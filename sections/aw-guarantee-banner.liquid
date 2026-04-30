@@ -1,0 +1,77 @@
+{% liquid
+    assign section_settings = section.settings
+    assign color_scheme = section_settings.color_scheme
+    assign background_color = color_scheme.settings.background
+    assign text_color = color_scheme.settings.text
+    assign image = section_settings.image
+    assign badge = section_settings.badge
+    assign subtitle = section_settings.subtitle
+    assign title = section_settings.title
+    assign description = section_settings.description
+%}
+
+<div class="wb-flex relative" style="background-color: {{ background_color }}">
+    {% if image != blank %}
+        <div class="wb-flex w-1/2 relative">
+            {% render 'picture', source: image, class: 'w-full h-full', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+        </div>
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-5 -left-10 !w-[59px] !h-auto', loading: 'eager', preload: 'eager' }}
+    {% endif %}
+    <div class="wb-flex w-1/2">
+        <div class="wb-flex flex-col gap-4" style="color: {{ text_color }}">
+            {% if subtitle != blank %}
+                <span class="h3">{{ subtitle }}</span>
+            {% endif %}
+        </div>
+        {% if title != blank %}
+            <span class="h2">{{ title }}</span>
+        {% endif %}
+        {% if description != blank %}
+            <span class="body">{{ description }}</span>
+        {% endif %}
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "AW Guarantee Banner",
+        "settings": [
+            {
+                "type": "color_scheme",
+                "id": "color_scheme",
+                "label": "Color Scheme",
+                "default": "scheme-1"
+            },
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "badge",
+                "label": "Badge"
+            },
+            {
+                "type": "text",
+                "id": "subtitle",
+                "label": "Subtitle"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title"
+            },
+            {
+                "type": "text",
+                "id": "description",
+                "label": "Description"
+            }
+        ],
+        "presets": [
+            {
+                "name": "AW Guarantee Banner"
+            }
+        ]
+    }
+{% endschema %}
