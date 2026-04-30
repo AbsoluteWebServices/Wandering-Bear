@@ -1,0 +1,137 @@
+{% liquid
+    assign section_settings = section.settings
+    assign color_scheme = section_settings.color_scheme
+    assign background_color = color_scheme.background
+    assign background_image = section_settings.background_image
+    assign text_color = color_scheme.text
+    assign title_type = section_settings.title_type
+    assign title = section_settings.title
+    assign title_alt = section_settings.title_alt
+    assign title_image = section_settings.title_image
+    assign title_image_mobile = section_settings.title_image_mobile
+    assign diagram_image = section_settings.diagram_image
+
+%}
+
+<div class="aw-flex flex-col gap-4 relative" style="background-color: {{ background_color }}">
+    {% if background_image != blank %}
+        {% render 'picture', source: background_image, class: 'w-full !h-full object-cover !max-w-none absolute inset-0 -top-[77px]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+    {% endif %}
+   <div class="aw-flex mx-auto">
+    {% if title_type == 'image' %}
+        {% if title_image != blank %}
+            <div class="max-w-[442px] w-full mx-auto md:!mb-5">
+                {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+            </div>
+        {% endif %}
+    {% elsif title_type == 'text' %}
+        {% if title != blank %}
+            <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
+        {% endif %}
+    {% endif %}
+   </div>
+   <div class="aw-flex mx-auto w-[511px]">
+    {% if diagram_image != blank %}
+            <picture>
+                <source srcset="{{ diagram_image | image_url: width: 1920 }}" media="(min-width: 1920px)">
+                <source srcset="{{ diagram_image | image_url: width: 1440 }}" media="(min-width: 1440px)">
+                <source srcset="{{ diagram_image | image_url: width: 1200 }}" media="(min-width: 1200px)">
+                <source srcset="{{ diagram_image | image_url: width: 1024 }}" media="(min-width: 1024px)">
+                <source srcset="{{ diagram_image | image_url: width: 768 }}" media="(min-width: 768px)">
+                <img src="{{ diagram_image | image_url: width: 365 }}" alt="{{ title_alt }}" class="w-full max-h-full object-contain relative z-[2]">
+            </picture>
+        {% endif %}
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "AW Diagram Section",
+        "settings": [
+            {
+                "type": "color_scheme",
+                "id": "color_scheme",
+                "label": "Color Scheme",
+                "default": "scheme-1"
+            },
+            {
+                "type": "image_picker",
+                "id": "background_image",
+                "label": "Background Image"
+            },
+            {
+                "type": "select",
+                "id": "title_type",
+                "label": "Title Type",
+                "options": [
+                    {
+                        "value": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "value": "image",
+                        "label": "Image"
+                    }
+                ],
+                "default": "text"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "visible_if": "{{ section.settings.title_type == 'text' }}"
+            },
+            {
+                "type": "text",
+                "id": "title_alt",
+                "label": "Title Alt",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image",
+                "label": "Title Image",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image_mobile",
+                "label": "Title Image Mobile",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "diagram_image",
+                "label": "Diagram Image"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "diagram_item",
+                "name": "Diagram Item",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "icon",
+                        "label": "Icon"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title"
+                    },
+                    {
+                        "type": "text",
+                        "id": "description",
+                        "label": "Description"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "AW Diagram Section"
+            }
+        ]
+    }
+{% endschema %}
