@@ -468,9 +468,9 @@
       },
       "scheme-53a30445-4815-46e7-b861-da7f32359d08": {
         "settings": {
-          "background": "#431A03",
-          "foreground_heading": "#000000",
-          "foreground": "#FEF8F3",
+          "background": "#431a03",
+          "foreground_heading": "#FEF8F3",
+          "foreground": "#fef8f3",
           "primary": "#000000cf",
           "primary_hover": "#000000",
           "border": "#0000000f",
