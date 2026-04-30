@@ -246,6 +246,7 @@
       "block_order": [
         "text_cbcgyb"
       ],
+      "disabled": true,
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
@@ -265,10 +266,55 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "aw_diagram_6mi8V4": {
+      "type": "aw-diagram",
+      "blocks": {
+        "diagram_item_qP99bg": {
+          "type": "diagram_item",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226584.svg",
+            "title": "Cold Brew Process",
+            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
+          }
+        },
+        "diagram_item_UqUHic": {
+          "type": "diagram_item",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
+            "title": "BEAN QUALITY",
+            "description": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew"
+          }
+        },
+        "diagram_item_UMNaHE": {
+          "type": "diagram_item",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226583.svg",
+            "title": "More Coffee",
+            "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine."
+          }
+        }
+      },
+      "block_order": [
+        "diagram_item_qP99bg",
+        "diagram_item_UqUHic",
+        "diagram_item_UMNaHE"
+      ],
+      "name": "AW Diagram Section",
+      "settings": {
+        "color_scheme": "",
+        "background_image": "shopify://shop_images/sky.png",
+        "title_type": "image",
+        "title": "",
+        "title_alt": "",
+        "title_image": "shopify://shop_images/cold-brew-title.svg",
+        "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png"
+      }
     }
   },
   "order": [
     "main",
-    "product_recommendations_qggXJq"
+    "product_recommendations_qggXJq",
+    "aw_diagram_6mi8V4"
   ]
 }
