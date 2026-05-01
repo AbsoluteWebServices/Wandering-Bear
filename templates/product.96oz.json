@@ -459,6 +459,21 @@
         "button_label": "",
         "button_link": ""
       }
+    },
+    "aw_frequently_asked_questions_33izYW": {
+      "type": "aw-frequently-asked-questions",
+      "name": "AW FAQs",
+      "settings": {
+        "color_scheme": "",
+        "background": "linear-gradient(180deg, #F2E6DC 0%, #BFD7E9 100%)",
+        "title_type": "image",
+        "title": "",
+        "title_alt": "",
+        "title_image": "shopify://shop_images/Group_1327226590.svg",
+        "faqs_metaobject": "96-oz-cold-brew-straight-black",
+        "button_label": "",
+        "button_link": ""
+      }
     }
   },
   "order": [
@@ -468,6 +483,7 @@
     "aw_image_text_icons_6YkxCz",
     "aw_guarantee_banner_GxEGrE",
     "1777580187e490aceb",
-    "aw_member_comparison_EAjQ8J"
+    "aw_member_comparison_EAjQ8J",
+    "aw_frequently_asked_questions_33izYW"
   ]
 }
