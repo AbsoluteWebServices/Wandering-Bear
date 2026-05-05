@@ -23,13 +23,12 @@ export default (Alpine: AlpineType) => {
           },
 
         get currentSavingsAmount() {
-            const bundleSize = (this.bundleSize > 0 && this.bundleSize <= 3) ? (this.bundleSize - 1) : 3;
+            const bundleSize = (this.bundleSize <= 2) ? (this.bundleSize - 1) : 2;
+            console.log('bundleSize', bundleSize);
             console.log('selectedProduct', this.selectedProduct);
             const savingsAmountAutoship = this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[bundleSize]?.selling_plan_price;
             const savingsAmountOneTime = this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[bundleSize]?.price;
 
-            console.log('savingsAmountAutoship', savingsAmountAutoship);
-            console.log('savingsAmountOneTime', savingsAmountOneTime);
 
             return this.purchaseOption === 'autoship' ? savingsAmountAutoship : savingsAmountOneTime;
         },
