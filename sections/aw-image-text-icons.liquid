@@ -15,7 +15,7 @@
 {% capture value_props %}
     <div class="wb-flex flex-col gap-3">
         {% for block in section.blocks %}
-            <div class="wb-flex gap-5">
+            <div class="wb-flex gap-5 items-center">
                 {{ block.settings.icon | image_url: width: 100 | image_tag: class: '!w-[54px] !h-[54px]', alt: block.settings.text }}
                 <span class="body text-black-bear">{{ block.settings.text }}</span>
             </div>

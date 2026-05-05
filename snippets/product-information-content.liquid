@@ -87,7 +87,7 @@
     {% render 'skip-to-content-link', href: product_href, text: 'accessibility.skip_to_product_info' %}
   {% endif %}
   <div
-    class="{{ product_grid_class }}"
+    class="{{ product_grid_class }} !max-w-[1050px] mx-auto"
     data-product-grid-content
   >
     {% assign render_order_array = render_order | split: ',' %}
