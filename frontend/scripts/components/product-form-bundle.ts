@@ -5,7 +5,8 @@ import { CartAddEvent, CartErrorEvent } from '/assets/events'
 
 
 export default (Alpine: AlpineType) => {
-    Alpine.data("productFormBundle", () => ({
+    Alpine.data("productFormBundle", ( selectedProductId: any) => ({
+        selectedProductId: selectedProductId,
         selectedProduct: null,
         bundleProducts: {},
         selectedBundleProducts: {},
@@ -42,6 +43,30 @@ export default (Alpine: AlpineType) => {
                 default:
                     return 'width: 100%';
             }
+        },
+
+        _formatPrice(price) {
+          const price_normalized = price / 100;
+          return price_normalized.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+        },
+
+        _setProgressBarPrices() {
+          const tierEls = document.querySelectorAll('[data-tier]')
+
+          tierEls.forEach((el, index) => {
+            const priceEl = el.querySelector('[data-tier-price]')
+            const savingsEl = el.querySelector('[data-tier-savings]')
+
+            const price = this.purchaseOption === 'autoship' ? 
+            this.selectedProduct?.variants[index].selling_plan_price : this.selectedProduct?.variants[index].price
+
+            console.log('selectedProduct', this.selectedProduct);
+
+            const savings = this.purchaseOption === 'autoship' ? this.selectedProduct?.variants[index].selling_plan_savings : this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[index].price
+
+            savingsEl.textContent = savings > 0 ? this._formatPrice(savings) + ' off' : ' '
+            priceEl.textContent = this._formatPrice(price)
+          })
         },
 
         _assignToBundle() {
@@ -109,6 +134,14 @@ export default (Alpine: AlpineType) => {
 
         init() {
             this.bundleProducts = JSON.parse(this.$refs.bundleProducts.textContent);
+            this.selectedProduct = this.bundleProducts[this.selectedProductId];
+            console.log('bundleProducts', this.bundleProducts);
+            console.log('selectedProduct', this.selectedProduct);
+        },
+
+        onPurchaseOptionChange() {
+            console.log('purchaseOption change', this.purchaseOption);
+            this._setProgressBarPrices();
         },
 
         addToBundle(productId) {
@@ -122,7 +155,6 @@ export default (Alpine: AlpineType) => {
               },
             }
         },
-
         
         selectProduct(productId) {
             this.selectedProduct = this.bundleProducts[productId];

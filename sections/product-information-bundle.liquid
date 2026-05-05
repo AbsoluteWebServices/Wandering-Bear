@@ -6,6 +6,7 @@
 
 {% liquid
   assign bundle_collection = section.settings.bundle_collection
+  assign selected_product = bundle_collection.products.first
 %}
 
 {% capture media_gallery %}
@@ -171,7 +172,8 @@
   </sticky-add-to-cart>
 {% endif %}
 
-<div x-data="productFormBundle">
+
+<div x-data="productFormBundle({{ selected_product.id }})">
   {% render 'product-information-content',
     product_media_size: closest.product.media.size,
     section_id: section.id,

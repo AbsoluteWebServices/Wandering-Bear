@@ -2,23 +2,25 @@
     assign color_scheme = block.settings.color_scheme
     assign background_color = color_scheme.settings.background
     assign text_color = color_scheme.settings.foreground
+    assign button_bg = color_scheme.settings.primary_button_background
+    assign button_text = color_scheme.settings.primary_button_text
     assign title = block.settings.title
     assign subtitle = block.settings.subtitle
     assign button_label = block.settings.button_label
     assign button_link = block.settings.button_link
     assign image = block.settings.image
  %}
-<div class="wb-flex items-stretch relative w-full" style="background-color: {{ background_color }}">
+<div class="wb-flex items-stretch relative w-full rounded-[5px] h-fit" style="background-color: {{ background_color }}">
   {% if image != blank %}
-    <div class="!max-w-[130px] md:!max-w-[104px] w-full h-full wb-flex">
+    <div class="max-w-full flex-1 w-full h-auto wb-flex">
     {% render 'picture', source: image, class: 'w-full !h-full object-cover', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
     </div>
   {% endif %}
-  <div class="wb-flex flex-col gap-4 p-4">
+  <div class="wb-flex flex-col gap-2 p-4 h-fit flex-2">
     <h2 class="text-base font-gothic_condensed font-bold leading-[100%]" style="color: {{ text_color }}">{{ title }}</h2>
     <span class="text-[12px] font-semibold font-kurdis leading-[120%]" style="color: {{ text_color }}">{{ subtitle }}</span>
     {% if button_label != blank and button_link != blank %}
-      {% render 'wb-button', style: 'primary', class: 'mt-4 z-[3] md:!ml-5 !w-[266px] !h-[51px]', width: 253, height: 49, label: button_label, link: button_link %}
+      {% render 'wb-button', style: 'custom', class: 'z-[3] !w-[98px] !h-[25px] !text-[12px]', width: 98, height: 25, label: button_label, link: button_link, button_bg: button_bg, button_text: button_text %}
     {% endif %}
   </div>
 </div>
