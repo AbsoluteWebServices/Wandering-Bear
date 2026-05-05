@@ -1,1 +1,0 @@
-var e=e=>{e.data(`productFormBundle`,()=>({init(){}}))};export{e as default};

@@ -1,1 +1,0 @@
-var e=e=>{e.data(`productFormBundle`,()=>({selectedProduct:null,bundleProducts:{},selectedBundleProducts:[],init(){this.bundleProducts=JSON.parse(this.$refs.bundleProducts.textContent),console.log(`bundleProducts`,this.bundleProducts)}}))};export{e as default};

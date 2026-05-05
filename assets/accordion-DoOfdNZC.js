@@ -1,1 +1,0 @@
-var e=e=>{e.data(`accordion`,()=>({init(){},toggleAccordion(e){let t=this.$el.querySelectorAll(`[data-accordion-item]`),n=e.target.closest(`[data-accordion-item]`);console.log(`accordionItem`,n),t.forEach(e=>{e.removeAttribute(`open`)}),this.$nextTick(()=>{n?.toggleAttribute(`open`)})}}))};export{e as default};

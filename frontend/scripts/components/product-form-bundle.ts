@@ -13,6 +13,7 @@ export default (Alpine: AlpineType) => {
         assignedBundleProducts: [],
         loading: false,
         purchaseOption: 'autoship',
+        savingsAmount: 5,
         sellingPlanId: null,
 
         get bundleSize() {
@@ -20,6 +21,18 @@ export default (Alpine: AlpineType) => {
               return acc + Number(product.quantity || 0)
             }, 0)
           },
+
+        get currentSavingsAmount() {
+            const bundleSize = (this.bundleSize > 0 && this.bundleSize <= 3) ? (this.bundleSize - 1) : 3;
+            console.log('selectedProduct', this.selectedProduct);
+            const savingsAmountAutoship = this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[bundleSize]?.selling_plan_price;
+            const savingsAmountOneTime = this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[bundleSize]?.price;
+
+            console.log('savingsAmountAutoship', savingsAmountAutoship);
+            console.log('savingsAmountOneTime', savingsAmountOneTime);
+
+            return this.purchaseOption === 'autoship' ? savingsAmountAutoship : savingsAmountOneTime;
+        },
 
         // Helpers
         isInBundle(productId) {
@@ -126,8 +139,6 @@ export default (Alpine: AlpineType) => {
             const price = this.assignedBundleProducts.reduce((acc: number, product: any) => {
                 return acc + (Number(product.sellingPlanPrice) * Number(product.quantity))
             }, 0)
-
-            console.log('price', price);
 
             return price;
         },
