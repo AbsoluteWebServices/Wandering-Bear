@@ -27,7 +27,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "main-DpcyaJmI.js",
+    "file": "main-CcXQdUoe.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -80,7 +80,7 @@
     ]
   },
   "frontend/scripts/components/product-form-bundle.ts": {
-    "file": "product-form-bundle-DLygwe7m.js",
+    "file": "product-form-bundle-CwYVFKti.js",
     "name": "product-form-bundle",
     "src": "frontend/scripts/components/product-form-bundle.ts",
     "isDynamicEntry": true

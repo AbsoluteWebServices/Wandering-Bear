@@ -15,8 +15,10 @@ export default (Alpine: AlpineType) => {
         purchaseOption: 'autoship',
         savingsAmount: 5,
         sellingPlanId: null,
+        bundleParentProducts: {},
 
         get bundleSize() {
+            this._updateQueryString();
             return Object.values(this.selectedBundleProducts).reduce((acc, product) => {
               return acc + Number(product.quantity || 0)
             }, 0)
@@ -37,6 +39,32 @@ export default (Alpine: AlpineType) => {
 
         get currentSavingsAmountFormatted() {
             return this._formatPrice(this.currentSavingsAmount);
+        },
+
+        get guid() {
+            let d = new Date().getTime()
+            let d2 =
+                (performance && performance.now && performance.now() * 1000) ||
+                0
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                /[xy]/g,
+                (c) => {
+                    let r = Math.random() * 16
+                    if (d > 0) {
+                        r = (d + r) % 16 | 0
+                        d = Math.floor(d / 16)
+                    } else {
+                        r = (d2 + r) % 16 | 0
+                        d2 = Math.floor(d2 / 16)
+                    }
+                    return (c == "x" ? r : (r & 0x7) | 0x8).toString(16)
+                }
+            )
+        },
+
+        get parentProduct() {
+          const index = (this.bundleSize <= 2) ? (this.bundleSize - 1) : 2;
+          return this.bundleParentProducts[index]
         },
 
         // Helpers
@@ -86,7 +114,6 @@ export default (Alpine: AlpineType) => {
         },
 
         _assignToBundle() {
-
             let variantIndex = 0;
 
             switch (this.bundleSize) {
@@ -123,7 +150,49 @@ export default (Alpine: AlpineType) => {
                   },
                 }
               })
+        },
 
+        _addQueryParam(key, value) {
+          const url = new URL(window.location)
+          url.searchParams.set(key, value)
+          window.history.pushState({}, "", url)
+        },
+
+        _updateQueryString() {
+            let baseUrl = [
+                location.protocol,
+                "//",
+                location.host,
+                location.pathname,
+            ].join("")
+            let bundleParams = []
+            let bundleIntervalParam = ""
+
+            // Determine the active collection and build product parameters
+            Object.entries(this.selectedBundleProducts).forEach(([key, value]) => {
+                if (value.quantity > 0) {
+                    bundleParams.push(`bundle=${key}_${value.quantity}`)
+                }
+            })
+           
+            // Construct the full query string
+            let bundleFrequencyParam =
+                this.purchaseOption === "autoship"
+                    ? "bundle_interval=sub"
+                    : "bundle_interval=otp"
+            let queryString =
+                bundleParams.join("&") +
+                "&" +
+                bundleFrequencyParam +
+                "&" +
+                bundleIntervalParam
+
+            // Push the new URL to the history stack
+            window.history.pushState(
+                { path: baseUrl + "?" + queryString },
+                "",
+                baseUrl + "?" + queryString
+            )
         },
 
         getOneTimePrice() {
@@ -147,12 +216,32 @@ export default (Alpine: AlpineType) => {
         },
 
         init() {
-            this.bundleProducts = JSON.parse(this.$refs.bundleProducts.textContent);
+            this.bundleProducts = JSON.parse(this.$refs.productObject.textContent);
+            this.bundleParentProducts = JSON.parse(this.$refs.bundleParentProducts.textContent);
             this.selectedProduct = this.bundleProducts[this.selectedProductId];
+
+            let queryParams = new URLSearchParams(window.location.search)
+
+            // Populate bundle if sent a link with query params
+            queryParams.forEach((value, key) => {
+              if (key === "bundle") {
+                  let [variantId, quantity] = value.split("_")
+                  let parsedQuantity = parseInt(quantity, 10)
+
+                  this.selectedBundleProducts[variantId] = {
+                    productId: variantId,
+                    quantity: parsedQuantity,
+                  }
+                 
+              } else if (key === "bundle_interval") {
+                  this.purchaseOption = value
+              }
+            })
         },
 
         onPurchaseOptionChange() {
             this._setProgressBarPrices();
+            this._updateQueryString();
         },
 
         addToBundle(productId) {
@@ -176,7 +265,36 @@ export default (Alpine: AlpineType) => {
             this.loading = true;
             this._assignToBundle()
 
-            console.log('assignedBundleProducts', this.assignedBundleProducts);
+            let guid = this.guid;
+
+            let bundleCart = {
+              items: [],
+            }
+
+            this.assignedBundleProducts.forEach((item) => {
+                let bundleItem = {
+                  id: item.id,
+                  quantity: item.quantity,
+                  selling_plan: this.purchaseOption === 'autoship' ? item.selling_plan : null,
+                  properties: {
+                    _bundle_id: guid,
+                  },
+                }
+                bundleCart.items.push(bundleItem);
+            })
+
+            let bundleParent = {
+              id: this.parentProduct.variant_id,
+              quantity: 1,
+              selling_plan: this.purchaseOption === 'autoship' ? this.parentProduct.selling_plan_id : null,
+              properties: {
+                _bundle_id: guid,
+                _bundle_parent: true,
+              },
+            }
+
+            bundleCart.items.unshift(bundleParent);
+
           
             const res = await fetch('/cart/add.js', {
               method: 'POST',
@@ -184,9 +302,7 @@ export default (Alpine: AlpineType) => {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
               },
-              body: JSON.stringify({
-                items: this.assignedBundleProducts,
-              }),
+              body: JSON.stringify(bundleCart),
             })
           
             if (!res.ok) {
