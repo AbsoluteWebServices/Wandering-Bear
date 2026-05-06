@@ -142,7 +142,7 @@
              data-product-id="{{ child_product.id }}"
              :class="{ 'outline-2 outline outline-gold': selectedProduct?.id === {{ child_product.id }}}"
              class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer flex-nowrap {% if forloop.first %} outline-2 outline outline-gold {% endif %}">
-                <div class="w-[75px] h-full bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
+                <div class="min-w-[77px] w-[77px] lg:!min-w-[75px] lg:!w-[75px] h-full bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
                   {% if image != blank %}
                     {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
                   {% else %}
@@ -153,9 +153,9 @@
                   {% endif %}
                 </div>
                 <div class="wb-flex w-full h-full p-2 items-center gap-2">
-                    <div class="flex flex-col !gap-1 w-full">
-                        <div class="wb-flex items-center gap-2 w-full">
-                          <span class="text-base !font-bold uppercase text-bear-black font-gothic_condensed">{{ title }}</span>
+                    <div class="wb-flex flex-col !gap-2 lg:!gap-1 w-full">
+                        <div class="wb-flex items-center gap-1 lg:!gap-2 w-full flex-wrap">
+                          <span class="text-lg lg:!text-base !font-bold uppercase text-bear-black font-gothic_condensed">{{ title }}</span>
                           {% if product_badge != blank %}
                             <div class="flex items-center justify-center rounded-full px-2 py-1 h-fit" style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
                               <span class="text-[10px] font-kurdis uppercase font-semibold !leading-[100%] whitespace-nowrap">{{ product_badge_text }}</span>
@@ -166,7 +166,7 @@
                               </span>
                           {% endif %}
                         </div>
-                        <span class="text-[11px] font-kurdis font-semibold leading-[120%] text-bear-black">{{ flavor_description }}</span>
+                        <span class="text-[12px] lg:!text-[11px] font-kurdis font-semibold leading-[120%] text-bear-black">{{ flavor_description }}</span>
                     </div>
                     <div class="min-w-[100px]">
                       {% if member_only %}
@@ -182,7 +182,7 @@
                         </div>
                       {% else %}
                         <div x-show="!isInBundle({{ child_product.id }})" class="w-full flex justify-end">
-                          <div class="group !h-[30px] !w-[80px] flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button" @click.prevent.stop="addToBundle({{ child_product.id }})">
+                          <div class="group !h-10 lg:!h-[30px] !w-[80px] flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button" @click.prevent.stop="addToBundle({{ child_product.id }})">
                               <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold">+ Add</span>
                               <div class="absolute top-0 left-0 w-full h-full">
                                 <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">

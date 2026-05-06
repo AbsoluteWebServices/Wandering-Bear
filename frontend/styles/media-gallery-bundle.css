@@ -11,3 +11,26 @@
 [data-media-gallery-bundle] .swiper-thumbs .swiper-slide-thumb-active {
     border: 2px solid var(--color-espresso);
 }
+
+
+
+@media (max-width: 1023px) {
+    [data-media-gallery-bundle] .swiper-main {
+        display: flex;
+        justify-content: center;
+    }
+
+    [data-media-gallery-bundle] .swiper-main .swiper-slide {
+        width: var(--mobile-width);
+        margin-right: var(--mobile-margin-right);
+    }
+
+    [data-media-gallery-bundle] .swiper-thumbs {
+        width: calc(calc((100% - 25%)) + 20px);
+        margin: 0 auto;
+    }
+
+    [data-media-gallery-bundle] .swiper-thumbs .swiper-slide {
+        aspect-ratio: auto;
+    }
+}

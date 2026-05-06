@@ -1,5 +1,7 @@
 {% capture slide_styles %}
     --width: 100%;
+    --mobile-width: calc((100% / 1.25) - 8px);
+    --mobile-margin-right: 10px;
 {% endcapture %}
 {% capture thumbnail_styles %}
     --desktop-margin-right: 10px;
@@ -7,9 +9,10 @@
     --aspect-ratio: 1;
 {% endcapture %}
 
+
 <div data-media-gallery-bundle class="max-w-[580px] w-full overflow-hidden">
     <div class="flex flex-col !max-w-[580px] gap-[17px]">
-        <div class="swiper swiper-main max-w-[580px] max-h-[580px] w-full aspect-square" x-ref="swiper">
+        <div class="swiper swiper-main max-w-[580px] max-h-[580px] w-full lg:aspect-square" x-ref="swiper">
             <div class="swiper-wrapper max-w-full max-h-full">
                 {% for media in product.media %}
                     <div class="swiper-slide rounded-[5px] overflow-hidden" style="{{ slide_styles }}">

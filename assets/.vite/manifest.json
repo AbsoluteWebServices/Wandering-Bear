@@ -18,7 +18,7 @@
     ]
   },
   "frontend/entrypoints/main.css": {
-    "file": "main-CQPdqi3l.css",
+    "file": "main-Cz-tEruP.css",
     "name": "main",
     "names": [
       "main.css"
@@ -27,7 +27,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "main-FyH97Sr4.js",
+    "file": "main-DpcyaJmI.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -48,7 +48,7 @@
       "frontend/scripts/components/accordion.ts"
     ],
     "css": [
-      "main-Yv-0U2Ze.css"
+      "main-DOhP8zoT.css"
     ]
   },
   "frontend/scripts/components/accordion.ts": {
@@ -70,7 +70,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "media-gallery-bundle-BE8CZNlO.js",
+    "file": "media-gallery-bundle-C1NzuNMh.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
