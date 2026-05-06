@@ -58,7 +58,7 @@
 <div class="flex flex-col gap-2.5">
     <span class="text-base font-bold font-gothic_condensed uppercase text-gold">Build Your Bundle</span>
 
-    <div class="flex flex-col w-full bg-white/50 p-4.5 rounded-[5px] font-kurdis relative button-shadow uppercase">
+    <div class="wb-flex gap-1 flex-col w-full bg-white/50 p-4.5 rounded-[5px] font-kurdis relative button-shadow uppercase">
       <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
         {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%]', svg_class: 'text-gold'%}
       </div>
@@ -98,7 +98,7 @@
       <div class="flex items-center justify-between text-[12px] w-full">
         {% for i in (1..3) %}
           <div data-tier="{{ i }}" class="wb-flex gap-1 flex-col items-center justify-center w-[63px]">
-            <div class="text-bear-black font-semibold font-kurdis leading-[120%] normal-case inline-block whitespace-nowrap h-full">
+            <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
               {%- case i -%}
                 {%- when 1 -%}
                   {%- assign autoship_price = tier_one_unit_price_autoship -%}
@@ -112,7 +112,7 @@
                 </span>
                 <span>/ea</span>
               </div>
-              <div class="text-gold font-semibold font-kurdis leading-[120%] normal-case inline-block whitespace-nowrap">
+              <div class="text-kraft font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap">
               <span data-tier-savings>
                 {{- i | times: 5 | prepend: '$' | append: ' off' -}}
               </span>
@@ -129,7 +129,7 @@
         {% for child_product in bundle_collection.products %}
             {% liquid
             assign title = child_product.title | split: ' - ' | last
-            assign image = child_product.featured_image
+            assign image = child_product.metafields.custom.variant_selector_image
             assign flavor_description = child_product.metafields.airf.p_flavor | default: ''
             assign member_only = child_product.metafields.product.member_only | default: false
 
@@ -142,8 +142,15 @@
              data-product-id="{{ child_product.id }}"
              :class="{ 'outline-2 outline outline-gold': selectedProduct?.id === {{ child_product.id }}}"
              class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer flex-nowrap {% if forloop.first %} outline-2 outline outline-gold {% endif %}">
-                <div class="w-[75px] h-full bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px]">
-                {{ child_product.featured_image | image_url: width: 300 | image_tag: class: 'w-full h-full object-cover' }}
+                <div class="w-[75px] h-full bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
+                  {% if image != blank %}
+                    {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
+                  {% else %}
+                    <div class="absolute inset-0 z-[2] wb-flex justify-center items-center">
+                      <span class="text-xs text-center">Missing Image</span>
+                    </div>
+                    {{ child_product.featured_image | image_url: width: 300 | image_tag: class: 'w-full h-full object-cover opacity-50' }}
+                  {% endif %}
                 </div>
                 <div class="wb-flex w-full h-full p-2 items-center gap-2">
                     <div class="flex flex-col !gap-1 w-full">
