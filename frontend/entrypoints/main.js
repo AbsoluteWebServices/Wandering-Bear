@@ -17,6 +17,7 @@ import '../styles/media-gallery-bundle.css';
 import '../styles/main-product.css';
 
 
+
 export {}
 
 let loaded = false
@@ -35,6 +36,7 @@ const init = async () => {
     const { default: MediaGalleryBundle } = await import("~/scripts/components/media-gallery-bundle")
     const { default: Diagram } = await import("~/scripts/components/diagram")
     const { default: Accordion } = await import("~/scripts/components/accordion")
+    const { default: Footer } = await import("~/scripts/components/footer")
 
     Alpine.plugin(morph)
 
@@ -46,6 +48,7 @@ const init = async () => {
     Alpine.plugin(MediaGalleryBundle)
     Alpine.plugin(Diagram)
     Alpine.plugin(Accordion)
+    Alpine.plugin(Footer)
     
     Alpine.start()
     window.Alpine = Alpine

@@ -6,19 +6,19 @@
       "_swiper-core-C1JZ1M_I.js"
     ]
   },
-  "_swiper-core-C1JZ1M_I.js": {
-    "file": "swiper-core-C1JZ1M_I.js",
-    "name": "swiper-core"
-  },
-  "_swiper-jVW2zQdZ.js": {
-    "file": "swiper-jVW2zQdZ.js",
+  "_swiper-DdVPzQTz.js": {
+    "file": "swiper-DdVPzQTz.js",
     "name": "swiper",
     "imports": [
       "_swiper-core-C1JZ1M_I.js"
     ]
   },
+  "_swiper-core-C1JZ1M_I.js": {
+    "file": "swiper-core-C1JZ1M_I.js",
+    "name": "swiper-core"
+  },
   "frontend/entrypoints/main.css": {
-    "file": "main-CHsyhyN3.css",
+    "file": "main-B08epJM7.css",
     "name": "main",
     "names": [
       "main.css"
@@ -27,7 +27,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "main-DVWE8Zyz.js",
+    "file": "main-DFEO-FTv.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -45,7 +45,8 @@
       "frontend/scripts/components/product-form-bundle.ts",
       "frontend/scripts/components/media-gallery-bundle.ts",
       "frontend/scripts/components/diagram.ts",
-      "frontend/scripts/components/accordion.ts"
+      "frontend/scripts/components/accordion.ts",
+      "frontend/scripts/components/footer.ts"
     ],
     "css": [
       "main-CR-RjnWN.css"
@@ -63,59 +64,65 @@
     "src": "frontend/scripts/components/diagram.ts",
     "isDynamicEntry": true
   },
+  "frontend/scripts/components/footer.ts": {
+    "file": "footer-CzStvEj5.js",
+    "name": "footer",
+    "src": "frontend/scripts/components/footer.ts",
+    "isDynamicEntry": true
+  },
   "frontend/scripts/components/header.ts": {
-    "file": "header-COM8z4xG.js",
+    "file": "header-Bq5XifI1.js",
     "name": "header",
     "src": "frontend/scripts/components/header.ts",
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "media-gallery-bundle-C1NzuNMh.js",
+    "file": "media-gallery-bundle-qH_YAQve.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
     "imports": [
       "_swiper-core-C1JZ1M_I.js",
-      "_swiper-jVW2zQdZ.js"
+      "_swiper-DdVPzQTz.js"
     ]
   },
   "frontend/scripts/components/product-form-bundle.ts": {
-    "file": "product-form-bundle-J0vfngda.js",
+    "file": "product-form-bundle-Cc7Q5VFU.js",
     "name": "product-form-bundle",
     "src": "frontend/scripts/components/product-form-bundle.ts",
     "isDynamicEntry": true
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "swiperSlider-Bj7hlE9p.js",
+    "file": "swiperSlider-Cu89h6GQ.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,
     "imports": [
       "_navigation-BIH-8bFS.js",
       "_swiper-core-C1JZ1M_I.js",
-      "_swiper-jVW2zQdZ.js"
+      "_swiper-DdVPzQTz.js"
     ]
   },
   "frontend/scripts/components/tooltip.ts": {
-    "file": "tooltip-BuCyukYj.js",
+    "file": "tooltip-BHl-dQnb.js",
     "name": "tooltip",
     "src": "frontend/scripts/components/tooltip.ts",
     "isDynamicEntry": true
   },
   "frontend/scripts/components/videoPlayer.ts": {
-    "file": "videoPlayer-DhuZBo87.js",
+    "file": "videoPlayer-DY3uzg_c.js",
     "name": "videoPlayer",
     "src": "frontend/scripts/components/videoPlayer.ts",
     "isDynamicEntry": true
   },
   "node_modules/@alpinejs/morph/dist/module.esm.js": {
-    "file": "module.esm-DX5jqbVq.js",
+    "file": "module.esm-DgjLOHH-.js",
     "name": "module.esm",
     "src": "node_modules/@alpinejs/morph/dist/module.esm.js",
     "isDynamicEntry": true
   },
   "node_modules/alpinejs/dist/module.esm.js": {
-    "file": "module.esm-DMoJNMyO.js",
+    "file": "module.esm-C6SbkCNJ.js",
     "name": "module.esm",
     "src": "node_modules/alpinejs/dist/module.esm.js",
     "isDynamicEntry": true

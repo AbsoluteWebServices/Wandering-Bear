@@ -17,6 +17,7 @@ export default (Alpine: AlpineType) => {
           
             const accordionItems = this.$root.querySelectorAll<HTMLElement>('[data-accordion-item]')
             const isOpen = accordionItem.hasAttribute('open')
+            
           
             accordionItems.forEach(item => item.removeAttribute('open'))
           
