@@ -10,7 +10,7 @@
     assign button_link = block.settings.button_link
     assign image = block.settings.image
  %}
-<div class="wb-flex items-stretch relative w-full rounded-[5px] h-fit" style="background-color: {{ background_color }}">
+<div class="wb-flex items-stretch relative w-full rounded-[5px] h-fit mb-4" style="background-color: {{ background_color }}">
   {% if image != blank %}
     <div class="max-w-full flex-1 w-full h-auto wb-flex">
     {% render 'picture', source: image, class: 'w-full !h-full object-cover', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
