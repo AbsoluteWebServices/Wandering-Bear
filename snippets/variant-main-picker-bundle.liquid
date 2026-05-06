@@ -232,24 +232,22 @@
 <div>
     <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
     <fieldset>
+        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute top-0 left-0 w-0 h-0 opacity-0">
         <label
-        :class="{ 'bg-foam border-espresso': purchaseOption === 'autoship' }"
         class="flex items-center justify-between w-full p-6 border cursor-pointer"
         for="autoship">
         <span>Autoship</span>
             <span x-text="selectedProduct?.variants[0].selling_plan?.price"></span>
         </label>
-        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute top-0 left-0 w-0 h-0 opacity-0">
     </fieldset>
     <fieldset>
+       <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute top-0 left-0 w-0 h-0 opacity-0">
         <label 
-        :class="{ 'bg-foam border-espresso': purchaseOption === 'one_time' }"
         class="flex items-center justify-between w-full p-6 border cursor-pointer"
         for="one_time">
         <span>One Time</span>
             <span x-text="selectedProduct?.price"></span>
         </label>
-        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute top-0 left-0 w-0 h-0 opacity-0">
     </fieldset>
 </div>
 
@@ -268,7 +266,7 @@ class="group relative flex items-center justify-center shadow-button cursor-poin
 </button>
 
 <template x-if="currentSavingsAmount > 0">
-  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center" x-text="`You're saving ` + currentSavingsAmountFormatted"></span>
+  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>
 
 <script x-ref="bundleParentProducts" type="application/json">

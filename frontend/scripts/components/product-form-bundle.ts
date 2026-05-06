@@ -13,7 +13,6 @@ export default (Alpine: AlpineType) => {
         assignedBundleProducts: [],
         loading: false,
         purchaseOption: 'autoship',
-        savingsAmount: 5,
         sellingPlanId: null,
         bundleParentProducts: {},
 
@@ -30,9 +29,22 @@ export default (Alpine: AlpineType) => {
 
         get currentSavingsAmount() {
             const bundleSize = (this.bundleSize <= 2) ? (this.bundleSize - 1) : 2;
+            const originalPrice = this.selectedProduct?.variants[0].price;
+            const newSellingPlanPrice = this.selectedProduct?.variants[bundleSize]?.selling_plan_price;
+            const newOtpPrice = this.selectedProduct?.variants[bundleSize]?.price;
 
-            const savingsAmountAutoship = this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[bundleSize]?.selling_plan_price;
-            const savingsAmountOneTime = this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[bundleSize]?.price;
+            console.log('bundle size', bundleSize);
+            console.log('this.bundleSize', this.bundleSize);
+
+            console.log('original price', originalPrice);
+            console.log('new selling plan price', newSellingPlanPrice);
+            console.log('new otp price', newOtpPrice);
+
+            console.log('savings amount autoship', this.bundleSize * (originalPrice - newSellingPlanPrice));
+            console.log('savings amount one time', this.bundleSize * (originalPrice - newOtpPrice));
+
+            const savingsAmountAutoship = this.bundleSize * (originalPrice - newSellingPlanPrice);
+            const savingsAmountOneTime = this.bundleSize * (originalPrice - newOtpPrice);
 
             return this.purchaseOption === 'autoship' ? savingsAmountAutoship : savingsAmountOneTime;
         },
@@ -215,6 +227,7 @@ export default (Alpine: AlpineType) => {
             return price;
         },
 
+
         init() {
             this.bundleProducts = JSON.parse(this.$refs.productObject.textContent);
             this.bundleParentProducts = JSON.parse(this.$refs.bundleParentProducts.textContent);
@@ -234,7 +247,7 @@ export default (Alpine: AlpineType) => {
                   }
                  
               } else if (key === "bundle_interval") {
-                  this.purchaseOption = value
+                  this.purchaseOption = value === 'sub' ? 'autoship' : 'one_time';
               }
             })
         },
