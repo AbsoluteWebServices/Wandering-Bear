@@ -1,0 +1,23 @@
+{% assign product = section.settings.product %}
+<div class="max-w-[1126px] mx-auto px-6 xl:px-0 py-20">
+  {% render 'okendo-reviews-widget', product: product %}
+</div>
+
+{%  schema  %}
+{
+  "name": "Okendo Reviews Widget",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Okendo Reviews Widget",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

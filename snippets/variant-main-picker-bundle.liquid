@@ -1,0 +1,409 @@
+{%- doc -%}
+  Renders a default variant picker, used to display the variant picker in the variants block.
+
+  @param {object} product_resource - The product object.
+  @param {object} [block] - The block object
+  @param {object} section - The section object.
+  @param {object} product - The current product object (used to determine selected variant state).
+{%- enddoc -%}
+
+{% liquid
+   assign block_settings = block.settings
+   assign bundle_collection = section.settings.bundle_collection
+   assign first_product = bundle_collection.products.first
+   assign product_object = product.metafields.custom.product_group
+   
+   assign bundle_products = product_object.value.bundle_products.value
+   assign bundle_products_count = bundle_products.size
+   assign headline = product_object.value.headline
+   assign headline_size = product_object.value.headline
+   assign singular_label = product_object.value.singular_label
+   assign plural_label = product_object.value.plural_label
+
+   ## Prices ##
+
+   assign tier_one_unit_price_otp = first_product.variants[0].price
+   assign tier_two_unit_price_otp = first_product.variants[1].price
+   assign tier_three_unit_price_otp = first_product.variants[2].price
+
+   for selling_plan in first_product.selling_plan_groups
+    for selling_plan_allocation in selling_plan.selling_plan_allocations
+      if selling_plan_allocation.selling_plan.name contains '1 Month'
+        assign tier_one_unit_price_autoship = selling_plan_allocation.selling_plan.price
+      endif
+    endfor
+   endfor
+
+   for variant in first_product.variants
+    assign variant_title = variant.title | downcase | split: ' discount' | first
+    assign variant_title = variant_title | split: ' ' | first
+  
+    for allocation in variant.selling_plan_allocations
+      assign plan = allocation.selling_plan
+      assign plan_name = plan.name | downcase
+  
+      if plan_name contains '1 month' and plan_name contains variant_title
+     
+        unless plan_name contains 'bundle'
+          assign adjustment = plan.price_adjustments[0]
+          assign discount_amount = adjustment.value
+          assign autoship_price = variant.price | minus: discount_amount
+  
+          case variant_title
+            when '1'
+              assign tier_one_unit_price_autoship = autoship_price
+            when '2'
+              assign tier_two_unit_price_autoship = autoship_price
+            when '3'
+              assign tier_three_unit_price_autoship = autoship_price
+          endcase
+        endunless
+      endif
+    endfor
+  endfor
+%}
+
+
+<div class="flex flex-col gap-2.5">
+    <span class="text-base font-bold font-gothic_condensed uppercase text-gold">Build Your Bundle</span>
+
+    <div class="wb-flex gap-1 flex-col w-full bg-white/50 p-4.5 rounded-[5px] font-kurdis relative button-shadow uppercase">
+      <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
+        {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%]', svg_class: 'text-gold'%}
+      </div>
+      <div class="flex items-center justify-between">
+        {% for i in (1..bundle_products_count) %}
+            {% assign tier = i %}
+            {% if forloop.last %}
+              {% assign tier = i | append: '+' %}
+            {% endif %}
+            {% if i == 1 %}
+              {% assign tier_label = singular_label %}
+            {% else %}
+              {% assign tier_label = plural_label %}
+            {% endif %}
+            <div class="flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold w-[63px] text-bear-black">
+                <span>{{ tier }} {{ tier_label }}</span>
+            </div>
+        {% endfor %}
+      </div>
+      <div>
+        <div class="flex items-center justify-between relative">
+          {% for i in (1..bundle_products_count) %}
+              <div class="flex items-center justify-center w-[63px]">
+                <div class="flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC]"
+                :class="bundleSize >= {{ i }} ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
+                >
+                  <div class="flex items-center justify-center h-3.5 w-3.5 bg-[#CFBDB1] rounded-full bg-transparent"
+                  :class="bundleSize >= {{ i }} ? '!bg-gold' : 'bg-transparent'"
+                  ></div>
+                 </div>
+              </div>
+              <div class="absolute right-6 left-6 rounded-full mx-auto">
+                <div class="relative h-[2px] bg-[#CFBDB1]">
+                  <div class="absolute top-0 left-0 h-full max-w-full bg-gold transition-all duration-300"
+                  :style="progressBarWidth"
+                  ></div>
+                </div>
+              </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="flex items-center justify-between text-[12px] w-full">
+        {% for i in (1..bundle_products_count) %}
+          <div data-tier="{{ i }}" class="wb-flex gap-1 flex-col items-center justify-center w-[63px]">
+            <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
+              {%- case i -%}
+                {%- when 1 -%}
+                  {%- assign autoship_price = tier_one_unit_price_autoship -%}
+                {%- when 2 -%}
+                  {%- assign autoship_price = tier_two_unit_price_autoship -%}
+                {%- when 3 -%}
+                  {%- assign autoship_price = tier_three_unit_price_autoship -%}
+               {%- endcase -%}
+               <span data-tier-price>
+                 {{- autoship_price | money -}}
+                </span>
+                <span>/ea</span>
+              </div>
+              <div class="text-kraft font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap">
+              <span data-tier-savings>
+                {{- i | times: 5 | prepend: '$' | append: ' off' -}}
+              </span>
+              </div>
+            </div>
+        {% endfor %}
+    </div>
+  </div>
+
+
+
+<div class="h-[436px] overflow-hidden relative">
+    <div class="flex flex-col gap-2 overflow-y-auto absolute top-0 left-0 w-full h-full py-2.5 pl-1 !pr-2.5">
+        {% for child_product in bundle_collection.products %}
+            {% liquid
+            assign title = child_product.title | split: ' - ' | last
+            assign image = child_product.metafields.custom.variant_selector_image
+            assign flavor_description = child_product.metafields.airf.p_flavor | default: ''
+            assign member_only = child_product.metafields.product.member_only | default: false
+
+            assign product_badge = child_product.metafields.product.product_badge
+            assign product_badge_text = product_badge.value.badge_text
+            assign product_badge_color = product_badge.value.background_color
+            assign product_badge_text_color = product_badge.value.text_color
+            %}
+            <div @click="selectProduct({{ child_product.id }})"
+             data-product-id="{{ child_product.id }}"
+             :class="{ 'outline-2 outline outline-gold': selectedProduct?.id === {{ child_product.id }}}"
+             class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer flex-nowrap {% if forloop.first %} outline-2 outline outline-gold {% endif %}">
+                <div class="min-w-[77px] w-[77px] lg:!min-w-[75px] lg:!w-[75px] h-full bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
+                  {% if image != blank %}
+                    {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
+                  {% else %}
+                    <div class="absolute inset-0 z-[2] wb-flex justify-center items-center">
+                      <span class="text-xs text-center">Missing Image</span>
+                    </div>
+                    {{ child_product.featured_image | image_url: width: 300 | image_tag: class: 'w-full h-full object-cover opacity-50' }}
+                  {% endif %}
+                </div>
+                <div class="wb-flex w-full h-full p-2 items-center gap-2">
+                    <div class="wb-flex flex-col !gap-2 lg:!gap-1 w-full">
+                        <div class="wb-flex items-center gap-1 w-full flex-wrap">
+                          <span class="text-lg lg:!text-base !font-bold uppercase text-bear-black font-gothic_condensed">{{ title }}</span>
+                          {% if product_badge != blank %}
+                            <div class="flex items-center justify-center rounded-full px-2 py-1 h-fit" style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
+                              <span class="text-[10px] font-kurdis uppercase font-semibold !leading-[100%] whitespace-nowrap">{{ product_badge_text }}</span>
+                            </div>
+                          {% elsif member_only %}
+                              <span class="text-[10px] font-kurdis uppercase font-semibold text-cream whitespace-nowrap py-1 px-2 rounded-full relative -top-0.5" style="background-color: var(--color-brand-gold); color: var(--color-cream)">VIP / Elite Only
+                              {% render 'tooltip', content: settings.member_tooltip, class: 'relative top-0.5', badge: true %}
+                              </span>
+                          {% endif %}
+                        </div>
+                        <span class="text-[12px] lg:!text-[11px] font-kurdis font-semibold leading-[120%] text-bear-black">{{ flavor_description }}</span>
+                    </div>
+                    <div class="min-w-[100px]">
+                      {% if member_only %}
+                        <div class="w-full flex justify-end">
+                          <div class="group !h-[30px] !w-[80px] flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button">
+                              <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold whitespace-nowrap">{% render 'icons', icon: 'unlock' %} Unlock</span>
+                              <div class="absolute top-0 left-0 w-full h-full">
+                                <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
+                                  <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
+                                </svg>
+                              </div>
+                          </div>
+                        </div>
+                      {% else %}
+                        <div x-show="!isInBundle({{ child_product.id }})" class="w-full flex justify-end">
+                          <div class="group !h-10 lg:!h-[30px] !w-[80px] flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button" @click.prevent.stop="addToBundle({{ child_product.id }})">
+                              <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold">+ Add</span>
+                              <div class="absolute top-0 left-0 w-full h-full">
+                                <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
+                                  <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
+                                </svg>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="flex items-center !gap-0" x-cloak x-show="isInBundle({{ child_product.id }})">
+                            <button class="group cursor-pointer relative shadow-button h-[30px] w-[30px]" @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity--">
+                              <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold">-</span>
+                              <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                                <path d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
+                              </svg>
+                            </button>
+                            <span class="text-[12px] w-10 text-espresso text-center font-kurdis uppercase font-bold" x-text="getBundleProductQuantity({{ child_product.id }})"></span>
+                            <button class="group cursor-pointer relative shadow-button h-[30px] w-[30px]" @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity++">
+                              <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold">+</span>
+                              <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                                <path d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
+                              </svg>
+                            </button>
+                        </div>
+                      {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+
+<div class="mb-4">
+    <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
+    <fieldset>
+        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute top-0 left-0 w-0 h-0 opacity-0">
+        <label
+        class="flex items-center justify-between w-full p-6 border cursor-pointer"
+        for="autoship">
+        <span>Autoship</span>
+            <span x-text="selectedProduct?.variants[0].selling_plan?.price"></span>
+        </label>
+    </fieldset>
+    <fieldset>
+       <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute top-0 left-0 w-0 h-0 opacity-0">
+        <label 
+        class="flex items-center justify-between w-full p-6 border cursor-pointer"
+        for="one_time">
+        <span>One Time</span>
+            <span x-text="selectedProduct?.price"></span>
+        </label>
+    </fieldset>
+</div>
+
+<button
+:class="bundleSize >= 1 ? '!pointer-events-auto' : 'pointer-events-none'"
+class="group relative flex items-center justify-center shadow-button cursor-pointer h-[61px] w-[402px] max-w-full uppercase pointer-events-auto mb-4" @click.prevent="addToCart">
+    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-white text-base font-['Kurdis_SemiCondensed'] font-bold uppercase">
+      Add 1 Flavor
+    </span>
+    {% render 'loading-animation', class: 'z-[2]' %}
+    <svg xmlns="http://www.w3.org/2000/svg"
+    :class="bundleSize >= 1 ? 'text-espresso' : 'text-espresso/50'"
+    class="absolute inset-0 z-[1] text-espresso/50 group-hover:!text-gold transition-all duration-300" width="402" height="61" viewBox="0 0 402 61" fill="none">
+      <path d="M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z" fill="currentColor"/>
+    </svg>
+</button>
+
+<template x-if="currentSavingsAmount > 0">
+  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center mb-4 flex justify-center items-center" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+</template>
+
+<script x-ref="bundleParentProducts" type="application/json">
+  [
+    {%- for bundle_product in bundle_products -%}
+      {%- assign bundle_parent_variant = bundle_product.selected_or_first_available_variant -%}
+      {
+        "id": {{ bundle_product.id | json }},
+        "handle": {{ bundle_product.handle | json }},
+        "variant_id": {{ bundle_parent_variant.id | json }},
+        {% for allocation in bundle_parent_variant.selling_plan_allocations %}
+          {%- assign selling_plan_name = allocation.selling_plan.name -%}
+          {%- if selling_plan_name contains '1 Month' and selling_plan_name contains 'Bundle' -%}
+              "selling_plan_id": {{ allocation.selling_plan.id | json }}
+            {%- endif -%}
+        {%- endfor -%}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+</script>
+
+<script x-ref="productObject" type="application/json">
+  {
+    {%- for child_product in bundle_collection.products -%}
+        "{{- child_product.id -}}": {
+            "id": {{- child_product.id -}},
+            "title": "{{- child_product.title -}}",
+            "handle": "{{- child_product.handle -}}",
+            "variants": {
+                {% for child_variant in child_product.variants %}
+                    "{{- forloop.index0 -}}": {
+                        "title": "{{- child_variant.title -}}",
+                        "id": {{- child_variant.id -}},
+                        "price": {{- child_variant.price -}},
+                        {%- assign printed_allocation = false -%}
+                        {%- for allocation in child_variant.selling_plan_allocations -%}
+                          {%- assign selling_plan_name = allocation.selling_plan.name -%}
+                          {%- if selling_plan_name contains '1 Month' and selling_plan_name contains 'Bundle' -%}
+                            {%- if printed_allocation -%},{%- endif -%}
+                              "selling_plan_id": {{ allocation.selling_plan.id | json }},
+                              "selling_plan_name": {{ allocation.selling_plan.name | json }},
+                              "selling_plan_price": {{ allocation.price | json }},
+                              "selling_plan_savings": {{ child_product.variants[0].price | minus: allocation.price | json }}
+                            {%- assign printed_allocation = true -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                    }{%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+            }
+        }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  }
+</script>
+
+{% stylesheet %}
+  /* Variant picker container styles - unique to main variant picker */
+  .variant-picker {
+    width: 100%;
+  }
+
+  .variant-picker__form {
+    width: 100%;
+  }
+
+  .variant-picker[data-shopify-visual-preview] {
+    min-width: 300px;
+    padding-inline-start: max(4px, var(--padding-inline-start));
+  }
+
+  /* Dropdown variant option styles */
+  .variant-option__select-wrapper {
+    display: flex;
+    position: relative;
+    border: var(--style-border-width-inputs) solid var(--color-border);
+    border-radius: var(--style-border-radius-inputs);
+    align-items: center;
+    margin-top: var(--margin-2xs);
+    overflow: clip;
+  }
+
+  .variant-option__select-wrapper:has(.swatch) {
+    --variant-picker-swatch-width: 20px;
+    --variant-picker-swatch-height: 20px;
+  }
+
+  .variant-option__select-wrapper:hover {
+    border-color: var(--color-variant-hover-border);
+  }
+
+  .variant-option__select:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .variant-option__select {
+    padding-block: var(--padding-md);
+    padding-inline: var(--padding-lg) calc(var(--padding-lg) + var(--icon-size-2xs));
+    appearance: none;
+    border: 0;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .variant-option__select-wrapper .icon {
+    position: absolute;
+    right: var(--padding-md);
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--icon-size-2xs);
+    height: var(--icon-size-2xs);
+    pointer-events: none;
+  }
+
+  .variant-option__select--has-swatch {
+    padding-inline-start: calc((2 * var(--padding-sm)) + var(--variant-picker-swatch-width));
+  }
+
+  .variant-option__select-wrapper .swatch {
+    position: absolute;
+    top: 50%;
+    left: var(--padding-md);
+    transform: translateY(-50%);
+  }
+
+  /* Variant picker alignment modifiers */
+  .variant-picker--center,
+  .variant-picker--center .variant-option {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .variant-picker--right,
+  .variant-picker--right .variant-option {
+    text-align: right;
+    justify-content: right;
+  }
+{% endstylesheet %}

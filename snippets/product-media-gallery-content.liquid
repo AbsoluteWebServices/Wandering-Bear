@@ -322,6 +322,7 @@
   :root { --gallery-media-border-radius: {{ block_settings.media_radius }}px; }
 {% endstyle %}
 
+<div data-media-wrapper>
 {% if closest.product == blank %}
   <div
     class="
@@ -354,6 +355,7 @@
     data-presentation="{{ media_presentation }}"
     {{ block_shopify_attributes }}
   >
+  <div>
     {% capture slides %}
       {% for media in sorted_media %}
         {% capture children %}
@@ -635,9 +637,10 @@
         window.ProductModel.loadShopifyXR();
       </script>
     {%- endif -%}
+    </div>
   </media-gallery>
 {% endif %}
-
+</div>
 {% render 'product-media-gallery-content-styles' %}
 
 {% stylesheet %}

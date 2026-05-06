@@ -7,9 +7,10 @@
   assign path = entry | replace: '~/', '../' | replace: '@/', '../'
 %}
 {% if path == "/frontend/entrypoints/main.css" or path == "main.css" %}
-  {{ 'main-SnjhZ6T0.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
+  {{ 'main-B08epJM7.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% elsif path == "/frontend/entrypoints/main.js" or path == "main.js" %}
-  <script src="{{ 'main-DGppS0tD.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
-  <link rel="modulepreload" href="{{ 'navigation-BFu4OMN7.js' | asset_url | split: '?' | first }}" crossorigin="anonymous">
-  {{ 'main-DtoTxmOE.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
+  <script src="{{ 'main-DFEO-FTv.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
+  <link rel="modulepreload" href="{{ 'navigation-BIH-8bFS.js' | asset_url | split: '?' | first }}" crossorigin="anonymous">
+  <link rel="modulepreload" href="{{ 'swiper-core-C1JZ1M_I.js' | asset_url | split: '?' | first }}" crossorigin="anonymous">
+  {{ 'main-CR-RjnWN.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% endif %}

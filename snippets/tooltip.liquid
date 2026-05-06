@@ -2,7 +2,7 @@
 <div
   x-data="tooltip()"
   @click.outside="open = false"
-  class="relative inline-block"
+  class="relative inline-block {{ class }}"
 >
   <!-- trigger -->
   <div
@@ -10,7 +10,7 @@
     @mouseenter="showTooltip()"
     @mouseleave="hideTooltip()"
     @click="toggleTooltip()"
-    class="cursor-pointer p-2 -m-2"
+    class="cursor-pointer {% unless badge %} p-2 -m-2 {% endunless %}"
   >
     {% render 'icons', icon: 'info' %}
   </div>

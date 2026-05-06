@@ -1,0 +1,133 @@
+{% liquid
+    assign section_settings = section.settings
+    assign color_scheme = section_settings.color_scheme
+    assign background_color = color_scheme.background
+    assign text_color = color_scheme.text
+    assign title_type = section_settings.title_type
+    assign title = section_settings.title
+    assign title_alt = section_settings.title_alt
+    assign title_image = section_settings.title_image
+    assign title_image_mobile = section_settings.title_image_mobile
+    assign large_image = section_settings.large_image
+
+%}
+
+{% capture value_props %}
+    <div class="wb-flex flex-col gap-3">
+        {% for block in section.blocks %}
+            <div class="wb-flex gap-5 items-center">
+                {{ block.settings.icon | image_url: width: 100 | image_tag: class: '!w-[54px] !h-[54px]', alt: block.settings.text }}
+                <span class="body text-black-bear">{{ block.settings.text }}</span>
+            </div>
+        {% endfor %}
+    </div>
+{% endcapture %}
+
+<div class="wb-flex relative pt-0 pb-[54px] md:!py-11" style="background-color: {{ background_color }}">
+    <div class="grid !grid-cols-2 max-w-[1290px] w-full mx-auto">
+        <div class="wb-flex mx-auto relative z-[2] justify-center order-2 md:!order-1 pt-[30px] md:!pt-0 px-6 md:!px-0">
+            <div class="wb-flex flex-col justify-center items-start mx-auto max-w-[440px]">
+                {% if title_type == 'image' %}
+                    {% if title_image != blank %}
+                        <div class="max-w-[442px] w-full md:!mb-5">
+                            {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+                        </div>
+                    {% endif %}
+                {% elsif title_type == 'text' %}
+                    {% if title != blank %}
+                        <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
+                    {% endif %}
+                {% endif %}
+
+                {{ value_props }}
+            </div>
+            </div>
+            <div class="order-1 md:!order-2">
+                {% if large_image != blank %}
+                    {% render 'picture', source: large_image, class: 'w-full h-full', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+                {% endif %}
+            </div>
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "AW Image + Text Icons",
+        "settings": [
+            {
+                "type": "color_scheme",
+                "id": "color_scheme",
+                "label": "Color Scheme",
+                "default": "scheme-1"
+            },
+            {
+                "type": "select",
+                "id": "title_type",
+                "label": "Title Type",
+                "options": [
+                    {
+                        "value": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "value": "image",
+                        "label": "Image"
+                    }
+                ],
+                "default": "text"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "visible_if": "{{ section.settings.title_type == 'text' }}"
+            },
+            {
+                "type": "text",
+                "id": "title_alt",
+                "label": "Title Alt",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image",
+                "label": "Title Image",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image_mobile",
+                "label": "Title Image Mobile",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "large_image",
+                "label": "Image"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "icon_item",
+                "name": "Icon Item",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "icon",
+                        "label": "Icon"
+                    },
+                    {
+                        "type": "text",
+                        "id": "text",
+                        "label": "Text"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "AW Image + Text Icons"
+            }
+        ]
+    }
+{% endschema %}

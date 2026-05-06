@@ -4,6 +4,10 @@
   {{ closest.product | structured_data }}
 </script>
 
+{% liquid
+  assign bundle_collection = section.settings.bundle_collection
+%}
+
 {% capture media_gallery %}
   {%- content_for 'block',
     type: '_product-media-gallery',
@@ -373,6 +377,11 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "collection",
+      "id": "bundle_collection",
+      "label": "Bundle Collection"
+    },
     {
       "type": "header",
       "content": "t:content.layout"

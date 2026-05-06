@@ -24,6 +24,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@alpinejs/morph": "^3.15.11",
     "alpinejs": "^3.15.11",
     "swiper": "^12.1.3"
   }

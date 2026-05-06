@@ -12,22 +12,28 @@
     line-height: 100%;
     text-transform: uppercase;
     position: relative;
-}
 
-.btn.primary {
     span {
         position: relative;
         z-index: 2;
-        color: var(--color-brand-cream);
         transition: color 0.3s ease;
     }
 
     svg {
-        fill: var(--color-brand-espresso);
         position: absolute;
         inset: 0;
         z-index: 0;
         transition: fill 0.3s ease;
+    }
+}
+
+.btn.primary {
+    span {
+        color: var(--color-brand-cream);
+    }
+
+    svg {
+        fill: var(--color-brand-espresso);
     }
 
     &:hover {
@@ -93,5 +99,45 @@
         svg {
             fill: var(--color-brand-gold);
         }
+    }
+}
+
+.btn.custom {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: var(--button-border);
+    &:hover {
+        background-color: var(--button-hover-bg);
+        color: var(--button-hover-text);
+        border: var(--button-hover-border);
+    }
+    .btn-svg {
+        fill: var(--svg-fill);
+        &:hover {
+            fill: var(--svg-hover-fill);
+        }
+    }
+}
+
+[data-accordion-item] {
+    summary {
+        svg {
+            transition: transform 0.3s ease;
+        }
+
+        transition: margin-bottom 0.3s ease;
+        padding-bottom: 24px !important;
+    }
+
+}
+
+[data-accordion-item][open] {
+    summary {
+        svg {
+            transform: rotate(180deg);
+        }
+
+        padding-bottom: 0 !important;
+        margin-bottom: 24px;
     }
 }

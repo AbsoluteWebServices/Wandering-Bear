@@ -1,0 +1,21 @@
+{%- doc -%}
+    Renders a badge with the given text, svg class, and text class.
+    @param {string} text - The text of the badge
+    @param {string} svg_class - The class of the svg (optional)
+    @param {string} text_class - The class of the text (optional)
+    @param {string} button_class - The class of the button (optional)
+{%- enddoc -%}
+
+{%- if text -%}
+    {%- assign text = text -%}
+{%- else -%}
+    {%- assign text = 'Badge' -%}
+{%- endif -%}
+
+<div class="{{ button_class }} relative shadow-button flex justify-center items-center">
+    <span class="{{ text_class }} relative z-[2]">{{ text }}</span>
+
+    <svg xmlns="http://www.w3.org/2000/svg" class="{{ svg_class }} absolute inset-0"  width="97" height="20" viewBox="0 0 97 20" fill="none">
+        <path d="M0.897291 2.07969C0.135152 3.23975 0.104602 4.60688 0.0917387 5.91742C0.0611888 9.03622 0.0322468 12.1537 0.00169694 15.2725C-0.00634251 16.1201 -0.00473461 17.0023 0.463161 17.7624C1.59029 19.59 3.01327 19.9887 7.22273 19.9887C35.4573 19.9887 63.6934 20.0568 91.9295 19.8588C92.9313 19.8523 94.0311 19.8935 94.8527 19.4344C97.0796 18.1907 96.8368 15.9182 96.7693 14.2321C96.6439 11.0927 96.9413 8.51277 96.9413 5.37211C96.9413 3.17545 96.6342 2.29318 95.7242 1.42378C94.5584 0.308725 92.1305 0.356311 90.312 0.32673C78.3557 0.129957 66.393 0.0283544 54.432 0.00520455C42.3937 -0.0192314 30.3554 0.0425015 18.3172 0.187831C14.9213 0.228986 11.527 0.276572 8.13279 0.331875C5.56982 0.37303 2.31867 -0.0796785 0.897291 2.07969Z" fill="currentColor"/>
+    </svg>
+</div>

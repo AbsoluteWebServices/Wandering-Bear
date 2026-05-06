@@ -6,6 +6,12 @@
     @param {string} class - The class of the button (optional)
     @param {number} width - The width of the button (optional)
     @param {number} height - The height of the button (optional)
+    @param {string} button_bg - The background color of the button (optional)
+    @param {string} button_text - The text color of the button (optional)
+    @param {string} button_border - The border color of the button (optional)
+    @param {string} button_hover_bg - The background color of the button on hover (optional)
+    @param {string} button_hover_text - The text color of the button on hover (optional)
+    @param {string} button_hover_border - The border color of the button on hover (optional)
 {%- enddoc -%}
 
 {%- if width -%}
@@ -25,25 +31,38 @@
     --height: {{ height }}px;
 {% endcapture %}
 
+{% if style == 'custom' %}
+    {% capture custom_svg_styles %}
+        --svg-fill: {{ button_bg }};
+        --svg-hover-fill: {{ button_hover_bg }};
+    {% endcapture %}
+    {% capture custom_styles %}
+       --button-text: {{ button_text }};
+       --button-border: {{ button_border }};
+       --button-hover-text: {{ button_hover_text }};
+       --button-hover-border: {{ button_hover_border }};
+    {% endcapture %}
+{% endif %}
+
+
 {%- capture svg_filter -%}
     {%- if style == 'primary' -%}
         <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]"  width="280" height="47" viewBox="0 0 280 47" fill="none">
         <path d="M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z"/>
         </svg>
-        {% comment %} <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]" viewBox="0 0 213 51" fill="none">
-            <path d="M1.89748 4.47133C0.285803 6.96547 0.2212 9.90479 0.193998 12.7225C0.129395 19.4279 0.0681918 26.1305 0.00358848 32.8359C-0.0134124 34.6582 -0.0100122 36.555 0.979438 38.1892C3.36296 42.1185 6.37211 42.9756 15.2738 42.9756C74.9808 42.9756 134.691 43.1222 194.402 42.6964C196.52 42.6825 198.846 42.771 200.583 41.7839C205.292 39.11 204.779 34.224 204.636 30.599C204.371 23.8493 205 18.3025 205 11.55C205 6.82721 204.351 4.93034 202.426 3.06112C199.961 0.663758 194.827 0.766068 190.981 0.70247C165.697 0.279407 140.4 0.060962 115.106 0.0111898C89.6491 -0.0413475 64.1921 0.0913783 38.735 0.403837C31.5538 0.492321 24.376 0.59463 17.1983 0.713531C11.7784 0.802014 4.90324 -0.171309 1.89748 4.47133Z"/>
-        </svg> {% endcomment %}
     {%- elsif style == 'secondary' or style == 'secondary-gold' or style == 'secondary-cream' -%}
-        {% comment %} <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 213 51" fill="none" preserveAspectRatio="none">
-            <path d="M1.89748 4.47133C0.285803 6.96547 0.2212 9.90479 0.193998 12.7225C0.129395 19.4279 0.0681918 26.1305 0.00358848 32.8359C-0.0134124 34.6582 -0.0100122 36.555 0.979438 38.1892C3.36296 42.1185 6.37211 42.9756 15.2738 42.9756C74.9808 42.9756 134.691 43.1222 194.402 42.6964C196.52 42.6825 198.846 42.771 200.583 41.7839C205.292 39.11 204.779 34.224 204.636 30.599C204.371 23.8493 205 18.3025 205 11.55C205 6.82721 204.351 4.93034 202.426 3.06112C199.961 0.663758 194.827 0.766068 190.981 0.70247C165.697 0.279407 140.4 0.060962 115.106 0.0111898C89.6491 -0.0413475 64.1921 0.0913783 38.735 0.403837C31.5538 0.492321 24.376 0.59463 17.1983 0.71353C11.7784 0.802014 4.90324 -0.171309 1.89748 4.47133Z"/>
-        </svg> {% endcomment %}
         <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]"  width="280" height="47" viewBox="0 0 280 47" fill="none">
+            <path d="M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z"/>
+        </svg>
+    {%- elsif style == 'custom' -%}
+        <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]"  width="280" height="47" viewBox="0 0 280 47" fill="none" style="{{ custom_svg_styles }}">
             <path d="M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z"/>
         </svg>
     {%- endif -%}
 {%- endcapture -%}
 
-<a href="{{ link }}" class="btn {{ style }} {% if class %} {{ class }} {% endif %}">
+
+<a href="{{ link }}" class="btn {{ style }} {% if class %} {{ class }} {% endif %}" {% if custom_styles %} style="{{ custom_styles }}" {% endif %}>
     <span class="">{{ label }}</span>
     {{ svg_filter }}
 </a>

@@ -32,9 +32,7 @@
   -%}
   {% capture menu_accordion_children %}
     <details
-    {% if menu.title == 'Shop' %}
       open
-    {% endif %}
       class="
         menu__details
         spacing-style
@@ -90,6 +88,7 @@
     </details>
   {% endcapture %}
   {% render 'accordion-custom-component',
+    class: block_settings.class,
     children: menu_accordion_children,
     menu_title: menu.title,
     class: menu_class,
@@ -162,6 +161,11 @@
   "name": "t:names.menu",
   "tag": null,
   "settings": [
+    {
+      "type": "text",
+      "id": "class",
+      "label": "Class"
+    },
     {
       "type": "link_list",
       "id": "menu",

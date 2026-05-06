@@ -1,0 +1,79 @@
+{% liquid
+    assign section_settings = section.settings
+    assign color_scheme = section_settings.color_scheme
+    assign background_color = color_scheme.settings.background
+    assign text_color = color_scheme.settings.foreground
+    assign image = section_settings.image
+    assign badge = section_settings.badge
+    assign subtitle = section_settings.subtitle
+    assign title = section_settings.title
+    assign description = section_settings.description
+%}
+
+<div class="wb-flex flex-col lg:!flex-row relative" style="background-color: {{ background_color }}">
+    {% if image != blank %}
+        <div class="wb-flex w-full lg:!w-1/2 relative items-center justify-center">
+            <div class="w-full h-full wb-flex items-stretch justify-stretch">
+              {% render 'picture', source: image, class: '!w-[100vw] lg:!w-auto !h-auto object-cover !min-h-full !min-w-full ', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+            </div>
+            {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -bottom-10 lg:!bottom-auto lg:-right-10 !w-[188px] !h-auto', loading: 'eager', preload: 'eager' }}
+        </div>
+    {% endif %}
+    <div class="wb-flex justify-start items-center w-full lg:!w-1/2" style="color: {{ text_color }}">
+        <div class="wb-flex flex-col !gap-1 max-w-full w-1/2 py-[43px] px-[30px] md:!px-[77px] w-full text-center lg:!text-left">
+        {% if subtitle != blank %}
+            <span class="h3" style="color: {{ text_color }}">{{ subtitle }}</span>
+        {% endif %}
+        {% if title != blank %}
+            <span class="h2" style="color: {{ text_color }}">{{ title }}</span>
+        {% endif %}
+        {% if description != blank %}
+            <span class="body" style="color: {{ text_color }}">{{ description }}</span>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "AW Guarantee Banner",
+        "settings": [
+            {
+                "type": "color_scheme",
+                "id": "color_scheme",
+                "label": "Color Scheme",
+                "default": "scheme-1"
+            },
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "badge",
+                "label": "Badge"
+            },
+            {
+                "type": "text",
+                "id": "subtitle",
+                "label": "Subtitle"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title"
+            },
+            {
+                "type": "text",
+                "id": "description",
+                "label": "Description"
+            }
+        ],
+        "presets": [
+            {
+                "name": "AW Guarantee Banner"
+            }
+        ]
+    }
+{% endschema %}

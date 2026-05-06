@@ -1,0 +1,35 @@
+rte-formatter.product-description {
+    font-family: var(--font-kurdis) !important;
+    font-size: 14px;
+    line-height: 130%;
+    font-weight: 600;
+    color: var(--color-bear-black) !important;
+    margin-bottom: 16px !important;
+
+    ul {
+        list-style-type: none !important;
+        padding-inline-start: 1rem !important;
+
+        li:not(:last-child) {
+            margin-bottom: 4px;
+        }
+
+        li {
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            position: absolute;
+            left: -1em;
+            top: 0em; /* adjust this to align */
+            font-size: 1rem;
+        }
+    }
+
+}
+
+input[name="purchase_option"]:checked + label {
+    background-color: var(--color-foam);
+    border: 1px solid var(--color-espresso);
+}

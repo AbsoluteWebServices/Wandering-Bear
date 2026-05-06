@@ -1,0 +1,136 @@
+{% liquid
+    assign section_settings = section.settings
+    assign color_scheme = section_settings.color_scheme
+    assign background_color = section_settings.background
+    assign text_color = color_scheme.text
+    assign title_type = section_settings.title_type
+    assign title = section_settings.title
+    assign title_alt = section_settings.title_alt
+    assign title_image = section_settings.title_image
+    assign title_image_mobile = section_settings.title_image_mobile
+    assign background_image = section_settings.background_image
+    assign faqs_metaobject = section_settings.faqs_metaobject
+    assign button_label = section_settings.button_label
+    assign button_link = section_settings.button_link
+%}
+
+
+<div class="wb-flex justify-center relative" style="background: {{ background_color }};">
+    <div class="max-w-[640px] w-full mx-auto wb-flex flex-col px-4 py-9">
+    <div class="wb-flex flex-col gap-4 max-w-[601px] w-full mx-auto">
+        <div class="wb-flex flex-col justify-center items-start mx-auto w-full">
+            {% if title_type == 'image' %}
+                {% if title_image != blank %}
+                    <div class="max-w-[442px] w-full md:!mb-5 mx-auto">
+                        {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+                    </div>
+                {% endif %}
+            {% elsif title_type == 'text' %}
+                {% if title != blank %}
+                    <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
+                {% endif %}
+            {% endif %}
+            {% if faqs_metaobject != blank %}
+                {% assign metaobject = faqs_metaobject.entries %}
+                <div class="wb-flex flex-col gap-4 w-full">
+                    <div x-data="accordion">
+                        {% for faq in metaobject.value %}
+                            {% assign title = faq.question %}
+                            {% assign content = faq.answer | metafield_tag %}
+                            {% assign open = '' %}
+                            {% assign class = 'border-b border-bear-black w-full text-black-bear' %}
+                            {% assign title_class = 'text-bear-black text-[20px] font-bold font-gothic_condensed' %}
+                            {% assign content_class = 'body text-bear-black font-kurdis pb-6' %}
+                            {% if forloop.first %}
+                                {% assign open = 'open' %}
+                                {% assign class = class | append: ' border-t' %}
+                            {% endif %}
+                            {% render 'accordion', title: title, content: content, open: open, class: class, title_class: title_class, content_class: content_class %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "AW FAQs",
+        "settings": [
+            {
+                "type": "color_scheme",
+                "id": "color_scheme",
+                "label": "Color Scheme",
+                "default": "scheme-1"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background Color"
+            },
+            {
+                "type": "select",
+                "id": "title_type",
+                "label": "Title Type",
+                "options": [
+                    {
+                        "value": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "value": "image",
+                        "label": "Image"
+                    }
+                ],
+                "default": "text"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "visible_if": "{{ section.settings.title_type == 'text' }}"
+            },
+            {
+                "type": "text",
+                "id": "title_alt",
+                "label": "Title Alt",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image",
+                "label": "Title Image",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image_mobile",
+                "label": "Title Image Mobile",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "metaobject",
+                "id": "faqs_metaobject",
+                "label": "FAQs Metaobject",
+                "metaobject_type": "faq_groups"
+            },
+            {
+                "type": "text",
+                "id": "button_label",
+                "label": "Button Label"
+            },
+            {
+                "type": "url",
+                "id": "button_link",
+                "label": "Button Link"
+            }
+        ],
+        "presets": [
+            {
+                "name": "AW FAQs"
+            }
+        ]
+    }
+{% endschema %}

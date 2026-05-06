@@ -1,0 +1,47 @@
+
+
+{% if closest.product == blank %}
+    {% assign text = 'placeholders.product_title' | t %}
+    {% assign product_title = '<p role="heading" aria-level="3">' | append: text | append: '</p>' %}
+    {% render 'text', fallback_text: product_title, block: block %}
+  {% else %}
+    {% assign product_title = '<p role="heading" aria-level="3">' | append: closest.product.title | append: '</p>' %}
+    <a
+      class="contents user-select-text !flex !whitespace-nowrap !items-end !gap-2 block !mb-4 "
+      ref="productTitleLink"
+      href="{{ closest.product.selected_or_first_available_variant.url }}"
+    >
+      <span class="font-gothic_condensed text-[35px] lg:!text-[45px] font-extrabold leading-[100%] uppercase">{{ block.settings.product_title }}</span>
+      <span class="font-kurdis-semi-condensed text-lg font-semibold leading-[120%] uppercase">{{ block.settings.product_title_small }}</span>
+    </a>
+  {% endif %}
+  
+  {% schema %}
+  {
+    "name": "Product Title Bundle",
+    "tag": null,
+    "settings": [
+       {
+        "type": "text",
+        "id": "product_title",
+        "label": "Product Title",
+        "default": "Product Title",
+        "info": "Large text for the product title"
+       },
+       {
+        "type": "text",
+        "id": "product_title_small",
+        "label": "Product Title Small",
+        "default": "Product Title Small",
+        "info": "Small text for the product title"
+       }
+    ],
+    "presets": [
+      {
+        "name": "Product Title Bundle",
+        "category": "t:categories.product"
+      }
+    ]
+  }
+  {% endschema %}
+  

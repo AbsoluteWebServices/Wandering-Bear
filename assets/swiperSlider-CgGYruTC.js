@@ -1,1 +1,0 @@
-import{r as e,t}from"./navigation-BFu4OMN7.js";var n=n=>{n.data(`swiperSlider`,()=>({swiper:null,dropdownOpen:!1,init(){this.swiper=new e(this.$el.querySelector(`.swiper`),{modules:[t],slidesPerView:5.5,navigation:{nextEl:`.swiper-button-next`,prevEl:`.swiper-button-prev`}})}}))};export{n as default};

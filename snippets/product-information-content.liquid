@@ -86,13 +86,17 @@
     {% assign product_href = '#ProductInformation-' | append: section_id %}
     {% render 'skip-to-content-link', href: product_href, text: 'accessibility.skip_to_product_info' %}
   {% endif %}
+  <div class="max-w-[1050px] w-full mx-auto">
+    {% render 'breadcrumbs', product: product %}
+  </div>
   <div
-    class="{{ product_grid_class }}"
+    class="{{ product_grid_class }} !max-w-[1050px] mx-auto"
     data-product-grid-content
   >
     {% assign render_order_array = render_order | split: ',' %}
     {% capture media %}
       <div
+        x-data="mediaGalleryBundle"
         class="product-information__media"
         data-testid="product-information-media"
       >
@@ -141,7 +145,7 @@
   }
 
   /* Mobile styles */
-  @media screen and (max-width: 749px) {
+  @media screen and (max-width: 1199px) {
     .product-information__media {
       grid-column: 1 / -1;
     }
@@ -171,13 +175,13 @@
       &.product-information--media-left {
         grid-template-columns: 1fr min(50vw, var(--sidebar-width));
 
-        .product-information__media {
+        /* .product-information__media {
           padding-right: calc(var(--gap, 0) / 2);
-        }
+        } */
 
-        .product-details {
+        /* .product-details {
           padding-left: calc(var(--gap, 0) / 2);
-        }
+        } */
 
         &:has(.media-gallery--extend) {
           grid-column: 1 / 3;
@@ -288,7 +292,8 @@
         .product-information__grid--half,
         .product-information--media-none
       ).product-information--media-left {
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 580px 422px;
+      gap: 51px;
     }
 
     .product-information__grid:not(
