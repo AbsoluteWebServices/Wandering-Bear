@@ -9,10 +9,6 @@ export default (Alpine: AlpineType) => {
         this.accordions = [
             ...this.el.querySelectorAll("accordion-custom")
           ] as HTMLElement[]
-    
-          console.log("accordions", this.accordions)
-
-        console.log('accordions', this.accordions)
   
         window.addEventListener("resize", () => {
           this.setAccordions()
