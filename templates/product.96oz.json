@@ -472,7 +472,7 @@
               "type": "subscription-value-prop",
               "name": "t:names.heading",
               "settings": {
-                "block_class": "!text-2xl",
+                "block_class": "review-heading",
                 "text": "<h2>WE WANT TO IMPRESS YOU</h2>",
                 "width": "fit-content",
                 "max_width": "normal",
