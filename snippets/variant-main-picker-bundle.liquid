@@ -235,7 +235,7 @@
     <fieldset>
         <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden">
         <label
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full p-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-3 text-bear-black"
+        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-3 text-bear-black"
         :class="purchaseOption === 'autoship' ? 'border-kraft' : 'border-[#CFBDB1]'"
         for="autoship">
           <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center bg-kraft border border-kraft"
@@ -255,21 +255,22 @@
             <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.original !== totalPrice.autoship" x-text="totalPrice.original"></span>
             <span x-text="totalPrice.autoship"></span>
         </div>
+        <div x-show="purchaseOption === 'autoship'"
+        x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform scale-95"
+        x-transition:enter-end="opacity-100 transform scale-100"
+    
+        class="subscription-value-props mt-4 col-start-1 col-end-4 row-start-3">
+            {{ section.settings.subscription_value_props }}
+        </div>
         </label>
     </fieldset>
-    <div x-show="purchaseOption === 'autoship'"
-    x-cloak
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 transform scale-95"
-    x-transition:enter-end="opacity-100 transform scale-100"
-
-    class="subscription-value-props mt-4">
-        {{ section.settings.subscription_value_props }}
-    </div>
+   
     <fieldset>
        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden">
         <label 
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full p-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-4 text-bear-black"
+        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-4 text-bear-black"
         :class="purchaseOption === 'one_time' ? 'border-kraft' : 'border-[#CFBDB1]'"
         for="one_time">
         <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center bg-kraft  bg-transparent border border-[#CFBDB1]"
