@@ -1,0 +1,1 @@
+var e=e=>{e.data(`modal`,e=>({modal:e,el:null,init(){this.el=this.$el},openModal(){this.modal=!0,console.log(`openModal`)},closeModal(){this.modal=!1}}))};export{e as default};

@@ -124,6 +124,7 @@
     </script>
 
     <main
+      x-data
       id="MainContent"
       class="content-for-layout"
       role="main"
@@ -133,6 +134,8 @@
     >
       {{ content_for_layout }}
     </main>
+    {% section 'aw-membership-modal' %}
+
 
     <footer class="z-1 relative">
       {% sections 'footer-group' %}

@@ -2381,6 +2381,11 @@
         "id": "member_tooltip",
         "label": "Member tooltip",
         "default": "<p>This is a tooltip for members</p>"
+      },
+      {
+        "type": "product",
+        "id": "elite_product",
+        "label": "Elite product"
       }
     ]
   }

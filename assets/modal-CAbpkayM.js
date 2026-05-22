@@ -1,0 +1,1 @@
+var e=e=>{e.data(`modal`,()=>({modal:null,init(){window.addEventListener(`openModal`,e=>{let t=e;this.openModal(t.detail.modal)})},openModal(e){this.modal=e,console.log(`openModal`,e)},closeModal(){this.modal=!1}}))};export{e as default};

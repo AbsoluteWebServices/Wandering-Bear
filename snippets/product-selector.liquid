@@ -38,7 +38,7 @@ class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer fle
        <div class="min-w-[100px]">
          {% if member_only %}
            <div class="w-full flex justify-end">
-             <div class="group !h-[30px] !w-[80px] flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button">
+             <div @click.prevent.stop="$dispatch('modal-open', { modal: 'membership-info' })" class="group !h-[30px] !w-[80px] flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button">
                  <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold whitespace-nowrap">{% render 'icons', icon: 'unlock' %} Unlock</span>
                  <div class="absolute top-0 left-0 w-full h-full">
                    <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">

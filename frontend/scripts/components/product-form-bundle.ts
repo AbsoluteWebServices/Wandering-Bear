@@ -14,6 +14,7 @@ export default (Alpine: AlpineType) => {
         purchaseOption: 'autoship',
         sellingPlanId: null,
         bundleParentProducts: {},
+        modal: null,
         
         get totalPrice() {
           let totalOriginalPrice = 0;
@@ -258,6 +259,7 @@ export default (Alpine: AlpineType) => {
                   this.purchaseOption = value === 'sub' ? 'autoship' : 'one_time';
               }
             })
+
         },
 
         onPurchaseOptionChange() {

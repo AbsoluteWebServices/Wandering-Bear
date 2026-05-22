@@ -16,6 +16,15 @@ rte-formatter.product-description {
 
         li {
             position: relative;
+            span {
+
+                font-family: var(--font-kurdis) !important;
+                font-size: 14px !important;
+                line-height: 130% !important;
+                font-weight: 600 !important;
+                color: var(--color-bear-black) !important;
+
+            }
         }
 
         li::before {
