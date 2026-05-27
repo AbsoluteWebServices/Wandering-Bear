@@ -22,7 +22,6 @@ export default (Alpine: AlpineType) => {
           let totalOneTimePrice = 0;
 
           Object.values(this.assignedBundleProducts).forEach((product) => {
-            console.log('product', product);
             totalOriginalPrice += product.originalPrice * product.quantity;
             totalAutoshipPrice += product.sellingPlanPrice * product.quantity;
             totalOneTimePrice += product.otpPrice * product.quantity;
@@ -143,13 +142,38 @@ export default (Alpine: AlpineType) => {
           tierEls.forEach((el, index) => {
             const priceEl = el.querySelector('[data-tier-price]')
             const savingsEl = el.querySelector('[data-tier-savings]')
+            const multiUnitQuantity = this.selectedProduct?.variants[index].multi_unit_quantity;
+            const discountType = this.selectedProduct?.variants[index].discount_type;
+            const compareAtPrice = this.selectedProduct?.variants[0].price
 
-            const price = this.purchaseOption === 'autoship' ? 
-            this.selectedProduct?.variants[index].selling_plan_price : this.selectedProduct?.variants[index].price
+            let autoshipPrice = 0;
+            let otpPrice = 0;
+            let autoshipSavings = 0;
+            let otpSavings = 0;
 
-            const savings = this.purchaseOption === 'autoship' ? this.selectedProduct?.variants[index].selling_plan_savings : this.selectedProduct?.variants[0].price - this.selectedProduct?.variants[index].price
+            if (multiUnitQuantity) {
+              autoshipPrice = this.selectedProduct?.variants[index].selling_plan_price / multiUnitQuantity;
+              otpPrice = this.selectedProduct?.variants[index].price / multiUnitQuantity;
+            } else {
+              autoshipPrice = this.selectedProduct?.variants[index].selling_plan_price;
+              otpPrice = this.selectedProduct?.variants[index].price;
+            }
 
-            savingsEl.textContent = savings > 0 ? this._formatPrice(savings) + ' off' : ' '
+            const price = this.purchaseOption === 'autoship' ? autoshipPrice : otpPrice;
+
+
+            if (discountType === 'Percentage') {
+              autoshipSavings = this.selectedProduct?.variants[index].price / compareAtPrice
+              otpSavings = this.selectedProduct?.variants[index].price / compareAtPrice
+            } else {
+              autoshipSavings = compareAtPrice - this.selectedProduct?.variants[index].price
+              otpSavings = compareAtPrice - this.selectedProduct?.variants[index].price
+            }
+
+            const savings = this.purchaseOption === 'autoship' ? autoshipSavings : otpSavings;
+            const savingsFormatted = discountType === 'Percentage' ? Math.round(savings) + '% off' : this._formatPrice(savings) + ' off';
+
+            savingsEl.textContent = savings > 0 ? savingsFormatted : ' '
             priceEl.textContent = this._formatPrice(price)
           })
         },

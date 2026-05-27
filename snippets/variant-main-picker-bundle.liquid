@@ -14,6 +14,12 @@
    assign bundle_collection = section.settings.bundle_collection
    assign first_product = bundle_collection.products.first
    assign product_object = product.metafields.custom.product_group
+
+   if first_product.selected_or_first_available_variant.compare_at_price > first_product.selected_or_first_available_variant.price
+    assign compare_at_price = first_product.selected_or_first_available_variant.compare_at_price
+   else
+    assign compare_at_price = first_product.selected_or_first_available_variant.price
+   endif
    
    assign bundle_products = product_object.value.bundle_products.value
    assign bundle_products_count = bundle_products.size
@@ -22,10 +28,14 @@
    assign singular_label = product_object.value.singular_label
    assign plural_label = product_object.value.plural_label
    assign selling_plan_keywords = product_object.value.selling_plan_keywords.value
+   assign discount_type = product_object.value.discount_type
+   assign col_width = 63
 
    if product_object.value.multi_unit_product_quantity != blank and product_object.value.multi_unit_product_quantity > 1
     assign multi_unit_product = true
     assign multi_unit_quantity = product_object.value.multi_unit_product_quantity
+    assign multi_unit_product_unit = product_object.value.multi_unit_product_unit
+    assign col_width = 121
    endif
 
    ## Prices ##
@@ -71,6 +81,16 @@
   endfor
 %}
 
+{% capture col_width_styles %}
+  --col-width: {{ col_width }}px;
+{% endcapture %}
+
+{% style %}
+  .col-width {
+    width: var(--col-width);
+  }
+{% endstyle %}
+
 <div class="flex flex-col gap-2.5">
     <span class="text-base font-bold font-gothic_condensed uppercase text-gold">Build Your Bundle</span>
 
@@ -89,7 +109,7 @@
             {% else %}
               {% assign tier_label = plural_label %}
             {% endif %}
-            <div class="flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold w-[63px] text-bear-black">
+            <div class="col-width flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold" style="{{ col_width_styles }} text-bear-black">
                 <span>{{ tier }} {{ tier_label }}</span>
             </div>
         {% endfor %}
@@ -97,7 +117,7 @@
       <div>
         <div class="flex items-center justify-between relative">
           {% for i in (1..bundle_products_count) %}
-              <div class="flex items-center justify-center w-[63px]">
+              <div class="col-width flex items-center justify-center" style="{{ col_width_styles }}">
                 <div class="flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC]"
                 :class="bundleSize >= {{ i }} ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
                 >
@@ -118,7 +138,7 @@
       </div>
       <div class="flex items-center justify-between text-[12px] w-full">
         {% for i in (1..bundle_products_count) %}
-          <div data-tier="{{ i }}" class="wb-flex gap-1 flex-col items-center justify-center w-[63px]">
+          <div data-tier="{{ i }}" class="col-width wb-flex gap-1 flex-col items-center justify-center" style="{{ col_width_styles }}">
             <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
               {%- case i -%}
                 {%- when 1 -%}
@@ -128,14 +148,28 @@
                 {%- when 3 -%}
                   {%- assign autoship_price = tier_three_unit_price_autoship -%}
                {%- endcase -%}
+               {% if multi_unit_product %}
+                {% assign calculated_qty = multi_unit_quantity | times: i %}
+                {%- assign autoship_price_qty = autoship_price | divided_by: multi_unit_quantity -%}
+                <span>{{ calculated_qty }} {{ multi_unit_product_unit }}</span>
+                <span>·</span>
+              {% else %}
+                {% assign autoship_price_qty = autoship_price %}
+              {% endif %}
+              {% if discount_type == 'Percentage' %}
+                {% assign difference = compare_at_price | minus: autoship_price %}
+                {% assign savings = difference | times: 100.0 | divided_by: compare_at_price | round | append: '% off' %}
+              {% else %}
+                {% assign savings = compare_at_price | minus: autoship_price_qty | money %}
+              {% endif %}
                <span data-tier-price>
-                 {{- autoship_price | money -}}
+                 {{- autoship_price_qty | money -}}
                 </span>
                 <span>/ea</span>
               </div>
               <div class="text-kraft font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap">
               <span data-tier-savings>
-                {{- i | times: 5 | prepend: '$' | append: ' off' -}}
+                {{- savings -}}
               </span>
               </div>
             </div>
@@ -275,6 +309,29 @@ class="group relative flex items-center justify-center shadow-button cursor-poin
             "variants": {
                 {% for child_variant in child_product.variants %}
                     "{{- forloop.index0 -}}": {
+                        {% liquid
+                          assign product_object = child_product.metafields.custom.product_group
+
+                          if product_object.value.discount_type == 'Percentage'
+                            assign discount_type = 'Percentage'
+                          else
+                            assign discount_type = 'Fixed'
+                          endif
+
+                          if child_variant.compare_at_price > child_variant.price
+                            assign compare_at_price = child_variant.compare_at_price
+                          else
+                            assign compare_at_price = child_variant.price
+                          endif
+                        %}
+
+                        {% if child_product.metafields.custom.product_group.value.multi_unit_product_quantity != blank and child_product.metafields.custom.product_group.value.multi_unit_product_quantity > 0 %}
+                          "multi_unit_product": true,
+                          "multi_unit_product_unit": "{{- child_product.metafields.custom.product_group.value.multi_unit_product_unit -}}",
+                          "multi_unit_quantity": {{- child_product.metafields.custom.product_group.value.multi_unit_product_quantity -}},
+                        {% endif %}
+                        "compare_at_price": {{- compare_at_price -}},
+                        "discount_type": "{{- discount_type -}}",
                         "title": "{{- child_variant.title -}}",
                         "id": {{- child_variant.id -}},
                         "price": {{- child_variant.price -}},

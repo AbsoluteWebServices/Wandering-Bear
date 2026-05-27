@@ -12,7 +12,7 @@
     assign elite_product = settings.elite_product
     assign elite_selling_plan = elite_product.selected_or_first_available_variant.selling_plan_allocations.first.selling_plan.id
 
-    assign is_elite = true
+    assign is_elite = false
     if customer.tags contains 'inveterate-tier#dc38b982'
         assign is_elite = true
     endif
