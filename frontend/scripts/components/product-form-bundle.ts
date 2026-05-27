@@ -162,9 +162,9 @@ export default (Alpine: AlpineType) => {
             const price = this.purchaseOption === 'autoship' ? autoshipPrice : otpPrice;
 
 
-            if (discountType === 'Percentage') {
-              autoshipSavings = this.selectedProduct?.variants[index].price / compareAtPrice
-              otpSavings = this.selectedProduct?.variants[index].price / compareAtPrice
+            if (discountType === 'Percentage') {            
+              autoshipSavings = 100 - (this.selectedProduct?.variants[index].selling_plan_price / compareAtPrice) * 100;
+              otpSavings = 100 - (this.selectedProduct?.variants[index].price / compareAtPrice) * 100;
             } else {
               autoshipSavings = compareAtPrice - this.selectedProduct?.variants[index].price
               otpSavings = compareAtPrice - this.selectedProduct?.variants[index].price
