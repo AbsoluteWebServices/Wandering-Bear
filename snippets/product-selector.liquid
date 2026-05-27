@@ -3,6 +3,8 @@
   if child_product.id == product.id
     assign is_selected = true
   endif
+
+  assign bundle_add_to_cart_text = section.settings.bundle_add_to_cart_text
 %}
 
 <div @click="selectProduct({{ child_product.id }})"
@@ -50,7 +52,7 @@ class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer fle
          {% else %}
            <div x-show="!isInBundle({{ child_product.id }})" class="w-full flex justify-end">
              <div class="group !h-10 lg:!h-[30px] !w-[80px] flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button" @click.prevent.stop="addToBundle({{ child_product.id }})">
-                 <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold">+ Add</span>
+                 <span class="relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">+ {{ bundle_add_to_cart_text }}</span>
                  <div class="absolute top-0 left-0 w-full h-full">
                    <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
                      <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
