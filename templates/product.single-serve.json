@@ -129,6 +129,7 @@
       },
       "settings": {
         "bundle_collection": "grouped-cold-brew-latte-8oz-cans",
+        "bundle_add_to_cart_text": "Add Case",
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
         "equal_columns": false,
