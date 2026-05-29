@@ -22,7 +22,7 @@
     ]
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.CXF7SdeO.css",
+    "file": "wb-main.EQYQyipd.css",
     "name": "main",
     "names": [
       "main.css"
@@ -31,7 +31,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.CMNlI6WK.js",
+    "file": "wb-main.BDycJh2_.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -56,7 +56,7 @@
       "frontend/scripts/components/product-form.ts"
     ],
     "css": [
-      "wb-main.alozt08s.css"
+      "wb-main.DwcSdx3f.css"
     ]
   },
   "frontend/scripts/components/accordion.ts": {
