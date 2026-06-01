@@ -2,30 +2,82 @@
     assign section_settings = section.settings
     assign title = section_settings.title
     assign image = section_settings.image
-%}
+    assign icon = section_settings.icon
 
-<div class="w-full">
-    <div class="wb-flex justify-between">
-        <div class="flex flex-col gap-4">
-        <h2 class="text-2xl font-bold">{{ section.settings.title }}</h2>
-        <div x-data="howToSteps()">
-            {% for block in section.blocks %}
-                {% if block.type == 'how-to-category' %}
-                    <div data-how-to-category data-title="{{ block.settings.title }}">
-                        {{ block.settings.title }}
-                        {% for step in block.blocks %}
-                            {% if step.type == 'how-to-step' %}
-                                <div data-how-to-step data-title="{{ step.settings.title }}">
-                                    {{ step.settings.title }}
+    for block in section.blocks
+        if block.type == 'how-to-mix' and forloop.first
+            assign metaobject = block.settings.metaobject
+            assign title = block.settings.title
+            assign title_handleize = block.settings.title | handleize
+            assign active_title = title_handleize
+        endif
+    endfor
+%}
+{% style %}
+    [data-step-title].active {
+        background: var(--color-beige);
+    }
+{% endstyle %}
+
+{% capture menu %}
+    <div class="wb-flex gap-4 bg-foam border-2 border-espresso rounded-[30px] p-1.5 w-fit mb-9">
+        {% for block in section.blocks %}
+            {% if block.type == 'how-to-mix' %}
+                {% liquid 
+                    assign metaobject = block.settings.metaobject
+                    assign title = block.settings.title
+                    assign title_handleize = block.settings.title | handleize
+                %}    
+                <div @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} px-4 py-3 rounded-[25px] cursor-pointer font-gothic_condensed font-bold text-base leading-[22px] tracking-[1%] uppercase"
+                :class="{ 'active': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
+                    <span>{{ title }}</span>
+                </div>
+                
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endcapture %}
+
+<div x-data="howToMix('{{ active_title }}')" class="w-full max-w-[1099px] mx-auto lg:pt-[64px] pb-5">
+    <div class="wb-flex flex-col-reverse lg:flex-row justify-between">
+        <div class="wb-flex flex-col gap-4 mt-6 px-6">
+            <div class="wb-flex items-center justify-center gap-4">
+                <h2 class="text-2xl font-bold text-center uppercase font-gothic_condensed font-bold text-[55px] leading-[61px] tracking-[1%] whitespace-nowrap">{{ section.settings.title }}</h2>
+                {{ icon | image_url: width: 60 | image_tag: class: '!h-11 !w-fit' }}
+            </div>
+            <div class="wb-flex flex-col items-center">
+                {{ menu }}
+                {% for block in section.blocks %}
+                    {% if block.type == 'how-to-mix' %}
+                        {% liquid 
+                            assign metaobject = block.settings.metaobject
+                            assign title_handleize = block.settings.title | handleize
+                        %}
+                        <div x-cloak x-show="activeTitle === '{{ title_handleize }}'" class="wb-flex flex-col gap-5">
+                            {% for step in metaobject.steps.value %}
+                                {% liquid
+                                    assign index = forloop.index
+                                    assign description = step.content | metafield_tag
+                                    assign step_title = 'Step ' | append: index
+                                    assign icon = step.icon | image_url: width: 100 | image_tag
+                                    assign title = step.title | handleize
+                                %}
+                                <div class="wb-flex gap-4 items-center">
+                                    <div class="w-[54px] h-[54px]">
+                                        {{ icon }}
+                                    </div>
+                                    <div class="wb-flex flex-col gap-1">
+                                        <h3 class="body font-bold text-lg font-bold text-bear-black">{{ step_title }}</h3>
+                                        <div class="body text-bear-black">{{ description }}</div>
+                                    </div>
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-        </div>
-        <div class="max-w-[500px]">
+        <div class="max-w-[500px] w-full h-full mx-auto lg:mx-0">
             {{ image | image_url: width: 1000 | image_tag }}
         </div>
     </div>
@@ -45,40 +97,30 @@
             "type": "image_picker",
             "id": "image",
             "label": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "Icon"
         }
       ],
       "blocks": [
         {
-          "type": "how-to-category",
-          "name": "How To Category",
+          "type": "how-to-mix",
+          "name": "How To Mix",
           "settings": [
             {
               "type": "text",
               "id": "title",
               "label": "Title"
+            },
+            {
+               "type": "metaobject",
+               "id": "metaobject",
+               "label": "Instructions",
+               "metaobject_type": "how_to_mix"
             }
           ]
-        },
-        {
-            "type": "how-to-step",
-            "name": "How To Step",
-            "settings": [
-              {
-                "type": "text",
-                "id": "title",
-                "label": "Title"
-              },
-              {
-                "type": "text",
-                "id": "description",
-                "label": "Description"
-              },
-              {
-                "type": "image_picker",
-                "id": "image",
-                "label": "Image"
-              }
-            ]
         }
       ],
       "presets": [

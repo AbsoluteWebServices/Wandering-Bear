@@ -49,14 +49,14 @@ export default (Alpine: AlpineType) => {
       const bottle = this.$refs.bottle as HTMLElement | undefined
       if (!bottle) return
 
-      this.applyArc(
-        Array.from(root.querySelectorAll<HTMLElement>('[data-col="left"] [data-prop]')),
-        -1,
-      )
-      this.applyArc(
-        Array.from(root.querySelectorAll<HTMLElement>('[data-col="right"] [data-prop]')),
-        1,
-      )
+      // this.applyArc(
+      //   Array.from(root.querySelectorAll<HTMLElement>('[data-col="left"] [data-prop]')),
+      //   -1,
+      // )
+      // this.applyArc(
+      //   Array.from(root.querySelectorAll<HTMLElement>('[data-col="right"] [data-prop]')),
+      //   1,
+      // )
 
       const s = root.getBoundingClientRect()
       const b = bottle.getBoundingClientRect()

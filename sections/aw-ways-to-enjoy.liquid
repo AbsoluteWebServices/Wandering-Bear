@@ -1,0 +1,170 @@
+{% liquid
+    assign section_settings = section.settings
+    assign title = section_settings.title
+    assign background_image = section_settings.background_image
+
+    for block in section.blocks
+        if block.type == 'recipe' and forloop.first
+            assign metaobject = block.settings.metaobject
+            assign title = block.settings.title
+            assign title_handleize = block.settings.title | handleize
+            assign active_title = title_handleize
+        endif
+    endfor
+%}
+{% style %}
+    [data-step-title].active {
+        background: var(--color-beige);
+    }
+{% endstyle %}
+
+{% capture menu %}
+    <div class="wb-flex gap-1 lg:gap-4">
+        {% for block in section.blocks %}
+            {% if block.type == 'recipe' %}
+                {% liquid 
+                    assign metaobject = block.settings.metaobject
+                    assign title = block.settings.title
+                    assign title_handleize = block.settings.title | handleize
+                %}
+                <div class="wb-flex gap-4 bg-foam border-2 border-espresso rounded-[30px] p-1.5 w-fit mb-5">
+                    <div @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} px-1 sm:!px-4 py-3 rounded-[25px] cursor-pointer rounded-[30px] font-gothic_condensed font-bold text-base uppercase leading-[22px] tracking-[1%] whitespace-nowrap"
+                    :class="{ 'active': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
+                        <span>{{ title }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endcapture %}
+
+{% capture recipe_content %}
+    {% for block in section.blocks %}
+        {% if block.type == 'recipe' %}
+            {% liquid 
+                assign metaobject = block.settings.metaobject
+                assign title = metaobject.title
+                assign title_handleize = block.settings.title | handleize
+                assign image = metaobject.image
+                assign text = metaobject.text | metafield_tag
+            %}
+            <div class="wb-flex flex-col mx-auto" x-cloak x-show="activeTitle === '{{ title_handleize }}'">
+                <h3 class="body font-bold text-lg font-bold text-bear-black mb-6 text-center">{{ title }}</h3>
+                <div class="wb-flex flex-col gap-5 mb-5.5 w-fit mx-auto">
+                    {% for step in metaobject.steps.value %}
+                        {% liquid
+                            assign index = forloop.index
+                            assign description = step.content | metafield_tag
+                            assign step_title = 'Step ' | append: index | append: ': '
+                            assign icon = step.icon | image_url: width: 100 | image_tag
+                            assign title = step.title | handleize
+                        %}
+                        <div class="wb-flex gap-1 items-center text-bear-black">
+                            <h3 class="body font-bold text-lg font-bold">{{ step_title }}</h3>
+                            <div class="body">{{ description }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="body text-bear-black text-center [&_a]:underline">{{ text }}</div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endcapture %}
+
+{% capture recipe_text %}
+    {% for block in section.blocks %}
+        {% if block.type == 'recipe' %}
+            {% liquid 
+                assign metaobject = block.settings.metaobject
+                assign title = metaobject.title
+                assign title_handleize = block.settings.title | handleize
+                assign image = metaobject.image
+                assign text = metaobject.text | metafield_tag
+            %}
+            <div x-show="activeTitle === '{{ title_handleize }}'" class="block lg:!hidden">
+                <div class="body text-bear-black text-center [&_a]:underline">{{ text }}</div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endcapture %}
+
+{% capture recipe_image %}
+    {% for block in section.blocks %}
+        {% if block.type == 'recipe' %}
+            {% liquid 
+                assign metaobject = block.settings.metaobject
+                assign title_handleize = block.settings.title | handleize
+                assign image = metaobject.image
+            %}
+            <div class="wb-flex justify-between mt-5" x-cloak x-show="activeTitle === '{{ title_handleize }}'" x-cloak>
+                <div class="max-w-[339px] mx-auto lg:mx-0">
+                    {{ image | image_url: width: 1000 | image_tag }}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endcapture %}
+
+<div x-data="waysToEnjoy('{{ active_title }}')" class="relative mt-8 lg:!mt-0">
+    {% if background_image != blank %}
+        <div class="hidden lg:!block absolute inset-0 w-full h-full z-[0]">
+            {{ background_image | image_url: width: 1000 | image_tag }}
+        </div>
+    {% endif %}
+    <div class="wb-flex justify-between w-full max-w-[966px] mx-auto relative z-[2]">
+        <div class="wb-flex flex-col-reverse lg:flex-row justify-between w-full mb-5.5">
+            <div>
+                {{ recipe_image }}
+            </div>
+            <div class="wb-flex flex-col gap-4 justify-center items-center px-6">
+                <h2 class="text-2xl font-bold text-center uppercase font-gothic_condensed font-bold text-[55px] leading-[61px] tracking-[1%]">{{ section.settings.title }}</h2>
+                {{ recipe_text }}
+                {{ menu }}
+                <div class="hidden lg:!block">
+                    {{ recipe_content }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+    {
+      "name": "AW Ways to Enjoy",
+      "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "Background Image"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "recipe",
+          "name": "Recipe",
+          "settings": [
+            {
+              "type": "text",
+              "id": "title",
+              "label": "Title"
+            },
+            {
+               "type": "metaobject",
+               "id": "metaobject",
+               "label": "Instructions",
+               "metaobject_type": "how_to_mix"
+            }
+          ]
+        }
+      ],
+      "presets": [
+        { "name": "AW Ways to Enjoy" }
+      ]
+    }
+    {% endschema %}

@@ -1,5 +1,6 @@
 {% liquid
     assign section_settings = section.settings
+    assign background_image = section_settings.background_image
     assign color_scheme = section_settings.color_scheme
     assign background_color = color_scheme.background
     assign text_color = color_scheme.text
@@ -14,10 +15,14 @@
     assign right_blocks = section.blocks | where: 'type', 'value_prop_right'
 %}
 
-<div class="relative" style="background-color: {{ background_color }}; color: {{ text_color }}">
-
+<div class="relative pt-[70px]" style="background-color: {{ background_color }}; color: {{ text_color }}">
+  {% if background_image != blank %}
+    <div class="absolute inset-0 w-full h-full z-[0]">
+      {{ background_image | image_url: width: 1000 | image_tag: class: 'w-full !h-full object-cover' }}
+    </div>
+  {% endif %}
   {%- comment -%} ── DESKTOP ── {%- endcomment -%}
-  <div class="hidden md:!block py-14">
+  <div class="hidden md:!block relative z-[2]">
     <div class="max-w-[1200px] mx-auto px-6">
 
       <div class="wb-flex flex-col items-center text-center mb-10 gap-3">
@@ -25,7 +30,7 @@
           {{ crown_icon | image_url: width: 60 | image_tag: class: '!w-[32px] !h-auto', alt: '' }}
         {% endif %}
         {% if title != blank %}
-          <h2 class="h1" style="color: {{ text_color }}">{{ title }}</h2>
+          <h2 class="font-bold text-[45px] font-gothic_condensed" style="color: {{ text_color }}">{{ title }}</h2>
         {% endif %}
         {% if subtitle != blank %}
           <p class="body max-w-[520px]" style="color: {{ text_color }}">{{ subtitle }}</p>
@@ -49,15 +54,15 @@
           {%- comment -%} Left column {%- endcomment -%}
           <div class="wb-flex flex-col justify-between py-7" data-col="left">
             {% for block in left_blocks %}
-              <div class="wb-flex flex-col items-center gap-2 mr-auto" data-prop {{ block.shopify_attributes }}>
+              <div class="wb-flex flex-col items-center gap-2 mr-auto w-[150px]" data-prop {{ block.shopify_attributes }}>
                 {% if block.settings.icon != blank %}
                   <div class="wb-flex items-center justify-center !w-[72px] !h-[72px] rounded-full bg-[#f0ebe3] shrink-0" data-icon data-side="left">
                     {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain', alt: block.settings.label }}
                   </div>
                 {% endif %}
-                <span class="font-bold uppercase text-[0.7rem] tracking-[0.1em] leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
+                <span class="font-bold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
                 {% if block.settings.subtext != blank %}
-                  <span class="uppercase text-[0.6rem] tracking-[0.08em] opacity-70 text-center">{{ block.settings.subtext }}</span>
+                  <span class="uppercase text-[0.6rem] opacity-70 text-center font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
                 {% endif %}
               </div>
             {% endfor %}
@@ -73,15 +78,15 @@
           {%- comment -%} Right column {%- endcomment -%}
           <div class="wb-flex flex-col justify-between py-7" data-col="right">
             {% for block in right_blocks %}
-              <div class="wb-flex flex-col items-center gap-2 ml-auto" data-prop {{ block.shopify_attributes }}>
+              <div class="wb-flex flex-col items-center gap-2 ml-auto w-[150px]" data-prop {{ block.shopify_attributes }}>
                 {% if block.settings.icon != blank %}
                   <div class="wb-flex items-center justify-center !w-[72px] !h-[72px] rounded-full bg-[#f0ebe3] shrink-0" data-icon data-side="right">
                     {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain', alt: block.settings.label }}
                   </div>
                 {% endif %}
-                <span class="font-bold uppercase text-[0.7rem] tracking-[0.1em] leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
+                <span class="font-bold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
                 {% if block.settings.subtext != blank %}
-                  <span class="uppercase text-[0.6rem] tracking-[0.08em] opacity-70 text-center">{{ block.settings.subtext }}</span>
+                  <span class="uppercase text-[0.6rem] opacity-70 text-center font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
                 {% endif %}
               </div>
             {% endfor %}
@@ -93,7 +98,7 @@
   </div>
 
   {%- comment -%} ── MOBILE ── {%- endcomment -%}
-  <div class="block md:!hidden pt-8 pb-10">
+  <div class="block md:!hidden relative z-[2]">
     <div class="wb-flex flex-col items-center text-center px-6 gap-2 mb-6">
       {% if crown_icon != blank %}
         {{ crown_icon | image_url: width: 60 | image_tag: class: '!w-[28px] !h-auto', alt: '' }}
@@ -107,12 +112,12 @@
     </div>
 
     {% if product_image != blank %}
-      <div class="wb-flex justify-center mb-8 px-6">
+      <div class="wb-flex justify-center lg:!mb-8 px-6">
         <img src="{{ product_image | image_url: width: 560 }}" alt="{{ product_image.alt }}" loading="lazy" class="w-full max-w-[280px] h-auto object-contain mx-auto">
       </div>
     {% endif %}
 
-    <div class="wb-flex flex-col gap-5 px-8">
+    <div class="wb-flex flex-col gap-5 px-8 bg-[#F2E6DCCC] lg:!bg-transparent pt-8 pb-10 lg:!py-0">
       {% for block in section.blocks %}
         <div class="wb-flex items-center gap-4" {{ block.shopify_attributes }}>
           {% if block.settings.icon != blank %}
@@ -121,9 +126,9 @@
             </div>
           {% endif %}
           <div class="wb-flex flex-col">
-            <span class="font-bold uppercase text-[0.7rem] tracking-[0.1em] leading-snug">{{ block.settings.label }}</span>
+            <span class="font-bold uppercase text-base font-gothic_condensed leading-snug">{{ block.settings.label }}</span>
             {% if block.settings.subtext != blank %}
-              <span class="uppercase text-[0.6rem] tracking-[0.08em] opacity-70">{{ block.settings.subtext }}</span>
+              <span class="uppercase text-[0.6rem] opacity-70">{{ block.settings.subtext }}</span>
             {% endif %}
           </div>
         </div>
@@ -137,6 +142,11 @@
 {
     "name": "AW Product Value Props",
     "settings": [
+        {
+          "type": "image_picker",
+          "id": "background_image",
+          "label": "Background Image"
+        },
         {
             "type": "color_scheme",
             "id": "color_scheme",

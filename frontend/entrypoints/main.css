@@ -3,6 +3,10 @@
 @theme {
     --breakpoint-sm: 30rem; /* 480px */
     --breakpoint-smd: 46.875rem; /* 750px */
+    --breakpoint-md: 64rem; /* 1024px */
+    --breakpoint-lg: 80rem; /* 1280px */
+    --breakpoint-xl: 96rem; /* 1536px */
+    --breakpoint-2xl: 112rem; /* 1792px */
     --color-gold: #FFD700/100%;
     --color-sky-blue: #BFD7E9/100%;
     --color-grey-tag: #E1E1E1/100%;
@@ -17,8 +21,14 @@
     --color-white: #FFFFFF/100%;
 }
 
-[x-cloak] {
-    display: none;
+@layer utilities {
+    .wb-grid {
+        display: grid;
+    }
+    
+    .wb-flex {
+        display: flex;
+    }
 }
 
 .wb-grid {
@@ -27,6 +37,10 @@
 
 .wb-flex {
     display: flex;
+}
+
+[x-cloak] {
+    display: none !important;
 }
 
 .email-signup__input {
