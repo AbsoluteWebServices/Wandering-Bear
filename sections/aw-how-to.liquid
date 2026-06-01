@@ -1,0 +1,88 @@
+{% liquid
+    assign section_settings = section.settings
+    assign title = section_settings.title
+    assign image = section_settings.image
+%}
+
+<div class="w-full">
+    <div class="wb-flex justify-between">
+        <div class="flex flex-col gap-4">
+        <h2 class="text-2xl font-bold">{{ section.settings.title }}</h2>
+        <div x-data="howToSteps()">
+            {% for block in section.blocks %}
+                {% if block.type == 'how-to-category' %}
+                    <div data-how-to-category data-title="{{ block.settings.title }}">
+                        {{ block.settings.title }}
+                        {% for step in block.blocks %}
+                            {% if step.type == 'how-to-step' %}
+                                <div data-how-to-step data-title="{{ step.settings.title }}">
+                                    {{ step.settings.title }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        </div>
+        <div class="max-w-[500px]">
+            {{ image | image_url: width: 1000 | image_tag }}
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+    {
+      "name": "AW How To Prepare",
+      "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        }
+      ],
+      "blocks": [
+        {
+          "type": "how-to-category",
+          "name": "How To Category",
+          "settings": [
+            {
+              "type": "text",
+              "id": "title",
+              "label": "Title"
+            }
+          ]
+        },
+        {
+            "type": "how-to-step",
+            "name": "How To Step",
+            "settings": [
+              {
+                "type": "text",
+                "id": "title",
+                "label": "Title"
+              },
+              {
+                "type": "text",
+                "id": "description",
+                "label": "Description"
+              },
+              {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image"
+              }
+            ]
+        }
+      ],
+      "presets": [
+        { "name": "AW How To Prepare" }
+      ]
+    }
+    {% endschema %}

@@ -1,0 +1,207 @@
+{% liquid
+    assign section_settings = section.settings
+    assign color_scheme = section_settings.color_scheme
+    assign background_color = color_scheme.background
+    assign text_color = color_scheme.text
+    assign title = section_settings.title
+    assign subtitle = section_settings.subtitle
+    assign crown_icon = section_settings.crown_icon
+    assign product_image = section_settings.product_image
+    assign line_color = section_settings.line_color
+    assign arc = section_settings.arc_strength | default: 16
+
+    assign left_blocks = section.blocks | where: 'type', 'value_prop_left'
+    assign right_blocks = section.blocks | where: 'type', 'value_prop_right'
+%}
+
+<div class="relative" style="background-color: {{ background_color }}; color: {{ text_color }}">
+
+  {%- comment -%} ── DESKTOP ── {%- endcomment -%}
+  <div class="hidden md:!block py-14">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <div class="wb-flex flex-col items-center text-center mb-10 gap-3">
+        {% if crown_icon != blank %}
+          {{ crown_icon | image_url: width: 60 | image_tag: class: '!w-[32px] !h-auto', alt: '' }}
+        {% endif %}
+        {% if title != blank %}
+          <h2 class="h1" style="color: {{ text_color }}">{{ title }}</h2>
+        {% endif %}
+        {% if subtitle != blank %}
+          <p class="body max-w-[520px]" style="color: {{ text_color }}">{{ subtitle }}</p>
+        {% endif %}
+      </div>
+
+      <div class="relative" x-data="productValueProps({{ arc }})">
+        <svg class="absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
+          <path
+            :d="path"
+            fill="none"
+            stroke="{{ line_color | default: '#8fb4d9' }}"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-dasharray="0.1 8"
+          />
+        </svg>
+
+        <div class="wb-grid [grid-template-columns:1fr_auto_1fr] items-stretch relative z-[2]">
+
+          {%- comment -%} Left column {%- endcomment -%}
+          <div class="wb-flex flex-col justify-between py-7" data-col="left">
+            {% for block in left_blocks %}
+              <div class="wb-flex flex-col items-center gap-2 mr-auto" data-prop {{ block.shopify_attributes }}>
+                {% if block.settings.icon != blank %}
+                  <div class="wb-flex items-center justify-center !w-[72px] !h-[72px] rounded-full bg-[#f0ebe3] shrink-0" data-icon data-side="left">
+                    {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain', alt: block.settings.label }}
+                  </div>
+                {% endif %}
+                <span class="font-bold uppercase text-[0.7rem] tracking-[0.1em] leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
+                {% if block.settings.subtext != blank %}
+                  <span class="uppercase text-[0.6rem] tracking-[0.08em] opacity-70 text-center">{{ block.settings.subtext }}</span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+          {%- comment -%} Center product image {%- endcomment -%}
+          <div class="wb-flex items-center justify-center w-[300px] max-w-[32vw]">
+            {% if product_image != blank %}
+              <img x-ref="bottle" src="{{ product_image | image_url: width: 600 }}" alt="{{ product_image.alt }}" loading="lazy" class="w-full h-auto object-contain">
+            {% endif %}
+          </div>
+
+          {%- comment -%} Right column {%- endcomment -%}
+          <div class="wb-flex flex-col justify-between py-7" data-col="right">
+            {% for block in right_blocks %}
+              <div class="wb-flex flex-col items-center gap-2 ml-auto" data-prop {{ block.shopify_attributes }}>
+                {% if block.settings.icon != blank %}
+                  <div class="wb-flex items-center justify-center !w-[72px] !h-[72px] rounded-full bg-[#f0ebe3] shrink-0" data-icon data-side="right">
+                    {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain', alt: block.settings.label }}
+                  </div>
+                {% endif %}
+                <span class="font-bold uppercase text-[0.7rem] tracking-[0.1em] leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
+                {% if block.settings.subtext != blank %}
+                  <span class="uppercase text-[0.6rem] tracking-[0.08em] opacity-70 text-center">{{ block.settings.subtext }}</span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ── MOBILE ── {%- endcomment -%}
+  <div class="block md:!hidden pt-8 pb-10">
+    <div class="wb-flex flex-col items-center text-center px-6 gap-2 mb-6">
+      {% if crown_icon != blank %}
+        {{ crown_icon | image_url: width: 60 | image_tag: class: '!w-[28px] !h-auto', alt: '' }}
+      {% endif %}
+      {% if title != blank %}
+        <h2 class="h1" style="color: {{ text_color }}">{{ title }}</h2>
+      {% endif %}
+      {% if subtitle != blank %}
+        <p class="body" style="color: {{ text_color }}">{{ subtitle }}</p>
+      {% endif %}
+    </div>
+
+    {% if product_image != blank %}
+      <div class="wb-flex justify-center mb-8 px-6">
+        <img src="{{ product_image | image_url: width: 560 }}" alt="{{ product_image.alt }}" loading="lazy" class="w-full max-w-[280px] h-auto object-contain mx-auto">
+      </div>
+    {% endif %}
+
+    <div class="wb-flex flex-col gap-5 px-8">
+      {% for block in section.blocks %}
+        <div class="wb-flex items-center gap-4" {{ block.shopify_attributes }}>
+          {% if block.settings.icon != blank %}
+            <div class="wb-flex items-center justify-center !w-[54px] !h-[54px] rounded-full bg-[#f0ebe3] shrink-0">
+              {{ block.settings.icon | image_url: width: 60 | image_tag: class: '!w-[28px] !h-[28px] object-contain', alt: block.settings.label }}
+            </div>
+          {% endif %}
+          <div class="wb-flex flex-col">
+            <span class="font-bold uppercase text-[0.7rem] tracking-[0.1em] leading-snug">{{ block.settings.label }}</span>
+            {% if block.settings.subtext != blank %}
+              <span class="uppercase text-[0.6rem] tracking-[0.08em] opacity-70">{{ block.settings.subtext }}</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+{
+    "name": "AW Product Value Props",
+    "settings": [
+        {
+            "type": "color_scheme",
+            "id": "color_scheme",
+            "label": "Color Scheme",
+            "default": "scheme-1"
+        },
+        {
+            "type": "color",
+            "id": "line_color",
+            "label": "Connector line color",
+            "default": "#8fb4d9"
+        },
+        {
+            "type": "range",
+            "id": "arc_strength",
+            "label": "Icon arc strength",
+            "min": 0,
+            "max": 80,
+            "step": 4,
+            "unit": "px",
+            "default": 16
+        },
+        {
+            "type": "image_picker",
+            "id": "crown_icon",
+            "label": "Crown Icon"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "textarea",
+            "id": "subtitle",
+            "label": "Subtitle"
+        },
+        {
+            "type": "image_picker",
+            "id": "product_image",
+            "label": "Product Image"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "value_prop_left",
+            "name": "Value Prop (Left)",
+            "settings": [
+                { "type": "image_picker", "id": "icon", "label": "Icon" },
+                { "type": "text", "id": "label", "label": "Label" },
+                { "type": "text", "id": "subtext", "label": "Subtext (optional)" }
+            ]
+        },
+        {
+            "type": "value_prop_right",
+            "name": "Value Prop (Right)",
+            "settings": [
+                { "type": "image_picker", "id": "icon", "label": "Icon" },
+                { "type": "text", "id": "label", "label": "Label" },
+                { "type": "text", "id": "subtext", "label": "Subtext (optional)" }
+            ]
+        }
+    ],
+    "presets": [
+        { "name": "AW Product Value Props" }
+    ]
+}
+{% endschema %}
