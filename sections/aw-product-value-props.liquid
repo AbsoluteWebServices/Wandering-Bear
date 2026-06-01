@@ -42,10 +42,9 @@
           <path
             :d="path"
             fill="none"
-            stroke="{{ line_color | default: '#8fb4d9' }}"
+            stroke="{{ line_color | default: '#75BDF4' }}"
             stroke-width="2"
-            stroke-linecap="round"
-            stroke-dasharray="0.1 8"
+            stroke-dasharray="2 2"
           />
         </svg>
 
@@ -128,7 +127,7 @@
           <div class="wb-flex flex-col">
             <span class="font-bold uppercase text-base font-gothic_condensed leading-snug">{{ block.settings.label }}</span>
             {% if block.settings.subtext != blank %}
-              <span class="uppercase text-[0.6rem] opacity-70">{{ block.settings.subtext }}</span>
+              <span class="uppercase text-[0.6rem] opacity-70 font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
             {% endif %}
           </div>
         </div>
@@ -157,7 +156,7 @@
             "type": "color",
             "id": "line_color",
             "label": "Connector line color",
-            "default": "#8fb4d9"
+            "default": "#75BDF4"
         },
         {
             "type": "range",
