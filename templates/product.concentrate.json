@@ -185,89 +185,141 @@
         "padding-block-end": 0
       }
     },
-    "aw_diagram_7M6UNA": {
-      "type": "aw-diagram",
+    "aw_product_value_props_mCiak9": {
+      "type": "aw-product-value-props",
       "blocks": {
-        "diagram_item_BdiWiA": {
-          "type": "diagram_item",
+        "value_prop_left_MEdhqt": {
+          "type": "value_prop_left",
           "settings": {
-            "icon": "shopify://shop_images/Group_1327226584.svg",
-            "title": "Cold Brew Process",
-            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
+            "icon": "shopify://shop_images/Group_1327226585_86c8cf9f-2848-4221-b1bd-db95d40922a9.svg",
+            "label": "SMOOTH, YET STRONG",
+            "subtext": ""
           }
         },
-        "diagram_item_DPgjFA": {
-          "type": "diagram_item",
+        "value_prop_left_pML4WR": {
+          "type": "value_prop_left",
           "settings": {
-            "icon": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
-            "title": "BEAN QUALITY",
-            "description": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew"
+            "icon": "shopify://shop_images/Group_1327226586_6583f80e-f5b2-4baa-a2eb-f7356c708138.svg",
+            "label": "USDA CERTIFIED ORGANIC",
+            "subtext": ""
           }
         },
-        "diagram_item_EdexbY": {
-          "type": "diagram_item",
+        "value_prop_left_eDHa4A": {
+          "type": "value_prop_left",
           "settings": {
-            "icon": "shopify://shop_images/Group_1327226583.svg",
-            "title": "More Coffee",
-            "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine."
+            "icon": "shopify://shop_images/Group_1327226587_6dd36edb-029b-4afa-9425-fac8207db112.svg",
+            "label": "NO DAIRY",
+            "subtext": ""
+          }
+        },
+        "value_prop_right_qBgiLi": {
+          "type": "value_prop_right",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226588_91cbbf45-6a2a-4d74-b80b-49ed668b0d55.svg",
+            "label": "NO SUGAR",
+            "subtext": ""
+          }
+        },
+        "value_prop_right_77CWJw": {
+          "type": "value_prop_right",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226590_f0275c7a-bdab-4a41-abf2-b0d0883e27b1.svg",
+            "label": "SHELF STABLE",
+            "subtext": "(PRIOR TO OPENING)"
+          }
+        },
+        "value_prop_right_6AxP3q": {
+          "type": "value_prop_right",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226589_0503aa56-e30f-4201-824b-a4428e7813dc.svg",
+            "label": "MAKES 21 SERVINGS",
+            "subtext": "(ONE GALLON OF COLD BREW)"
           }
         }
       },
       "block_order": [
-        "diagram_item_BdiWiA",
-        "diagram_item_DPgjFA",
-        "diagram_item_EdexbY"
+        "value_prop_left_MEdhqt",
+        "value_prop_left_pML4WR",
+        "value_prop_left_eDHa4A",
+        "value_prop_right_qBgiLi",
+        "value_prop_right_77CWJw",
+        "value_prop_right_6AxP3q"
       ],
-      "name": "AW Diagram Section",
+      "name": "AW Product Value Props",
       "settings": {
+        "background_image": "shopify://shop_images/bg-image-blue-tile.png",
         "color_scheme": "",
-        "background_image": "shopify://shop_images/sky.png",
-        "title_type": "image",
-        "title": "",
-        "title_alt": "",
-        "title_image": "shopify://shop_images/cold-brew-title.svg",
-        "title_image_mobile": "shopify://shop_images/on-tap-innovation-mobile_6d18829d-a82d-44be-9713-394659d47d33.svg",
-        "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png"
+        "line_color": "#8fb4d9",
+        "arc_strength": 16,
+        "crown_icon": "shopify://shop_images/crown.svg",
+        "title": "3:1 COLD BREW CONCENTRATE",
+        "subtitle": "A powered-up version of the Wandering Bear you love. Made with organic, specialty-grade Arabica beans, this cold brew concentrate is versatile and easy to customize, perfect for smoothies, lattes, or cocktails.",
+        "product_image": "shopify://shop_images/image_82_bbaa03e3-15ec-4c02-a286-963e6918d06b.png"
       }
     },
-    "aw_image_text_icons_a77yKj": {
-      "type": "aw-image-text-icons",
+    "aw_how_to_bfhKzP": {
+      "type": "aw-how-to",
       "blocks": {
-        "icon_item_qGUczX": {
-          "type": "icon_item",
+        "how_to_mix_ppxrUX": {
+          "type": "how-to-mix",
           "settings": {
-            "icon": "shopify://shop_images/Group_1327226586_4387d08b-9ccc-456b-bb51-886c3448c5b4.svg",
-            "text": "We were the first to put cold brew in a box"
+            "title": "Single Serving",
+            "metaobject": "concentrate-single-serving"
           }
         },
-        "icon_item_CUjXFp": {
-          "type": "icon_item",
+        "how_to_mix_D7pxyX": {
+          "type": "how-to-mix",
           "settings": {
-            "icon": "shopify://shop_images/Group_1327226587.svg",
-            "text": "These big boxes are designed to keep light and air away so your coffee is never stale and always tastes fresh"
-          }
-        },
-        "icon_item_RwVHTE": {
-          "type": "icon_item",
-          "settings": {
-            "icon": "shopify://shop_images/Group_1327226588.svg",
-            "text": "Product is shelf stable before opening and lasts 30 days once opened"
+            "title": "1 Gallon",
+            "metaobject": "concentrate-1-gallon"
           }
         }
       },
       "block_order": [
-        "icon_item_qGUczX",
-        "icon_item_CUjXFp",
-        "icon_item_RwVHTE"
+        "how_to_mix_ppxrUX",
+        "how_to_mix_D7pxyX"
       ],
-      "name": "AW Image + Text Icons",
+      "name": "How To Prepare",
       "settings": {
-        "color_scheme": "",
-        "title_type": "image",
-        "title": "",
-        "title_alt": "",
-        "title_image": "shopify://shop_images/Group_1327226589.svg",
-        "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png"
+        "title": "How To Mix",
+        "image": "shopify://shop_images/how-to-image.png",
+        "icon": "shopify://shop_images/32oz_bear.svg"
+      }
+    },
+    "aw_ways_to_enjoy_tp6jab": {
+      "type": "aw-ways-to-enjoy",
+      "blocks": {
+        "recipe_eETzCb": {
+          "type": "recipe",
+          "settings": {
+            "title": "Iced Mocha",
+            "metaobject": "recipe-iced-mocha"
+          }
+        },
+        "recipe_gYCETG": {
+          "type": "recipe",
+          "settings": {
+            "title": "Thai Cold Brew",
+            "metaobject": "recipe-thai-cold-brew"
+          }
+        },
+        "recipe_8dPYTn": {
+          "type": "recipe",
+          "settings": {
+            "title": "Cortado",
+            "metaobject": "recipe-cortado"
+          }
+        }
+      },
+      "block_order": [
+        "recipe_eETzCb",
+        "recipe_gYCETG",
+        "recipe_8dPYTn"
+      ],
+      "name": "AW Ways to Enjoy",
+      "settings": {
+        "title": "Other Ways to Enjoy",
+        "background_image": "shopify://shop_images/checker-bg_fc2a97ef-a5b5-49da-a1ec-fd8cf5fc7d08.png"
       }
     },
     "aw_guarantee_banner_HAr7Rz": {
@@ -292,8 +344,9 @@
   },
   "order": [
     "main",
-    "aw_diagram_7M6UNA",
-    "aw_image_text_icons_a77yKj",
+    "aw_product_value_props_mCiak9",
+    "aw_how_to_bfhKzP",
+    "aw_ways_to_enjoy_tp6jab",
     "aw_guarantee_banner_HAr7Rz",
     "okendo_reviews_widget_PUYwdN"
   ]
