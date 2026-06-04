@@ -15,6 +15,8 @@
    assign first_product = bundle_collection.products.first
    assign product_object = product.metafields.custom.product_group
 
+   assign bundle_placeholder_image = section.settings.bundle_placeholder_image
+
    if first_product.selected_or_first_available_variant.compare_at_price > first_product.selected_or_first_available_variant.price
     assign compare_at_price = first_product.selected_or_first_available_variant.compare_at_price
    else
@@ -99,10 +101,15 @@
             {% assign qty = i | times: 3 %}
             <fieldset class="flex flex-col h-full w-full justify-center items-center">
                 <input
+                 @change="changeBundleQuantity({{ qty }})"
                  class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  x-model="bundleQty"
                  type="radio" name="bundle-qty" id="bundle-qty-{{ i }}" value="{{ qty }}" {% if forloop.first %}checked{% endif %}>
-                <label class="peer-checked:bg-[#F9F3ED] h-full w-full flex justify-center items-center" for="bundle-qty-{{ i }}">{{ qty }} Cartons</label>
+                <label class="peer-checked:bg-[#F9F3ED] h-full w-full wb-flex flex-col justify-center items-center" for="bundle-qty-{{ i }}">
+                  <span class="font-gothic_condensed text-bear-black text-base font-bold uppercase">{{ qty }} Cartons</span>
+                  <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From $XX/carton</span>
+                  <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save 10%</span>
+                </label>
             </fieldset>
             {% endfor %}
         </div>
@@ -112,25 +119,57 @@
         <div class="wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px] overflow-hidden">
             <fieldset class="flex flex-col h-full w-full justify-center items-center">
                 <input
+                 @change="changeFlavorType('mix')"
                  x-model="flavorType"
                  class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  type="radio" name="bundle-flavor" id="bundle-flavor-mix" value="mix">
-                <label class="peer-checked:bg-[#F9F3ED] h-full w-full flex justify-center items-center" for="bundle-flavor-mix">Mix & Match</label>
+                <label class="peer-checked:bg-[#F9F3ED] h-full w-full wb-flex flex-col justify-center items-center" for="bundle-flavor-mix">
+                  <span class="font-gothic_condensed text-bear-black text-base font-bold uppercase">Mix & Match</span>
+                  <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">Pick up to <span x-text="bundleQty">3</span> flavors</span>
+                </label>
             </fieldset>
             <fieldset class="flex flex-col h-full w-full justify-center items-center">
                 <input
+                 @change="changeFlavorType('single')"
                  x-model="flavorType"
                  class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  type="radio" name="bundle-flavor" id="bundle-flavor-single" value="single" checked>
-                <label class="peer-checked:bg-[#F9F3ED] h-full w-full flex justify-center items-center" for="bundle-flavor-single">Single Flavor</label>
+                <label class="peer-checked:bg-[#F9F3ED] h-full w-full wb-flex flex-col justify-center items-center" for="bundle-flavor-single">
+                  <span class="font-gothic_condensed text-bear-black text-base font-bold uppercase">Single Flavor</span>
+                  <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save an additional 5%</span>
+
+                </label>
             </fieldset>
         </div>
     </div>
+    <div x-show="flavorType == 'mix'" x-cloak class="wb-flex justify-center gap-2.5 h-[87px]">
+      <template x-for="(product, index) in bundleSlots" :key="index">
+        <div class="flex flex-col gap-2.5 py-5 px-4 border border-[#CFBDB1] rounded-[5px] aspect-[62/87]">
+          
+          <template x-if="product">
+            <div>
+              <span x-text="product.title"></span>
+            </div>
+          </template>
+    
+          <template x-if="!product">
+            <div>
+              {% if bundle_placeholder_image != blank %}
+                {{ bundle_placeholder_image | image_url: width: 100 | image_tag }}
+              {% endif %}
+            </div>
+          </template>
+    
+        </div>
+      </template>
+    </div>
 </div>
 
+
 <div class="flex flex-col gap-2.5">
-    {% render 'product-selector-group', bundle_collection: bundle_collection %}
+    {% render 'product-selector-group', bundle_collection: bundle_collection, bundle_type: '32oz' %}
 </div>
+
 
 {% render 'purchase-option-selector' %}
 
@@ -146,7 +185,8 @@
           {%- assign selling_plan_name = allocation.selling_plan.name -%}
           {%- if selling_plan_name contains '1 Month' -%}
               "selling_plan_id": {{ allocation.selling_plan.id | json }}
-            {%- endif -%}
+          {%- break -%}
+          {%- endif -%}
         {%- endfor -%}
       }{% unless forloop.last %},{% endunless %}
     {%- endfor -%}
@@ -187,7 +227,6 @@
                         "compare_at_price": {{- compare_at_price -}},
                         "discount_type": "{{- discount_type -}}",
                         "title": "{{- child_variant.title -}}",
-                        "id": {{- child_variant.id -}},
                         "price": {{- child_variant.price -}},
                         {%- assign printed_allocation = false -%}
                         {%- for allocation in child_variant.selling_plan_allocations -%}
@@ -204,10 +243,11 @@
                               "selling_plan_id": {{ allocation.selling_plan.id | json }},
                               "selling_plan_name": {{ allocation.selling_plan.name | json }},
                               "selling_plan_price": {{ allocation.price | json }},
-                              "selling_plan_savings": {{ child_product.variants[0].price | minus: allocation.price | json }}
+                              "selling_plan_savings": {{ child_product.variants[0].price | minus: allocation.price | json }},
                             {%- assign printed_allocation = true -%}
                           {%- endif -%}
                         {%- endfor -%}
+                        "id": {{- child_variant.id -}}
                     }{%- unless forloop.last -%},{%- endunless -%}
                 {%- endfor -%}
             }

@@ -5,9 +5,15 @@ import { CartAddEvent, CartErrorEvent } from '/assets/events'
 
 
 export default (Alpine: AlpineType) => {
-    Alpine.data("productFormBundle", ( selectedProductId: any) => ({
+    Alpine.data("productFormBundle", ( 
+      selectedProductId: any,
+      bundleQty: any,
+      flavorType: any
+    ) => ({
         selectedProductId: selectedProductId,
         selectedProduct: null,
+        bundleQty: bundleQty,
+        flavorType: flavorType,
         bundleProducts: {},
         selectedBundleProducts: {},
         loading: false,
@@ -15,8 +21,11 @@ export default (Alpine: AlpineType) => {
         sellingPlanId: null,
         bundleParentProducts: {},
         modal: null,
-        bundleQty: null,
-        flavorType: null,
+        qtyLimit: 6,
+
+        get qtyLimitReached() {
+          return this.bundleSize >= this.qtyLimit;
+        },
         
         get totalPrice() {
           let totalOriginalPrice = 0;
@@ -34,6 +43,14 @@ export default (Alpine: AlpineType) => {
             autoship: this._formatPrice(totalAutoshipPrice),
             oneTime: this._formatPrice(totalOneTimePrice),
           }
+        },
+
+        get bundleSlots() {
+          const selected = this.assignedBundleProducts.flatMap(product =>
+            Array.from({ length: Number(product.quantity || 0) }, () => product)
+          );
+        
+          return Array.from({ length: this.qtyLimit }, (_, index) => selected[index] || null);
         },
 
         get bundleSize() {
@@ -95,6 +112,8 @@ export default (Alpine: AlpineType) => {
                 return {
                   id: Number(variant.id),
                   quantity: selectedProduct.quantity,
+                  image: product.image,
+                  title: product.title,
                   otpPrice: Number(variant.price),
                   originalPrice: Number(product.variants[0].price),
                   sellingPlanPrice: Number(variant.selling_plan_price),
@@ -107,6 +126,10 @@ export default (Alpine: AlpineType) => {
               })
 
             return assignedBundleProducts;
+        },
+
+        get disabled() {
+          return this.flavorType !== 'single' && this.bundleSize >= this.qtyLimit;
         },
 
         // Helpers
@@ -178,6 +201,10 @@ export default (Alpine: AlpineType) => {
             savingsEl.textContent = savings > 0 ? savingsFormatted : ' '
             priceEl.textContent = this._formatPrice(price)
           })
+        },
+
+        _clearBundle() {
+          this.selectedBundleProducts = {};
         },
 
         _addQueryParam(key, value) {
@@ -265,11 +292,14 @@ export default (Alpine: AlpineType) => {
 
         init() {
             this.bundleProducts = JSON.parse(this.$refs.productObject.textContent);
-            console.log('bundle products', this.bundleProducts);
             this.bundleParentProducts = JSON.parse(this.$refs.bundleParentProducts.textContent);
             this.selectedProduct = this.bundleProducts[this.selectedProductId];
 
             let queryParams = new URLSearchParams(window.location.search)
+
+            if (this.bundleQty) {
+              this.qtyLimit = this.bundleQty;
+            }
 
             // Populate bundle if sent a link with query params
             queryParams.forEach((value, key) => {
@@ -294,8 +324,19 @@ export default (Alpine: AlpineType) => {
             this._updateQueryString();
         },
 
-        addToBundle(productId) {
+        addToBundle(productId, type = null) {
             const id = String(productId)
+
+            if (type === '32oz' && this.flavorType === 'single') {
+              this.selectedBundleProducts = {};
+              this.selectedBundleProducts = {
+                [id]: {
+                  id,
+                  quantity: this.bundleQty,
+                },
+              }
+              return;
+            }
           
             this.selectedBundleProducts = {
               ...this.selectedBundleProducts,
@@ -310,6 +351,51 @@ export default (Alpine: AlpineType) => {
         selectProduct(productId) {
             this.selectedProduct = this.bundleProducts[productId];
             window.dispatchEvent(new CustomEvent('product-changed', { detail: { product: this.selectedProduct }, bubbles: true, composed: true }));
+        },
+
+        changeFlavorType(type) {
+            this.flavorType = type;
+            this._clearBundle();
+            this.selectedBundleProducts = {};
+        },
+
+        changeBundleQuantity(quantity) {
+          this.bundleQty = Number(quantity);
+          this.qtyLimit = this.bundleQty;
+        
+          if (this.flavorType === 'single') {
+            this.selectedBundleProducts = {
+              [this.selectedProductId]: {
+                id: this.selectedProductId,
+                quantity: this.bundleQty,
+              },
+            };
+            return;
+          }
+        
+          let overage = this.bundleSize - this.qtyLimit;
+        
+          if (overage <= 0) return;
+        
+          const entries = Object.entries(this.selectedBundleProducts).reverse();
+        
+          for (const [productId, product] of entries) {
+            if (overage <= 0) break;
+        
+            const qty = Number(product.quantity || 0);
+            const removeQty = Math.min(qty, overage);
+            const newQty = qty - removeQty;
+        
+            if (newQty <= 0) {
+              delete this.selectedBundleProducts[productId];
+            } else {
+              product.quantity = newQty;
+            }
+        
+            overage -= removeQty;
+          }
+        
+          this.selectedBundleProducts = { ...this.selectedBundleProducts };
         },
 
         async addToCart() {

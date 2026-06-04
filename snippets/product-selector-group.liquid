@@ -13,7 +13,7 @@
             assign product_badge_color = product_badge.value.background_color
             assign product_badge_text_color = product_badge.value.text_color
             %}
-            {% render 'product-selector', title: title, image: image, flavor_description: flavor_description, member_only: member_only, product_badge: product_badge, product_badge_text: product_badge_text, product_badge_color: product_badge_color, product_badge_text_color: product_badge_text_color, child_product: child_product %}
+            {% render 'product-selector', title: title, image: image, flavor_description: flavor_description, member_only: member_only, product_badge: product_badge, product_badge_text: product_badge_text, product_badge_color: product_badge_color, product_badge_text_color: product_badge_text_color, child_product: child_product, bundle_type: bundle_type %}
         {% endfor %}
     </div>
 </div>

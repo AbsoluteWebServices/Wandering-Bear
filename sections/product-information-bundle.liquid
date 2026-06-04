@@ -16,6 +16,15 @@
       break
     endif
   endfor
+
+  assign is_32oz = false
+  if template.suffix == '32oz'
+    assign is_32oz = true
+  endif
+
+  if is_32oz
+    assign params = "3,'single'"
+  endif
 %}
 
 
@@ -183,7 +192,7 @@
 {% endif %}
 
 
-<div x-data="productFormBundle({{ selected_product.id }})">
+<div x-data="productFormBundle({{ selected_product.id }},{{ params }})">
   {% render 'product-information-content',
     product_media_size: closest.product.media.size,
     section_id: section.id,
@@ -401,6 +410,12 @@
       "id": "bundle_add_to_cart_text",
       "label": "Bundle Add to Cart Text",
       "default": "Add"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_placeholder_image",
+      "label": "Bundle Placeholder Image",
+      "info": "For 32oz carton bundle only"
     },
     {
       "type": "header",
