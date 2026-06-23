@@ -11,9 +11,9 @@
     assign badge = section_settings.badge
 %}
 
-<div class="pt-5 pb-0 md:!pt-5 md:!pb-8 relative" style="background-color: {{ background_color }}">
+<div class="pt-5 pb-0 md:!pt-5 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[80px] right-[5vw] md:!right-[19vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[80px] right-[5vw] md:!right-[19vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
     {% endif %}
     {% if title_type == 'image' %}
         {% if title_image != blank %}
@@ -53,15 +53,15 @@
                         %}
                     {% endif %}
                     </a>
-                    <div class="hidden md:!flex flex-col {% unless accent_text != blank %} !gap-2.5 {% endunless %} items-center">
+                    <div class="hidden md:!flex flex-col mt-1 {% unless accent_text != blank %} !gap-2.5 {% endunless %} items-center">
                         {% if title != blank %}
                             <a href="{{ collection.url }}" class="h1 text-center" style="color: {{ text_color }}">{{ title }}</a>
                         {% endif %}
                         {% if accent_text != blank %}
-                            <span class="accent text-gold text-center">{{ accent_text }}</span>
+                            <span class="accent text-gold text-center !text-lg">{{ accent_text }}</span>
                         {% endif %}
                         {% if subtitle != blank %}
-                            <span class="body text-espresso text-center" style="color: {{ text_color }}">{{ subtitle }}</span>
+                            <span class="body text-espresso text-center text-balance" style="color: {{ text_color }}">{{ subtitle }}</span>
                         {% endif %}
                     </div>
                 </div>

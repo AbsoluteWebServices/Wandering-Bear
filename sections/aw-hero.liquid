@@ -34,7 +34,7 @@
                             {% for button in buttons %}
                                 <div class="relative mx-auto md:!mx-0">
                                     {% if button.settings.badge != blank %}
-                                        {{ button.settings.badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-5 -left-10 !w-[59px] !h-auto', loading: 'eager', preload: 'eager' }}
+                                        {{ button.settings.badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-5 -left-10 !w-[59px] !h-auto shadow-button', loading: 'eager', preload: 'eager' }}
                                     {% endif %}
                                     {% render 'wb-button', style: button.settings.style, label: button.settings.label, link: button.settings.link %}
                                 </div>
