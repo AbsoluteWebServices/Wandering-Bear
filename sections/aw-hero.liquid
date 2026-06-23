@@ -17,7 +17,7 @@
 {% capture hero_content %}
         {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
         {% if title_image != blank or title_text != blank or subtitle != blank %}
-            <div class="container relative wb-flex flex-col md:!flex-row justify-end w-[800px] mx-auto h-full pb-12 md:!pb-0">
+            <div class="container relative wb-flex flex-col md:!flex-row justify-end w-[870px] mx-auto h-full pb-12">
                 <div class="relative wb-flex flex-col justify-center gap-4 z-1 max-w-full">
                     {% if title_image != blank %}
                         {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative left-5 sm:!left-0 w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
@@ -47,7 +47,7 @@
 {% endcapture %}
 
 {% if hero_content != blank %}
-<div class="flex relative justify-center items-center relative overflow-hidden py-8 md:!py-20 lg:!py-8 lg:!h-[600px]">
+<div class="flex relative justify-center items-center relative overflow-hidden py-8 md:!py-20 lg:!py-8 lg:!h-[560px]">
     <div class="flex justify-center items-center ">
       {{ hero_content }}
     </div>

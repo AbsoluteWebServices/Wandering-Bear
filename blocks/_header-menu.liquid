@@ -111,7 +111,7 @@
             {% endif %}
             ref="menuitem"
           >
-            <span class="menu-list__link-title">{{- link.title -}}</span>
+            <span class="menu-list__link-title {% unless forloop.first or forloop.last %}!ml-[18px] !mr-2{% endunless %}">{{- link.title -}}</span>
           </a>
           {%- if link.links != blank -%}
             <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
@@ -167,7 +167,7 @@
     >
       <div class="header-menu__inner">
         <nav
-          class="menu-list"
+          class="menu-list !ml-1.5"
           aria-label="{{ 'accessibility.header_navigation_label' | t }}"
           style="{% render 'menu-font-styles', settings: block_settings, menu_type: 'mega_menu' %}"
         >

@@ -11,9 +11,9 @@
     assign badge = section_settings.badge
 %}
 
-<div class="pt-5 pb-0 md:!pt-5 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
+<div class="pt-5 pb-0 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[80px] right-[5vw] md:!right-[19vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[120px] right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[100px] !h-auto shadow-button' }}
     {% endif %}
     {% if title_type == 'image' %}
         {% if title_image != blank %}
@@ -27,7 +27,7 @@
         {% endif %}
     {% endif %}
     <div class="container max-w-[1140px] mx-auto">
-        <div class="wb-grid grid-cols-1 md:px-10 xl:!px-0 md:grid-cols-3 gap-0 md:gap-10 xl:gap-20 relative z-[1]">
+        <div class="wb-grid grid-cols-1 md:!px-0 md:grid-cols-3 gap-0 md:gap-[90px] relative z-[1]">
             {% for block in section.blocks %}
                 {% liquid
                     assign image = block.settings.image
