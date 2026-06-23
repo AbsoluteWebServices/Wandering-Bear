@@ -13,7 +13,7 @@
 
 <div class="pt-5 pb-0 md:!pt-5 md:!pb-8 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[80px] right-[5vw] md:!right-[15vw] !w-[80px] md:!w-[85px] !h-auto' }}
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[80px] right-[5vw] md:!right-[19vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
     {% endif %}
     {% if title_type == 'image' %}
         {% if title_image != blank %}
