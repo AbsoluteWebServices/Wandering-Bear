@@ -16,13 +16,13 @@
 %}
 
 {% capture founders_content %}
-    <div class="aw-flex flex-col gap-4 relative">
+    <div class="aw-flex flex-col gap-4 relative mt-[100px]">
     {% if title_badge != blank %}
         {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-12 -right-12 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
     {% endif %}
     {% if title_type == 'image' %}
         {% if title_image != blank %}
-            <div class="max-w-[442px] w-full mx-auto md:!mb-5 mt-11">
+            <div class="max-w-[442px] w-full mx-auto md:!mb-2 mt-11">
                 {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
             </div>
         {% endif %}
@@ -32,7 +32,7 @@
         {% endif %}
     {% endif %}
     {% if content != blank %}
-        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3">
+        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:mt-5">
             {{ content }}
         </div>
     {% endif %}
@@ -81,7 +81,7 @@
                 {% endif %}
                 {{ video_content }}
             </div>
-            <div class="w-full max-w-[400px]">
+            <div class="w-full max-w-[436px]">
                 {{ founders_content }}
             </div>
             
