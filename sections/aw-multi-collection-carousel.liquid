@@ -47,7 +47,7 @@
                             assign collection = block.settings.collection
                         %}
                         <li x-cloak x-show="activeCollectionHandle !== '{{ collection.handle }}'" @click="changeCollection('{{ block.settings.title }}', '{{ block.settings.accent_text }}', '{{ collection.handle }}')"  
-                        class="dropdown-item p-3 border-t border-espresso cursor-pointer"
+                        class="dropdown-item p-3 border-t border-espresso cursor-pointer hover:bg-[#F4ECE5] hover:brightness-90 transition-all duration-300"
                         :class="{ 'active': activeCollectionHandle === '{{ collection.handle }}' }"
                         >
                             <span class="font-kurdis-semi-condensed text-base font-bold">{{ block.settings.title }}</span>
@@ -68,11 +68,11 @@
                 {% render 'multi-coll-carousel-slide', product: product %}
             {% endfor %}
         </div>
-        <div class="hidden md:!flex swiper-button-next" style="right: calc(calc(var(--slide-width) * 0.87) - 18px);">
-            {% render 'icons', icon: 'chevron-right' with class: 'translate-x-[10%]' %}
+        <div class="hidden md:!flex swiper-button-next group transition-all duration-300" style="right: calc(calc(var(--slide-width) * 0.87) - 18px);">
+            {% render 'icons', icon: 'chevron-right' with class: 'translate-x-[10%] group-hover:!text-gold transition-all duration-300' %}
         </div>
-        <div class="hidden md:!flex swiper-button-prev" style="left: calc(calc(var(--slide-width)) - 0px);">
-            {% render 'icons', icon: 'chevron-left' with class: '-translate-x-[10%]' %}
+        <div class="hidden md:!flex swiper-button-prev group transition-all duration-300" style="left: calc(calc(var(--slide-width)) - 0px);">
+            {% render 'icons', icon: 'chevron-left' with class: '-translate-x-[10%] group-hover:!text-gold transition-all duration-300' %}
         </div>
     </div>
 </div>

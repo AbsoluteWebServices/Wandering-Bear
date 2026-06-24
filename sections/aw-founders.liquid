@@ -16,9 +16,9 @@
 %}
 
 {% capture founders_content %}
-    <div class="wb-flex flex-col gap-3 relative md:!mt-[100px]">
+    <div class="wb-flex flex-col gap-3 relative md:!mt-[100px] relative">
     {% if title_badge != blank %}
-        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-12 -right-12 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
+        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-2 -right-12 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
     {% endif %}
     {% if title_type == 'image' %}
         {% if title_image != blank %}

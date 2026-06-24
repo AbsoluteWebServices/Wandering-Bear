@@ -38,7 +38,7 @@
                     assign accent_text = block.settings.accent_text
                     assign badge = block.settings.badge
                 %}
-                <div class="relative {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
+                <div class="relative group {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
                     <a href="{{ collection.url }}">
                     {% if badge != blank %}
                         {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-[50px] -left-[50px] !w-[148px] !h-auto' }}
@@ -48,7 +48,7 @@
                             source: image, 
                             tablet_source: image_mobile,
                             mobile_source: image_mobile,
-                            class: 'w-full h-full object-cover',
+                            class: 'w-full h-full object-cover group-hover:brightness-110 transition-all duration-300',
                             preload: 'eager',
                             loading: 'eager'
                         %}
@@ -56,13 +56,13 @@
                     </a>
                     <div class="hidden md:!flex flex-col mt-2 {% unless accent_text != blank %} {% endunless %} items-center">
                         {% if title != blank %}
-                            <a href="{{ collection.url }}" class="h1 text-center" style="color: {{ text_color }}">{{ title }}</a>
+                            <a href="{{ collection.url }}" class="h1 text-center group-hover:!text-gold transition-all duration-300" style="color: {{ text_color }}">{{ title }}</a>
                         {% endif %}
                         {% if accent_text != blank %}
                             <span class="accent text-gold text-center !text-lg">{{ accent_text }}</span>
                         {% endif %}
                         {% if subtitle != blank %}
-                            <span class="body text-espresso text-center text-balance" style="color: {{ text_color }}">{{ subtitle }}</span>
+                            <span class="body text-espresso text-center text-balance group-hover:!text-gold transition-all duration-300" style="color: {{ text_color }}">{{ subtitle }}</span>
                         {% endif %}
                     </div>
                 </div>
