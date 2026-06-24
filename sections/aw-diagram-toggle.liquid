@@ -1,0 +1,363 @@
+
+{% assign class = '' %}
+{% liquid
+    assign title_type = section.settings.title_type
+    assign title = section.settings.title
+    assign title_alt = section.settings.title_alt
+    assign title_image = section.settings.title_image
+    assign title_image_mobile = section.settings.title_image_mobile
+%}
+<div x-data="diagramToggle(0)">
+    <div
+    x-ref="toggle"
+    @pointerdown="startDrag($event)"
+    @pointermove.window="onDrag($event)"
+    @pointerup.window="endDrag()"
+    @pointercancel.window="endDrag()"
+    @click.window="endDrag()"
+    class="wb-flex relative user-select-none touch-pan-y select-none flex-col mx-auto relative z-[3] items-center justify-center"
+    >
+        {% if title_type == 'image' %}
+            {% if title_image != blank %}
+                <div class="max-w-[442px] w-full mx-auto lg:!mb-5">
+                    {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+                </div>
+            {% endif %}
+        {% elsif title_type == 'text' %}
+            {% if title != blank %}
+                <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
+            {% endif %}
+        {% endif %}
+
+        <div
+        class="relative wb-flex flex-row gap-4 bg-foam border-2 border-espresso rounded-[30px] p-2 w-fit"
+        x-ref="toggle"
+      >
+        <div
+          class="absolute top-2 bottom-2 rounded-[25px] bg-[#E6CDB7] transition-all duration-300 ease-out"
+          :style="indicatorStyle"
+        ></div>
+      
+        {% for block in section.blocks %}
+          <button
+            class="relative z-[2] cursor-pointer py-3 px-5 rounded-[25px] uppercase font-kurdis-semi-condensed font-bold text-espresso text-[15px] leading-[120%]"
+            data-toggle-button
+            @click="setState({{ forloop.index0 }})"
+          >
+            {{ block.settings.toggle_title }}
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div x-ref="content" class="relative z-[1] overflow-hidden"></div>        
+
+    {% for block in section.blocks %}
+        {% capture diagram_content %}
+            {% liquid
+                assign block_settings = block.settings
+                assign color_scheme = block_settings.color_scheme
+                assign background_color = color_scheme.background
+                assign background_image = block_settings.background_image
+                assign text_color = color_scheme.text
+                assign title_type = block_settings.title_type
+                assign title = block_settings.title
+                assign title_alt = block_settings.title_alt
+                assign title_image = block_settings.title_image
+                assign title_image_mobile = block_settings.title_image_mobile
+                assign diagram_image = block_settings.diagram_image
+            %}
+            {% capture diagram_icons %}
+                {% assign block_settings = block.settings %}
+
+                {% for i in (1..3) %}
+                    {% liquid
+                        assign icon_key = 'icon_' | append: i
+                        assign title_key = 'title_' | append: i
+                        assign description_key = 'description_' | append: i
+                    
+                        assign icon = block_settings[icon_key]
+                        assign title = block_settings[title_key]
+                        assign description = block_settings[description_key]
+                    %}
+            
+                    {% case forloop.index %}
+                        {% when 1 %}
+                            {% assign class = 'mt-[53px] mb-6 lg:!mb-0 lg:!mt-0 order-2 lg:!w-[215px] lg:absolute lg:left-[82%] lg:top-[12%]' %}
+                            {% assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto' %}
+                        {% when 2 %}
+                            {% assign class = 'order-3 mb-6 lg:!mb-0 lg:!w-[215px] lg:absolute lg:right-[82%] lg:top-[23%]' %}
+                            {% assign icon_class = '!w-[54px] !h-[54px] lg:!ml-auto lg:!mr-0'  %}
+                        {% when 3 %}
+                            {% assign class = 'mb-[53px] lg:!mb-0 order-4 lg:!w-[287px] lg:absolute lg:left-[82%] lg:top-[58%]' %}
+                            {% assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto' %}
+                    {% endcase %}
+                    {% if icon != blank %}
+                        <div class="wb-flex flex-row {% unless forloop.last %} lg:!flex-col {% endunless %} gap-4 {{ class }}"
+                        data-callout
+                        data-index="{{ forloop.index0 }}">
+                            {{ icon | image_url: width: 100 | image_tag: class: icon_class, alt: title }}
+                            <div class="wb-flex flex-col gap-4">
+                                <span class="h2 uppercase">{{ title }}</span>
+                                <span class="body">{{ description }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endcapture %}
+
+
+
+
+            <div class="wb-flex flex-col gap-4 relative" style="background-color: {{ background_color }}">
+                {% if background_image != blank %}
+                    {% render 'picture', source: background_image, class: 'w-full !h-full object-cover object-top !max-w-none absolute inset-0 lg:!-mt-[77px]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+                {% endif %}
+            <div class="wb-flex flex-col mx-auto relative z-[2]">
+                {% if title_type == 'image' %}
+                    {% if title_image != blank %}
+                        <div class="max-w-[442px] w-full mx-auto lg:!mb-5">
+                            {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+                        </div>
+                    {% endif %}
+                {% elsif title_type == 'text' %}
+                    {% if title != blank %}
+                        <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div data-line-wrapper class="wb-flex flex-col lg:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0">
+
+                <!-- SVG LINES -->
+                <svg class="hidden lg:!block absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
+                    <line
+                    x-show="lines[0]"
+                    :x1="lines[0]?.x1 || 0"
+                    :y1="lines[0]?.y1 || 0"
+                    :x2="lines[0]?.x2 || 0"
+                    :y2="lines[0]?.y2 || 0"
+                    stroke="#2f1a0f"
+                    stroke-width="1"
+                    stroke-dasharray="4 4"
+                    />
+                
+                    <line
+                    x-show="lines[1]"
+                    :x1="lines[1]?.x1 || 0"
+                    :y1="lines[1]?.y1 || 0"
+                    :x2="lines[1]?.x2 || 0"
+                    :y2="lines[1]?.y2 || 0"
+                    stroke="#2f1a0f"
+                    stroke-width="1"
+                    stroke-dasharray="4 4"
+                    />
+                
+                    <line
+                    x-show="lines[2]"
+                    :x1="lines[2]?.x1 || 0"
+                    :y1="lines[2]?.y1 || 0"
+                    :x2="lines[2]?.x2 || 0"
+                    :y2="lines[2]?.y2 || 0"
+                    stroke="#2f1a0f"
+                    stroke-width="1"
+                    stroke-dasharray="4 4"
+                    />
+                </svg>
+
+                {{ diagram_icons }}
+                    {% if diagram_image != blank %}
+                        <div class="mx-auto h-auto">
+                            <picture>
+                                <source srcset="{{ diagram_image | image_url: width: 1920 }}" media="(min-width: 1920px)">
+                                <source srcset="{{ diagram_image | image_url: width: 1440 }}" media="(min-width: 1440px)">
+                                <source srcset="{{ diagram_image | image_url: width: 1200 }}" media="(min-width: 1200px)">
+                                <source srcset="{{ diagram_image | image_url: width: 1024 }}" media="(min-width: 1024px)">
+                                <source srcset="{{ diagram_image | image_url: width: 768 }}" media="(min-width: 768px)">
+                                <img data-diagram-image src="{{ diagram_image | image_url: width: 365 }}" alt="{{ title_alt }}" class="!h-[355px] lg:!h-[573px] !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto">
+                            </picture>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endcapture %}
+        <template data-template-view="{{ forloop.index0 }}">
+            {{ diagram_content }}
+        </template>
+    {% endfor %}
+  
+</div>
+
+
+
+{% schema %}
+    {
+        "name": "AW Diagram Toggle",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "background_image",
+                "label": "Background Image"
+            },
+            {
+                "type": "select",
+                "id": "title_type",
+                "label": "Title Type",
+                "options": [
+                    {
+                        "value": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "value": "image",
+                        "label": "Image"
+                    }
+                ],
+                "default": "text"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "visible_if": "{{ section.settings.title_type == 'text' }}"
+            },
+            {
+                "type": "text",
+                "id": "title_alt",
+                "label": "Title Alt",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image",
+                "label": "Title Image",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "image_picker",
+                "id": "title_image_mobile",
+                "label": "Title Image Mobile",
+                "visible_if": "{{ section.settings.title_type == 'image' }}"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "view",
+                "name": "View",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "toggle_title",
+                        "label": "Toggle Title"
+                    },
+                    {
+                        "type": "color_scheme",
+                        "id": "color_scheme",
+                        "label": "Color Scheme",
+                        "default": "scheme-1"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "background_image",
+                        "label": "Background Image"
+                    },
+                    {
+                        "type": "select",
+                        "id": "title_type",
+                        "label": "Title Type",
+                        "options": [
+                            {
+                                "value": "text",
+                                "label": "Text"
+                            },
+                            {
+                                "value": "image",
+                                "label": "Image"
+                            }
+                        ],
+                        "default": "text"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title",
+                        "visible_if": "{{ block.settings.title_type == 'text' }}"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title_alt",
+                        "label": "Title Alt",
+                        "visible_if": "{{ block.settings.title_type == 'image' }}"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "title_image",
+                        "label": "Title Image",
+                        "visible_if": "{{ block.settings.title_type == 'image' }}"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "title_image_mobile",
+                        "label": "Title Image Mobile",
+                        "visible_if": "{{ block.settings.title_type == 'image' }}"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "diagram_image",
+                        "label": "Diagram Image"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "icon_1",
+                        "label": "Icon 1"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title_1",
+                        "label": "Title 1"
+                    },
+                    {
+                        "type": "text",
+                        "id": "description_1",
+                        "label": "Description 1"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "icon_2",
+                        "label": "Icon 2"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title_2",
+                        "label": "Title 2"
+                    },
+                    {
+                        "type": "text",
+                        "id": "description_2",
+                        "label": "Description 2"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "icon_3",
+                        "label": "Icon 3"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title_3",
+                        "label": "Title 3"
+                    },
+                    {
+                        "type": "text",
+                        "id": "description_3",
+                        "label": "Description 3"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+                "name": "AW Diagram Toggle"
+            }
+        ]
+    }
+{% endschema %}
