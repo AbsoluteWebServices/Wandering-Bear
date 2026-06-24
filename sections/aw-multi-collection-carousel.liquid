@@ -8,7 +8,7 @@
 %}
 
 {% capture slide_styles %}
-    width: calc(100% / 5.5);
+    width: calc(100% / 5.8);
 {% endcapture %}
 
 <div x-data="swiperSlider('{{ active_collection_title }}', '{{ active_collection_accent_text }}','{{ active_collection_handle }}')" class="relative z-1 pt-2 pb-[66px] max-w-[100vw] overflow-x-hidden" style="background-color: {{ color_scheme.settings.background }}">
@@ -68,10 +68,10 @@
                 {% render 'multi-coll-carousel-slide', product: product %}
             {% endfor %}
         </div>
-        <div class="hidden md:!flex swiper-button-next" style="right: calc(calc(var(--slide-width) / 2) - 10px);">
+        <div class="hidden md:!flex swiper-button-next" style="right: calc(calc(var(--slide-width) * 0.87) - 18px);">
             {% render 'icons', icon: 'chevron-right' with class: 'translate-x-[10%]' %}
         </div>
-        <div class="hidden md:!flex swiper-button-prev" style="left: calc(calc(var(--slide-width)) - 10px);">
+        <div class="hidden md:!flex swiper-button-prev" style="left: calc(calc(var(--slide-width)) - 0px);">
             {% render 'icons', icon: 'chevron-left' with class: '-translate-x-[10%]' %}
         </div>
     </div>

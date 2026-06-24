@@ -17,7 +17,7 @@
     assign foreground_bg_image = section.settings.foreground_bg_image
 %}
 
-<div class="flex flex-col md:!flex-row relative pt-[55px] md:!pb-[55px] lg:!py-[65px] z-0 overflow-hidden" style="background-color: {{ color_scheme.background }}">
+<div class="flex flex-col md:!flex-row relative pt-[55px] md:!pb-[50px] lg:!pt-[55px] lg:!pb-[65px] z-0 overflow-hidden" style="background-color: {{ color_scheme.background }}">
     <svg preserveAspectRatio="none" class="absolute -top-5 left-0 w-full z-[2]" xmlns="http://www.w3.org/2000/svg" width="1280" height="18" viewBox="0 0 1280 18" fill="none">
         <path d="M0 14.5L424 17.0497L1280 14.5V0H0V14.5Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
@@ -38,7 +38,7 @@
                 {% if subtitle != blank %}
                     <span class="body block !mb-5 max-w-[316px] md:!max-w-full" style="color: {{ color_scheme.settings.foreground }}">{{ subtitle }}</span>
                 {% endif %}
-                <div class="max-w-[316px] w-full md:!max-w-full mb-2 !font-kurdis-semi-condensed">
+                <div class="max-w-[316px] w-full md:!max-w-full !font-kurdis-semi-condensed">
                 {% for bullet in bulletpoints %}
                     <div class="wb-flex gap-2 block !mb-5 items-center w-full">
                         {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!w-[14px]', alt: bullet.settings.title }}
