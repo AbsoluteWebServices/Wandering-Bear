@@ -46,11 +46,11 @@
             {% if product.metafields.custom.carousel_image != blank %}
                 <span class="h2 !text-xl text-espresso block !mb-2 !leading-[1.2]">{{ product.title | split: '- ' | last }}</span>
             {% endif %}
-            <div class="hidden md:!flex h-[36px] w-[158px] group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-5 transition-all duration-500 mx-auto relative wb-flex items-center justify-center">
-                <span class="text-gold -mt-1 h-fit relative z-[2] font-kurdis-condensed text-[15px] font-bold">SHOP NOW</span>
-                <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="213" height="51" viewBox="0 0 213 51" fill="none" class="absolute inset-0 w-full h-full" stroke="#AF7404">
-                    <g fill="#F2E6DC" stroke="#AF7404" filter="url(#filter0_d_3_52)">
-                        <path d="M1.89748 4.47133C0.285803 6.96547 0.2212 9.90479 0.193998 12.7225C0.129395 19.4279 0.0681918 26.1305 0.00358848 32.8359C-0.0134124 34.6582 -0.0100122 36.555 0.979438 38.1892C3.36296 42.1185 6.37211 42.9756 15.2738 42.9756C74.9808 42.9756 134.691 43.1222 194.402 42.6964C196.52 42.6825 198.846 42.771 200.583 41.7839C205.292 39.11 204.779 34.224 204.636 30.599C204.371 23.8493 205 18.3025 205 11.55C205 6.82721 204.351 4.93034 202.426 3.06112C199.961 0.663758 194.827 0.766068 190.981 0.70247C165.697 0.279407 140.4 0.060962 115.106 0.0111898C89.6491 -0.0413475 64.1921 0.0913783 38.735 0.403837C31.5538 0.492321 24.376 0.59463 17.1983 0.71353C11.7784 0.802014 4.90324 -0.171309 1.89748 4.47133Z"/>
+            <div class="hidden group/button md:!flex h-[36px] w-[158px] group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-5 transition-all duration-500 mx-auto relative wb-flex items-center justify-center">
+                <span class="text-gold -mt-1 h-fit relative z-[2] font-kurdis-condensed text-[15px] group-hover/button:!text-[#F2E6DC] font-bold">SHOP NOW</span>
+                <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="213" height="51" viewBox="0 0 213 51" fill="none" class="absolute inset-0 w-full h-full text-[#F2E6DC] fill-[#F2E6DC] stroke-[#AF7404] group-hover/button:!text-gold group-hover/button:!stroke-gold transition-all duration-300">
+                    <g fill="currentColor" stroke="currentColor" filter="url(#filter0_d_3_52)">
+                        <path stroke="#AF7404" d="M1.89748 4.47133C0.285803 6.96547 0.2212 9.90479 0.193998 12.7225C0.129395 19.4279 0.0681918 26.1305 0.00358848 32.8359C-0.0134124 34.6582 -0.0100122 36.555 0.979438 38.1892C3.36296 42.1185 6.37211 42.9756 15.2738 42.9756C74.9808 42.9756 134.691 43.1222 194.402 42.6964C196.52 42.6825 198.846 42.771 200.583 41.7839C205.292 39.11 204.779 34.224 204.636 30.599C204.371 23.8493 205 18.3025 205 11.55C205 6.82721 204.351 4.93034 202.426 3.06112C199.961 0.663758 194.827 0.766068 190.981 0.70247C165.697 0.279407 140.4 0.060962 115.106 0.0111898C89.6491 -0.0413475 64.1921 0.0913783 38.735 0.403837C31.5538 0.492321 24.376 0.59463 17.1983 0.71353C11.7784 0.802014 4.90324 -0.171309 1.89748 4.47133Z"/>
                     </g>
                     <defs>
                         <filter id="filter0_d_3_52" x="0" y="0" width="213" height="51" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
