@@ -163,10 +163,11 @@
         "background_image_mobile": "shopify://shop_images/Group_1327226600.png",
         "floating_image": "shopify://shop_images/LatteHands_Badge.png",
         "floating_image_mobile": "shopify://shop_images/Mobile_Hand.png",
+        "badge": "shopify://shop_images/NEW_BADGE_3c9b0304-61d1-4e60-8f8d-7999b8b005cd.svg",
         "title_type": "image",
         "title": "",
-        "title_image": "shopify://shop_images/lattes-got-benefits.svg",
-        "title_image_mobile": "shopify://shop_images/Group_1327226608_9dce444c-5629-4918-85ff-0a441448ddb9.png",
+        "title_image": "shopify://shop_images/Group_1327226591.svg",
+        "title_image_mobile": "shopify://shop_images/Group_1327226591.svg",
         "title_alt": "This latte's got benefits",
         "button_label": "Shop Lattes",
         "button_link": "shopify://collections/lattes"
