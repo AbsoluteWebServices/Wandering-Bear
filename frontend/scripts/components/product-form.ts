@@ -108,7 +108,7 @@ export default (Alpine: AlpineType) => {
                 console.log('current price formatted', variant.currentPriceFormatted);
                 variant.currentSavings = variant.currentPrice/variant.compare_at_price;
                 variant.currentSavingsPercentage = Math.round(100 - variant.currentSavings * 100);
-                variant.currentSavingsPercentageFormatted = 'Save ' + Math.round(variant.currentSavingsPercentage) + '% off';
+                variant.currentSavingsPercentageFormatted = 'Save ' + Math.round(variant.currentSavingsPercentage) + '%';
             });
         },
 

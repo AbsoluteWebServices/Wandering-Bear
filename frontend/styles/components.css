@@ -110,12 +110,13 @@
         background-color: var(--button-hover-bg);
         color: var(--button-hover-text);
         border: var(--button-hover-border);
+
+        .btn-svg {
+            color: var(--button-hover-text);
+        }
     }
     .btn-svg {
         fill: var(--svg-fill);
-        &:hover {
-            fill: var(--svg-hover-fill);
-        }
     }
 }
 
