@@ -46,7 +46,7 @@
                 <div class="max-w-[316px] w-full md:!max-w-full !font-kurdis-semi-condensed">
                 {% for bullet in bulletpoints %}
                     <div class="wb-flex gap-2 block !mb-5 items-center w-full">
-                        {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!w-[14px]', alt: bullet.settings.title }}
+                        {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!w-[14px]', alt: bullet.settings.image.alt }}
                         <span class="body font-bold !leading-[16px]" style="color: {{ color_scheme.settings.foreground }}">{{ bullet.settings.title }}</span>
                     </div>
                 {% endfor %}
