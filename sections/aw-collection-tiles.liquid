@@ -28,7 +28,7 @@
         <span class="h1 mb-8 title-text leading-[1.2] text-center mx-auto mb-5 md:!mb-7.5 block" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     <div class="container max-w-[1140px] mx-auto">
-        <div class="wb-grid grid-cols-1 lg:!px-5 xl:!px-0 md:grid-cols-3 gap-0 md:gap-[90px] relative z-[1]">
+        <div class="wb-grid grid-cols-1 px-0 md:!px-5 xl:!px-0 md:grid-cols-3 gap-0 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none">
             {% for block in section.blocks %}
                 {% liquid
                     assign image = block.settings.image
@@ -48,6 +48,8 @@
                     {% if image != blank %}
                         {% render 'picture', 
                             source: image, 
+                            image: image,
+                            image_mobile: image_mobile,
                             tablet_source: image_mobile,
                             mobile_source: image_mobile,
                             class: 'w-full h-full object-cover',

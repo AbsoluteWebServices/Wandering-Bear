@@ -22,7 +22,9 @@
 {% capture hero_content %}
         {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover object-left sm:!object-[center_bottom] md:!object-center !max-w-none absolute inset-0 2xl:!object-[0%_30%]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
         {% if title_image != blank or title_text != blank or subtitle != blank %}
-            <div class="container relative wb-flex justify-center sm:justify-end max-w-[500px] md:max-w-none md:w-[870px] mx-0 md:mx-auto h-full pb-10">
+            <div class="container relative wb-flex
+            
+            justify-center sm:justify-end  max-w-[500px] md:max-w-none md:w-[870px] mx-0 md:mx-auto h-full pb-10">
                 <div class="relative wb-flex flex-col items-center justify-center sm:justify-end sm:items-start md:items-start gap-4 z-1 w-fit max-w-full">
                     {% if title_image != blank and title_type == 'image' %}
                         {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative sm:left-0 w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
@@ -51,6 +53,9 @@
 
 {% if hero_content != blank %}
 <div class="flex relative justify-center items-center relative overflow-hidden py-8 md:py-20 lg:py-8 lg:h-[560px]">
+    {% if foreground_image != blank %}
+        {% render 'picture', source: foreground_image, class: 'hidden md:!block !w-fit h-full object-contain h-full top-0 bottom-0 max-h-full absolute left-[10%] right-auto z-[2]', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+    {% endif %}
     <div class="flex justify-center md:!justify-end lg:!justify-center items-center w-full">
       {{ hero_content }}
     </div>

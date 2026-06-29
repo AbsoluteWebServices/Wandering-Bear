@@ -28,7 +28,7 @@
                 <span class="text-xs text-center">Add Carousel Image metafield image for <em>{{ product.title }}</em></span>
             </div>
         {% endif %}
-        <div class="absolute bottom-auto top-[70%] md:!top-[75%] mx-auto text-center aw-flex justify-center items-center z-[2] w-full px-4">
+        <div class="absolute bottom-auto top-[65%] md:top-[70%] lg:!top-[75%] mx-auto text-center aw-flex justify-center items-center z-[2] w-full px-4">
             {% if product.metafields.custom.carousel_image != blank %}
                 <span class="h2 !text-xl text-espresso block !mb-2 !leading-[1.2]">{{ product.title | split: '- ' | last }}</span>
             {% endif %}
