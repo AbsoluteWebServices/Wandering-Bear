@@ -19,7 +19,7 @@ export default (Alpine: AlpineType) => {
         purchaseOption: 'autoship',
         sellingPlanId: sellingPlanId,
         modal: null,
-        
+
         get addToCartText() {
             return this.selectedVariant.available ? 'Add to Cart' : 'Sold Out';
         },
@@ -28,11 +28,11 @@ export default (Alpine: AlpineType) => {
             let totalOriginalPrice = 0;
             let totalAutoshipPrice = 0;
             let totalOneTimePrice = 0;
-  
+
             totalOriginalPrice += this.selectedVariant.price;
             totalAutoshipPrice += this.selectedVariant.selling_plan_price;
             totalOneTimePrice += this.selectedVariant.price;
-  
+
             return {
               original: this._formatPrice(totalOriginalPrice),
               autoship: this._formatPrice(totalAutoshipPrice),
@@ -56,10 +56,59 @@ export default (Alpine: AlpineType) => {
           return price_normalized.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
         },
 
+        _getCartQuantity(variant: any) {
+            if (variant?.quantified && variant?.quantified_units > 0) {
+                return variant.quantified_units;
+            }
+
+            return 1;
+        },
+
+        _getCartSectionIds() {
+            const sectionIds = new Set<string>();
+
+            document.querySelectorAll('cart-items-component').forEach((item) => {
+                if (item instanceof HTMLElement && item.dataset.sectionId) {
+                    sectionIds.add(item.dataset.sectionId);
+                }
+            });
+
+            return Array.from(sectionIds);
+        },
+
+        _openCartDrawer() {
+            const cartDrawer = document.querySelector('cart-drawer-component') as
+                | (HTMLElement & { open?: () => void })
+                | null;
+
+            cartDrawer?.open?.();
+        },
+
+        _syncSelectedVariant() {
+            const picker = this.$root?.querySelector('variant-picker');
+            const checked = picker?.querySelector('fieldset input:checked');
+
+            if (!(checked instanceof HTMLInputElement)) {
+                return;
+            }
+
+            const variantId = checked.dataset.variantId;
+
+            if (!variantId || !this.productObject?.[variantId]) {
+                return;
+            }
+
+            this.selectedVariantId = String(variantId);
+            this.selectedVariant = this.productObject[this.selectedVariantId];
+            this.sellingPlanId = this.purchaseOption === 'autoship'
+                ? this.selectedVariant.selling_plan_id
+                : null;
+        },
+
         getOneTimePrice() {
 
             const price = this.selectedVariant.price;
-            
+
             return price;
         },
 
@@ -78,17 +127,27 @@ export default (Alpine: AlpineType) => {
                 variant.currentSavingsPercentageFormatted = '';
             });
 
+            this.selectedVariantId = String(this.selectedVariantId);
             this.selectedVariant = this.productObject[this.selectedVariantId];
+            this._syncSelectedVariant();
             this.updatePrices();
 
-            window.addEventListener('variant-changed', (event) => {
-                this.selectedVariantId = String(event.detail.variantId);
-                this.selectedVariant = this.productObject[this.selectedVariantId];
-                console.log('selected variant', this.selectedVariant);
+            this.$nextTick(() => {
+                this._syncSelectedVariant();
                 this.updatePrices();
-
             });
 
+            window.addEventListener('variant-changed', () => {
+                this._syncSelectedVariant();
+                this.updatePrices();
+            });
+
+            window.addEventListener('pageshow', (event: PageTransitionEvent) => {
+                if (event.persisted) {
+                    this._syncSelectedVariant();
+                    this.updatePrices();
+                }
+            });
         },
 
         onPurchaseOptionChange(option: string) {
@@ -113,36 +172,60 @@ export default (Alpine: AlpineType) => {
         },
 
         async addToCart() {
+            this._syncSelectedVariant();
             this.loading = true;
 
-            let cartItem = {
-              id: this.selectedVariantId,
-              quantity: 1,
+            const quantity = this._getCartQuantity(this.selectedVariant);
+            const sectionIds = this._getCartSectionIds();
+
+            const cartItem: Record<string, unknown> = {
+              id: this.selectedVariant.id,
+              quantity,
               selling_plan: this.purchaseOption === 'autoship' ? this.selectedVariant.selling_plan_id : null,
+            };
+
+            if (sectionIds.length > 0) {
+              cartItem.sections = sectionIds.join(',');
+              cartItem.sections_url = window.location.pathname + window.location.search;
             }
-          
-            const res = await fetch('/cart/add.js', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-              },
-              body: JSON.stringify(cartItem),
-            })
-          
-            if (!res.ok) {
-              const errorText = await res.text()
-          
+
+            try {
+              const res = await fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                },
+                body: JSON.stringify(cartItem),
+              })
+            
+              const addResponse = await res.json();
+
+              if (!res.ok || addResponse.status) {
+                const errorText = addResponse.description || addResponse.message || 'ATC failed';
+
+                document.dispatchEvent(
+                  new CartErrorEvent('product-atc', 'ATC failed', errorText)
+                )
+
+                return
+              }
+
+              const cart = await fetch('/cart.js').then((r) => r.json())
+
               document.dispatchEvent(
-                new CartErrorEvent('product-atc', 'ATC failed', errorText)
+                new CartAddEvent(cart, 'product-atc', {
+                  source: 'product-atc',
+                  itemCount: cart.item_count,
+                  variantId: String(this.selectedVariant.id),
+                  sections: addResponse.sections,
+                })
               )
-          
-              return
+
+              this._openCartDrawer();
+            } finally {
+              this.loading = false;
             }
-                    
-            this.loading = false;
           }
-
-
     }))
 }

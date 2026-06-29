@@ -35,7 +35,7 @@ class CartItemsComponent extends Component {
   connectedCallback() {
     super.connectedCallback();
 
-    document.addEventListener(ThemeEvents.cartUpdate, this.#handleCartUpdate);
+    document.addEventListener(ThemeEvents.cartUpdate, this.#handleCartUpdate, { capture: true });
     document.addEventListener(ThemeEvents.discountUpdate, this.handleDiscountUpdate);
     document.addEventListener(ThemeEvents.quantitySelectorUpdate, this.#debouncedOnChange);
   }
@@ -43,7 +43,7 @@ class CartItemsComponent extends Component {
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    document.removeEventListener(ThemeEvents.cartUpdate, this.#handleCartUpdate);
+    document.removeEventListener(ThemeEvents.cartUpdate, this.#handleCartUpdate, { capture: true });
     document.removeEventListener(ThemeEvents.discountUpdate, this.handleDiscountUpdate);
     document.removeEventListener(ThemeEvents.quantitySelectorUpdate, this.#debouncedOnChange);
   }

@@ -179,7 +179,7 @@
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 48,
-        "hide_thumbnails_desktop": true,
+        "hide_thumbnails_desktop": false,
         "color_scheme": "",
         "padding-block-start": 44,
         "padding-block-end": 0
