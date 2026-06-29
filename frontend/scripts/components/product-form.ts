@@ -25,26 +25,24 @@ export default (Alpine: AlpineType) => {
         },
 
         get totalPrice() {
-            let totalOriginalPrice = 0;
-            let totalAutoshipPrice = 0;
-            let totalOneTimePrice = 0;
-
-            totalOriginalPrice += this.selectedVariant.price;
-            totalAutoshipPrice += this.selectedVariant.selling_plan_price;
-            totalOneTimePrice += this.selectedVariant.price;
+            const variant = this.selectedVariant;
+            const autoshipPrice = variant?.selling_plan_price ?? variant?.price ?? 0;
 
             return {
-              original: this._formatPrice(totalOriginalPrice),
-              autoship: this._formatPrice(totalAutoshipPrice),
-              oneTime: this._formatPrice(totalOneTimePrice),
+              original: this._formatPrice(variant?.price),
+              autoship: this._formatPrice(autoshipPrice),
+              oneTime: this._formatPrice(variant?.price),
             }
           },
 
         get currentSavingsAmount() {
-            const savingsAmountAutoship = this.selectedVariant.price - this.selectedVariant.selling_plan_price;
-            const savingsAmountOneTime = this.selectedVariant.price - this.selectedVariant.price;
+            const variant = this.selectedVariant;
 
-            return savingsAmountAutoship;
+            if (variant?.selling_plan_price == null) {
+                return 0;
+            }
+
+            return variant.price - variant.selling_plan_price;
         },
 
         get currentSavingsAmountFormatted() {
@@ -52,8 +50,20 @@ export default (Alpine: AlpineType) => {
         },
 
         _formatPrice(price) {
+          if (price == null || Number.isNaN(Number(price))) {
+            return '';
+          }
+
           const price_normalized = price / 100;
           return price_normalized.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+        },
+
+        _getVariantDisplayPrice(variant: any) {
+            if (this.purchaseOption === 'autoship' && variant?.selling_plan_price != null) {
+                return variant.selling_plan_price;
+            }
+
+            return variant?.price;
         },
 
         _getCartQuantity(variant: any) {
@@ -159,15 +169,17 @@ export default (Alpine: AlpineType) => {
 
         updatePrices() {
             Object.values(this.productObject).forEach((variant: any) => {
-                variant.currentPrice = this.purchaseOption === 'autoship' ? variant.selling_plan_price : variant.price;
-                console.log('selling plan price', variant.selling_plan_price);
-                console.log('price', variant.price);
-
+                variant.currentPrice = this._getVariantDisplayPrice(variant);
                 variant.currentPriceFormatted = this._formatPrice(variant.currentPrice);
-                console.log('current price formatted', variant.currentPriceFormatted);
-                variant.currentSavings = variant.currentPrice/variant.compare_at_price;
-                variant.currentSavingsPercentage = Math.round(100 - variant.currentSavings * 100);
-                variant.currentSavingsPercentageFormatted = 'Save ' + Math.round(variant.currentSavingsPercentage) + '%';
+
+                if (variant.compare_at_price > 0) {
+                    variant.currentSavings = variant.currentPrice / variant.compare_at_price;
+                    variant.currentSavingsPercentage = Math.round(100 - variant.currentSavings * 100);
+                    variant.currentSavingsPercentageFormatted = 'Save ' + Math.round(variant.currentSavingsPercentage) + '%';
+                } else {
+                    variant.currentSavingsPercentage = 0;
+                    variant.currentSavingsPercentageFormatted = '';
+                }
             });
         },
 

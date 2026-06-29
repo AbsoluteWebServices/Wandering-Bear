@@ -43,7 +43,7 @@
 
     assign svg_filled_stars = rating | floor | plus: decimal_rounded
   %}
-<a href="#reviews">
+<a href="#product-reviews" class="hover:[&_.rating-count]:no-underline!">
   <div
     class="rating-wrapper !mb-5 lg:!mb-2 rating-color--{{ block_settings.rating_color }} justify-{{ block_settings.alignment }} size-style"
     style="{% render 'size-style', settings: block_settings %}"
@@ -141,7 +141,7 @@
   .rating-wrapper,
   .rating {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
   }
 
   .rating-wrapper.justify-right {

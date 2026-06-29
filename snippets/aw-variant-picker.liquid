@@ -104,7 +104,7 @@
               {% endif %}
               <label
                 data-variant-id="{{ product_option_value.variant.id }}"
-                class="bg-transparent p-0 m-0 flex !items-start justify-center relative w-full h-full py-3 {% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
+                class="bg-transparent p-0 m-0 flex !items-start justify-center relative w-full h-full py-3 hover:[&_.variant-option-name]:text-kraft hover:bg-foam! transition-colors duration-300 {% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
               >
                 <input
                   type="radio"
@@ -141,7 +141,7 @@
                     assign option_name = product_option_value
                     for variant in product_resource.variants
                     if variant.id == product_option_value.variant.id
-                      assign option_name = variant.metafields.airf.boxes
+                      assign option_name = variant.metafields.airf.boxes | default: variant.title
                       assign option_price = variant.price
                       assign discount = product_resource.variants[0].compare_at_price | minus: variant.price
                       assign option_savings = discount | times: 100.0 | divided_by: product_resource.variants[0].compare_at_price | round: 0
@@ -149,7 +149,7 @@
                     endif
                     endfor
                   %}
-                    <span class="text-base text-bear-black font-bold font-gothic_condensed uppercase">{{- option_name | escape -}}</span>
+                    <span class="variant-option-name text-base text-bear-black font-bold font-gothic_condensed uppercase">{{- option_name | escape -}}</span>
                     <span x-text="productObject[{{ product_option_value.variant.id }}].currentPriceFormatted + '/{{ box_text }}'" class="text-xs text-bear-black font-kurdis-semi-condensed">{{- option_price | money -}}/{{ box_text }}</span>
                     <span x-text="productObject[{{ product_option_value.variant.id }}].currentSavingsPercentageFormatted"
                     :class="productObject[{{ product_option_value.variant.id }}].currentSavingsPercentage > 0 ? '!block' : '!hidden'"
@@ -250,16 +250,16 @@
   }
 
   .variant-option label:has(input:checked) {
-    background-color: #F2F2F2;
+    background-color: #F9F3ED;
     border-color: var(--color-espresso);
   }
 
-  .variant-option label:has(input:checked):first-of-type {
+  .variant-option label:first-of-type {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
   }
 
-  .variant-option label:has(input:checked):last-of-type {
+  .variant-option label:last-of-type {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
   }

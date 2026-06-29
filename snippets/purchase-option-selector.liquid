@@ -4,7 +4,7 @@
     <fieldset>
         <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
         <label
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-3 text-bear-black"
+        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-3 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-kraft transition-colors duration-300"
         :class="purchaseOption === 'autoship' ? 'border-kraft' : 'border-[#CFBDB1]'"
         for="autoship">
           <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center bg-kraft border border-kraft"
@@ -15,7 +15,7 @@
             </svg>
           </div>
         <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase -mt-0.75">
-          <span class="font-bold">Monthly with Autoship</span>
+          <span  class="subscription-label-name font-bold">Monthly with Autoship</span>
           </div>
           <div class="col-start-2 wb-flex flex-col row-start-2 col-end-4">
           <span class="text-sm">Skip, reschedule, cancel at anytime</span>
@@ -39,7 +39,7 @@
     <fieldset>
        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
         <label 
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] 1.75 text-bear-black"
+        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] 1.75 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-kraft transition-colors duration-300"
         :class="purchaseOption === 'one_time' ? 'border-kraft' : 'border-[#CFBDB1]'"
         for="one_time">
         <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center bg-kraft  bg-transparent border border-[#CFBDB1]"
@@ -49,8 +49,8 @@
               <path d="M10.3589 0.152908C7.87155 2.0711 5.74656 4.40752 4.12225 7.12816C3.9495 7.44218 3.77675 7.77324 3.604 8.08726C2.98182 7.44218 2.29081 6.84887 1.54853 6.34344C1.09911 6.02943 0.37369 6.23854 0.132097 6.72695C-0.14458 7.2501 0.0281745 7.82569 0.512022 8.15675C0.650359 8.24394 0.77115 8.34884 0.909481 8.43603C0.927027 8.45374 1.0134 8.50551 1.04782 8.54094C1.08223 8.55865 1.11665 8.59339 1.11665 8.59339C1.35823 8.78548 1.60048 8.99459 1.82521 9.22144C2.04991 9.43056 2.25709 9.63968 2.44739 9.86652C2.55131 9.97142 2.65456 10.0933 2.74094 10.2153C2.7929 10.2848 2.84486 10.3549 2.91369 10.4244C2.9481 10.4769 3.12086 10.7037 2.96565 10.4769C3.19036 10.7732 3.46636 11 3.86383 11C4.19179 11 4.60679 10.8079 4.76201 10.4769C5.36664 9.13425 6.10961 7.86114 6.95582 6.6582C7.05974 6.51856 7.16299 6.36188 7.2669 6.22224C7.31887 6.15276 7.37083 6.0826 7.42211 6.03015C7.45652 5.99541 7.47407 5.96067 7.50848 5.92525C7.73319 5.62893 7.97479 5.34966 8.21704 5.07105C8.70088 4.51316 9.2016 3.99002 9.71984 3.48389C10.0134 3.20461 10.3069 2.926 10.618 2.66443C10.7732 2.52479 10.946 2.38515 11.1187 2.24619C11.1876 2.19374 11.2739 2.12426 11.3434 2.07181C11.361 2.07181 11.361 2.0541 11.3779 2.0541C11.4123 2.01936 11.4467 2.00165 11.4818 1.98462C11.7065 1.81024 11.8792 1.65357 11.9656 1.35657C12.0344 1.11271 12 0.780983 11.8617 0.554142C11.5162 0.100474 10.8252 -0.195828 10.3589 0.152934L10.3589 0.152908Z" fill="#F9F3ED"/>
             </svg>
           </div>
-          <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase font-bold">
-            <span>One Time Purchase</span>
+          <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase font-bold -mt-0.75">
+            <span class="subscription-label-name">One Time Purchase</span>
         </div>
         <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
             <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.original !== totalPrice.oneTime" x-text="totalPrice.original"></span>

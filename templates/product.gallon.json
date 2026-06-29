@@ -91,7 +91,7 @@
                     "rating_color": "primary",
                     "type_preset": "paragraph",
                     "width": "100%",
-                    "alignment": "left"
+                    "alignment": "center"
                   },
                   "blocks": {}
                 },
@@ -188,14 +188,6 @@
     "aw_diagram_7M6UNA": {
       "type": "aw-diagram",
       "blocks": {
-        "diagram_item_BdiWiA": {
-          "type": "diagram_item",
-          "settings": {
-            "icon": "shopify://shop_images/Group_1327226584.svg",
-            "title": "Cold Brew Process",
-            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
-          }
-        },
         "diagram_item_DPgjFA": {
           "type": "diagram_item",
           "settings": {
@@ -211,12 +203,20 @@
             "title": "More Coffee",
             "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine."
           }
+        },
+        "diagram_item_BdiWiA": {
+          "type": "diagram_item",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226584.svg",
+            "title": "Cold Brew Process",
+            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
+          }
         }
       },
       "block_order": [
-        "diagram_item_BdiWiA",
         "diagram_item_DPgjFA",
-        "diagram_item_EdexbY"
+        "diagram_item_EdexbY",
+        "diagram_item_BdiWiA"
       ],
       "name": "AW Diagram Section",
       "settings": {
@@ -266,7 +266,7 @@
         "title_type": "image",
         "title": "",
         "title_alt": "",
-        "title_image": "shopify://shop_images/Group_1327226589.svg",
+        "title_image": "shopify://shop_images/Group_1327226589-2.svg",
         "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png"
       }
     },

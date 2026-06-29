@@ -131,6 +131,12 @@
       },
       {
         "type": "color",
+        "id": "dark_foam",
+        "label": "Dark Foam",
+        "default": "#F9F3ED"
+      },
+      {
+        "type": "color",
         "id": "light_sky",
         "label": "Light Sky",
         "default": "#D9EAF7"

@@ -39,7 +39,7 @@ rte-formatter.product-description {
 }
 
 input[name="purchase_option"]:checked + label {
-    background-color: var(--color-foam);
+    background-color: var(--color-dark-foam);
     border: 1px solid var(--color-espresso);
 }
 

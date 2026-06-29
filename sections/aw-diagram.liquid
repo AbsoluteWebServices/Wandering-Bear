@@ -22,10 +22,10 @@
                 {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto' %}
             {% when 2 %}
                 {% assign class = 'order-3 mb-6 md:!mb-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%]' %}
-                {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0'  %}
+                {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-10!'  %}
             {% when 3 %}
                 {% assign class = 'mb-[53px] md:!mb-0 order-4 md:!w-[287px] md:absolute md:left-[82%] md:top-[58%]' %}
-                {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto' %}
+                {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-4!' %}
         {% endcase %}
         {% if block.type == 'diagram_item' %}
             <div class="wb-flex flex-row {% unless forloop.last %} md:!flex-col {% endunless %} gap-4 {{ class }}"
