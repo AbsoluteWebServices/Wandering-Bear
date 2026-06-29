@@ -69,7 +69,7 @@
           "type": "collection_tile",
           "settings": {
             "collection": "cold-brew-boxes",
-            "image": "shopify://shop_images/wb-col-1.png",
+            "image": "shopify://shop_images/Mask_group_4695ca2c-feed-41ac-bfe0-32f6adbc7cee.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
             "title": "Cold Brew Boxes",
@@ -82,7 +82,7 @@
           "type": "collection_tile",
           "settings": {
             "collection": "cold-brew-cartons",
-            "image": "shopify://shop_images/wb-col-2.png",
+            "image": "shopify://shop_images/Mask_group-1_998d87be-6286-4a32-b772-556854b8df22.png",
             "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
             "mobile_image_alt": "",
             "title": "Multi-Serve Cartons",
@@ -94,7 +94,7 @@
           "type": "collection_tile",
           "settings": {
             "collection": "test-single-serve-12-cartons-11oz",
-            "image": "shopify://shop_images/wb-col-3.png",
+            "image": "shopify://shop_images/Mask_group-2_b38ea12b-556f-43a2-9c52-b5f06f96a9ac.png",
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
             "mobile_image_alt": "",
             "title": "Single Serves",
