@@ -14,20 +14,23 @@
     assign badge = section_settings.badge
 %}
 
+{% capture title_styles %}
+    --font-size: {{ section.settings.font_size }}px;
+    --font-size-mobile: {{ section.settings.font_size_mobile }}px;
+{% endcapture %}
+
 {% capture hero_content %}
         {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover object-left sm:!object-[center_bottom] md:!object-center !max-w-none absolute inset-0 2xl:!object-[0%_30%]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
         {% if title_image != blank or title_text != blank or subtitle != blank %}
             <div class="container relative wb-flex justify-center sm:justify-end max-w-[500px] md:max-w-none md:w-[870px] mx-0 md:mx-auto h-full pb-10">
                 <div class="relative wb-flex flex-col items-center justify-center sm:justify-end sm:items-start md:items-start gap-4 z-1 w-fit max-w-full">
-                    {% if title_image != blank %}
+                    {% if title_image != blank and title_type == 'image' %}
                         {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative sm:left-0 w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
-                        {% comment %} {{ title_image | image_url: width: 1920 | image_tag: class: 'hidden md:!block w-full h-full object-contain' }}
-                        {{ title_image_mobile | image_url: width: 1920 | image_tag: class: 'block relative left-5 sm:!left-0 md:!hidden w-full h-full object-contain !max-w-[270px] mx-auto' }} {% endcomment %}
-                    {% elsif title_text != blank %}
-                        <h1 class="h1">{{ title_text }}</h1>
+                    {% elsif title_text != blank and title_type == 'text'%}
+                        <h1 class="h1 title-text leading-[1.2] text-center md:!text-left" style="color: {{ color_scheme.settings.foreground }}; {{ title_styles }}">{{ title_text | replace: '\b', '<br>' }}</h1>
                     {% endif %}
                     {% if subtitle != blank %}
-                        <span class="h3 text-center !text-base sm:!text-left md:!text-xl">{{ subtitle }}</span>
+                        <span class="h3 text-center md:!text-xl title-text" style="color: {{ color_scheme.settings.foreground }};">{{ subtitle }}</span>
                     {% endif %}
                     {% if buttons != blank %}
                         <div class="wb-flex flex-col md:!flex-row gap-4 w-fit mx-auto md:!mx-0">
@@ -59,6 +62,18 @@
     </svg>
 </div>
 {% endif %}
+
+{% style %}
+    .title-text {
+        font-size: var(--font-size);
+    }
+
+    @media (max-width: 1024px) {
+        .title-text {
+            font-size: var(--font-size-mobile);
+        }
+    }
+{% endstyle %}
 
 {% schema %}
 {
@@ -121,7 +136,30 @@
         {
             "type": "text",
             "id": "title_text",
-            "label": "Title Text",
+            "label": "Title",
+            "visible_if": "{{ section.settings.title_type == 'text' }}",
+            "info": "Add '\\b' for line breaks"
+        },
+        {
+            "type": "range",
+            "id": "font_size",
+            "label": "Font Size",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
+            "visible_if": "{{ section.settings.title_type == 'text' }}"
+        },
+        {
+            "type": "range",
+            "id": "font_size_mobile",
+            "label": "Font Size Mobile",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
             "visible_if": "{{ section.settings.title_type == 'text' }}"
         },
         {

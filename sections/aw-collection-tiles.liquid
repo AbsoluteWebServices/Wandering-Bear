@@ -11,20 +11,21 @@
     assign badge = section_settings.badge
 %}
 
+{% capture title_styles %}
+    --font-size: {{ section.settings.font_size }}px;
+    --font-size-mobile: {{ section.settings.font_size_mobile }}px;
+{% endcapture %}
+
 <div class="pt-5 pb-0 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
         {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[120px] right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[100px] !h-auto shadow-button' }}
     {% endif %}
-    {% if title_type == 'image' %}
-        {% if title_image != blank %}
+    {% if title_type == 'image' and title_image != blank %}
             <div class="h-[36px] mx-auto mb-5 md:!mb-7.5">
               {{ title_image | image_url: width: 365 | image_tag: class: 'w-full !max-w-[228px] md:!max-w-full max-h-full object-contain mx-auto', alt: title_alt }}
             </div>
-        {% endif %}
-    {% elsif title_type == 'text' %}
-        {% if title != blank %}
-            <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
-        {% endif %}
+    {% elsif title_type == 'text' and title != blank %}
+        <span class="h1 mb-8 title-text leading-[1.2] text-center mx-auto mb-5 md:!mb-7.5 block" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     <div class="container max-w-[1140px] mx-auto">
         <div class="wb-grid grid-cols-1 lg:!px-5 xl:!px-0 md:grid-cols-3 gap-0 md:gap-[90px] relative z-[1]">
@@ -37,10 +38,10 @@
                     assign subtitle = block.settings.subtitle
                     assign accent_text = block.settings.accent_text
                     assign badge = block.settings.badge
-                    assign collection = block.settings.collection
+                    assign url = block.settings.url
                 %}
                 <div class="relative group {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
-                    <a href="{{ collection.url }}" class="shadow-button collection-tile transition-all group-hover:!filter-none duration-300">
+                    <a href="{{ url }}" class="shadow-button collection-tile transition-all group-hover:!filter-none duration-300">
                     {% if badge != blank %}
                         {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:block absolute z-[2] -top-[50px] -left-[50px] !w-[148px] !h-auto' }}
                     {% endif %}
@@ -75,6 +76,18 @@
     </svg>
 </div>
 
+{% style %}
+    .title-text {
+        font-size: var(--font-size);
+    }
+
+    @media (max-width: 1024px) {
+        .title-text {
+            font-size: var(--font-size-mobile);
+        }
+    }
+{% endstyle %}
+
 
 {% schema %}
 {
@@ -106,6 +119,29 @@
             "type": "text",
             "id": "title",
             "label": "Title",
+            "visible_if": "{{ section.settings.title_type == 'text' }}",
+            "info": "Add '\\b' for line breaks"
+        },
+        {
+            "type": "range",
+            "id": "font_size",
+            "label": "Font Size",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
+            "visible_if": "{{ section.settings.title_type == 'text' }}"
+        },
+        {
+            "type": "range",
+            "id": "font_size_mobile",
+            "label": "Font Size Mobile",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
             "visible_if": "{{ section.settings.title_type == 'text' }}"
         },
         {
@@ -132,9 +168,9 @@
             "name": "Collection Tile",
             "settings": [
                 {
-                    "type": "collection",
-                    "id": "collection",
-                    "label": "Collection"
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
                 },
                 {
                     "type": "image_picker",

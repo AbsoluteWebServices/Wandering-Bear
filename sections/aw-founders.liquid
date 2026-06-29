@@ -15,21 +15,22 @@
     assign title_badge = section_settings.title_badge
 %}
 
+{% capture title_styles %}
+    --font-size: {{ section.settings.font_size }}px;
+    --font-size-mobile: {{ section.settings.font_size_mobile }}px;
+{% endcapture %}
+
 {% capture founders_content %}
     <div class="wb-flex flex-col gap-3 relative relative">
     {% if title_badge != blank %}
         {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-2 -right-12 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
     {% endif %}
-    {% if title_type == 'image' %}
-        {% if title_image != blank %}
-            <div class="max-w-[442px] w-full mx-auto md:!mb-2 md:!mt-11">
-                {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
-            </div>
-        {% endif %}
-    {% elsif title_type == 'text' %}
-        {% if title != blank %}
-            <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
-        {% endif %}
+    {% if title_type == 'image' and title_image != blank %}
+        <div class="max-w-[442px] w-full mx-auto mb-8">
+            {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+        </div>
+    {% elsif title_type == 'text' and title != blank %}
+        <span class="h1 mb-8 title-text leading-[1.2] text-center" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     {% if content != blank %}
         <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:mt-5">
@@ -89,6 +90,18 @@
     </div>
 </div>
 
+{% style %}
+    .title-text {
+        font-size: var(--font-size);
+    }
+
+    @media (max-width: 1024px) {
+        .title-text {
+            font-size: var(--font-size-mobile);
+        }
+    }
+{% endstyle %}
+
 {% schema %}
 {
     "name": "Founders",
@@ -119,6 +132,29 @@
             "type": "text",
             "id": "title",
             "label": "Title",
+            "visible_if": "{{ section.settings.title_type == 'text' }}",
+            "info": "Add '\\b' for line breaks"
+        },
+        {
+            "type": "range",
+            "id": "font_size",
+            "label": "Font Size",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
+            "visible_if": "{{ section.settings.title_type == 'text' }}"
+        },
+        {
+            "type": "range",
+            "id": "font_size_mobile",
+            "label": "Font Size Mobile",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
             "visible_if": "{{ section.settings.title_type == 'text' }}"
         },
         {
