@@ -44,8 +44,12 @@
             <div class="wb-flex !leading-[16px] flex-col md:!pl-12 !gap-4.5 md:!gap-4 items-center sm:!pb-[24vw] md:!pb-0 md:!items-start">
             {% for bullet in bulletpoints %}
                 <div class="inline !leading-[16px] text-center md:!text-left md:!flex gap-2">
-                    {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!h-4 !w-4 !inline-block md:!flex', alt: bullet.settings.title }}
-                    <span class="body font-bold !leading-[16px] text-center md:!text-left">{{ bullet.settings.title }}</span>
+                    {% if bullet.settings.image != blank %}
+                        {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!h-4 !w-4 !inline-block md:!flex', alt: bullet.settings.title }}
+                    {% endif %}
+                    {% if bullet.settings.title != blank %}
+                        <span class="body font-bold !leading-[16px] text-center md:!text-left">{{ bullet.settings.title }}</span>
+                    {% endif %}
                 </div>
             {% endfor %}
             {% if button_label != blank and button_link != blank %}
