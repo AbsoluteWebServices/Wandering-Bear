@@ -2,9 +2,9 @@
     assign vip = product.metafields.custom.vip
 %}
 
-<div class="swiper-slide relative group sm:!min-w-[135px]" style="{{ slide_styles }}">
+<div class="swiper-slide relative group sm:!min-w-[135px] pb-2" style="{{ slide_styles }}">
     {% if vip %}
-        <div class="flex justify-center items-center absolute top-0 right-1 left-1 w-auto mx-auto z-[2]">
+        <div class="flex justify-center items-center absolute top-0 right-1 left-0 w-auto mx-auto z-[2]">
             <div class="relative w-full">
             <div class="wb-flex gap-1 items-center text-white text-center text-2xl font-bold pt-1.5 pb-2 md:pt-2.5 md:pb-4 !px-4 w-full h-full relative z-[2]">
                 {% render 'icons', icon: 'crown' %}
@@ -34,7 +34,7 @@
     <a href="{{ collection.url }}">
         
         {% if product.metafields.custom.carousel_image != blank %}
-            {% render 'picture', source: product.metafields.custom.carousel_image, class: 'w-full h-full object-cover w-full h-full' %}
+            {% render 'picture', source: product.metafields.custom.carousel_image, class: 'w-full h-full object-cover w-full h-full shadow-button border border-transparent group-hover:border-gold rounded-[10px] transition-all duration-300' %}
         {% else %}
             <img src="{{ 'placeholder-image.png' | asset_url }}" class="w-full h-full object-cover w-full h-full" alt="{{ product.title }}">
             <div class="absolute top-0 z-[1] wb-flex flex-col h-full w-full items-center justify-center p-4">
@@ -42,7 +42,7 @@
                 <span class="text-xs text-center">Add Carousel Image metafield image for <em>{{ product.title }}</em></span>
             </div>
         {% endif %}
-        <div class="absolute bottom-auto top-[75%] md:!top-[80%] mx-auto text-center aw-flex justify-center items-center z-[2] w-full px-4">
+        <div class="absolute bottom-auto top-[70%] md:!top-[75%] mx-auto text-center aw-flex justify-center items-center z-[2] w-full px-4">
             {% if product.metafields.custom.carousel_image != blank %}
                 <span class="h2 !text-xl text-espresso block !mb-2 !leading-[1.2]">{{ product.title | split: '- ' | last }}</span>
             {% endif %}
