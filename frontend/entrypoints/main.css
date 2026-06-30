@@ -50,10 +50,20 @@
 
 .shadow-button {
     filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
-    transition: filter 0.3s ease-in-out;
 }
 
-
-.shadow-button.collection-tile:hover {
+.collection-tile {
+    filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.1));
+    -webkit-filter: drop-shadow(-4px 4px 4px rgba(0, 0, 0, 0.1));
+    will-change: filter;
+    transition: filter 0.2s ease-in-out;
+  }
+  
+  .group:hover .collection-tile {
     filter: none;
-}
+    -webkit-filter: none;
+  }
+
+.swiper.multi-collection-slider .swiper-button-disabled {
+    pointer-events: auto !important;
+ }

@@ -18,7 +18,7 @@
 
 <div class="pt-5 pb-0 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[120px] right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[100px] !h-auto shadow-button' }}
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[100px] right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
     {% endif %}
     {% if title_type == 'image' and title_image != blank %}
             <div class="h-[36px] mx-auto mb-5 md:!mb-7.5">
@@ -41,7 +41,7 @@
                     assign url = block.settings.url
                 %}
                 <div class="relative group {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
-                    <a href="{{ url }}" class="shadow-button collection-tile transition-all group-hover:!filter-none duration-300">
+                    <a href="{{ url }}" class="transition-all duration-300">
                     {% if badge != blank %}
                         {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:block absolute z-[2] -top-[50px] -left-[50px] !w-[148px] !h-auto' }}
                     {% endif %}
@@ -52,7 +52,7 @@
                             image_mobile: image_mobile,
                             tablet_source: image_mobile,
                             mobile_source: image_mobile,
-                            class: 'w-full h-full object-cover',
+                            class: 'collection-tile w-full h-full object-cover',
                             preload: 'eager',
                             loading: 'eager'
                         %}

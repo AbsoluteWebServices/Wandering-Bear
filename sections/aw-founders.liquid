@@ -23,22 +23,22 @@
 {% capture founders_content %}
     <div class="wb-flex flex-col gap-3 relative relative">
     {% if title_badge != blank %}
-        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-6 -right-20 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
+        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-9 -right-15 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
     {% endif %}
     {% if title_type == 'image' and title_image != blank %}
-        <div class="max-w-[442px] w-full mx-auto mb-8">
+        <div class="max-w-[442px] w-full mx-auto mb-2">
             {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
         </div>
     {% elsif title_type == 'text' and title != blank %}
         <span class="h1 mb-8 title-text leading-[1.2] text-center" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     {% if content != blank %}
-        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:mt-5">
+        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:!mt-5">
             {{ content }}
         </div>
     {% endif %}
     {% if signature_image != blank %}
-        <div class="w-full max-w-[141px] md:!max-w-[224px] w-full mx-auto md:!mb-5">
+        <div class="w-full max-w-[141px] md:!max-w-[224px] w-full mx-auto">
             {{ signature_image | image_url: width: 365 | image_tag: class: 'w-full max-h-full object-contain', alt: title_alt }}
         </div>
     {% endif %}
@@ -68,7 +68,7 @@
     {% endif %}
 {% endcapture %}
 <div class="relative pt-[84px] md:!pt-[110px] pb-[46px] md:!pb-[90px]" style="background-color: {{ color_scheme.background }}">
-    <div class="absolute top-0 left-0 right-0 h-5 z-[2]"
+    <div class="absolute top-0 left-0 right-0 h-[100px] z-[2]"
     style="background: linear-gradient(to bottom, {{ color_scheme.settings.background }} 0%, transparent 100%);"></div>
 
     {% if background_image != blank %}

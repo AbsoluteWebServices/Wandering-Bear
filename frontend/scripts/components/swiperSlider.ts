@@ -1,6 +1,6 @@
 import { Alpine as AlpineType } from "alpinejs"
 import Swiper from 'swiper';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Mousewheel } from 'swiper/modules';
 
 export default (Alpine: AlpineType) => {
     Alpine.data("swiperSlider", (
@@ -21,12 +21,17 @@ export default (Alpine: AlpineType) => {
 
         initSwiper() {
             this.swiper = new Swiper(this.el.querySelector('.swiper'), {
-                modules: [Navigation],
+                modules: [Navigation, Mousewheel],
                 slidesPerView: 2.5,
                 spaceBetween: 12,
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
+                },
+                mousewheel: {
+                    forceToAxis: true,       // Prevents diagonal scrolling bugs
+                    releaseOnEdges: true,    // Allows normal page scroll at the ends
+                    sensitivity: 1,          // Lower this if trackpad feels hypersensitive
                 },
                 slidesOffsetBefore: 12,
                 slidesOffsetAfter: 12,

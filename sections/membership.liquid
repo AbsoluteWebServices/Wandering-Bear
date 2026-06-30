@@ -27,7 +27,7 @@
         <path d="M0 14.5L424 17.0497L1280 14.5V0H0V14.5Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
     {% if foreground_bg_image != blank %}
-        <div class="-mt-10 md:!mt-0 !h-fit order-2 w-3/4 md:!w-1/2 max-h-full object-cover md:!absolute z-[1] left-0 bottom-0">
+        <div class="-mt-[40px] md:!mt-0 !h-fit order-2 w-3/4 md:!w-1/2 max-h-full object-cover md:!absolute z-[1] left-0 bottom-0">
         {% render 'picture', source: foreground_bg_image, class: '!h-full !min-h-full', alt: foreground_bg_image.alt, width: 1920, height: 1080 %}
         </div>
     {% endif %}
@@ -73,9 +73,11 @@
                     </div>
                 {% endfor %}
                 </div>
-                {% if foreground_image != blank %}
-                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'w-full max-h-full object-contain', alt: title_alt %}
-                {% endif %}
+                <div class="flex justify-start w-full">
+                    {% if foreground_image != blank %}
+                        {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'w-full max-h-full object-contain', alt: title_alt %}
+                    {% endif %}
+                </div>
                 {% if description != blank %}
                     <div class="rte !font-kurdis-semi-condensed !text-sm" style="color: {{ color_scheme.settings.foreground }}">{{ description }}</div>
                 {% endif %}

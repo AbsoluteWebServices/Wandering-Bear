@@ -3,8 +3,8 @@
     "file": "wb-events.DndOPqDK.js",
     "name": "events"
   },
-  "_wb-navigation.DbgO__Cq.js": {
-    "file": "wb-navigation.DbgO__Cq.js",
+  "_wb-navigation.B11qhkZp.js": {
+    "file": "wb-navigation.B11qhkZp.js",
     "name": "navigation",
     "imports": [
       "_wb-swiper-core.D7W3CLDJ.js"
@@ -22,7 +22,7 @@
     ]
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.My_i0Qan.css",
+    "file": "wb-main.BgvNQkVW.css",
     "name": "main",
     "names": [
       "main.css"
@@ -31,12 +31,12 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.D4rwiF4y.js",
+    "file": "wb-main.B7To5YOH.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
     "imports": [
-      "_wb-navigation.DbgO__Cq.js",
+      "_wb-navigation.B11qhkZp.js",
       "_wb-swiper-core.D7W3CLDJ.js"
     ],
     "dynamicImports": [
@@ -139,12 +139,12 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.5Z_IFypr.js",
+    "file": "wb-swiperSlider.B0AOZkFI.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,
     "imports": [
-      "_wb-navigation.DbgO__Cq.js",
+      "_wb-navigation.B11qhkZp.js",
       "_wb-swiper-core.D7W3CLDJ.js",
       "_wb-swiper.D1f_fYTf.js"
     ]

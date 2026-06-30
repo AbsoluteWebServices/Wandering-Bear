@@ -1735,7 +1735,7 @@ deferred-media[data-media-loaded] img {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  display: flex;
+  /* display: flex; */
   align-items: center;
   justify-content: center;
 }

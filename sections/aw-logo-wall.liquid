@@ -5,8 +5,8 @@
 
 <div>
     <div class="container pt-5 md:!pt-[50px] pb-1.5 max-w-[1132px] flex flex-col mx-auto !gap-[30px]">
-        <div class="max-w-[380px] sm:max-w-[400px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full">
-            {% for block in section.blocks %}
+        <div class="max-w-[380px] sm:max-w-[450px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full gap-7 smd:!gap-0">
+            {% for block in section.blocks %}          
                 <div class="
                 {% if block.settings.hide_on_mobile %} hidden md:!block {% endif %} w-[128px] sm:w-[200px] h-[58px] md:!h-[72px] flex items-center justify-center">
                     {% assign class = 'object-contain !max-h-full !w-auto !h-auto  logo-' | append: block.id %}

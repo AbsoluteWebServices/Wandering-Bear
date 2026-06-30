@@ -4,42 +4,5 @@
 {% endcapture %}
 
 {% for product in collection.products %}
-    {% comment %} <div class="swiper-slide relative group" style="{{ slide_styles }}">
-        <a href="{{ collection.url }}">
-            {% if product.metafields.custom.carousel_image != blank %}
-                {% render 'picture', source: product.metafields.custom.carousel_image, class: 'w-full h-full object-cover w-full h-full' %}
-            {% else %}
-                <div class="wb-flex flex-col h-full w-full items-center justify-center p-4">
-                    <span class="font-bold text-xs uppercase block mb-4 text-center">Missing Image</span>
-                    <span class="text-xs text-center">Add Carousel Image metafield image for <em>{{ product.title }}</em></span>
-                </div>
-            {% endif %}
-            <div class="absolute bottom-5 mx-auto text-center aw-flex justify-center z-[2] w-full">
-                {% if product.metafields.custom.carousel_image != blank %}
-                    <span class="h2 text-espresso mb-2.5">{{ product.title | split: '- ' | last }}</span>
-                {% endif %}
-                <div class="h-[36px] w-[158px] group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-5 transition-all duration-500 mx-auto relative wb-flex justify-center">
-                    <span class="text-gold relative z-[2] font-kurdis text-[15px] font-bold">SHOP NOW</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="213" height="51" viewBox="0 0 213 51" fill="none" class="absolute inset-0 w-full" stroke="#AF7404">
-                        <g fill="#F2E6DC" stroke="#AF7404" filter="url(#filter0_d_3_52)">
-                            <path d="M1.89748 4.47133C0.285803 6.96547 0.2212 9.90479 0.193998 12.7225C0.129395 19.4279 0.0681918 26.1305 0.00358848 32.8359C-0.0134124 34.6582 -0.0100122 36.555 0.979438 38.1892C3.36296 42.1185 6.37211 42.9756 15.2738 42.9756C74.9808 42.9756 134.691 43.1222 194.402 42.6964C196.52 42.6825 198.846 42.771 200.583 41.7839C205.292 39.11 204.779 34.224 204.636 30.599C204.371 23.8493 205 18.3025 205 11.55C205 6.82721 204.351 4.93034 202.426 3.06112C199.961 0.663758 194.827 0.766068 190.981 0.70247C165.697 0.279407 140.4 0.060962 115.106 0.0111898C89.6491 -0.0413475 64.1921 0.0913783 38.735 0.403837C31.5538 0.492321 24.376 0.59463 17.1983 0.71353C11.7784 0.802014 4.90324 -0.171309 1.89748 4.47133Z"/>
-                        </g>
-                        <defs>
-                            <filter id="filter0_d_3_52" x="0" y="0" width="213" height="51" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                            <feOffset dx="4" dy="4"/>
-                            <feGaussianBlur stdDeviation="2"/>
-                            <feComposite in2="hardAlpha" operator="out"/>
-                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3_52"/>
-                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3_52" result="shape"/>
-                            </filter>
-                        </defs>
-                    </svg>
-                </div>
-            </div>
-        </a>
-    </div> {% endcomment %}
     {% render 'multi-coll-carousel-slide', product: product, slide_styles: slide_styles %}
 {% endfor %}
