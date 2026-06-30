@@ -178,10 +178,10 @@
         "desktop_media_position": "left",
         "equal_columns": false,
         "limit_details_width": false,
-        "gap": 48,
+        "gap": 20,
         "hide_thumbnails_desktop": false,
         "color_scheme": "",
-        "padding-block-start": 44,
+        "padding-block-start": 18,
         "padding-block-end": 0
       }
     },
@@ -193,7 +193,8 @@
           "settings": {
             "icon": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title": "BEAN QUALITY",
-            "description": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew"
+            "description": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
+            "order_mobile": 2
           }
         },
         "diagram_item_EdexbY": {
@@ -201,7 +202,8 @@
           "settings": {
             "icon": "shopify://shop_images/Group_1327226583.svg",
             "title": "More Coffee",
-            "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine."
+            "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine.",
+            "order_mobile": 1
           }
         },
         "diagram_item_BdiWiA": {
@@ -209,7 +211,8 @@
           "settings": {
             "icon": "shopify://shop_images/Group_1327226584.svg",
             "title": "Cold Brew Process",
-            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
+            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic",
+            "order_mobile": 3
           }
         }
       },
@@ -226,7 +229,7 @@
         "title": "",
         "title_alt": "",
         "title_image": "shopify://shop_images/cold-brew-title.svg",
-        "title_image_mobile": "shopify://shop_images/on-tap-innovation-mobile_6d18829d-a82d-44be-9713-394659d47d33.svg",
+        "title_image_mobile": "shopify://shop_images/cold-brew-title.svg",
         "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png"
       }
     },
@@ -267,6 +270,7 @@
         "title": "",
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589-2.svg",
+        "title_image_mobile": "shopify://shop_images/Group_1327226589-2-mobile.png",
         "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png"
       }
     },
@@ -284,6 +288,38 @@
     },
     "okendo_reviews_widget_PUYwdN": {
       "type": "okendo-reviews-widget",
+      "blocks": {
+        "text_VJVmPd": {
+          "type": "text",
+          "name": "t:names.heading",
+          "settings": {
+            "block_class": "",
+            "text": "<h2><strong>WE WANT TO IMPRESS YOU</strong></h2>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2.5rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_VJVmPd"
+      ],
       "name": "Okendo Reviews Widget",
       "settings": {
         "product": ""

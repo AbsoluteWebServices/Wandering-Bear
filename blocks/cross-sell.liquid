@@ -17,7 +17,7 @@
     </div>
   {% endif %}
   <div class="wb-flex flex-col gap-2 p-4 h-fit flex-2">
-    <h2 class="text-base font-gothic_condensed font-bold leading-[100%]" style="color: {{ text_color }}">{{ title }}</h2>
+    <h2 class="text-[20px] font-gothic_condensed font-extrabold leading-[100%] md:text-base" style="color: {{ text_color }}">{{ title }}</h2>
     <span class="text-[12px] font-semibold font-kurdis leading-[120%]" style="color: {{ text_color }}">{{ subtitle }}</span>
     {% if button_label != blank and button_link != blank %}
       {% render 'wb-button', style: 'custom', class: 'z-[3] !w-[98px] !h-[25px] !text-[12px]', width: 98, height: 25, label: button_label, link: button_link, button_bg: button_bg, button_text: button_text %}

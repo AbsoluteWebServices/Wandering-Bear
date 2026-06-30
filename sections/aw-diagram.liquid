@@ -11,26 +11,73 @@
     assign title_image_mobile = section_settings.title_image_mobile
     assign diagram_image = section_settings.diagram_image
 
+    assign min_mobile_order = 999999
+    assign max_mobile_order = 0
+    assign diagram_item_count = 0
+
+    for block in section.blocks
+        if block.type == 'diagram_item'
+            assign diagram_item_count = diagram_item_count | plus: 1
+
+            assign item_mobile_order = block.settings.order_mobile
+            if item_mobile_order == blank
+                assign item_mobile_order = diagram_item_count | plus: 1
+            endif
+
+            if item_mobile_order < min_mobile_order
+                assign min_mobile_order = item_mobile_order
+            endif
+
+            if item_mobile_order > max_mobile_order
+                assign max_mobile_order = item_mobile_order
+            endif
+        endif
+    endfor
+
+    assign diagram_items_total = diagram_item_count
+
 %}
 
 {% capture diagram_content %}
     {% assign class = '' %}
+    {% assign diagram_item_count = 0 %}
     {% for block in section.blocks %}
-        {% case forloop.index %}
-            {% when 1 %}
-                {% assign class = 'mt-[53px] mb-6 md:!mb-0 md:!mt-0 order-2 md:!w-[215px] md:absolute md:left-[82%] md:top-[12%]' %}
-                {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto' %}
-            {% when 2 %}
-                {% assign class = 'order-3 mb-6 md:!mb-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%]' %}
-                {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-10!'  %}
-            {% when 3 %}
-                {% assign class = 'mb-[53px] md:!mb-0 order-4 md:!w-[287px] md:absolute md:left-[82%] md:top-[58%]' %}
-                {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-4!' %}
-        {% endcase %}
         {% if block.type == 'diagram_item' %}
-            <div class="wb-flex flex-row {% unless forloop.last %} md:!flex-col {% endunless %} gap-4 {{ class }}"
+            {% assign diagram_item_count = diagram_item_count | plus: 1 %}
+            {% case diagram_item_count %}
+                {% when 1 %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-2 md:!w-[215px] md:absolute md:left-[75%] md:top-[5%] lg:top-[12%] lg:left-[82%]' %}
+                    {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto' %}
+                {% when 2 %}
+                    {% assign class = 'order-3 md:!mb-0 md:!mt-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%]' %}
+                    {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-10!'  %}
+                {% when 3 %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-4 md:!w-[287px] md:absolute md:left-[75%] md:top-[58%] lg:left-[82%]' %}
+                    {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-4!' %}
+                {% else %}
+                    {% assign class = 'md:hidden' %}
+                    {% assign icon_class = '!w-[54px] !h-[54px]' %}
+            {% endcase %}
+            {% liquid
+                assign mobile_order = block.settings.order_mobile
+                if mobile_order == blank
+                    assign mobile_order = diagram_item_count | plus: 1
+                endif
+
+                assign diagram_item_index = diagram_item_count | minus: 1
+                assign mobile_margin_role = 'middle'
+
+                if diagram_items_total == 1 or mobile_order == min_mobile_order
+                    assign mobile_margin_role = 'first'
+                elsif mobile_order == max_mobile_order
+                    assign mobile_margin_role = 'last'
+                endif
+            %}
+            <div class="diagram-item wb-flex flex-row {% if diagram_item_count < diagram_items_total %} md:!flex-col {% endif %} gap-4 {{ class }}"
+            style="--diagram-order-mobile: {{ mobile_order }};"
             data-callout
-            data-index="{{ forloop.index0 }}">
+            data-mobile-margin="{{ mobile_margin_role }}"
+            data-index="{{ diagram_item_index }}">
                 {{ block.settings.icon | image_url: width: 100 | image_tag: class: icon_class, alt: block.settings.title }}
                 <div class="wb-flex flex-col gap-4">
                     <span class="h2 uppercase">{{ block.settings.title }}</span>
@@ -41,7 +88,7 @@
     {% endfor %}
 {% endcapture %}
 
-<div class="wb-flex flex-col gap-4 relative" style="background-color: {{ background_color }}">
+<div class="aw-diagram wb-flex flex-col gap-4 relative" style="background-color: {{ background_color }}">
     {% if background_image != blank %}
         {% render 'picture', source: background_image, class: 'w-full !h-full object-cover !max-w-none absolute inset-0 md:!-top-[77px]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
     {% endif %}
@@ -62,7 +109,7 @@
    <div x-data="diagram()" class="wb-flex flex-col md:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0">
 
     <!-- SVG LINES -->
-    <svg class="hidden md:!block absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
+    <svg class="diagram-lines absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
         <line
           x-show="lines[0]"
           :x1="lines[0]?.x1 || 0"
@@ -112,6 +159,46 @@
         {% endif %}
     </div>
 </div>
+
+{% stylesheet %}
+    @media screen and (max-width: 1023px) {
+        .aw-diagram .diagram-lines {
+            display: none !important;
+        }
+
+        .aw-diagram .diagram-item {
+            order: var(--diagram-order-mobile) !important;
+        }
+
+        .aw-diagram .diagram-item[data-mobile-margin='first'] {
+            margin-top: 3.313rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .aw-diagram .diagram-item[data-mobile-margin='middle'] {
+            margin-bottom: 1.5rem;
+        }
+
+        .aw-diagram .diagram-item[data-mobile-margin='last'] {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .aw-diagram .diagram-item[data-mobile-margin='first'] > img {
+            margin-top: 0.938rem;
+        }
+
+        .aw-diagram .diagram-item[data-mobile-margin='middle'] > img {
+            margin-top: 1.625rem;
+        }
+    }
+
+    @media screen and (min-width: 1024px) {
+        .aw-diagram .diagram-lines {
+            display: block;
+        }
+    }
+{% endstylesheet %}
 
 {% schema %}
     {
@@ -193,6 +280,11 @@
                         "type": "text",
                         "id": "description",
                         "label": "Description"
+                    },
+                    {
+                        "type": "number",
+                        "id": "order_mobile",
+                        "label": "Order Mobile"
                     }
                 ]
             }

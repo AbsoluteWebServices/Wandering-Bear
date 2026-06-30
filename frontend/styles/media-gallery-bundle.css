@@ -12,9 +12,7 @@
     border: 2px solid var(--color-espresso);
 }
 
-
-
-@media (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
     [data-media-gallery-bundle] .swiper-main {
         display: flex;
         justify-content: center;
@@ -26,7 +24,7 @@
     }
 
     [data-media-gallery-bundle] .swiper-thumbs {
-        width: calc(calc((100% - 25%)) + 20px);
+        width: calc(100% - 42px);
         margin: 0 auto;
     }
 
