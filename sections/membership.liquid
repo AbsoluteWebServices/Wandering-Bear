@@ -27,8 +27,8 @@
         <path d="M0 14.5L424 17.0497L1280 14.5V0H0V14.5Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
     {% if foreground_bg_image != blank %}
-        <div class="-mt-[40px] md:!mt-0 !h-fit order-2 w-3/4 md:!w-1/2 max-h-full object-cover md:!absolute z-[1] left-0 bottom-0">
-        {% render 'picture', source: foreground_bg_image, class: '!h-full !min-h-full', alt: foreground_bg_image.alt, width: 1920, height: 1080 %}
+        <div class="-mt-[10px] md:mt-0 !h-fit order-2 w-3/4 md:w-1/2 max-h-full object-cover md:absolute z-[1] left-0 bottom-0 4xl:w-fit">
+        {% render 'picture', source: foreground_bg_image, class: 'md:!h-full md:!min-h-full', alt: foreground_bg_image.alt, width: 1920, height: 1080 %}
         </div>
     {% endif %}
     {% render 'picture', source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080 %}

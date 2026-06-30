@@ -7,6 +7,8 @@
     --breakpoint-lg: 80rem; /* 1280px */
     --breakpoint-xl: 96rem; /* 1536px */
     --breakpoint-2xl: 112rem; /* 1792px */
+    --breakpoint-3xl: 128rem; /* 2048px */
+    --breakpoint-4xl: 144rem; /* 2304px */
     --color-gold: #FFD700/100%;
     --color-sky-blue: #BFD7E9/100%;
     --color-grey-tag: #E1E1E1/100%;
