@@ -94,6 +94,7 @@
     "mobile_media": "Mobile media",
     "mobile_media_1": "Mobile media 1",
     "mobile_media_2": "Mobile media 2",
+    "mobile": "Mobile",
     // Section header for navigation menu settings in theme editor
     "menu": "Menu",
     "mobile_column_optimization": "Columns will automatically optimize for mobile",
@@ -580,6 +581,7 @@
     "leaf": "Leaf",
     "leather": "Leather",
     "left": "Left",
+    "left_mobile": "Left (Mobile)",
     // Size option, typically clothing size Large
     "lg": "LG",
     "lift": "Lift",
@@ -661,6 +663,7 @@
     "rich_text": "Rich text",
     // Positional option for alignment/layout (opposite of left)
     "right": "Right",
+    "right_mobile": "Right (Mobile)",
     "rounded": "Rounded",
     "ruler": "Ruler",
     "s": "S",
@@ -789,6 +792,7 @@
     "border_width": "Border thickness",
     "borders": "Borders",
     "bottom": "Bottom",
+    "bottom_mobile": "Bottom (Mobile)",
     "bullseye_color": "Inner color",
     "bottom_row": "Bottom row",
     "bottom_padding": "Bottom padding",
@@ -883,6 +887,7 @@
     "full_width_first_image": "Full width first image",
     "full_width_on_mobile": "Full width on mobile",
     "gap": "Gap",
+    "gap_mobile": "Gap (Mobile)",
     // CSS Y-axis transform setting for vertical positioning (legacy/unused)
     "geometric_translate_y": "Geometric translate Y",
     "gift_card_form": "Gift card form",
@@ -934,6 +939,7 @@
     // Layout display format (grid, carousel, etc.)
     "layout_type": "Type",
     "left": "Left",
+    "left_mobile": "Left (Mobile)",
     "left_padding": "Left padding",
     "length": "Length",
     "letter_spacing": "Letter spacing",
@@ -1055,6 +1061,7 @@
     "regular": "Regular",
     "review_count": "Review count",
     "right": "Right",
+    "right_mobile": "Right (Mobile)",
     "right_padding": "Right padding",
     "row": "Row",
     "scroll_speed": "Time to next announcement",
@@ -1125,6 +1132,7 @@
     "title": "Title",
     // Label for range input controlling top spacing/margin
     "top": "Top",
+    "top_mobile": "Top (Mobile)",
     "top_level_size": "Top level size",
     "top_padding": "Top padding",
     "transition_to_main_product": "Product card to product page transition",

@@ -41,7 +41,7 @@ export default (Alpine: typeof Alpine) => {
           const that = this
 
           this.swiper = new Swiper(this.$refs.swiper, {
-            slidesPerView: 1.25,
+            slidesPerView: 1.12,
             centeredSlides: true,
             loop: true,
             spaceBetween: 10,

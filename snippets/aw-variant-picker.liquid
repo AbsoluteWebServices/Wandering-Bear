@@ -104,7 +104,7 @@
               {% endif %}
               <label
                 data-variant-id="{{ product_option_value.variant.id }}"
-                class="bg-transparent p-0 m-0 flex !items-start justify-center relative w-full h-full py-3 hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300 {% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
+                class="bg-transparent p-0 m-0 flex !items-start justify-center relative w-full h-full py-1.75 hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300 md:pb-2.5 md:pt-1.5 {% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
               >
                 <input
                   type="radio"
@@ -134,7 +134,7 @@
                   {% endif %}
                 >
                   <div
-                    class="wb-flex flex-col items-center justify-start"
+                    class="wb-flex flex-col gap-0.5 items-center justify-start"
                     data-key="variant-option-text"
                   >
                   {% liquid 

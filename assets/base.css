@@ -1936,7 +1936,7 @@ deferred-media[class] :is(.deferred-media__poster-button img, .deferred-media__p
 
 .variant-option--buttons legend {
   padding: 0;
-  margin-block-end: var(--margin-xs);
+  margin-block-end: 0.625rem;
 }
 
 .variant-option__swatch-value {
@@ -2448,11 +2448,11 @@ form.payment-terms {
   /* Must disable this, when you use these with calc and another unit type, things break — see logo.liquid */
   /* stylelint-disable length-zero-no-unit */
   --padding-block: 0px;
-  --padding-block-start: var(--padding-block, 0px);
-  --padding-block-end: var(--padding-block, 0px);
+  --padding-block-start: var(--padding-block-start-desktop, var(--padding-block, 0px));
+  --padding-block-end: var(--padding-block-end-desktop, var(--padding-block, 0px));
   --padding-inline: 0px;
-  --padding-inline-start: var(--padding-inline, 0px);
-  --padding-inline-end: var(--padding-inline, 0px);
+  --padding-inline-start: var(--padding-inline-start-desktop, var(--padding-inline, 0px));
+  --padding-inline-end: var(--padding-inline-end-desktop, var(--padding-inline, 0px));
   --margin-block: 0px;
   --margin-block-start: var(--margin-block, 0px);
   --margin-block-end: var(--margin-block, 0px);
@@ -2467,6 +2467,15 @@ form.payment-terms {
   padding-inline: var(--padding-inline-start) var(--padding-inline-end);
   margin-block: var(--margin-block-start) var(--margin-block-end);
   margin-inline: var(--margin-inline-start) var(--margin-inline-end);
+}
+
+@media screen and (max-width: 749px) {
+  .spacing-style {
+    --padding-block-start: var(--padding-block-start-mobile, var(--padding-block-start-desktop, var(--padding-block, 0px)));
+    --padding-block-end: var(--padding-block-end-mobile, var(--padding-block-end-desktop, var(--padding-block, 0px)));
+    --padding-inline-start: var(--padding-inline-start-mobile, var(--padding-inline-start-desktop, var(--padding-inline, 0px)));
+    --padding-inline-end: var(--padding-inline-end-mobile, var(--padding-inline-end-desktop, var(--padding-inline, 0px)));
+  }
 }
 
 /* Size style */
@@ -2539,6 +2548,12 @@ form.payment-terms {
   display: flex;
   gap: var(--gap);
   height: 100%;
+}
+
+@media screen and (max-width: 749px) {
+  .layout-panel-flex {
+    gap: var(--gap-mobile, var(--gap));
+  }
 }
 
 .layout-panel-flex--row {

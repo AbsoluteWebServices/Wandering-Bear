@@ -2,6 +2,8 @@
   Renders CSS variables for spacing (padding and margin) styles with responsive scaling.
   Intended for blocks and sections that provide values for all the referenced settings.
 
+  Always outputs every padding variable so values do not inherit from ancestor spacing-style elements.
+
   @param {object} settings - The block or section settings object containing spacing values
 
   @example
@@ -9,16 +11,17 @@
 {%- enddoc -%}
 {%- liquid
   assign scale_min = 20
-  assign keys = 'padding-block-start,padding-block-end,padding-inline-start,padding-inline-end' | split: ','
+  assign desktop_keys = 'padding-block-start,padding-block-end,padding-inline-start,padding-inline-end' | split: ','
+  assign mobile_keys = 'padding-block-start-mobile,padding-block-end-mobile,padding-inline-start-mobile,padding-inline-end-mobile' | split: ','
 
-  for key in keys
+  for key in desktop_keys
     assign value = settings[key]
 
-    if value != blank
-      echo '--'
-      echo key
-      echo ': '
+    echo '--'
+    echo key
+    echo '-desktop: '
 
+    if value != blank
       if value > scale_min
         echo 'max('
         echo scale_min
@@ -29,8 +32,38 @@
         echo value
         echo 'px'
       endif
-
-      echo ';'
+    else
+      echo '0px'
     endif
+
+    echo ';'
+  endfor
+
+  for key in mobile_keys
+    assign value = settings[key]
+    assign desktop_key = key | remove: '-mobile' | append: '-desktop'
+
+    echo '--'
+    echo key
+    echo ': '
+
+    if value != blank
+      if value > scale_min
+        echo 'max('
+        echo scale_min
+        echo 'px, calc(var(--spacing-scale) * '
+        echo value
+        echo 'px))'
+      else
+        echo value
+        echo 'px'
+      endif
+    else
+      echo 'var(--'
+      echo desktop_key
+      echo ')'
+    endif
+
+    echo ';'
   endfor
 -%}

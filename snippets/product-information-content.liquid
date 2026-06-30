@@ -76,23 +76,30 @@
   endcase
 
   assign selling_plan_id = product.selected_or_first_available_variant.selling_plan_allocations.first.selling_plan.id
+
+  assign section_gap = settings.gap | default: 0
+  if settings.gap_mobile != blank
+    assign section_gap_mobile = settings.gap_mobile
+  else
+    assign section_gap_mobile = section_gap
+  endif
 %}
 
 <div class="section-background color-{{ settings.color_scheme }}"></div>
 <div
   class="product-information section section--{{ content_width }} spacing-style color-{{ settings.color_scheme }} relative"
-  style="{% render 'spacing-style', settings: settings %} --gap: {{ settings.gap }}px;"
+  style="{% render 'spacing-style', settings: settings %} --gap: {{ section_gap }}px; --gap-mobile: {{ section_gap_mobile }}px;"
   data-testid="product-information"
 >
   {% if settings.desktop_media_position == 'left' and product_has_media and request.page_type == 'product' %}
     {% assign product_href = '#ProductInformation-' | append: section_id %}
     {% render 'skip-to-content-link', href: product_href, text: 'accessibility.skip_to_product_info' %}
   {% endif %}
-  <div class="max-w-[1050px] w-full mx-auto">
+  <div class="max-w-[1025px] w-full mx-auto">
     {% render 'breadcrumbs', product: product %}
   </div>
   <div
-    class="{{ product_grid_class }} !max-w-[1050px] mx-auto"
+    class="{{ product_grid_class }} !max-w-[1025px] mx-auto"
     data-product-grid-content
   >
     {% assign render_order_array = render_order | split: ',' %}
@@ -120,7 +127,13 @@
 
 {% stylesheet %}
   .product-information {
-    gap: var(--gap) 0;
+    gap: var(--gap-mobile, var(--gap)) 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information {
+      gap: var(--gap) 0;
+    }
   }
 
   /* Base grid layout */
@@ -294,8 +307,8 @@
         .product-information__grid--half,
         .product-information--media-none
       ).product-information--media-left {
-      grid-template-columns: 580px 422px;
-      gap: 51px;
+      grid-template-columns: 545px 419px;
+      gap: 61px;
     }
 
     .product-information__grid:not(

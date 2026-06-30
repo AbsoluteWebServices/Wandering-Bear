@@ -30,13 +30,6 @@
 </div>
 
 {% stylesheet %}
-  /* Clear padding on mobile, if not full-width */
-  @media screen and (max-width: 749px) {
-    .product-information.section--page-width .product-details > .group-block {
-      padding-inline: 0;
-    }
-  }
-
   .view-product-title {
     display: none;
   }
@@ -250,6 +243,16 @@
       "default": 12
     },
     {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "t:settings.gap_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
       "type": "checkbox",
       "id": "sticky_details_desktop",
       "label": "t:settings.make_details_sticky_desktop",
@@ -424,6 +427,50 @@
       "type": "range",
       "id": "padding-inline-end",
       "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "t:settings.left_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "t:settings.right_mobile",
       "min": 0,
       "max": 100,
       "step": 1,

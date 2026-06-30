@@ -107,11 +107,12 @@
     color: var(--button-text);
     border: var(--button-border);
     &:hover {
-        background-color: var(--button-hover-bg);
+        background-color: transparent;
         color: var(--button-hover-text);
         border: var(--button-hover-border);
 
         .btn-svg {
+            fill: var(--color-brand-cream);
             color: var(--button-hover-text);
         }
     }

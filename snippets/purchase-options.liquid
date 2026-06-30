@@ -1,11 +1,11 @@
-<div class="mb-3.25 mt-1.25 md:mb-4">
+<div class="mb-0 mt-3 md:mb-6 md:mt-0.5">
     <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
     <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
     <fieldset>
         <input x-model="purchaseOption" @change="onPurchaseOptionChange('autoship')" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
         <label
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-3 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
-        :class="purchaseOption === 'autoship' ? 'border-kraft' : 'border-[#CFBDB1]'"
+        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-2.5 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300 md:mt-2.5"
+        :class="purchaseOption === 'autoship' ? 'border-kraft pb-3.5!' : 'border-[#CFBDB1]'"
         for="autoship">
         <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
         :class="purchaseOption === 'autoship' ? 'bg-dark-gold border-dark-gold' : 'bg-transparent border-[#CFBDB1]'"
@@ -30,7 +30,7 @@
         x-transition:enter-start="opacity-0 transform scale-95"
         x-transition:enter-end="opacity-100 transform scale-100"
     
-        class="subscription-value-props mt-4 col-start-1 col-end-4 row-start-3">
+        class="subscription-value-props mt-4 col-start-1 col-end-4 row-start-3 md:mt-3.5">
             {{ settings.subscription_value_props }}
         </div>
         </label>
@@ -38,7 +38,7 @@
     <fieldset>
         <input x-model="purchaseOption" @change="onPurchaseOptionChange('one_time')" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
         <label 
-            class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-[11px] pr-4 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-1.75 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
+            class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-1.75 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
             :class="purchaseOption === 'one_time' ? 'border-kraft' : 'border-[#CFBDB1]'"
             for="one_time">
             <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
@@ -59,7 +59,7 @@
     </fieldset>
 </div>
 
-<button class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-6" @click.prevent="addToCart">
+<button class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-6" @click.prevent="addToCart">
     <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-white text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
         {{ 'products.product.add_to_bag' | t }}
     </span>

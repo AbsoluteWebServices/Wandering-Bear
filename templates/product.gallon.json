@@ -23,6 +23,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
+            "gap_mobile": 14,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
             "color_scheme": "scheme-1",
@@ -33,10 +34,14 @@
             "border_width": 1,
             "border_opacity": 100,
             "border_radius": 0,
-            "padding-block-start": 24,
+            "padding-block-start": 10,
             "padding-block-end": 24,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 40,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
             "group_icgrde": {
@@ -51,7 +56,8 @@
                 "align_baseline": false,
                 "horizontal_alignment_flex_direction_column": "flex-start",
                 "vertical_alignment_flex_direction_column": "center",
-                "gap": 12,
+                "gap": 8,
+                "gap_mobile": 12,
                 "width": "fill",
                 "custom_width": 100,
                 "width_mobile": "fill",
@@ -77,7 +83,11 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
                 "review_PcMjXF": {
@@ -109,7 +119,7 @@
                   "name": "Product description",
                   "settings": {
                     "block_class": "product-description",
-                    "text": "{{ closest.product.description }}",
+                    "text": "<p>{{ closest.product.description }}</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -179,10 +189,13 @@
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 20,
+        "gap_mobile": 20,
         "hide_thumbnails_desktop": false,
         "color_scheme": "",
-        "padding-block-start": 18,
-        "padding-block-end": 0
+        "padding-block-start": 48,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 18,
+        "padding-block-end-mobile": 0
       }
     },
     "aw_diagram_7M6UNA": {
