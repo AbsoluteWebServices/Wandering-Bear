@@ -146,7 +146,7 @@
 
     {{ diagram_content }}
         {% if diagram_image != blank %}
-            <div class="max-w-[511px] md:w-[40vw]! mx-auto xl:md:w-[22vw]!" x-ref="diagramImage">
+            <div class="max-w-[511px] md:w-[40vw]! mx-auto xl:w-[22vw]!" x-ref="diagramImage">
                 <picture>
                     <source srcset="{{ diagram_image | image_url: width: 1920 }}" media="(min-width: 1920px)">
                     <source srcset="{{ diagram_image | image_url: width: 1440 }}" media="(min-width: 1440px)">

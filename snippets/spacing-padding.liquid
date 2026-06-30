@@ -1,11 +1,6 @@
-{%- comment -%}
-  Intended for blocks and sections that provide values for all the referenced settings.
+{%- doc -%}
+  @deprecated Use spacing-style instead.
 
-  <div style="{%  render 'spacing-padding', settings: section.settings %}">
-
-   Accepts:
-      settings: {block.settings || section.settings}
-{%- endcomment -%}
-
---padding-block-start: {{ settings.padding-block-start | default: 0 }}px; --padding-block-end:{{- settings.padding-block-end | default: 0 -}}px; 
---padding-inline-start:{{ settings.padding-inline-start | default: 0 }}px; --padding-inline-end:{{- settings.padding-inline-end | default: 0 -}}px; 
+  @param {object} settings - The block or section settings object containing spacing values
+{%- enddoc -%}
+{% render 'spacing-style', settings: settings %}

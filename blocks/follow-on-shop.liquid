@@ -3,7 +3,7 @@
 {%- if shop.features.follow_on_shop? -%}
   <div
     class="spacing-style"
-    style="{% render 'spacing-padding', settings: block.settings %}"
+    style="{% render 'spacing-style', settings: block.settings %}"
     {{ block.shopify_attributes }}
   >
     {{ shop | login_button: action: 'follow' }}

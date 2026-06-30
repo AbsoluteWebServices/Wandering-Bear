@@ -3,7 +3,7 @@
 {% assign block_settings = block.settings %}
 <div
   class="page-block spacing-style{% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}"
-  style="{% render 'spacing-padding', settings: block_settings %}{% if block_settings.background %} background-color: {{ block_settings.background_color }};{% endif %}"
+  style="{% render 'spacing-style', settings: block_settings %}{% if block_settings.background %} background-color: {{ block_settings.background_color }};{% endif %}"
 >
   {%- if block_settings.page != blank -%}
     {%- if block_settings.page.title != blank -%}
