@@ -18,7 +18,7 @@
 
 <div class="pt-5 pb-0 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[100px] right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[70px] sm:-top-[60px] md:!-top-[100px] right-[2.5vw] sm:right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
     {% endif %}
     {% if title_type == 'image' and title_image != blank %}
             <div class="h-[36px] mx-auto mb-5 md:!mb-7.5">
