@@ -1,0 +1,1 @@
+var e=e=>{e.data(`cart`,()=>({cart:null,async init(){this.cart=await fetch(`/cart.js`).then(e=>e.json()),console.log(`cart`,this.cart)}}))};export{e as default};

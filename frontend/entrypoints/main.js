@@ -43,6 +43,7 @@ const init = async () => {
     const { default: HowToMix } = await import("~/scripts/components/how-to-mix")
     const { default: WaysToEnjoy } = await import("~/scripts/components/ways-to-enjoy")
     const { default: ProductValueProps } = await import("~/scripts/components/productValueProps")
+    const { default: Cart } = await import("~/scripts/components/cart")
 
     Alpine.plugin(morph)
 
@@ -61,6 +62,7 @@ const init = async () => {
     Alpine.plugin(HowToMix)
     Alpine.plugin(WaysToEnjoy)
     Alpine.plugin(ProductValueProps)
+    Alpine.plugin(Cart)
 
     Alpine.start()
     window.Alpine = Alpine

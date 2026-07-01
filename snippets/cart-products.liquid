@@ -122,7 +122,89 @@
           </thead>
 
           <tbody role="rowgroup">
+
+          {% comment %} Bundle items: {% endcomment %}
+
+            {% assign bundle_parent_ids = '' %}
+
             {% for item in cart.items %}
+              {% if item.properties._bundle_id != blank and item.properties._bundle_parent == 'true' %}
+                {% assign bundle_parent_ids = bundle_parent_ids
+                  | append: item.properties._bundle_id
+                  | append: '||'
+                %}
+              {% endif %}
+            {% endfor %}
+
+            {% assign bundle_parent_ids = bundle_parent_ids | split: '||' | compact %}
+
+            {% comment %} Render bundles {% endcomment %}
+            {% for bundle_id in bundle_parent_ids %}
+              {% assign parent_item = blank %}
+
+              {% for item in cart.items %}
+                {% if item.properties._bundle_id == bundle_id and item.properties._bundle_parent == 'true' %}
+                  {% assign parent_item = item %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+
+              <div class="bg-[#F9F3ED] font-kurdis-semi-condensed rounded-[5px] overflow-hidden">
+                {% if parent_item != blank %}
+                  <div class="flex font-gothic_condensed text-bear-black font-bold uppercase text-lg justify-between items-center relative p-4">
+                    {{ parent_item.product.title }}
+                    <button type="button" class="cursor-pointer" 
+                    data-key="{{ parent_item.key }}" 
+                    data-bundle-id="{{ bundle_id }}" @click="removeBundle('{{ bundle_id }}')">
+                      {% render 'icons', icon: 'delete', class: 'text-sm' %} 
+                    </button>
+                    <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                  </div>
+                {% endif %}
+
+                {% for item in cart.items %}
+                  {% if item.properties._bundle_id == bundle_id %}
+                    {% unless item.properties._bundle_parent == 'true' %}
+                      <div data-key="{{ item.key }}" 
+                      data-bundle-id="{{ bundle_id }}" 
+                      class="relative flex p-4">
+                        <div class="w-20">
+                          {{ item.image | image_url: width: 100 | image_tag }}
+                        </div>
+                        <div class="font-bold text-sm">
+                          {{ item.product.title }}
+                        </div>
+                        <div>
+                          {{ item.price | money }} x {{ item.quantity }}
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                      </div>
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+                
+                {% if parent_item.selling_plan_allocation != null %}
+                  <div class="flex items-center justify-between relative text-kraft p-4">
+                    {{ parent_item.selling_plan_allocation.selling_plan.name }}
+                    <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                  </div>
+                {% endif %}
+                <div class="flex items-center justify-between relative p-4">
+                  <div @click="modifyBundle('{{ parent_item.properties._bundle_id }}')" class="inline-flex items-center gap-1 cursor-pointer text-kraft">
+                    {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %} 
+                    <button type="button" class="underline text-sm cursor-pointer">Add/Modify Flavors</button>
+                  </div>
+                  <span class="text-sm">{{ parent_item.price | money }}</span>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                </div>
+            {% endfor %}
+
+            {% comment %} Non-bundle items: {% endcomment %}
+              
+            {% for item in cart.items %}
+              {% unless item.properties._bundle_id != blank %}
+
               <tr
                 role="row"
                 class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}"
@@ -375,6 +457,7 @@
                   {%- endif -%}
                 </td>
               </tr>
+              {% endunless %}
             {% endfor %}
           </tbody>
         </table>

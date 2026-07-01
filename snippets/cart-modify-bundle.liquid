@@ -1,0 +1,49 @@
+<div class="">
+    <div class="flex justify-between items-center pt-6 px-4.5 pb-1">
+    <button class="cursor-pointer flex items-center gap-1" type="button" @click="showModifyBundle = false">
+    {% render 'icons', icon: 'chevron-left', class: 'text-sm' %} 
+    Back to Cart
+    </button>
+
+    <h2>Modify Bundle</h2>
+    </div>
+    <div class="p-3">
+        <form @submit.prevent="updateBundle()" class="flex flex-col gap-3">
+            <template x-for="bundleItem in newBundleItems" :key="bundleItem.key">
+              <div :data-key="bundleItem.key" class="flex bg-[#FFFFFF80] rounded-[5px] p-3">
+                <div class="w-[68px]">
+                  <img :src="bundleItem.image" :alt="bundleItem.title" class="!w-full !h-full object-cover">
+                </div>
+          
+                <div>
+                  <h3 x-text="bundleItem.title"></h3>
+                  <p x-text="bundleItem.price"></p>
+                </div>
+          
+                <div class="flex items-center gap-2 w-[100px]">
+                  <button type="button" @click="bundleDecrement(bundleItem.key)">
+                    -
+                  </button>
+          
+                  <input
+                    type="number"
+                    x-model.number="bundleItem.quantity"
+                    min="1"
+                    class="w-full"
+                    name="quantity"
+                    @input="bundleChangesDetected()"
+                  >
+          
+                  <button type="button" @click="bundleIncrement(bundleItem.key)">
+                    +
+                  </button>
+                </div>
+              </div>
+            </template>
+          
+            <button type="submit" :disabled="!bundleChanged">
+              Update bundle
+            </button>
+          </form>
+    </div>
+</div>
