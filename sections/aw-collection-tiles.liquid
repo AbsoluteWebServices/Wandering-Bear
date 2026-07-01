@@ -16,7 +16,7 @@
     --font-size-mobile: {{ section.settings.font_size_mobile }}px;
 {% endcapture %}
 
-<div class="pt-5 pb-0 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
+<div class="pt-5 pb-3 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
         {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[70px] sm:-top-[60px] md:!-top-[100px] right-[2.5vw] sm:right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
     {% endif %}
@@ -28,7 +28,7 @@
         <span class="h1 mb-8 title-text leading-[1.2] text-center mx-auto mb-5 md:!mb-7.5 block" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     <div class="container max-w-[1140px] mx-auto">
-        <div class="wb-grid grid-cols-1 px-0 md:!px-5 xl:!px-0 md:grid-cols-3 gap-0 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none">
+        <div class="wb-grid grid-cols-1 gap-2 px-0 md:!px-5 xl:!px-0 md:grid-cols-3 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none">
             {% for block in section.blocks %}
                 {% liquid
                     assign image = block.settings.image
@@ -54,7 +54,7 @@
                                 image_mobile: image_mobile,
                                 tablet_source: image_mobile,
                                 mobile_source: image_mobile,
-                                class: ' w-full h-full relative z-[1] top-0 left-0 object-cover group-hover:opacity-0 transition-opacity duration-300',
+                                class: ' w-full h-full relative z-[1] top-0 left-0 object-cover group-hover:md:opacity-0 transition-opacity duration-300',
                                 preload: 'eager',
                                 loading: 'eager'
                             %}
@@ -62,7 +62,7 @@
                         {% if hover_image != blank %}
                             {% render 'picture', 
                                 source: hover_image,
-                                class: 'opacity-0 absolute p-1 z-[2] top-0 left-0 object-cover w-full h-full group-hover:!opacity-100 transition-opacity duration-300'
+                                class: 'hidden md:block opacity-0 absolute p-1 z-[2] top-0 left-0 object-cover w-full h-full group-hover:!opacity-100 transition-opacity duration-300'
                                 preload: 'eager',
                                 loading: 'eager'
                             %}
