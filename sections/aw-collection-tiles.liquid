@@ -39,24 +39,35 @@
                     assign accent_text = block.settings.accent_text
                     assign badge = block.settings.badge
                     assign url = block.settings.url
+                    assign hover_image = block.settings.hover_image
                 %}
-                <div class="relative group {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
-                    <a href="{{ url }}" class="transition-all duration-300">
+                <div class="relative group w-full h-full {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
+                    <a href="{{ url }}" class="relative block w-full h-fit">
                     {% if badge != blank %}
-                        {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:block absolute z-[2] -top-[50px] -left-[50px] !w-[148px] !h-auto' }}
+                        {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:block absolute z-[3] -top-[50px] -left-[50px] !w-[148px] !h-auto' }}
                     {% endif %}
-                    {% if image != blank %}
-                        {% render 'picture', 
-                            source: image, 
-                            image: image,
-                            image_mobile: image_mobile,
-                            tablet_source: image_mobile,
-                            mobile_source: image_mobile,
-                            class: 'collection-tile w-full h-full object-cover',
-                            preload: 'eager',
-                            loading: 'eager'
-                        %}
-                    {% endif %}
+                    <div class="wb-grid grid-cols-1 grid-rows-1 relative block w-full h-full">
+                        {% if image != blank %}
+                            {% render 'picture', 
+                                source: image, 
+                                image: image,
+                                image_mobile: image_mobile,
+                                tablet_source: image_mobile,
+                                mobile_source: image_mobile,
+                                class: ' w-full h-full relative z-[1] top-0 left-0 object-cover group-hover:opacity-0 transition-opacity duration-300',
+                                preload: 'eager',
+                                loading: 'eager'
+                            %}
+                        {% endif %}
+                        {% if hover_image != blank %}
+                            {% render 'picture', 
+                                source: hover_image,
+                                class: 'opacity-0 absolute p-1 z-[2] top-0 left-0 object-cover w-full h-full group-hover:!opacity-100 transition-opacity duration-300'
+                                preload: 'eager',
+                                loading: 'eager'
+                            %}
+                        {% endif %}
+                    </div>
                     </a>
                     <div class="hidden md:!flex flex-col mt-2 {% unless accent_text != blank %} {% endunless %} items-center">
                         {% if title != blank %}
@@ -178,6 +189,11 @@
                     "type": "image_picker",
                     "id": "image",
                     "label": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "hover_image",
+                    "label": "Hover Image"
                 },
                 {
                     "type": "image_picker",
