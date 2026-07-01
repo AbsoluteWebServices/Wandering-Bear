@@ -78,7 +78,7 @@
         <div class="wb-flex flex-col-reverse md:!flex-row gap-4 justify-between items-center px-[50px] md:!px-0">
             <div class="max-w-[281px] md:!max-w-[400px] w-full relative">
                 {% if badge != blank %}
-                    {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] bottom-[72px] -left-10 md:!-left-[55px] !w-[68px] md:!w-[104px] !h-auto' }}
+                    {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] bottom-[60px] md:bottom-[72px] -left-5 sm:-left-10 md:!-left-[55px] !w-[68px] md:!w-[104px] !h-auto' }}
                 {% endif %}
                 {{ video_content }}
             </div>

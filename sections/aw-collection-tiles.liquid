@@ -62,7 +62,7 @@
                         {% if hover_image != blank %}
                             {% render 'picture', 
                                 source: hover_image,
-                                class: 'hidden md:block opacity-0 absolute p-1 z-[2] top-0 left-0 object-cover w-full h-full group-hover:!opacity-100 transition-opacity duration-300'
+                                class: 'hidden md:block opacity-0 absolute h-[calc(100%+4px)] w-[calc(100%+4px)] z-[2] top-0 left-0 object-cover w-full h-full group-hover:!opacity-100 transition-opacity duration-300'
                                 preload: 'eager',
                                 loading: 'eager'
                             %}
