@@ -100,8 +100,8 @@
   assign product_url = block_product.url
 %}
 
-<div class="products-slider-card flex flex-col gap-2 h-full" {{ block.shopify_attributes }}>
-  <a href="{{ product_url }}" class="group flex flex-col gap-2 h-full no-underline">
+<div class="products-slider-card group flex flex-col gap-2 h-full" {{ block.shopify_attributes }}>
+  <a href="{{ product_url }}" class="group flex flex-col gap-4 h-full no-underline md:gap-5.5">
     <div
       class="products-slider-card__media relative flex items-center justify-center overflow-hidden rounded-[10px] aspect-square w-full [&_picture]:w-full"
       style="background-color: {{ card_bg }};"
@@ -118,29 +118,29 @@
       {% if card_image != blank %}
         {% render 'picture',
           source: card_image,
-          class: 'w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]',
+          class: 'w-full h-full object-contain group-hover:brightness-110 rounded-lg transition-all duration-300',
           alt: card_title,
           loading: 'lazy'
         %}
       {% else %}
         <div class="wb-flex flex-col items-center justify-center p-4 text-center text-bear-black/60">
-          <span class="text-xs font-kurdis-semi-condensed font-semibold">{{ card_title }}</span>
+          <span class="text-xs font-(family-name:--font-kurdis-condensed) font-semibold">{{ card_title }}</span>
         </div>
       {% endif %}
     </div>
 
-    <div class="products-slider-card__content flex flex-col gap-0.5 px-0.5">
+    <div class="products-slider-card__content flex flex-col gap-2 md:gap-3">
       <span class="products-slider-card__title flex flex-wrap items-baseline gap-x-1 text-bear-black">
-        <span class="font-gothic_condensed text-base md:text-[18px] font-extrabold uppercase leading-[110%]">
+        <span class="font-(family-name:--font-kurdis-condensed) tracking-[0.18px] text-base/none md:text-lg/none font-extrabold leading-[110%] group-hover:text-gold transition-all duration-300">
           {{- card_title_main -}}
         </span>
         {% if card_title_small != blank %}
-          <span class="font-kurdis-semi-condensed text-[13px] md:text-[14px] font-bold leading-[120%] capitalize">
+          <span class="font-(family-name:--font-kurdis-condensed) tracking-[0.18px] text-base/none md:text-lg/none font-extrabold leading-[120%] group-hover:text-gold transition-all duration-300">
             · {{ card_title_small }}
           </span>
         {% endif %}
       </span>
-      <span class="font-kurdis-semi-condensed text-[12px] md:text-[13px] font-semibold leading-[120%] text-bear-black">
+      <span class="font-(family-name:--font-kurdis-semi-condensed) text-sm/none font-semibold leading-[120%] text-bear-black group-hover:text-gold transition-all duration-300">
         {{- price_label -}}
       </span>
     </div>

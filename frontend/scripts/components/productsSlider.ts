@@ -7,6 +7,7 @@ type ProductsSliderDataset = {
   slidesTablet?: string
   slidesDesktop?: string
   spaceMobile?: string
+  spaceTablet?: string
   spaceDesktop?: string
   offsetMobile?: string
   offsetDesktop?: string
@@ -38,14 +39,14 @@ export function initProductsSliders(root: ParentNode = document) {
       loop: false,
       navigation: showNavigation
         ? {
-            nextEl: track.querySelector('.products-slider__button-next'),
-            prevEl: track.querySelector('.products-slider__button-prev'),
+            nextEl: track.querySelector<HTMLElement>('.products-slider__button-next'),
+            prevEl: track.querySelector<HTMLElement>('.products-slider__button-prev'),
           }
         : undefined,
       breakpoints: {
         768: {
           slidesPerView: parseFloat(data.slidesTablet || '2.5'),
-          spaceBetween: parseInt(data.spaceDesktop || '16', 10),
+          spaceBetween: parseInt(data.spaceTablet || data.spaceDesktop || '16', 10),
           slidesOffsetBefore: parseInt(data.offsetDesktop || '0', 10),
           slidesOffsetAfter: parseInt(data.offsetDesktop || '0', 10),
         },

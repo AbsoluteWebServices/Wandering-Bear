@@ -86,6 +86,42 @@
     },
     {
       "type": "select",
+      "id": "font_family",
+      "label": "Font family",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as preset"
+        },
+        {
+          "value": "var(--font-gt_pressura)",
+          "label": "GT Pressura"
+        },
+        {
+          "value": "var(--font-kurdis)",
+          "label": "Kurdis"
+        },
+        {
+          "value": "var(--font-kurdis-semi-condensed)",
+          "label": "Kurdis SemiCondensed"
+        },
+        {
+          "value": "var(--font-kurdis-condensed)",
+          "label": "Kurdis Condensed"
+        },
+        {
+          "value": "var(--font-parslay)",
+          "label": "Parslay"
+        },
+        {
+          "value": "var(--font-gothic_condensed)",
+          "label": "Tablet Gothic Condensed"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
       "id": "font_size",
       "label": "t:settings.size",
       "options": [
@@ -106,6 +142,10 @@
           "label": "14px"
         },
         {
+          "value": "0.938rem",
+          "label": "15px"
+        },
+        {
           "value": "1rem",
           "label": "16px"
         },
@@ -118,44 +158,40 @@
           "label": "20px"
         },
         {
-          "value": "1.5rem",
-          "label": "24px"
+          "value": "1.375rem",
+          "label": "22px"
         },
         {
-          "value": "2rem",
-          "label": "32px"
+          "value": "1.563rem",
+          "label": "25px"
         },
         {
-          "value": "2.5rem",
-          "label": "40px"
+          "value": "1.75rem",
+          "label": "28px"
         },
         {
-          "value": "3rem",
-          "label": "48px"
+          "value": "2.188rem",
+          "label": "35px"
         },
         {
-          "value": "3.5rem",
-          "label": "56px"
+          "value": "2.813rem",
+          "label": "45px"
         },
         {
-          "value": "4.5rem",
-          "label": "72px"
+          "value": "3.438rem",
+          "label": "55px"
         },
         {
-          "value": "5.5rem",
-          "label": "88px"
+          "value": "3.75rem",
+          "label": "60px"
         },
         {
-          "value": "7.5rem",
-          "label": "120px"
+          "value": "4.688rem",
+          "label": "75px"
         },
         {
-          "value": "9.5rem",
-          "label": "152px"
-        },
-        {
-          "value": "11.5rem",
-          "label": "184px"
+          "value": "6.25rem",
+          "label": "100px"
         }
       ],
       "default": "1rem",
@@ -275,9 +311,287 @@
       "default": false
     },
     {
+      "type": "select",
+      "id": "type_preset_mobile",
+      "label": "Preset (Mobile)",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "paragraph",
+          "label": "t:options.paragraph"
+        },
+        {
+          "value": "h1",
+          "label": "t:options.h1"
+        },
+        {
+          "value": "h2",
+          "label": "t:options.h2"
+        },
+        {
+          "value": "h3",
+          "label": "t:options.h3"
+        },
+        {
+          "value": "h4",
+          "label": "t:options.h4"
+        },
+        {
+          "value": "h5",
+          "label": "t:options.h5"
+        },
+        {
+          "value": "h6",
+          "label": "t:options.h6"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "font_mobile",
+      "label": "t:settings.font",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "var(--font-body--family)",
+          "label": "t:options.body"
+        },
+        {
+          "value": "var(--font-subheading--family)",
+          "label": "t:options.subheading"
+        },
+        {
+          "value": "var(--font-heading--family)",
+          "label": "t:options.heading"
+        },
+        {
+          "value": "var(--font-accent--family)",
+          "label": "t:options.accent"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "font_size_mobile",
+      "label": "t:settings.size",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "0.625rem",
+          "label": "10px"
+        },
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "0.938rem",
+          "label": "15px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        },
+        {
+          "value": "1.25rem",
+          "label": "20px"
+        },
+        {
+          "value": "1.375rem",
+          "label": "22px"
+        },
+        {
+          "value": "1.563rem",
+          "label": "25px"
+        },
+        {
+          "value": "1.75rem",
+          "label": "28px"
+        },
+        {
+          "value": "2.188rem",
+          "label": "35px"
+        },
+        {
+          "value": "2.813rem",
+          "label": "45px"
+        },
+        {
+          "value": "3.438rem",
+          "label": "55px"
+        },
+        {
+          "value": "3.75rem",
+          "label": "60px"
+        },
+        {
+          "value": "4.688rem",
+          "label": "75px"
+        },
+        {
+          "value": "6.25rem",
+          "label": "100px"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "line_height_mobile",
+      "label": "t:settings.line_height",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "tight",
+          "label": "t:options.tight"
+        },
+        {
+          "value": "normal",
+          "label": "t:options.normal"
+        },
+        {
+          "value": "loose",
+          "label": "t:options.loose"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "letter_spacing_mobile",
+      "label": "t:settings.letter_spacing",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "tight",
+          "label": "t:options.tight"
+        },
+        {
+          "value": "normal",
+          "label": "t:options.normal"
+        },
+        {
+          "value": "loose",
+          "label": "t:options.loose"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "case_mobile",
+      "label": "t:settings.case",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "none",
+          "label": "t:options.default"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "wrap_mobile",
+      "label": "t:settings.wrap",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "pretty",
+          "label": "t:options.pretty"
+        },
+        {
+          "value": "balance",
+          "label": "t:options.balance"
+        },
+        {
+          "value": "nowrap",
+          "label": "t:options.none"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "color_mobile",
+      "label": "t:settings.color",
+      "options": [
+        {
+          "value": "",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "var(--color-foreground)",
+          "label": "t:options.text"
+        },
+        {
+          "value": "var(--color-foreground-heading)",
+          "label": "t:options.heading"
+        },
+        {
+          "value": "var(--color-primary)",
+          "label": "t:options.link"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.type_preset_mobile == 'custom' }}"
+    },
+    {
       "type": "text_alignment",
       "id": "alignment",
       "label": "t:settings.alignment",
+      "default": "left",
+      "visible_if": "{{ block.settings.show_alignment != false }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment_mobile",
+      "label": "t:settings.alignment_mobile",
       "default": "left",
       "visible_if": "{{ block.settings.show_alignment != false }}"
     },
@@ -326,6 +640,50 @@
       "type": "range",
       "id": "padding-inline-end",
       "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "t:settings.left_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "t:settings.right_mobile",
       "min": 0,
       "max": 100,
       "step": 1,
