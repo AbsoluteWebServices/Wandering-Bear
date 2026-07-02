@@ -9,7 +9,8 @@
     assign title_image = section_settings.title_image
     assign title_image_mobile = section_settings.title_image_mobile
     assign large_image = section_settings.large_image
-
+    assign large_image_tablet = section_settings.large_image_tablet
+    assign large_image_mobile = section_settings.large_image_mobile
 %}
 
 {% capture value_props %}
@@ -23,7 +24,7 @@
     </div>
 {% endcapture %}
 
-<div class="wb-flex relative pt-0 pb-[54px] md:!py-11" style="background-color: {{ background_color }}">
+<div class="wb-flex relative pt-0 pb-[54px] smd:pt-13.5 md:!py-11" style="background-color: {{ background_color }}">
     <div class="grid !grid-cols-2 max-w-[1096px] w-full mx-auto">
         <div class="wb-flex mx-auto relative z-[2] justify-center order-2 md:!order-1 pt-[30px] md:!pt-0 px-6 md:!px-0">
             <div class="wb-flex flex-col justify-center items-start mx-auto max-w-[440px]">
@@ -44,7 +45,7 @@
             </div>
             <div class="order-1 md:!order-2">
                 {% if large_image != blank %}
-                    {% render 'picture', source: large_image, class: 'w-full h-full', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+                    {% render 'picture', source: large_image, tablet_source: large_image_tablet, mobile_source: large_image_mobile, class: 'w-full h-full', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
                 {% endif %}
             </div>
     </div>
@@ -104,6 +105,16 @@
                 "type": "image_picker",
                 "id": "large_image",
                 "label": "Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "large_image_tablet",
+                "label": "Image Tablet"
+            },
+            {
+                "type": "image_picker",
+                "id": "large_image_mobile",
+                "label": "Image Mobile"
             }
         ],
         "blocks": [
