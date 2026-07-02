@@ -21,7 +21,7 @@ export default (Alpine: AlpineType) => {
         modal: null,
 
         get addToCartText() {
-            return this.selectedVariant.available ? 'Add to Cart' : 'Sold Out';
+            return this.selectedVariant.available ? 'Add to bag' : 'Sold Out';
         },
 
         get totalPrice() {

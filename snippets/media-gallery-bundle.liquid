@@ -35,7 +35,7 @@
         <div class="swiper-thumbs !max-w-[545px] w-full {% if hide_thumbnails_desktop %} block lg:!hidden {% endif %}" x-ref="swiperThumbs">
             <div class="swiper-wrapper flex !max-w-[545px]">
                 {% for media in product_media %}
-                    <div class="swiper-slide rounded-[5px] max-w-17 md:max-w-27 overflow-hidden cursor-pointer !aspect-square {% if forloop.first %}swiper-slide-thumb-active{% endif %}" style="{{ thumbnail_styles }}">
+                    <div class="swiper-slide rounded-[5px] max-w-17 md:max-w-27 overflow-hidden cursor-pointer !aspect-square before:transition-all before:duration-300 {% if forloop.first %}swiper-slide-thumb-active{% endif %}" style="{{ thumbnail_styles }}">
                         {{ media | image_url: width: 600 | image_tag: class: 'w-full !h-full object-cover' }}
                     </div>
                 {% endfor %}

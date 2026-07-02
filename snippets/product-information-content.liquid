@@ -87,7 +87,7 @@
 
 <div class="section-background color-{{ settings.color_scheme }}"></div>
 <div
-  class="product-information section section--{{ content_width }} spacing-style color-{{ settings.color_scheme }} relative"
+  class="product-information section section--{{ content_width }} spacing-style color-{{ settings.color_scheme }} relative z-2"
   style="{% render 'spacing-style', settings: settings %} --gap: {{ section_gap }}px; --gap-mobile: {{ section_gap_mobile }}px;"
   data-testid="product-information"
 >
@@ -95,11 +95,11 @@
     {% assign product_href = '#ProductInformation-' | append: section_id %}
     {% render 'skip-to-content-link', href: product_href, text: 'accessibility.skip_to_product_info' %}
   {% endif %}
-  <div class="max-w-[1096px] w-full mx-auto">
+  <div class="max-w-[1092px] w-full mx-auto">
     {% render 'breadcrumbs', product: product %}
   </div>
   <div
-    class="{{ product_grid_class }} !max-w-[1096px] mx-auto"
+    class="{{ product_grid_class }} max-w-[1092px]! mx-auto w-full"
     data-product-grid-content
   >
     {% assign render_order_array = render_order | split: ',' %}

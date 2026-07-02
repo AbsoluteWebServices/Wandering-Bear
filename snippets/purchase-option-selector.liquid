@@ -62,8 +62,8 @@
 
 <button
 :class="bundleSize >= 1 ? '!pointer-events-auto' : 'pointer-events-none mt-4'"
-class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-6" @click.prevent="addToCart">
-    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-white text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
+class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-4.5" @click.prevent="addToCart">
+    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
       Add 1 Flavor
     </span>
     {% render 'loading-animation', class: 'z-[2]' %}

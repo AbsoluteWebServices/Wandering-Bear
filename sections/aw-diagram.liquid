@@ -80,7 +80,7 @@
             data-index="{{ diagram_item_index }}">
                 {{ block.settings.icon | image_url: width: 100 | image_tag: class: icon_class, alt: block.settings.title }}
                 <div class="wb-flex flex-col gap-0.5 md:gap-1">
-                    <span class="h2 text-[20px] uppercase md:text-[22px]">{{ block.settings.title }}</span>
+                    <span class="h2 text-[20px]! uppercase">{{ block.settings.title }}</span>
                     <span class="body">{{ block.settings.description }}</span>
                 </div>
             </div>
