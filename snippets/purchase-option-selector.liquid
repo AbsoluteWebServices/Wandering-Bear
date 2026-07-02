@@ -62,7 +62,7 @@
 
 <button
 :class="bundleSize >= 1 ? '!pointer-events-auto' : 'pointer-events-none mt-4'"
-class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-4" @click.prevent="addToCart">
+class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-6" @click.prevent="addToCart">
     <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-white text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
       Add 1 Flavor
     </span>
@@ -75,5 +75,5 @@ class="group relative flex w-full items-center justify-center shadow-button curs
 </button>
 
 <template x-if="currentSavingsAmount > 0">
-  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center mb-4 flex justify-center items-center" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center my-2.5 flex justify-center items-center md:mb-4 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>
