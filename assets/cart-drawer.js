@@ -70,6 +70,7 @@ class CartDrawerComponent extends DialogComponent {
    * @param {CustomEvent<{ resource?: { item_count?: number } }>} event
    */
   #handleCartAdd = (event) => {
+    console.log('this', this);
     if (this.hasAttribute('auto-open')) {
       this.showDialog();
     }
@@ -90,7 +91,8 @@ class CartDrawerComponent extends DialogComponent {
 
   open() {
     this.showDialog();
-
+  
+     document.dispatchEvent(new CustomEvent('cart-open'));
     /**
      * Close cart drawer when installments CTA is clicked to avoid overlapping dialogs
      */

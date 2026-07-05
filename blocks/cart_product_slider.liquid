@@ -1,0 +1,55 @@
+{% render 'products-slider-card', block: block, section: section %}
+
+{% schema %}
+{
+  "name": "Product card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title override",
+      "info": "Leave blank to use product group headline and size."
+    },
+    {
+      "type": "text",
+      "id": "title_small",
+      "label": "Title small",
+      "info": "e.g. 96oz — shown next to the title override.",
+      "visible_if": "{{ block.settings.title != blank }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text override",
+      "info": "Leave blank to use product badge metafield."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image override"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product card"
+    }
+  ]
+}
+{% endschema %}

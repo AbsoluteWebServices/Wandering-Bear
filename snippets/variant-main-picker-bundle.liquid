@@ -158,9 +158,9 @@
               {% endif %}
               {% if discount_type == 'Percentage' %}
                 {% assign difference = compare_at_price | minus: autoship_price %}
-                {% assign savings = difference | times: 100.0 | divided_by: compare_at_price | round | append: '% off' %}
+                {% assign savings = difference | times: 100.0 | divided_by: compare_at_price | round | append: '%' %}
               {% else %}
-                {% assign savings = compare_at_price | minus: autoship_price_qty | money %}
+                {% assign savings = compare_at_price | minus: autoship_price_qty | money_without_trailing_zeros %}
               {% endif %}
                <span data-tier-price>
                  {{- autoship_price_qty | money -}}
@@ -169,7 +169,7 @@
               </div>
               <div class="text-kraft font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap">
               <span data-tier-savings>
-                {{- savings -}}
+                {{- savings }} off
               </span>
               </div>
             </div>
@@ -211,7 +211,7 @@
             "title": "{{- child_product.title -}}",
             "handle": "{{- child_product.handle -}}",
             "flavor_name": "{{- child_product.metafields.custom.flavor_name -}}",
-            "bundle_type": "{{- child_product.metafields.custom.product_group.value.display_name -}}",
+            "bundle_name": "{{- child_product.metafields.custom.product_group.value.display_name | handleize -}}",
             "collection_handle": "{{- child_product.metafields.custom.flavor_collection.value.handle -}}",
             "variants": {
                 {% for child_variant in child_product.variants %}

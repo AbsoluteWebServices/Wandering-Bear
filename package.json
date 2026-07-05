@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "run-p -sr \"shopify:dev -- {@}\" \"vite:dev\" --",
     "deploy": "run-s \"vite:build\" \"shopify:push -- {@}\" --",
-    "shopify:dev": "shopify theme dev --store=wandering-bear.myshopify.com",
+    "shopify:dev": "shopify theme dev --theme-editor-sync --store=wandering-bear.myshopify.com",
     "shopify:push": "shopify theme push",
     "build": "vite build"
   },

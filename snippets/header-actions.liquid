@@ -132,7 +132,10 @@
       </div>
     {% endcapture %}
 
+    
     <cart-drawer-component
+      x-data="cart()"
+      x-init="init()"
       class="cart-drawer{% if display_style == 'text' %} cart-drawer--text{% endif %}"
       {{ block.shopify_attributes }}
       {% if settings.auto_open_cart_drawer %}
@@ -161,7 +164,7 @@
         scroll-lock
         cart-summary-sticky="true"
       >
-      <div x-data="cart()">
+      <div>
           <span
             ref="liveRegion"
             class="visually-hidden"
@@ -222,15 +225,15 @@
               {% render 'cart-items-component', children: cart_items_children, is_drawer: true, section_id: section.id %}
             </div>
           </div>
-          <div x-show="showModifyBundle" 
-          x-cloak
+          <div
           x-transition:enter="transition ease-out duration-300"
           x-transition:enter-start="transform translate-x-full"
           x-transition:enter-end="transform translate-x-0"
           x-transition:leave="transition ease-in duration-300"
           x-transition:leave-start="transform translate-x-0"
           x-transition:leave-end="transform translate-x-full"
-          class="modify-bundle bg-[#F2E6DC] absolute top-0 right-0 bottom-0 left-0 z-1000">
+          class="modify-bundle hidden bg-[#F2E6DC] absolute top-0 right-0 bottom-0 left-0 z-1000"
+          :class='$store.cart.state === "modifyBundle" ? "!block" : "hidden"'>
             {% render 'cart-modify-bundle', bundleItems: bundleItems %}
           </div>
           </div>
@@ -261,6 +264,28 @@
   src="{{ 'header-actions.js' | asset_url }}"
   fetchpriority="low"
 ></script>
+
+<script type="application/json" id="bundleDetails">
+{
+  {% for object in shop.metaobjects.product_group.values %}
+    "{{ object.display_name | handleize }}": {
+      "headline": {{ object.headline | json }},
+      "plural_label": {{ object.plural_label | json }},
+      "singular_label": {{ object.singular_label | json }},
+      "collection_handle": {{ object.collection_handle | json }},
+      "bundle_products": {
+        {% for product in object.bundle_products.value %}
+          "{{ product.title | handleize }}": {
+            "title": {{ product.title | json }},
+            "product_id": {{ product.id | json }},
+            "variant_id": {{ product.variants.first.id | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      }
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+}
+</script>
 
 {% stylesheet %}
   .header {

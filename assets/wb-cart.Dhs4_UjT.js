@@ -1,1 +1,0 @@
-var e=e=>{e.data(`cart`,()=>({cartItems:[],init(){console.log(`get cart`,window.Shopify.getCart())}}))};export{e as default};

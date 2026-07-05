@@ -10,8 +10,8 @@
 <div @click="selectProduct({{ child_product.id }})"
 data-product-id="{{ child_product.id }}"
 :class="{ 'selected-product': selectedProduct?.id === {{ child_product.id }}}"
-class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer flex-nowrap {% if is_selected %} selected-product {% endif %}">
-   <div class="min-w-[77px] w-[77px] lg:!min-w-[75px] lg:!w-[75px] h-full bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
+class="wb-flex bg-[#F9F3ED] items-start rounded-[5px] cursor-pointer h-auto flex-nowrap{% if is_selected %} selected-product{% endif %}">
+   <div class="min-w-[77px] w-[77px] shrink-0 self-stretch min-h-22.5 md:min-h-20 bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
      {% if image != blank %}
        {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
      {% else %}
@@ -21,23 +21,24 @@ class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer fle
        {{ child_product.featured_image | image_url: width: 300 | image_tag: class: 'w-full h-full object-cover opacity-50' }}
      {% endif %}
    </div>
-   <div class="wb-flex w-full h-full p-2 items-center gap-2">
+   <div class="wb-flex w-full h-full min-w-0 py-2 pl-3 pr-2 items-center gap-0.5">
        <div class="wb-flex flex-col !gap-2 lg:!gap-0.5 w-full">
            <div class="wb-flex items-center gap-1 w-full flex-wrap">
-             <span class="text-lg lg:!text-base !font-bold uppercase text-bear-black font-gothic_condensed">{{ title }}</span>
+             <span class="text-lg/none! lg:text-base/none! font-extrabold! uppercase text-bear-black font-gothic_condensed">{{ title }}</span>
              {% if product_badge != blank %}
-               <div class="flex items-center justify-center rounded-full px-2 py-1 h-fit" style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
-                 <span class="text-[10px] font-kurdis uppercase font-semibold !leading-[100%] whitespace-nowrap">{{ product_badge_text }}</span>
+               <div class="flex items-center justify-center rounded-full py-0.75 px-1 h-fit" style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
+                 <span class="text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap">{{ product_badge_text }}</span>
                </div>
              {% elsif member_only %}
-                 <span class="text-[10px] font-kurdis uppercase font-semibold text-cream whitespace-nowrap py-1 px-2 rounded-full relative -top-0.5" style="background-color: var(--color-brand-gold); color: var(--color-cream)">VIP / Elite Only
-                 {% render 'tooltip', content: settings.member_tooltip, class: 'relative top-0.5', badge: true %}
+                 <span class="flex items-center justify-center gap-0.5 text-[10px]/none font-kurdis uppercase font-bold text-cream whitespace-nowrap py-0.75 px-1 rounded-full relative" style="background-color: var(--color-brand-gold); color: var(--color-cream)">
+                  VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only
+                  {% render 'tooltip', content: settings.member_tooltip, class: 'relative', badge: true %}
                  </span>
              {% endif %}
            </div>
            <span class="text-[12px] lg:!text-[11px] font-kurdis font-semibold leading-[120%] text-bear-black">{{ flavor_description }}</span>
        </div>
-       <div class="min-w-[100px]">
+       <div class="min-w-[97px]">
          {% if member_only %}
            <div class="w-full flex justify-end">
              <div @click.prevent.stop="$dispatch('modal-open', { modal: 'membership-info' })" class="group !h-[30px] !w-[80px] flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button">
@@ -56,7 +57,7 @@ class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer fle
               :disabled="disabled"
               :class="{ 'opacity-50 pointer-events-none': disabled }">
                   <span 
-                  x-text="flavorType === 'mix' || flavorType === null ? '+ Add' : 'Select'" 
+                  x-text="flavorType !== 'single' ? '+ Add' : 'Select'" 
                   class="relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">+ Add</span>
                   <div class="absolute top-0 left-0 w-full h-full">
                     <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
@@ -79,7 +80,7 @@ class="wb-flex bg-[#F9F3ED] items-center !gap-3 rounded-[5px] cursor-pointer fle
                   </div>
               </div>
             </div>
-            <div class="flex items-center !gap-0" x-cloak x-show="isInBundle({{ child_product.id }}) && (flavorType === 'mix' || flavorType === null)">
+            <div class="flex items-center !gap-0" x-cloak x-show="isInBundle({{ child_product.id }}) && flavorType !== 'single'">
                 <button class="group cursor-pointer relative shadow-button h-[30px] w-[30px]" @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity--">
                   <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold">-</span>
                   <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">

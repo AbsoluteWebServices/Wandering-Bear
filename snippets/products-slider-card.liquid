@@ -1,0 +1,149 @@
+{%- doc -%}
+  Renders a product card for the products-slider section.
+
+  @param {object} block - The section block
+  @param {object} section - The parent section
+{%- enddoc -%}
+
+{% liquid
+  assign block_settings = block.settings
+  assign block_product = block_settings.product
+%}
+
+{% if block_product != blank %}
+{% liquid
+  assign product_group = block_product.metafields.custom.product_group.value
+  assign headline = blank
+  assign size_label = blank
+
+  if product_group != blank
+    if product_group.headline.value != blank
+      assign headline = product_group.headline.value
+    elsif product_group.headline != blank
+      assign headline = product_group.headline
+    endif
+
+    if product_group.size.value != blank
+      assign size_label = product_group.size.value
+    elsif product_group.size != blank
+      assign size_label = product_group.size
+    endif
+  endif
+
+  assign price_amount = block_product.price_min | money_without_trailing_zeros
+  assign pack_label = 'Pack'
+
+  if product_group != blank and product_group.plural_label != blank
+    if product_group.plural_label.value != blank
+      assign pack_label = product_group.plural_label.value
+    else
+      assign pack_label = product_group.plural_label
+    endif
+  endif
+
+  if product_group.multi_unit_product_quantity != blank and product_group.multi_unit_product_quantity > 1
+    assign price_label = product_group.multi_unit_product_quantity | append: ' ' | append: pack_label | append: ' from ' | append: price_amount
+  else
+    assign price_label = 'content.price_from' | t: price: price_amount
+  endif
+
+  if block_settings.title != blank
+    assign card_title_main = block_settings.title
+    assign card_title_small = block_settings.title_small
+  elsif headline != blank
+    assign card_title_main = headline
+    assign card_title_small = size_label
+  else
+    assign card_title_main = block_product.title
+    assign card_title_small = blank
+  endif
+
+  assign card_title = card_title_main
+  if card_title_small != blank
+    assign card_title = card_title_main | append: ' · ' | append: card_title_small
+  endif
+
+  assign badge_text = blank
+  assign badge_bg = '#BFD7E9'
+  assign badge_color = '#391704'
+
+  if block_settings.show_badge
+    if block_settings.badge_text != blank
+      assign badge_text = block_settings.badge_text
+    else
+      assign product_badge = block_product.metafields.product.product_badge.value
+      if product_badge.badge_text != blank
+        assign badge_text = product_badge.badge_text
+        if product_badge.background_color != blank
+          assign badge_bg = product_badge.background_color
+        endif
+        if product_badge.text_color != blank
+          assign badge_color = product_badge.text_color
+        endif
+      endif
+    endif
+  endif
+
+  assign card_image = block_settings.image
+  if card_image == blank and block_product.metafields.custom.carousel_image != blank
+    assign card_image = block_product.metafields.custom.carousel_image
+  endif
+  if card_image == blank
+    assign card_image = block_product.featured_image
+  endif
+
+  assign card_bg = block_settings.card_background_color
+  if card_bg == blank or card_bg == 'rgba(0,0,0,0)'
+    assign card_bg = '#EDE0D4'
+  endif
+
+  assign product_url = block_product.url
+%}
+
+<div class="products-slider-card group flex flex-col gap-2 h-full" {{ block.shopify_attributes }}>
+  <a href="{{ product_url }}" class="group flex flex-col gap-4 h-full no-underline md:gap-5.5">
+    <div
+      class="products-slider-card__media relative flex items-center justify-center overflow-hidden rounded-[10px] aspect-square w-full [&_picture]:w-full"
+      style="background-color: {{ card_bg }};"
+    >
+      {% if badge_text != blank %}
+        <div
+          class="absolute top-2 left-2 z-[2] flex items-center justify-center rounded-full py-0.75 px-2"
+          style="background-color: {{ badge_bg }}; color: {{ badge_color }};"
+        >
+          <span class="text-[10px]/none font-kurdis uppercase font-bold leading-none whitespace-nowrap">{{ badge_text }}</span>
+        </div>
+      {% endif %}
+
+      {% if card_image != blank %}
+        {% render 'picture',
+          source: card_image,
+          class: 'w-full h-full object-contain group-hover:brightness-110 rounded-lg transition-all duration-300',
+          alt: card_title,
+          loading: 'lazy'
+        %}
+      {% else %}
+        <div class="wb-flex flex-col items-center justify-center p-4 text-center text-bear-black/60">
+          <span class="text-xs font-(family-name:--font-kurdis-condensed) font-semibold">{{ card_title }}</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="products-slider-card__content flex flex-col gap-2 md:gap-3">
+      <span class="products-slider-card__title flex flex-wrap items-baseline gap-x-1 text-bear-black">
+        <span class="font-(family-name:--font-kurdis-condensed) tracking-[0.18px] text-base/none md:text-lg/none font-extrabold leading-[110%] group-hover:text-gold transition-all duration-300">
+          {{- card_title_main -}}
+        </span>
+        {% if card_title_small != blank %}
+          <span class="font-(family-name:--font-kurdis-condensed) tracking-[0.18px] text-base/none md:text-lg/none font-extrabold leading-[120%] group-hover:text-gold transition-all duration-300">
+            · {{ card_title_small }}
+          </span>
+        {% endif %}
+      </span>
+      <span class="font-(family-name:--font-kurdis-semi-condensed) text-sm/none font-semibold leading-[120%] text-bear-black group-hover:text-gold transition-all duration-300">
+        {{- price_label -}}
+      </span>
+    </div>
+  </a>
+</div>
+{% endif %}

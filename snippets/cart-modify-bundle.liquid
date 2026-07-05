@@ -1,6 +1,6 @@
 <div class="">
     <div class="flex justify-between items-center pt-6 px-4.5 pb-1">
-    <button class="cursor-pointer flex items-center gap-1" type="button" @click="showModifyBundle = false">
+    <button class="cursor-pointer flex items-center gap-1" type="button" @click="backToCart()">
     {% render 'icons', icon: 'chevron-left', class: 'text-sm' %} 
     Back to Cart
     </button>
@@ -10,17 +10,47 @@
     <div class="p-3">
 
         {% comment %} 96oz Bundle Start {% endcomment %}
-
-          <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
-            {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%]', svg_class: 'text-gold'%}
-          </div>
-          <div class="bg-[#FFFFFF80] flex items-center justify-between mb-2.5">
-              <template x-for="i in activeBundleCount" :key="i">
-                <div class="col-width flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold" style="{{ col_width_styles }} text-bear-black">
-                  <span x-text="i + 'Box'"></span>
-                </div>
+          <template x-if="activeBundleDetails && activeBundleDetails.bundle_products && Object.keys(activeBundleDetails.bundle_products).length > 0">
+            <div class="wb-flex gap-1 flex-col w-full bg-white/50 p-4.5 rounded-[5px] font-kurdis relative button-shadow uppercase">
+            <div class="flex items-center justify-between">
+              <template x-for="(product, index) in Object.keys(activeBundleDetails.bundle_products)" :key="index">
+                  <div class="col-width flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold" style="{{ col_width_styles }} text-bear-black">
+                      <span x-text="index + 1 + ' ' + activeBundleDetails.singular_label"></span>
+                  </div>
               </template>
+            </div>
+              <div class="wb-flex items-center justify-between relative w-full">
+                <template x-for="(product, index) in Object.keys(activeBundleDetails.bundle_products)" :key="index">
+                    <div class="wb-flex items-center justify-between relative w-full">
+                      <div :data-tier="index + 1" class="col-width flex items-center justify-center" style="{{ col_width_styles }}">
+                        <div class="wb-flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC]"
+                        :class="activeBundleCount >= index + 1 ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
+                        >
+                          <div class="wb-flex items-center justify-center h-3.5 w-3.5 bg-[#CFBDB1] rounded-full bg-transparent"
+                          :class="activeBundleCount >= index + 1 ? '!bg-gold' : 'bg-transparent'"
+                          ></div>
+                        </div>
+                      </div>
+                      <div class="absolute {% if col_width == 121 %} left-[50px] right-[50px] md:right-[66px] md:left-[66px] {% else %} right-6 left-6 {% endif %} rounded-full mx-auto">
+                        <div class="relative h-[2px] bg-[#CFBDB1]">
+                          <div class="absolute top-0 left-0 h-full max-w-full bg-gold transition-all duration-300"
+                          :style="progressBarWidth"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                </template>
+            </div>
+            <div class="flex items-center justify-between text-[12px] w-full">
+              <template x-for="(product, index) in Object.keys(activeBundleDetails.bundle_products)" :key="product.id">
+                <div :data-tier="index + 1" class="col-width wb-flex gap-1 flex-col items-center justify-center" style="{{ col_width_styles }}">
+                  <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
+                    </div>
+                  </div>
+                </template>
+            </div>
           </div>
+          </template>
 
           {% comment %} 96oz Bundle End {% endcomment %}
 
@@ -68,6 +98,3 @@
     </div>
 </div>
 
-<script type="text/javascript" id="bundleSpecs">
- 
-</script>

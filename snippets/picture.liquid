@@ -12,26 +12,32 @@
     @param {string} [alt] - The alt text for the image (optional)
 {%- enddoc -%}
 
+{% liquid
+    assign desktop_source = source
+    assign resolved_mobile = mobile_source
+    if resolved_mobile == blank
+        assign resolved_mobile = desktop_source
+    endif
+    assign resolved_tablet = tablet_source
+    if resolved_tablet == blank
+        assign resolved_tablet = mobile_source
+    endif
+    if resolved_tablet == blank
+        assign resolved_tablet = desktop_source
+    endif
+%}
+
 {% capture picture_sources %}
 {% if sources %}
     {{ sources }}
 {% else %}
-    <source srcset="{{ source | image_url: width: 1920 }}" media="(min-width: 1920px)">
-    <source srcset="{{ source | image_url: width: 1440 }}" media="(min-width: 1440px)">
-    <source srcset="{{ source | image_url: width: 1200 }}" media="(min-width: 1200px)">
-    <source srcset="{{ source | image_url: width: 1920 }}" media="(min-width: 1024px)">
-    {% if tablet_source %}
-        <source srcset="{{ tablet_source | image_url: width: 768 }}" media="(min-width: 768px)">
-    {% else %}
-        <source srcset="{{ source | image_url: width: 768 }}" media="(min-width: 768px)">
-    {% endif %}
-    {% if mobile_source %}
-        <source srcset="{{ mobile_source | image_url: width: 480 }}" media="(min-width: 480px)">
-        <source srcset="{{ mobile_source | image_url: width: 320 }}" media="(min-width: 320px)">
-    {% else %}
-        <source srcset="{{ source | image_url: width: 768 }}" media="(min-width: 480px)">
-        <source srcset="{{ source | image_url: width: 480 }}" media="(min-width: 320px)">
-    {% endif %}
+    <source srcset="{{ desktop_source | image_url: width: 1920 }}" media="(min-width: 1920px)">
+    <source srcset="{{ desktop_source | image_url: width: 1440 }}" media="(min-width: 1440px)">
+    <source srcset="{{ desktop_source | image_url: width: 1200 }}" media="(min-width: 1200px)">
+    <source srcset="{{ desktop_source | image_url: width: 1920 }}" media="(min-width: 1024px)">
+    <source srcset="{{ resolved_tablet | image_url: width: 768 }}" media="(min-width: 768px)">
+    <source srcset="{{ resolved_mobile | image_url: width: 480 }}" media="(min-width: 480px)">
+    <source srcset="{{ resolved_mobile | image_url: width: 320 }}" media="(min-width: 320px)">
 {% endif %}
 {% endcapture %}
 
@@ -44,7 +50,7 @@
 {% if alt %}
     {% assign alt = alt %}
 {% else %}
-    {% assign alt = source.alt %}
+    {% assign alt = desktop_source.alt %}
 {% endif %}
 
 {% if width %}
@@ -59,23 +65,16 @@
     {% assign height = image.height %}
 {% endif %}
 
-{% if mobile_source %}
-    {% assign source = mobile_source %}
-{% else %}
-    {% assign source = source %}
-{% endif %}
-
-
 {% capture img_parameters %}
     loading="{{ loading }}"
     {% if preload %}
       preload="{{ preload }}"
     {% endif %}
-    alt="{{ source.alt }}"
+    alt="{{ alt }}"
     class="{{ class }}"
 {% endcapture %}
 
 <picture>
     {{ picture_sources }}
-    <img src="{{ source | image_url: width: 1920 }}" height="1080" width="1920" {{ img_parameters }}>
+    <img src="{{ resolved_mobile | image_url: width: 1920 }}" height="1080" width="1920" {{ img_parameters }}>
 </picture>

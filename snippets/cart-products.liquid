@@ -185,15 +185,49 @@
                     {% endunless %}
                   {% endif %}
                 {% endfor %}
+
+                {%  liquid 
+                    assign selector_value = ''
+                    assign has_selling_plan = false
+                    if parent_item.properties._bundle_id == bundle_id
+                        if parent_item.selling_plan_allocation != null
+                          assign has_selling_plan = true
+                          assign selector_value = parent_item.selling_plan_allocation.selling_plan.name
+                        else
+                          assign selector_value = 'One Time Purchase'
+                        endif
+                    endif
+                %}
                 
-                {% if parent_item.selling_plan_allocation != null %}
-                  <div class="flex items-center justify-between relative text-kraft p-4">
-                    {{ parent_item.selling_plan_allocation.selling_plan.name }}
-                    <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                 <div x-data="{ open: false }" class="relative bg-[#F9F3ED] rounded-[5px]">
+                  <button @click="open = !open" type="button" class="border border-[#E0D2C6] rounded-[5px] cursor-pointer flex items-center justify-between relative p-4">
+                    {{ selector_value }}
+                    {% render 'icons', icon: 'chevron-down', class: 'text-sm' %}
+                  </button>
+                  <div x-show="open" x-cloak class="absolute top-full h-full z-2 left-0 w-full right-0 bg-[#F9F3ED]">
+                    {% for selling_plan_group in parent_item.product.selling_plan_groups %}
+                      {% for selling_plan in selling_plan_group.selling_plans %}
+                        {% if selling_plan.name contains '1 Month' or selling_plan.name contains '1 month' %}
+                          <div class="flex items-center justify-between relative p-4">
+                            <div class="flex items-center gap-1">
+                              <input type="radio" name="selling-plan-allocation" value="{{ selling_plan.id }}">
+                              <span>{{ selling_plan.name }}</span>
+                            </div>
+                          </div>
+                      {% endif %}
+                      {% endfor %}
+                    {% endfor %}
+                    <div class="flex items-center justify-between relative p-4">
+                        <div class="flex items-center gap-1">
+                          <input type="radio" name="selling-plan-allocation" value="one-time-purchase">
+                          <span>One Time Purchase</span>
+                        </div>
+                    </div>
                   </div>
-                {% endif %}
-                <div class="flex items-center justify-between relative p-4">
-                  <div @click="modifyBundle('{{ collection_handle }}', '{{ parent_item.properties._bundle_id }}')" class="inline-flex items-center gap-1 cursor-pointer text-kraft">
+                 </div>
+
+                  <div class="flex items-center justify-between relative p-4">
+                  <div @click="modifyBundle('{{ collection_handle }}', '{{ parent_item.properties._bundle_name | handleize }}', '{{ parent_item.properties._bundle_id }}')" class="inline-flex items-center gap-1 cursor-pointer text-kraft">
                     {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %} 
                     <button type="button" class="underline text-sm cursor-pointer">Add/Modify Flavors</button>
                   </div>

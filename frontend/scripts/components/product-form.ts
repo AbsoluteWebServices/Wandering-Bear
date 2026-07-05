@@ -46,16 +46,21 @@ export default (Alpine: AlpineType) => {
         },
 
         get currentSavingsAmountFormatted() {
-            return this._formatPrice(this.currentSavingsAmount);
+            return this._formatPrice(this.currentSavingsAmount, { withoutCents: true });
         },
 
-        _formatPrice(price) {
+        _formatPrice(price, { withoutCents = false } = {}) {
           if (price == null || Number.isNaN(Number(price))) {
             return '';
           }
 
           const price_normalized = price / 100;
-          return price_normalized.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+          return price_normalized.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: withoutCents ? 0 : undefined,
+            maximumFractionDigits: withoutCents ? 0 : undefined,
+          });
         },
 
         _getVariantDisplayPrice(variant: any) {

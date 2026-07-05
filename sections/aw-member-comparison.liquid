@@ -9,6 +9,8 @@
     assign title_image = section_settings.title_image
     assign title_image_mobile = section_settings.title_image_mobile
     assign background_image = section_settings.background_image
+    assign background_image_tablet = section_settings.background_image_tablet
+    assign background_image_mobile = section_settings.background_image_mobile
     assign button_label = section_settings.button_label
     assign button_link = section_settings.button_link
     assign tier_items = section.blocks
@@ -23,57 +25,83 @@
 
 {% style %}
     .membership-description {
+        font-family: var(--font-kurdis-semi-condensed) !important;
 
-     font-family: var(--font-kurdis-semi-condensed) !important;
+        p:has(strong) {
+            margin-bottom: 4px !important;
 
-     p:has(strong) {
-        margin-bottom: 4px !important;
-
-        @media screen and (max-width: 768px) {
-            text-align: center !important;
+            @media screen and (max-width: 768px) {
+                text-align: center !important;
+            }
         }
-     }
 
-     p > strong {
-        font-weight: 700 !important;
-     }
-
-      ul {
-        list-style: none;
-      }
-
-      ul li {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        line-height: 180%;
-
-        strong {
+        p > strong {
             font-weight: 700 !important;
-            font-family: var(--font-kurdis-semi-condensed) !important;
         }
-      }
 
-       ul li:before {
+        > p:first-child:has(strong) {
+            font-size: 16px !important;
+            line-height: 1 !important;
+            margin-bottom: 12px !important;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            list-style: none;
+            margin-bottom: 0px !important;
+        }
+
+        ul li {
+            align-items: center;
+            display: flex;
+            font-size: 14px !important;
+            gap: 8px;
+            line-height: 130%;
+            position: relative;
+
+            strong {
+                font-weight: 700 !important;
+                font-family: var(--font-kurdis-semi-condensed) !important;
+            }
+        }
+
+        ul li:before {
+            background-image: url('{{ bullet_icon | image_url: width: 14 }}');
+            background-repeat: no-repeat;
+            background-size: 14px 9px;
             content: "";
             display: block;
-            width: 14px;
+            position: relative;
+            top: -1px;
+            min-width: 14px;
             height: 9px;
-            background-image: url('{{ bullet_icon | image_url: width: 14 }}');
-            background-size: 14px 9px;
-            background-repeat: no-repeat;
-       }
+            width: 14px;
+        }
+    }
+
+    @media screen and (min-width: 1024px) {
+        .membership-description {
+            > p:first-child:has(strong) {
+                font-size: 14px !important;
+                line-height: 130% !important;
+            }
+
+            ul li:before {
+                top: -2px;
+            }
+        }
     }
 {% endstyle %}
 
 <div class="wb-flex justify-center relative" style="background: {{ background_color_mobile }}">
     {% if background_image != blank %}
-        {% render 'picture', source: background_image, class: 'hidden md:!block w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+        {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
     {% endif %}
     <div class="max-w-[1290px] w-full mx-auto wb-flex justify-end relative pt-10 pb-5 px-4">
         <div class="wb-flex flex-col gap-4 max-w-[601px] w-full">
-            <div class="wb-flex flex-col gap-4 mx-auto relative z-[2] justify-center">
+            <div class="wb-flex flex-col gap-9 mx-auto relative z-[2] justify-center md:gap-4">
                 <div class="wb-flex flex-col justify-center items-start mx-auto">
                     {% if title_type == 'image' %}
                         {% if title_image != blank %}
@@ -90,9 +118,9 @@
 
                 <div class="wb-flex flex-col gap-4">
                     {% for tier_item in tier_items %}
-                        <div class="wb-grid md:!grid-cols-2 py-4 rounded-[3px] shadow-button" style="background: {{ tier_item.settings.background_color }}">
-                                <div class="wb-flex flex-col items-center md:!items-start px-6.5 pb-4 md:!pb-0 col-start-1 w-full">
-                                    <span class="h1">{{ tier_item.settings.title }}</span>
+                        <div class="wb-grid md:!grid-cols-2 pb-4 pt-3 rounded-[3px] shadow-button md:pt-4" style="background: {{ tier_item.settings.background_color }}">
+                                <div class="wb-flex flex-col items-center md:!items-start px-6.5 pb-3 md:!pb-0 col-start-1 w-full">
+                                    <span class="h1 text-[25px]/none! font-extrabold!">{{ tier_item.settings.title }}</span>
                                     {% if tier_item.settings.title contains 'Elite' %}
                                         <svg class="mx-auto md:!mx-0 !my-1" xmlns="http://www.w3.org/2000/svg" width="121" height="4" viewBox="0 0 121 4" fill="none">
                                             <path d="M1.58045e-05 3.31446C0.00911985 3.43913 0.0182239 3.5638 0.0273279 3.68847C2.02906 3.56325 4.02657 3.41324 6.02408 3.25336C23.4527 1.63579 40.8835 0.94981 58.392 1.00124C58.9369 1.00139 59.4777 1.00216 60.0145 1.00354C78.0178 0.998044 96.0279 1.97284 114.003 3.30852C116.002 3.44402 118.001 3.574 120.001 3.68854C120.05 3.69136 120.099 3.6748 120.136 3.64213C120.174 3.60945 120.196 3.56341 120.2 3.51406C120.203 3.46471 120.187 3.41601 120.154 3.37862C120.122 3.34122 120.076 3.31825 120.026 3.31439C120.026 3.31439 120.026 3.31439 120.026 3.31439C118.031 3.15841 116.036 2.98907 114.041 2.81623C96.1011 1.14457 78.0477 -0.0022682 60.0171 0.00354066C59.4794 0.00216329 58.9377 0.00154012 58.392 0.00169072C40.868 -0.0407383 23.3706 0.818042 5.98009 2.76158C3.98732 2.95868 1.99579 3.1479 1.58045e-05 3.31446Z" fill="#AF7404"/>
@@ -100,15 +128,15 @@
                                     {% endif %}
                                     <span class="body text-center md:!text-left">{{ tier_item.settings.subtitle }}</span>
                                 </div>
-                                <div class="block md:!hidden w-full bg-gold h-[1px] mb-4"></div>
+                                <div class="block md:!hidden w-full bg-gold h-[1px] mb-2.5 md:mb-4"></div>
                                 {% if tier_item.settings.button_label != blank %}
-                                    {% render 'wb-button', style: 'secondary-gold', label: tier_item.settings.button_label, link: tier_item.settings.button_link, class: 'order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px]' %}
+                                    {% render 'wb-button', style: 'secondary-gold', label: tier_item.settings.button_label, link: tier_item.settings.button_link, class: 'min-w-[260px] order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:min-w-[158px]' %}
                                 {% endif %}
-                                <div class="rte membership-description order-3 md:!order-4 md:!col-start-2 md:row-start-1 md:row-end-3 body items-center md:!items-start w-fit mx-auto md:!mx-0 md:!w-full">{{ tier_item.settings.description }}</div>
+                                <div class="rte membership-description order-3 md:!order-4 md:!col-start-2 [&_ul]:pl-0! md:row-start-1 md:row-end-3 body items-center md:!items-start w-fit mx-auto md:!mx-0 md:!w-full">{{ tier_item.settings.description }}</div>
                         </div>
                     {% endfor %}
                     {% if button_label != blank and button_link != blank %}
-                        {% assign button_class = '!w-[280px] mx-auto button-styles' %}
+                        {% assign button_class = 'w-full! h-15! md:h-12! md:!w-[280px] mx-auto button-styles' %}
                         {% render 'wb-button', style: 'custom', class: button_class, label: button_label, link: button_link, 
                         button_bg: button_bg, button_text: button_text, button_border: button_border, button_hover_bg: button_hover_bg, button_hover_text: button_hover_text, button_hover_border: button_hover_border
                         %}
@@ -133,6 +161,16 @@
                 "type": "image_picker",
                 "id": "background_image",
                 "label": "Background Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "background_image_tablet",
+                "label": "Background Image Tablet"
+            },
+            {
+                "type": "image_picker",
+                "id": "background_image_mobile",
+                "label": "Background Image Mobile"
             },
             {
                 "type": "color_background",

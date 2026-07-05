@@ -2,7 +2,7 @@ import { CartUpdateEvent } from '../../../assets/events';
 
 export default (Alpine: AlpineType) => {
   Alpine.store('cart', {
-    state: 'isCartDrawer',
+    state: '',
     cart: null,
   });
 
@@ -13,6 +13,9 @@ export default (Alpine: AlpineType) => {
     bundleChanged: false,
     activeBundle: null,
     activeBundleCount: 0,
+    bundleDetails: {},
+    activeBundleDetails: {},
+    progressBarWidth: 0,
 
     get state() {
       return Alpine.store('cart').state;
@@ -31,23 +34,35 @@ export default (Alpine: AlpineType) => {
     },
 
     async init() {
-      console.log('init', this.showModifyBundle);
-      await this.refreshCart();
-    },
+      document.addEventListener('cart-open', async () => {
+        console.log('cart open event received', this.state);
+      
+        await this.refreshCart();
+        this.resetModifyBundle();
+      });
 
-    async modifyBundle(collectionHandle, bundleId) {
-      console.trace('modifyBundle fired', { collectionHandle, bundleId });
-    
-      await this.hydrateModifyBundle(collectionHandle, bundleId);
-    
-      this.activeBundle = bundleId;
-      this.activeBundleCount = this.bundleItems.length;
+      await this.refreshCart();
+
+      this.bundleDetails = JSON.parse(document.getElementById('bundleDetails')?.textContent || '{}');
+      console.log('bundleDetails', this.bundleDetails);
     },
 
     async refreshCart() {
+      console.log('refreshing cart');
       this.cart = await fetch('/cart.js', {
         headers: { Accept: 'application/json' },
       }).then(res => res.json());
+      console.log('cart refreshed', this.cart);
+    },
+
+    async modifyBundle(collectionHandle, bundleName, bundleId) {
+      await this.hydrateModifyBundle(collectionHandle, bundleId);
+      this.setupProgressBar(bundleName);
+
+    
+      this.activeBundle = bundleId;
+      this.activeBundleCount = this.bundleItems.length;
+      this.state = 'modifyBundle';
     },
 
     async _getFlavorCollection(collectionHandle) {
@@ -92,17 +107,13 @@ export default (Alpine: AlpineType) => {
           source: 'cart',
         })
       );
+
+      this.resetModifyBundle();
+      this.state = '';
     },
 
     changeState(state) {
       this.state = state;
-    },
-
-    async modifyBundle(collectionHandle, bundleId) {
-      await this.hydrateModifyBundle(collectionHandle, bundleId);
-
-      this.activeBundle = bundleId;
-      this.activeBundleCount = this.bundleItems.length;
     },
 
     async hydrateModifyBundle(collectionHandle, bundleId) {
@@ -133,7 +144,28 @@ export default (Alpine: AlpineType) => {
       });
 
       this.bundleChanged = false;
-      this.showModifyBundle = true;
+      // this.showModifyBundle = true;
+    },
+
+    setupProgressBar(bundleName) {
+      const bundleItems = this.bundleItems;
+      const tempBundle = this.tempBundle;
+
+      const totalItems = bundleItems.length + tempBundle.length;
+      const completedItems = bundleItems.filter(item => item.quantity > 0).length;
+
+      const progress = (completedItems / totalItems) * 100;
+      this.progressBarWidth = `${progress}%`;
+      console.log('progressBarWidth', this.progressBarWidth);
+
+      this.activeBundleDetails = this.bundleDetails[bundleName];
+      console.log('bundleName', bundleName);
+      console.log('activeBundleDetails', this.activeBundleDetails);
+    },
+
+    backToCart() {
+      this.showModifyBundle = false;
+      this.state = '';
     },
 
     bundleDecrement(id) {
@@ -164,6 +196,15 @@ export default (Alpine: AlpineType) => {
 
         return (originalItem?.quantity ?? 0) !== tempItem.quantity;
       });
+    },
+
+    resetModifyBundle() {
+      this.bundleItems = [];
+      this.tempBundle = [];
+      this.bundleChanged = false;
+      this.activeBundle = null;
+      this.activeBundleCount = 0;
+      this.state = 'isCartDrawer';
     },
 
     async updateBundle() {
@@ -222,6 +263,8 @@ export default (Alpine: AlpineType) => {
         }
       }
 
+      // this.showModifyBundle = false;
+
       await this.refreshCart();
 
       document.dispatchEvent(
@@ -231,7 +274,7 @@ export default (Alpine: AlpineType) => {
         })
       );
 
-      this.showModifyBundle = false;
+      this.resetModifyBundle();
       this.bundleChanged = false;
     },
   }));

@@ -13,8 +13,8 @@
 
 <div class="wb-flex items-stretch relative w-full rounded-[5px] h-fit mb-4" style="background-color: {{ background_color }}">
   {% if image != blank %}
-    <div class="max-w-full flex-1 w-full h-auto wb-flex">
-      {% render 'picture', source: image, class: 'w-full !h-full object-cover', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+    <div class="max-w-full flex-1 w-full h-auto wb-flex min-w-[130px] md:min-w-[104px]">
+      {% render 'picture', source: image, class: 'w-full !h-full object-cover rounded-[5px]', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
     </div>
   {% endif %}
 

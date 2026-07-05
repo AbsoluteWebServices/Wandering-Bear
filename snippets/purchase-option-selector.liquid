@@ -1,4 +1,4 @@
-<div x-show="bundleSize >= 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="mb-0 mt-3 md:mb-6 md:mt-0.5">
+<div x-show="bundleSize >= 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="mb-0 mt-3 md:mb-5 md:mt-0.5">
     <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
     <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
     <fieldset>
@@ -39,7 +39,7 @@
     <fieldset>
        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
         <label 
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
+        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-1.75 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
         :class="purchaseOption === 'one_time' ? 'border-kraft' : 'border-[#CFBDB1]'"
         for="one_time">
         <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
@@ -62,7 +62,7 @@
 
 <button
 :class="bundleSize >= 1 ? '!pointer-events-auto' : 'pointer-events-none mt-4'"
-class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-4" @click.prevent="addToCart">
+class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-6" @click.prevent="addToCart">
     <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-white text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
       Add 1 Flavor
     </span>
@@ -75,5 +75,5 @@ class="group relative flex w-full items-center justify-center shadow-button curs
 </button>
 
 <template x-if="currentSavingsAmount > 0">
-  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center mb-4 flex justify-center items-center" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center my-2.5 flex justify-center items-center md:mb-4 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>

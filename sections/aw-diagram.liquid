@@ -46,13 +46,13 @@
             {% assign diagram_item_count = diagram_item_count | plus: 1 %}
             {% case diagram_item_count %}
                 {% when 1 %}
-                    {% assign class = 'md:!mb-0 md:!mt-0 order-2 md:!w-[215px] md:absolute md:left-[75%] md:top-[5%] lg:top-[12%] lg:left-[82%] xl:top-[-3%] xl:left-[71%]' %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-2 md:!w-[215px] md:absolute md:left-[75%] md:top-[5%] lg:top-[-2%] lg:left-[78%] xl:top-[-3%] xl:left-[71%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto' %}
                 {% when 2 %}
-                    {% assign class = 'order-3 md:!mb-0 md:!mt-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%] xl:right-[67%] xl:top-[23%]' %}
+                    {% assign class = 'order-3 md:!mb-0 md:!mt-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%] lg:right-[79%] lg:top-[24%] xl:right-[67%] xl:top-[27%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-12!'  %}
                 {% when 3 %}
-                    {% assign class = 'md:!mb-0 md:!mt-0 order-4 md:!w-[287px] md:absolute md:left-[75%] md:top-[58%] lg:left-[82%] xl:top-[51%] xl:left-[69%]' %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-4 md:!w-[287px] md:absolute md:left-[75%] md:top-[58%] lg:top-[51%] lg:left-[75%] xl:left-[69%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-4!' %}
                 {% else %}
                     {% assign class = 'md:hidden' %}
@@ -95,7 +95,7 @@
    <div class="wb-flex flex-col mx-auto relative z-[2]">
     {% if title_type == 'image' %}
         {% if title_image != blank %}
-            <div class="max-w-[442px] w-full mx-auto md:!mb-5">
+            <div class="max-w-[442px] w-full mx-auto">
                 {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
             </div>
         {% endif %}
@@ -146,7 +146,7 @@
 
     {{ diagram_content }}
         {% if diagram_image != blank %}
-            <div class="max-w-[511px] md:w-[40vw]! mx-auto xl:w-[22vw]!" x-ref="diagramImage">
+            <div class="max-w-[511px] md:w-[40vw]! mx-auto lg:w-[34vw]! xl:w-[22vw]!" x-ref="diagramImage">
                 <picture>
                     <source srcset="{{ diagram_image | image_url: width: 1920 }}" media="(min-width: 1920px)">
                     <source srcset="{{ diagram_image | image_url: width: 1440 }}" media="(min-width: 1440px)">

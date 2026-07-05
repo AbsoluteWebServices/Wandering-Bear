@@ -15,6 +15,7 @@ import '../styles/footer.css';
 import '../styles/header.css';
 import '../styles/media-gallery-bundle.css';
 import '../styles/main-product.css';
+import '../styles/products-slider.css';
 
 
 
@@ -27,6 +28,7 @@ const init = async () => {
     loaded = true
     const { default: Alpine } = await import("alpinejs")
     const { default: morph } = await import("@alpinejs/morph")
+    const { default: Cart } = await import("~/scripts/components/cart")
 
     const { default: SwiperSlider } = await import("~/scripts/components/swiperSlider")
     const { default: VideoPlayer } = await import("~/scripts/components/videoPlayer")
@@ -43,10 +45,11 @@ const init = async () => {
     const { default: HowToMix } = await import("~/scripts/components/how-to-mix")
     const { default: WaysToEnjoy } = await import("~/scripts/components/ways-to-enjoy")
     const { default: ProductValueProps } = await import("~/scripts/components/productValueProps")
-    const { default: Cart } = await import("~/scripts/components/cart")
+    const { default: registerProductsSlider } = await import("~/scripts/components/productsSlider")
 
     Alpine.plugin(morph)
 
+    Alpine.plugin(Cart)
     Alpine.plugin(SwiperSlider)
     Alpine.plugin(VideoPlayer)
     Alpine.plugin(Header)
@@ -62,10 +65,16 @@ const init = async () => {
     Alpine.plugin(HowToMix)
     Alpine.plugin(WaysToEnjoy)
     Alpine.plugin(ProductValueProps)
-    Alpine.plugin(Cart)
+
+    Alpine.store('cart', {
+        state: '',
+    });
 
     Alpine.start()
+    registerProductsSlider()
     window.Alpine = Alpine
+
+    
 }
 
 document.addEventListener("mousedown", init, { once: true })

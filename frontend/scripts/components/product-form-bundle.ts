@@ -78,7 +78,7 @@ export default (Alpine: AlpineType) => {
         },
 
         get currentSavingsAmountFormatted() {
-            return this._formatPrice(this.currentSavingsAmount);
+            return this._formatPrice(this.currentSavingsAmount, { withoutCents: true });
         },
 
         get parentProduct() {
@@ -100,6 +100,7 @@ export default (Alpine: AlpineType) => {
 
             const assignedBundleProducts = Object.keys(this.selectedBundleProducts).map((productId) => {
                 const product = this.bundleProducts[productId]
+
                 const selectedProduct = this.selectedBundleProducts[productId]
             
                 const variants = Object.values(product.variants)
@@ -109,6 +110,7 @@ export default (Alpine: AlpineType) => {
                   id: Number(variant.id),
                   quantity: selectedProduct.quantity,
                   flavorName: product.flavor_name ? product.flavor_name : '',
+                  bundleName: product.bundle_name ? product.bundle_name : '',
                   collectionHandle: product.collection_handle ? product.collection_handle : '',
                   image: product.image ? product.image : '',
                   title: product.title,
@@ -120,7 +122,7 @@ export default (Alpine: AlpineType) => {
                     _bundle_product_id: productId,
                     _bundle_size: this.bundleSize,
                     _flavor_name: product.flavor_name ? product.flavor_name : '',
-                    _bundle_type: this.bundleType,
+                    _bundle_name: product.bundle_name ? product.bundle_name : '',
                   },
                 }
               })
@@ -134,11 +136,12 @@ export default (Alpine: AlpineType) => {
 
         // Helpers
         isInBundle(productId) {
-            return this.selectedBundleProducts[productId] !== undefined && this.selectedBundleProducts[productId].quantity > 0
+            const id = String(productId)
+            return this.selectedBundleProducts[id] !== undefined && this.selectedBundleProducts[id].quantity > 0
         },
 
         getBundleProductQuantity(productId) {
-            return this.selectedBundleProducts[productId]?.quantity || 0;
+            return this.selectedBundleProducts[String(productId)]?.quantity || 0;
         },
 
         get progressBarWidth() {
@@ -156,9 +159,22 @@ export default (Alpine: AlpineType) => {
             }
         },
 
-        _formatPrice(price) {
+        _openCartDrawer() {
+          const cartDrawer = document.querySelector('cart-drawer-component') as
+              | (HTMLElement & { open?: () => void })
+              | null;
+
+          cartDrawer?.open?.();
+      },
+
+        _formatPrice(price, { withoutCents = false } = {}) {
           const price_normalized = price / 100;
-          return price_normalized.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+          return price_normalized.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: withoutCents ? 0 : undefined,
+            maximumFractionDigits: withoutCents ? 0 : undefined,
+          });
         },
 
         _setProgressBarPrices() {
@@ -196,7 +212,7 @@ export default (Alpine: AlpineType) => {
             }
 
             const savings = this.purchaseOption === 'autoship' ? autoshipSavings : otpSavings;
-            const savingsFormatted = discountType === 'Percentage' ? Math.round(savings) + '% off' : this._formatPrice(savings) + ' off';
+            const savingsFormatted = discountType === 'Percentage' ? Math.round(savings) + '% off' : this._formatPrice(savings, { withoutCents: true }) + ' off';
 
             savingsEl.textContent = savings > 0 ? savingsFormatted : ' '
             priceEl.textContent = this._formatPrice(price)
@@ -427,16 +443,19 @@ export default (Alpine: AlpineType) => {
             }
 
             let collectionHandle = ''
+            let bundleName = ''
 
             this.assignedBundleProducts.forEach((item) => {
+
               collectionHandle = item.collectionHandle;
+              bundleName = item.bundleName;
                 let bundleItem = {
                   id: item.id,
                   quantity: item.quantity,
                   selling_plan: this.purchaseOption === 'autoship' ? item.selling_plan : null,
                   properties: {
                     _bundle_id: guid,
-                    _bundle_type: item.bundle_type,
+                    _bundle_name: bundleName,
                     _flavor: item.flavorName,
                     _collection_handle: collectionHandle,
                   },
@@ -451,7 +470,7 @@ export default (Alpine: AlpineType) => {
               properties: {
                 _bundle_id: guid,
                 _bundle_parent: true,
-                _bundle_type: this.bundleType,
+                _bundle_name: bundleName,
                 _collection_handle: collectionHandle,
               },
             }
@@ -482,17 +501,16 @@ export default (Alpine: AlpineType) => {
           
             document.dispatchEvent(
               new CartAddEvent(cart, 'bundle-atc', {
-                source: 'bundle',
+                source: 'bundle-atc',
                 itemCount: cart.item_count,
                 autoOpen: true,
               })
-            )
+            );            
 
+            this.showModifyBundle = false;
             this.selectedBundleProducts = {};
-
             this.loading = false;
           }
-
 
     }))
 }
