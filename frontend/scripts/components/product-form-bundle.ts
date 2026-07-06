@@ -190,20 +190,23 @@ export default (Alpine: AlpineType) => {
 
             const price = this.purchaseOption === 'autoship' ? autoshipPrice : otpPrice;
 
-
-            if (discountType === 'Percentage') {            
+            if (discountType === 'Percentage') {
               autoshipSavings = 100 - (this.selectedProduct?.variants[index].selling_plan_price / compareAtPrice) * 100;
               otpSavings = 100 - (this.selectedProduct?.variants[index].price / compareAtPrice) * 100;
             } else {
-              autoshipSavings = compareAtPrice - this.selectedProduct?.variants[index].price
-              otpSavings = compareAtPrice - this.selectedProduct?.variants[index].price
+              autoshipSavings = compareAtPrice - autoshipPrice;
+              otpSavings = compareAtPrice - otpPrice;
             }
 
             const savings = this.purchaseOption === 'autoship' ? autoshipSavings : otpSavings;
             const savingsFormatted = discountType === 'Percentage' ? Math.round(savings) + '% off' : this._formatPrice(savings, { withoutCents: true }) + ' off';
 
-            savingsEl.textContent = savings > 0 ? savingsFormatted : ' '
-            priceEl.textContent = this._formatPrice(price)
+            if (savingsEl) {
+              savingsEl.textContent = savings > 0 ? savingsFormatted : ' ';
+            }
+            if (priceEl) {
+              priceEl.textContent = this._formatPrice(price);
+            }
           })
         },
 
@@ -340,6 +343,7 @@ export default (Alpine: AlpineType) => {
               }
             })
 
+            this._setProgressBarPrices();
         },
 
         onPurchaseOptionChange() {
@@ -373,6 +377,7 @@ export default (Alpine: AlpineType) => {
         
         selectProduct(productId) {
             this.selectedProduct = this.bundleProducts[productId];
+            this._setProgressBarPrices();
             window.dispatchEvent(new CustomEvent('product-changed', { detail: { product: this.selectedProduct }, bubbles: true, composed: true }));
         },
 

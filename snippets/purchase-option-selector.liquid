@@ -3,7 +3,7 @@
   assign subscription_value_props_mobile = settings.subscription_value_props_mobile | default: subscription_value_props
 %}
 
-<div x-show="bundleSize >= 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="mb-0 mt-3 md:mb-5 md:mt-0.5">
+<div x-show="bundleSize >= 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="mb-0 mt-3 md:mb-5 md:mt-4">
   <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
   <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
   <fieldset>
@@ -73,9 +73,9 @@
 
 <button
   :class="bundleSize >= 1 ? '!pointer-events-auto' : 'pointer-events-none mt-4'"
-  class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-4.5" @click.prevent="addToCart"
+  class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-3.75" @click.prevent="addToCart"
 >
-  <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
+  <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold mt-0.5 uppercase">
     Add 1 Flavor
   </span>
   {% render 'loading-animation', class: 'z-[2]' %}
@@ -89,5 +89,5 @@
 </button>
 
 <template x-if="purchaseOption === 'autoship' && currentSavingsAmount > 0">
-  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-4 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-3.75 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>

@@ -70,8 +70,8 @@
     </fieldset>
 </div>
 
-<button class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-4.5" @click.prevent="addToCart">
-    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
+<button class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-3.75" @click.prevent="addToCart">
+    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold mt-0.5 uppercase">
         {{ 'products.product.add_to_bag' | t }}
     </span>
     {% render 'loading-animation', class: 'z-[2]' %}
@@ -85,5 +85,5 @@
 </button>
 
 <template x-if="purchaseOption === 'autoship' && currentSavingsAmount > 0">
-    <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-4 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+    <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-3.75 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>

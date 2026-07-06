@@ -100,7 +100,7 @@
         {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
     {% endif %}
     <div class="max-w-[1290px] w-full mx-auto wb-flex justify-end relative pt-10 pb-5 px-4">
-        <div class="wb-flex flex-col gap-4 max-w-[601px] w-full">
+        <div class="wb-flex flex-col gap-4 max-w-[601px] w-full mx-auto md:mr-0">
             <div class="wb-flex flex-col gap-9 mx-auto relative z-[2] justify-center md:gap-4">
                 <div class="wb-flex flex-col justify-center items-start mx-auto">
                     {% if title_type == 'image' %}
@@ -130,7 +130,14 @@
                                 </div>
                                 <div class="block md:!hidden w-full bg-gold h-[1px] mb-2.5 md:mb-4"></div>
                                 {% if tier_item.settings.button_label != blank %}
-                                    {% render 'wb-button', style: 'secondary-gold', label: tier_item.settings.button_label, link: tier_item.settings.button_link, class: 'min-w-[260px] order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:min-w-[158px]' %}
+                                    {% if tier_item.settings.button_action == 'elite_add_to_cart' %}
+                                        {% render 'elite-atc-button',
+                                          label: tier_item.settings.button_label,
+                                          class: 'min-w-[260px] order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:min-w-[158px]'
+                                        %}
+                                    {% else %}
+                                        {% render 'wb-button', style: 'secondary-gold', label: tier_item.settings.button_label, link: tier_item.settings.button_link, class: 'min-w-[260px] order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:min-w-[158px]' %}
+                                    {% endif %}
                                 {% endif %}
                                 <div class="rte membership-description order-3 md:!order-4 md:!col-start-2 [&_ul]:pl-0! md:row-start-1 md:row-end-3 body items-center md:!items-start w-fit mx-auto md:!mx-0 md:!w-full">{{ tier_item.settings.description }}</div>
                         </div>
@@ -264,9 +271,26 @@
                         "label": "Button Label"
                     },
                     {
+                        "type": "select",
+                        "id": "button_action",
+                        "label": "Button action",
+                        "options": [
+                            {
+                                "value": "link",
+                                "label": "Link"
+                            },
+                            {
+                                "value": "elite_add_to_cart",
+                                "label": "Add Elite to cart"
+                            }
+                        ],
+                        "default": "link"
+                    },
+                    {
                         "type": "url",
                         "id": "button_link",
-                        "label": "Button Link"
+                        "label": "Button Link",
+                        "visible_if": "{{ block.settings.button_action == 'link' }}"
                     }
                 ]
             }
