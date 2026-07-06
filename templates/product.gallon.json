@@ -23,7 +23,6 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
-            "gap_tablet": 14,
             "gap_mobile": 14,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
@@ -314,11 +313,9 @@
         "heading_VJVmPd": {
           "type": "_heading",
           "settings": {
-            "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_family": "var(--font-kurdis-semi-condensed)",
-            "font_family_mobile": "",
             "font_size": "3.438rem",
             "line_height": "tight",
             "letter_spacing": "normal",
@@ -357,6 +354,211 @@
       "settings": {
         "product": ""
       }
+    },
+    "aw_member_comparison_EAjQ8J": {
+      "type": "aw-member-comparison",
+      "blocks": {
+        "tier_item_KbPQaV": {
+          "type": "tier_item",
+          "settings": {
+            "title": "Free Member",
+            "subtitle": "Sign up and start earning for free",
+            "description": "<p><strong>What's Included:</strong></p><ul><li>Get $5 off your first order</li><li>Earn $5 for every $50 spent</li></ul>",
+            "background_color": "#ffffff",
+            "button_label": "Join for Free",
+            "button_link": "shopify://pages/membership"
+          }
+        },
+        "tier_item_LyTWDG": {
+          "type": "tier_item",
+          "settings": {
+            "title": "VIP Member",
+            "subtitle": "Sign up for autoship on any product or spend $250 annually to join.",
+            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
+            "background_color": "#fdede0",
+            "button_label": "BROWSE AUTOSHIP",
+            "button_link": "shopify://pages/membership"
+          }
+        },
+        "tier_item_xg8KDw": {
+          "type": "tier_item",
+          "settings": {
+            "title": "Elite Member",
+            "subtitle": "Pay $25 or spend $250 annually to join",
+            "description": "<p><strong>What's Included:</strong></p><ul><li>All Free & VIP Member perks plus...</li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
+            "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
+            "button_label": "Add ELITE · $25",
+            "button_link": "shopify://pages/membership"
+          }
+        }
+      },
+      "block_order": [
+        "tier_item_KbPQaV",
+        "tier_item_LyTWDG",
+        "tier_item_xg8KDw"
+      ],
+      "name": "AW Member Comparison",
+      "settings": {
+        "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
+        "background_image": "shopify://shop_images/Group_1327226595.jpg",
+        "background_color": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
+        "title_type": "image",
+        "title": "",
+        "title_alt": "",
+        "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_MORE_WITH_EVERY_SIP....svg",
+        "button_label": "Learn More",
+        "button_link": "shopify://pages/membership",
+        "bullet_icon": "shopify://shop_images/Crown-1.svg"
+      }
+    },
+    "aw_frequently_asked_questions_33izYW": {
+      "type": "aw-frequently-asked-questions",
+      "name": "AW FAQs",
+      "settings": {
+        "color_scheme": "",
+        "background": "",
+        "title_type": "image",
+        "title": "",
+        "title_alt": "",
+        "title_image": "shopify://shop_images/Group_1327226590.svg",
+        "faqs_metaobject": "96-oz-cold-brew-straight-black",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "products_slider_eeqjMT": {
+      "type": "products-slider",
+      "blocks": {
+        "heading_9RQfry": {
+          "type": "_heading",
+          "settings": {
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_size": "2.813rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "text": "<h2>More to explore</h2>",
+            "read_only": false,
+            "type_preset_mobile": "custom",
+            "font_mobile": "var(--font-body--family)",
+            "font_size_mobile": "2.188rem",
+            "line_height_mobile": "",
+            "letter_spacing_mobile": "",
+            "case_mobile": "",
+            "wrap_mobile": "",
+            "color_mobile": "",
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "show_alignment": true,
+            "padding-block-start": 0,
+            "padding-block-end": 52,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 28,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_VDnkkq": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "extra-strong-cold-brew-coffee-32oz-straight-black",
+            "title": "Original Black",
+            "title_small": "32oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/Original-Black-11oz.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_nATbyK": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "cold-brew-latte-8oz",
+            "title": "Mocha Latte",
+            "title_small": "8oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/Mocha-Latte-8oz.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_EU3AT8": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "32oz-3-to-1-coffee-concentrate-bundle-unit-straight-black",
+            "title": "3:1 Concentrate",
+            "title_small": "32oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/3-1-Concentrate-32oz_bd218ab7-f7e2-4a56-a053-4b1b50efd297.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_yPtdRp": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "extra-strong-organic-cold-brew-coffee-11oz-straight-black",
+            "title": "Original Black",
+            "title_small": "11oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/Original-Black-32oz.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_9RQfry",
+        "cart_product_slider_VDnkkq",
+        "cart_product_slider_nATbyK",
+        "cart_product_slider_EU3AT8",
+        "cart_product_slider_yPtdRp"
+      ],
+      "name": "AW Products Slider",
+      "settings": {
+        "color_scheme": "",
+        "background": "",
+        "section_image": "shopify://shop_images/more-to-explore-banner.png",
+        "section_image_mobile": "shopify://shop_images/more-to-explore-banner-mobile.png",
+        "section_image_fit": "full-width",
+        "section_image_vertical_align": "center",
+        "section_image_vertical_align_tablet": "bottom",
+        "section_image_vertical_align_mobile": "bottom",
+        "section_width": "page-width",
+        "layout_type": "slider",
+        "slides_per_view_mobile": "2.25",
+        "slides_per_view_tablet": "3",
+        "slides_per_view_desktop": "4",
+        "space_between_mobile": 14,
+        "space_between_tablet": 24,
+        "space_between_desktop": 44,
+        "slide_offset_mobile": 16,
+        "slide_offset_desktop": 0,
+        "show_navigation": false,
+        "columns_mobile": "2",
+        "columns_desktop": 4,
+        "grid_gap_mobile": 12,
+        "grid_gap_desktop": 16,
+        "padding-block-start": 20,
+        "padding-block-end": 52,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 36,
+        "padding-block-end-mobile": 36,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
     }
   },
   "order": [
@@ -364,6 +566,9 @@
     "aw_diagram_7M6UNA",
     "aw_image_text_icons_a77yKj",
     "aw_guarantee_banner_HAr7Rz",
-    "okendo_reviews_widget_PUYwdN"
+    "okendo_reviews_widget_PUYwdN",
+    "aw_member_comparison_EAjQ8J",
+    "aw_frequently_asked_questions_33izYW",
+    "products_slider_eeqjMT"
   ]
 }
