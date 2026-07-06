@@ -35,6 +35,9 @@ export default (Alpine: AlpineType) => {
                 },
                 slidesOffsetBefore: 12,
                 slidesOffsetAfter: 12,
+                centeredSlides: true,
+                centerInsufficientSlides: true,
+                centeredSlidesBounds: true,
                 watchOverflow: true,
                 loop: false,
                 breakpoints: {
@@ -43,7 +46,8 @@ export default (Alpine: AlpineType) => {
                     },
                     1024: {
                         slidesPerView: 5.8,
-                        spaceBetween: 20
+                        spaceBetween: 20,
+                
                     },
                 },
                 on: {

@@ -29,7 +29,7 @@
     ]
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.DWow74Y2.css",
+    "file": "wb-main.NiuEqfGE.css",
     "name": "main",
     "names": [
       "main.css"
@@ -38,7 +38,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.BhC_V5tX.js",
+    "file": "wb-main.CL8Kbln_.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -159,7 +159,7 @@
     ]
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.enJ4XkV_.js",
+    "file": "wb-swiperSlider.nDsZ1ynd.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,
