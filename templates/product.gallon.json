@@ -23,6 +23,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
+            "gap_tablet": 14,
             "gap_mobile": 14,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
@@ -313,9 +314,11 @@
         "heading_VJVmPd": {
           "type": "_heading",
           "settings": {
+            "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family_mobile": "",
             "font_size": "3.438rem",
             "line_height": "tight",
             "letter_spacing": "normal",
@@ -377,7 +380,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
             "background_color": "#fdede0",
             "button_label": "BROWSE AUTOSHIP",
-            "button_link": "shopify://pages/membership"
+            "button_link": "shopify://collections"
           }
         },
         "tier_item_xg8KDw": {
@@ -388,7 +391,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li>All Free & VIP Member perks plus...</li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
             "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
             "button_label": "Add ELITE · $25",
-            "button_link": "shopify://pages/membership"
+            "button_action": "elite_add_to_cart"
           }
         }
       },
@@ -432,16 +435,18 @@
         "heading_9RQfry": {
           "type": "_heading",
           "settings": {
+            "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family_mobile": "",
             "font_size": "2.813rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "pretty",
             "color": "var(--color-foreground-heading)",
-            "text": "<h2>More to explore</h2>",
+            "text": "<h2><strong>More to explore</strong></h2>",
             "read_only": false,
             "type_preset_mobile": "custom",
             "font_mobile": "var(--font-body--family)",

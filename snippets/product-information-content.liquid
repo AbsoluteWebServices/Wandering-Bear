@@ -87,7 +87,7 @@
 
 <div class="section-background color-{{ settings.color_scheme }}"></div>
 <div
-  class="product-information section section--{{ content_width }} spacing-style color-{{ settings.color_scheme }} relative z-2"
+  class="product-information {% if template.suffix == '96oz' %} product-information-96oz {% endif %}section section--{{ content_width }} spacing-style color-{{ settings.color_scheme }} relative z-2"
   style="{% render 'spacing-style', settings: settings %} --gap: {{ section_gap }}px; --gap-mobile: {{ section_gap_mobile }}px;"
   data-testid="product-information"
 >
@@ -106,7 +106,7 @@
     {% capture media %}
       <div
         x-data="mediaGalleryBundle"
-        class="product-information__media h-fit xl:sticky lg:top-[180px]"
+        class="product-information__media h-fit xl:pb-10 xl:sticky lg:top-[180px]"
         data-testid="product-information-media"
       >
         {{ media_gallery }}

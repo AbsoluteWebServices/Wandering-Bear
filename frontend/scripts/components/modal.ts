@@ -23,17 +23,5 @@ export default (Alpine: AlpineType) => {
         await new Promise(resolve => setTimeout(resolve, 300))
         this.isOpen = false
       },
-
-      async addToCart(id, quantity, sellingPlan = null) {
-        console.log("addToCart", id, quantity, sellingPlan);
-        const cart = await fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify({ id, quantity, selling_plan: sellingPlan }),
-        });
-      }
     }))
 }

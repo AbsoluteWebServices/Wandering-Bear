@@ -23,6 +23,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
+            "gap_tablet": 14,
             "gap_mobile": 14,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
@@ -352,20 +353,13 @@
     "aw_diagram_6mi8V4": {
       "type": "aw-diagram",
       "blocks": {
-        "diagram_item_qP99bg": {
-          "type": "diagram_item",
-          "settings": {
-            "icon": "shopify://shop_images/Group_1327226584.svg",
-            "title": "Cold Brew Process",
-            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
-          }
-        },
         "diagram_item_UqUHic": {
           "type": "diagram_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title": "BEAN QUALITY",
-            "description": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew"
+            "description": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
+            "order_mobile": 2
           }
         },
         "diagram_item_UMNaHE": {
@@ -373,14 +367,24 @@
           "settings": {
             "icon": "shopify://shop_images/Group_1327226583.svg",
             "title": "More Coffee",
-            "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine."
+            "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine.",
+            "order_mobile": 1
+          }
+        },
+        "diagram_item_qP99bg": {
+          "type": "diagram_item",
+          "settings": {
+            "icon": "shopify://shop_images/Group_1327226584.svg",
+            "title": "Cold Brew Process",
+            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic",
+            "order_mobile": 3
           }
         }
       },
       "block_order": [
-        "diagram_item_qP99bg",
         "diagram_item_UqUHic",
-        "diagram_item_UMNaHE"
+        "diagram_item_UMNaHE",
+        "diagram_item_qP99bg"
       ],
       "name": "AW Diagram Section",
       "settings": {
@@ -390,7 +394,7 @@
         "title": "",
         "title_alt": "",
         "title_image": "shopify://shop_images/cold-brew-title.svg",
-        "title_image_mobile": "shopify://shop_images/on-tap-innovation-mobile_6d18829d-a82d-44be-9713-394659d47d33.svg",
+        "title_image_mobile": "shopify://shop_images/cold-brew-title.svg",
         "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png"
       }
     },
@@ -453,9 +457,11 @@
         "heading_VJVmPd": {
           "type": "_heading",
           "settings": {
+            "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family_mobile": "",
             "font_size": "3.438rem",
             "line_height": "tight",
             "letter_spacing": "normal",
@@ -517,7 +523,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
             "background_color": "#fdede0",
             "button_label": "BROWSE AUTOSHIP",
-            "button_link": "shopify://pages/membership"
+            "button_link": "shopify://collections"
           }
         },
         "tier_item_xg8KDw": {
@@ -528,7 +534,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li>All Free & VIP Member perks plus...</li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
             "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
             "button_label": "Add ELITE · $25",
-            "button_link": "shopify://pages/membership"
+            "button_action": "elite_add_to_cart"
           }
         }
       },
@@ -572,19 +578,21 @@
         "heading_9RQfry": {
           "type": "_heading",
           "settings": {
+            "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family_mobile": "",
             "font_size": "2.813rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "pretty",
             "color": "var(--color-foreground-heading)",
-            "text": "<h2>More to explore</h2>",
+            "text": "<h2><strong>More to explore</strong></h2>",
             "read_only": false,
             "type_preset_mobile": "custom",
-            "font_mobile": "var(--font-body--family)",
+            "font_mobile": "var(--font-heading--family)",
             "font_size_mobile": "2.188rem",
             "line_height_mobile": "",
             "letter_spacing_mobile": "",

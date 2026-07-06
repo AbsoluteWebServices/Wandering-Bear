@@ -29,7 +29,7 @@
    assign plural_label = product_object.value.plural_label
    assign selling_plan_keywords = product_object.value.selling_plan_keywords.value
    assign discount_type = product_object.value.discount_type
-   assign col_width = 63
+   assign col_width = 69
 
    if product_object.value.multi_unit_product_quantity != blank and product_object.value.multi_unit_product_quantity > 1
     assign multi_unit_product = true
@@ -94,7 +94,7 @@
 <div class="flex flex-col gap-2.5">
     <span class="text-base font-bold font-gothic_condensed uppercase text-gold">Build Your Bundle</span>
 
-    <div class="wb-flex gap-1 flex-col w-full bg-white/50 p-4.5 rounded-[5px] font-kurdis relative button-shadow uppercase">
+    <div class="wb-flex gap-0.5 flex-col w-full bg-white/50 px-4.5 pb-2.5 pt-2 rounded-[5px] font-kurdis relative button-shadow uppercase">
       <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
         {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%]', svg_class: 'text-gold'%}
       </div>
@@ -109,7 +109,7 @@
             {% else %}
               {% assign tier_label = plural_label %}
             {% endif %}
-            <div class="col-width flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold" style="{{ col_width_styles }} text-bear-black">
+            <div class="col-width flex flex-col items-center justify-center font-gothic_condensed text-[20px]/none uppercase font-extrabold md:text-base/none" style="{{ col_width_styles }} text-bear-black">
                 <span>{{ tier }} {{ tier_label }}</span>
             </div>
         {% endfor %}
@@ -136,9 +136,9 @@
           {% endfor %}
         </div>
       </div>
-      <div class="flex items-center justify-between text-[12px] w-full">
+      <div class="flex items-center justify-between text-[12px] mt-1 w-full">
         {% for i in (1..bundle_products_count) %}
-          <div data-tier="{{ i }}" class="col-width wb-flex gap-1 flex-col items-center justify-center" style="{{ col_width_styles }}">
+          <div data-tier="{{ i }}" class="col-width wb-flex gap-0.75 flex-col items-center justify-center" style="{{ col_width_styles }}">
             <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
               {%- case i -%}
                 {%- when 1 -%}

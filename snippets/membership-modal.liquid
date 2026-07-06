@@ -9,8 +9,6 @@
     assign learn_more_button = item.learn_more_button
     assign login_text = item.login_text
     assign already_logged_in_text = item.already_logged_in_text
-    assign elite_product = settings.elite_product
-    assign elite_selling_plan = elite_product.selected_or_first_available_variant.selling_plan_allocations.first.selling_plan.id
 
     assign is_elite = false
     if customer.tags contains 'inveterate-tier#dc38b982'
@@ -45,9 +43,12 @@
     <span class="mb-2 text-gold text-[17px] font-kurdis-semi-condensed font-bold text-center">{{ item.elite_block_title }}</span>
     <div class="text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-pretty">{{ item.elite_block_description | metafield_tag }}</div>
     {% if item.learn_more_button != blank %}
-        <div @click.stop.prevent="addToCart({{ elite_product.selected_or_first_available_variant.id }}, 1, {{ elite_selling_plan }})">
-        {% render 'wb-button', style: 'secondary-gold', class: 'z-[3] !w-[119px] !h-[25px] !text-[12px] mt-5', width: 98, height: 25, label: item.elite_button_text, link: '' %}
-        </div>
+        {% render 'elite-atc-button',
+          label: item.elite_button_text,
+          class: 'z-[3] !w-[119px] !h-[25px] !text-[12px] mt-5',
+          width: 98,
+          height: 25
+        %}
     {% endif %}
 </div>
 {% if item.learn_more_button != blank %}

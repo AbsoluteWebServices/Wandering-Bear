@@ -36,7 +36,10 @@ rte-formatter.product-description {
             font-size: 1rem;
         }
     }
+}
 
+.product-information-96oz rte-formatter.product-description {
+    margin-bottom: 1rem !important;
 }
 
 input[name="purchase_option"]:checked + label {
@@ -107,6 +110,7 @@ input[name="purchase_option"]:checked + label {
 }
 
 @media screen and (max-width: 1023px) {
+    .product-information-96oz rte-formatter.product-description,
     rte-formatter.product-description {
         margin-bottom: 0.125rem !important;
     }

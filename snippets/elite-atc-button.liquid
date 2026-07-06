@@ -1,0 +1,37 @@
+{%- doc -%}
+  Renders a button that adds the Elite membership product to cart.
+
+  @param {string} label - Button label
+  @param {string} [class] - Additional button classes
+  @param {number} [width] - Button SVG width
+  @param {number} [height] - Button SVG height
+  @param {string} [style] - wb-button style, default secondary-gold
+{%- enddoc -%}
+
+{% liquid
+  assign elite_product = settings.elite_product
+  assign elite_variant = elite_product.selected_or_first_available_variant
+  assign elite_selling_plan = null
+
+  if elite_variant.selling_plan_allocations.size > 0
+    assign elite_selling_plan = elite_variant.selling_plan_allocations.first.selling_plan.id
+  endif
+
+  assign button_style = style | default: 'secondary-gold'
+%}
+
+{% if elite_variant != blank and label != blank %}
+  <div
+    x-data="eliteAtc"
+    @click.stop.prevent="addEliteToCart({{ elite_variant.id }}, 1{% if elite_selling_plan != blank %}, {{ elite_selling_plan }}{% else %}, null{% endif %})"
+  >
+    {% render 'wb-button',
+      style: button_style,
+      class: class,
+      width: width,
+      height: height,
+      label: label,
+      link: ''
+    %}
+  </div>
+{% endif %}
