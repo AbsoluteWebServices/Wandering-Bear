@@ -1,79 +1,93 @@
+{% liquid
+  assign subscription_value_props = settings.subscription_value_props
+  assign subscription_value_props_mobile = settings.subscription_value_props_mobile | default: subscription_value_props
+%}
+
 <div x-show="bundleSize >= 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="mb-0 mt-3 md:mb-5 md:mt-0.5">
-    <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
-    <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
-    <fieldset>
-        <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
-        <label
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-2.5 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300 md:mt-2.5"
-        :class="purchaseOption === 'autoship' ? 'border-kraft pb-3.5!' : 'border-[#CFBDB1]'"
-        for="autoship">
-          <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
-          :class="purchaseOption === 'autoship' ? 'bg-dark-gold border-dark-gold' : 'bg-transparent border-[#CFBDB1]'"
-          >
-            <svg x-show="purchaseOption === 'autoship'" x-cloak xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none">
-              <path d="M10.3589 0.152908C7.87155 2.0711 5.74656 4.40752 4.12225 7.12816C3.9495 7.44218 3.77675 7.77324 3.604 8.08726C2.98182 7.44218 2.29081 6.84887 1.54853 6.34344C1.09911 6.02943 0.37369 6.23854 0.132097 6.72695C-0.14458 7.2501 0.0281745 7.82569 0.512022 8.15675C0.650359 8.24394 0.77115 8.34884 0.909481 8.43603C0.927027 8.45374 1.0134 8.50551 1.04782 8.54094C1.08223 8.55865 1.11665 8.59339 1.11665 8.59339C1.35823 8.78548 1.60048 8.99459 1.82521 9.22144C2.04991 9.43056 2.25709 9.63968 2.44739 9.86652C2.55131 9.97142 2.65456 10.0933 2.74094 10.2153C2.7929 10.2848 2.84486 10.3549 2.91369 10.4244C2.9481 10.4769 3.12086 10.7037 2.96565 10.4769C3.19036 10.7732 3.46636 11 3.86383 11C4.19179 11 4.60679 10.8079 4.76201 10.4769C5.36664 9.13425 6.10961 7.86114 6.95582 6.6582C7.05974 6.51856 7.16299 6.36188 7.2669 6.22224C7.31887 6.15276 7.37083 6.0826 7.42211 6.03015C7.45652 5.99541 7.47407 5.96067 7.50848 5.92525C7.73319 5.62893 7.97479 5.34966 8.21704 5.07105C8.70088 4.51316 9.2016 3.99002 9.71984 3.48389C10.0134 3.20461 10.3069 2.926 10.618 2.66443C10.7732 2.52479 10.946 2.38515 11.1187 2.24619C11.1876 2.19374 11.2739 2.12426 11.3434 2.07181C11.361 2.07181 11.361 2.0541 11.3779 2.0541C11.4123 2.01936 11.4467 2.00165 11.4818 1.98462C11.7065 1.81024 11.8792 1.65357 11.9656 1.35657C12.0344 1.11271 12 0.780983 11.8617 0.554142C11.5162 0.100474 10.8252 -0.195828 10.3589 0.152934L10.3589 0.152908Z" fill="#F9F3ED"/>
-            </svg>
-          </div>
-        <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase -mt-0.75">
-          <span  class="subscription-label-name transition-colors duration-300 font-bold">Monthly with Autoship</span>
-          </div>
-          <div class="col-start-2 wb-flex flex-col row-start-2 col-end-4">
-          <span class="text-sm">Skip, reschedule, cancel at anytime</span>
-        </div>
-        <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
-            <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.original !== totalPrice.autoship" x-text="totalPrice.original"></span>
-            <span x-text="totalPrice.autoship"></span>
-        </div>
-        <div x-show="purchaseOption === 'autoship'"
+  <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
+  <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
+  <fieldset>
+    <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
+    <label
+      class="subscription-value-label wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-2.5 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300 md:mt-2.5"
+      :class="purchaseOption === 'autoship' ? 'border-kraft pb-3.5!' : 'border-[#CFBDB1]'"
+      for="autoship"
+    >
+      <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
+        :class="purchaseOption === 'autoship' ? 'bg-dark-gold border-dark-gold' : 'bg-transparent border-[#CFBDB1]'"
+      >
+        <svg x-show="purchaseOption === 'autoship'" x-cloak xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none">
+          <path d="M10.3589 0.152908C7.87155 2.0711 5.74656 4.40752 4.12225 7.12816C3.9495 7.44218 3.77675 7.77324 3.604 8.08726C2.98182 7.44218 2.29081 6.84887 1.54853 6.34344C1.09911 6.02943 0.37369 6.23854 0.132097 6.72695C-0.14458 7.2501 0.0281745 7.82569 0.512022 8.15675C0.650359 8.24394 0.77115 8.34884 0.909481 8.43603C0.927027 8.45374 1.0134 8.50551 1.04782 8.54094C1.08223 8.55865 1.11665 8.59339 1.11665 8.59339C1.35823 8.78548 1.60048 8.99459 1.82521 9.22144C2.04991 9.43056 2.25709 9.63968 2.44739 9.86652C2.55131 9.97142 2.65456 10.0933 2.74094 10.2153C2.7929 10.2848 2.84486 10.3549 2.91369 10.4244C2.9481 10.4769 3.12086 10.7037 2.96565 10.4769C3.19036 10.7732 3.46636 11 3.86383 11C4.19179 11 4.60679 10.8079 4.76201 10.4769C5.36664 9.13425 6.10961 7.86114 6.95582 6.6582C7.05974 6.51856 7.16299 6.36188 7.2669 6.22224C7.31887 6.15276 7.37083 6.0826 7.42211 6.03015C7.45652 5.99541 7.47407 5.96067 7.50848 5.92525C7.73319 5.62893 7.97479 5.34966 8.21704 5.07105C8.70088 4.51316 9.2016 3.99002 9.71984 3.48389C10.0134 3.20461 10.3069 2.926 10.618 2.66443C10.7732 2.52479 10.946 2.38515 11.1187 2.24619C11.1876 2.19374 11.2739 2.12426 11.3434 2.07181C11.361 2.07181 11.361 2.0541 11.3779 2.0541C11.4123 2.01936 11.4467 2.00165 11.4818 1.98462C11.7065 1.81024 11.8792 1.65357 11.9656 1.35657C12.0344 1.11271 12 0.780983 11.8617 0.554142C11.5162 0.100474 10.8252 -0.195828 10.3589 0.152934L10.3589 0.152908Z" fill="#F9F3ED"/>
+        </svg>
+      </div>
+      <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase -mt-0.75">
+        <span  class="subscription-label-name transition-colors duration-300 font-bold">Monthly with Autoship</span>
+      </div>
+      <div class="col-start-2 wb-flex flex-col row-start-2 col-end-4">
+        <span class="text-sm">Skip, reschedule, cancel at anytime</span>
+      </div>
+      <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
+        <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.original !== totalPrice.autoship" x-text="totalPrice.original"></span>
+        <span x-text="totalPrice.autoship"></span>
+      </div>
+      <div
+        x-show="purchaseOption === 'autoship'"
         x-cloak
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform scale-95"
         x-transition:enter-end="opacity-100 transform scale-100"
-    
-        class="subscription-value-props mt-4 col-start-1 col-end-4 row-start-3 md:mt-3.5">
-            {{ settings.subscription_value_props }}
-        </div>
-        </label>
-    </fieldset>
-   
-    <fieldset>
-       <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
-        <label 
-        class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-1.75 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
-        :class="purchaseOption === 'one_time' ? 'border-kraft' : 'border-[#CFBDB1]'"
-        for="one_time">
-        <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
+        class="subscription-value-props mt-4 col-start-1 col-end-4 row-start-3 md:mt-3.5"
+      >
+        {{ subscription_value_props }}
+      </div>
+    </label>
+    <div class="subscription-value-props mt-3.5 pb-2.5 col-start-1 col-end-4 row-start-3 tracking-tight md:hidden">
+      {{ subscription_value_props_mobile }}
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
+    <label
+      class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-1.75 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
+      :class="purchaseOption === 'one_time' ? 'border-kraft' : 'border-[#CFBDB1]'"
+      for="one_time"
+    >
+      <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
         :class="purchaseOption === 'one_time' ? 'bg-dark-gold border-dark-gold' : 'bg-transparent border-[#CFBDB1]'"
-        >
-            <svg x-show="purchaseOption === 'one_time'" x-cloak xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none">
-              <path d="M10.3589 0.152908C7.87155 2.0711 5.74656 4.40752 4.12225 7.12816C3.9495 7.44218 3.77675 7.77324 3.604 8.08726C2.98182 7.44218 2.29081 6.84887 1.54853 6.34344C1.09911 6.02943 0.37369 6.23854 0.132097 6.72695C-0.14458 7.2501 0.0281745 7.82569 0.512022 8.15675C0.650359 8.24394 0.77115 8.34884 0.909481 8.43603C0.927027 8.45374 1.0134 8.50551 1.04782 8.54094C1.08223 8.55865 1.11665 8.59339 1.11665 8.59339C1.35823 8.78548 1.60048 8.99459 1.82521 9.22144C2.04991 9.43056 2.25709 9.63968 2.44739 9.86652C2.55131 9.97142 2.65456 10.0933 2.74094 10.2153C2.7929 10.2848 2.84486 10.3549 2.91369 10.4244C2.9481 10.4769 3.12086 10.7037 2.96565 10.4769C3.19036 10.7732 3.46636 11 3.86383 11C4.19179 11 4.60679 10.8079 4.76201 10.4769C5.36664 9.13425 6.10961 7.86114 6.95582 6.6582C7.05974 6.51856 7.16299 6.36188 7.2669 6.22224C7.31887 6.15276 7.37083 6.0826 7.42211 6.03015C7.45652 5.99541 7.47407 5.96067 7.50848 5.92525C7.73319 5.62893 7.97479 5.34966 8.21704 5.07105C8.70088 4.51316 9.2016 3.99002 9.71984 3.48389C10.0134 3.20461 10.3069 2.926 10.618 2.66443C10.7732 2.52479 10.946 2.38515 11.1187 2.24619C11.1876 2.19374 11.2739 2.12426 11.3434 2.07181C11.361 2.07181 11.361 2.0541 11.3779 2.0541C11.4123 2.01936 11.4467 2.00165 11.4818 1.98462C11.7065 1.81024 11.8792 1.65357 11.9656 1.35657C12.0344 1.11271 12 0.780983 11.8617 0.554142C11.5162 0.100474 10.8252 -0.195828 10.3589 0.152934L10.3589 0.152908Z" fill="#F9F3ED"/>
-            </svg>
-          </div>
-          <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase font-bold -mt-0.75">
-            <span class="subscription-label-name transition-colors duration-300">One Time Purchase</span>
-        </div>
-        <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
-            <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.original !== totalPrice.oneTime" x-text="totalPrice.original"></span>
-            <span x-text="totalPrice.oneTime"></span>
-          </div>
-        </label>
-    </fieldset>
+      >
+        <svg x-show="purchaseOption === 'one_time'" x-cloak xmlns="http://www.w3.org/2000/svg" width="12" height="11" viewBox="0 0 12 11" fill="none">
+          <path d="M10.3589 0.152908C7.87155 2.0711 5.74656 4.40752 4.12225 7.12816C3.9495 7.44218 3.77675 7.77324 3.604 8.08726C2.98182 7.44218 2.29081 6.84887 1.54853 6.34344C1.09911 6.02943 0.37369 6.23854 0.132097 6.72695C-0.14458 7.2501 0.0281745 7.82569 0.512022 8.15675C0.650359 8.24394 0.77115 8.34884 0.909481 8.43603C0.927027 8.45374 1.0134 8.50551 1.04782 8.54094C1.08223 8.55865 1.11665 8.59339 1.11665 8.59339C1.35823 8.78548 1.60048 8.99459 1.82521 9.22144C2.04991 9.43056 2.25709 9.63968 2.44739 9.86652C2.55131 9.97142 2.65456 10.0933 2.74094 10.2153C2.7929 10.2848 2.84486 10.3549 2.91369 10.4244C2.9481 10.4769 3.12086 10.7037 2.96565 10.4769C3.19036 10.7732 3.46636 11 3.86383 11C4.19179 11 4.60679 10.8079 4.76201 10.4769C5.36664 9.13425 6.10961 7.86114 6.95582 6.6582C7.05974 6.51856 7.16299 6.36188 7.2669 6.22224C7.31887 6.15276 7.37083 6.0826 7.42211 6.03015C7.45652 5.99541 7.47407 5.96067 7.50848 5.92525C7.73319 5.62893 7.97479 5.34966 8.21704 5.07105C8.70088 4.51316 9.2016 3.99002 9.71984 3.48389C10.0134 3.20461 10.3069 2.926 10.618 2.66443C10.7732 2.52479 10.946 2.38515 11.1187 2.24619C11.1876 2.19374 11.2739 2.12426 11.3434 2.07181C11.361 2.07181 11.361 2.0541 11.3779 2.0541C11.4123 2.01936 11.4467 2.00165 11.4818 1.98462C11.7065 1.81024 11.8792 1.65357 11.9656 1.35657C12.0344 1.11271 12 0.780983 11.8617 0.554142C11.5162 0.100474 10.8252 -0.195828 10.3589 0.152934L10.3589 0.152908Z" fill="#F9F3ED"/>
+        </svg>
+      </div>
+      <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase font-bold -mt-0.75">
+        <span class="subscription-label-name transition-colors duration-300">One Time Purchase</span>
+      </div>
+      <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
+        <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.original !== totalPrice.oneTime" x-text="totalPrice.original"></span>
+        <span x-text="totalPrice.oneTime"></span>
+      </div>
+    </label>
+  </fieldset>
 </div>
 
 <button
-:class="bundleSize >= 1 ? '!pointer-events-auto' : 'pointer-events-none mt-4'"
-class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-4.5" @click.prevent="addToCart">
-    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
-      Add 1 Flavor
-    </span>
-    {% render 'loading-animation', class: 'z-[2]' %}
-    <svg xmlns="http://www.w3.org/2000/svg"
+  :class="bundleSize >= 1 ? '!pointer-events-auto' : 'pointer-events-none mt-4'"
+  class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-4.5" @click.prevent="addToCart"
+>
+  <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold uppercase">
+    Add 1 Flavor
+  </span>
+  {% render 'loading-animation', class: 'z-[2]' %}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
     :class="bundleSize >= 1 ? 'text-espresso' : 'text-espresso/50'"
-    class="absolute inset-0 z-[1] h-full w-full text-espresso/50 group-hover:!text-gold transition-all duration-300" viewBox="0 0 402 61" fill="none" preserveAspectRatio="none">
-      <path d="M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z" fill="currentColor"/>
-    </svg>
+    class="absolute inset-0 z-[1] h-full w-full text-espresso/50 group-hover:!text-gold transition-all duration-300" viewBox="0 0 402 61" fill="none" preserveAspectRatio="none"
+  >
+    <path d="M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z" fill="currentColor"/>
+  </svg>
 </button>
 
-<template x-if="currentSavingsAmount > 0">
-  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center my-2.5 flex justify-center items-center md:mb-4 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+<template x-if="purchaseOption === 'autoship' && currentSavingsAmount > 0">
+  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-4 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>

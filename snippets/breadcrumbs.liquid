@@ -5,12 +5,12 @@
     <nav class="wb-flex gap-1 items-center text-xs font-kurdis-semi-condensed text-bear-black font-semibold justify-center lg:!justify-start" role="navigation" aria-label="breadcrumbs">
       <ol class="wb-flex gap-1 items-center">
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="/">Home</a>
+          <a class="breadcrumbs__link text-bear-black!" href="/">Home</a>
         </li>
         {%- case t -%}
           {%- when 'page' -%}
             <li class="breadcrumbs__item">
-              <a class="breadcrumbs__link" href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
+              <a class="breadcrumbs__link text-bear-black!" href="{{ page.url }}" aria-current="page">{{ page.title }}</a>
             </li>
           {%- when 'product' -%}
             {% assign product_object = product.metafields.custom.product_group %}
@@ -28,12 +28,12 @@
             {% if product_object.value.title != blank %}
               <li class="breadcrumbs__item">
               <span>></span>
-              <a class="breadcrumbs__link" href="{{ product.url }}" aria-current="page">{{ product_object.value.title.value.text }}</a>
+              <a class="breadcrumbs__link text-bear-black!" href="{{ product.url }}" aria-current="page">{{ product_object.value.title.value.text }}</a>
             </li>
             {% else %}
               <li class="breadcrumbs__item">
                 <span>></span>
-                <a class="breadcrumbs__link" href="{{ product.url }}" aria-current="page">{{ product.title }}</a>
+                <a class="breadcrumbs__link text-bear-black!" href="{{ product.url }}" aria-current="page">{{ product.title }}</a>
               </li>
             {% endif %}
           {%- when 'collection' and collection.handle -%}
@@ -43,11 +43,11 @@
               </li>
               <li class="breadcrumbs__item">
                 {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
-                <a class="breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + "}}</a>
+                <a class="breadcrumbs__link text-bear-black!" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + "}}</a>
               </li>
             {%- else -%}
               <li class="breadcrumbs__item">
-                <a class="breadcrumbs__link" href="{{ collection.url }}" aria-current="page">{{ collection.title }}</a>
+                <a class="breadcrumbs__link text-bear-black!" href="{{ collection.url }}" aria-current="page">{{ collection.title }}</a>
               </li>
             {%- endif -%}
           {%- when 'blog' -%}
@@ -57,11 +57,11 @@
               </li>
               <li class="breadcrumbs__item">
                 {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
-                <a class="breadcrumbs__link" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + " }}</a>
+                <a class="breadcrumbs__link text-bear-black!" href="{{ tag_url }}" aria-current="page">{{ current_tags | join: " + " }}</a>
               </li>
             {%- else -%}
               <li class="breadcrumbs__item">
-                <a class="breadcrumbs__link" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</a>
+                <a class="breadcrumbs__link text-bear-black!" href="{{ blog.url }}" aria-current="page">{{ blog.title }}</a>
               </li>
             {%- endif -%}
           {%- when 'article' -%}
@@ -69,11 +69,11 @@
               {{ blog.title | link_to: blog.url }}
             </li>
             <li class="breadcrumbs__item">
-              <a class="breadcrumbs__link" href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
+              <a class="breadcrumbs__link text-bear-black!" href="{{ article.url }}" aria-current="page">{{ article.title }}</a>
             </li>
           {%- else -%}
             <li class="breadcrumbs__item">
-              <a class="breadcrumbs__link" href="{{ request.path }}" aria-current="page">{{ page_title }}</a>
+              <a class="breadcrumbs__link text-bear-black!" href="{{ request.path }}" aria-current="page">{{ page_title }}</a>
             </li>
         {%- endcase -%}
       </ol>

@@ -11,14 +11,14 @@
     assign image = block.settings.image
 %}
 
-<div class="wb-flex items-stretch relative w-full rounded-[5px] h-fit mb-4" style="background-color: {{ background_color }}">
+<div class="wb-flex items-stretch relative w-full rounded-[5px] h-fit mb-7.5 md:mb-4" style="background-color: {{ background_color }}">
   {% if image != blank %}
     <div class="flex-1 h-auto wb-flex min-w-[130px] max-w-[130px] md:min-w-[104px] md:max-w-[104px]">
       {% render 'picture', source: image, class: 'w-full !h-full object-cover rounded-[5px]', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
     </div>
   {% endif %}
 
-  <div class="wb-flex flex-col gap-2 p-4 h-fit flex-2 my-auto">
+  <div class="wb-flex flex-col gap-1.5 px-3 pt-2.25 pb-3 h-fit flex-2 my-auto md:p-4 md:gap-2">
     <h2 class="text-[20px] font-gothic_condensed font-extrabold leading-[100%] md:text-base" style="color: {{ text_color }}">{{ title }}</h2>
     <span class="text-[12px] font-semibold font-kurdis-semi-condensed leading-[120%]" style="color: {{ text_color }}">{{ subtitle }}</span>
     {% if button_label != blank and button_link != blank %}
@@ -47,7 +47,7 @@
       "type": "text",
       "id": "title",
       "label": "Title",
-      "default": "Looking for cold brew on-the-go?"
+      "default": "Looking for cold brew on‑the‑go?"
     },
     {
       "type": "text",

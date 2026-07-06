@@ -38,7 +38,7 @@ export default (Alpine: AlpineType) => {
         get currentSavingsAmount() {
             const variant = this.selectedVariant;
 
-            if (variant?.selling_plan_price == null) {
+            if (this.purchaseOption !== 'autoship' || variant?.selling_plan_price == null) {
                 return 0;
             }
 

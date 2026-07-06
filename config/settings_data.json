@@ -79,6 +79,7 @@
     "variant_button_radius": 14,
     "variant_button_width": "equal-width-buttons",
     "subscription_value_props": "<ul><li>Free VIP Membership with locked flavor access</li><li>Change or modify flavors</li><li>Discount on every order</li><li>Total flexibility, cancel anytime</li></ul>",
+    "subscription_value_props_mobile": "<ul><li>Upgrade to VIP Membership  with exclusive flavor access</li><li>Skip, reschedule, change flavors at any time.</li><li>Discount on every order</li><li>Cancel anytime</li></ul>",
     "nonmember_tooltip": "<p>Become a free member today to start earning $5 for every $50 spent. <a href=\"/pages/membership\" title=\"Membership\">Learn more.</a></p>",
     "member_tooltip": "<p>Members receive $5 for every $50 spent. Redeem these points at checkout or under your autoship management to apply to your next order.<a href=\"/pages/membership\" title=\"Membership\">Learn more.</a></p>",
     "elite_product": "inveterate-subscription-1",
@@ -526,7 +527,7 @@
         "settings": {
           "background": "#fef8f3",
           "foreground_heading": "#000000",
-          "foreground": "#1B1B1B",
+          "foreground": "#1b1b1b",
           "primary": "#000000cf",
           "primary_hover": "#000000",
           "border": "#0000000f",

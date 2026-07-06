@@ -67,14 +67,16 @@ export default (Alpine: AlpineType) => {
         },
 
         get currentSavingsAmount() {
+            if (this.purchaseOption !== 'autoship') {
+                return 0;
+            }
+
             const bundleSize = (this.bundleSize <= 2) ? (this.bundleSize - 1) : 2;
             const originalPrice = this.selectedProduct?.variants[0].price;
             const newSellingPlanPrice = this.selectedProduct?.variants[bundleSize]?.selling_plan_price;
-            const newOtpPrice = this.selectedProduct?.variants[bundleSize]?.price;
             const savingsAmountAutoship = this.bundleSize * (originalPrice - newSellingPlanPrice);
-            const savingsAmountOneTime = this.bundleSize * (originalPrice - newOtpPrice);
 
-            return this.purchaseOption === 'autoship' ? savingsAmountAutoship : savingsAmountOneTime;
+            return savingsAmountAutoship;
         },
 
         get currentSavingsAmountFormatted() {

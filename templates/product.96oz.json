@@ -137,7 +137,11 @@
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
-                    "padding-inline-end": 0
+                    "padding-inline-end": 0,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
                   },
                   "blocks": {}
                 }
@@ -168,7 +172,7 @@
               "settings": {
                 "color_scheme": "scheme-40eec688-b970-4f1a-96a1-8b50c977616b",
                 "image": "shopify://shop_images/3f3d11dcd1b175853b80f970707145ec401faff7.png",
-                "title": "Looking for cold brew on-the-go?",
+                "title": "Looking for cold brew on‑the‑go?",
                 "subtitle": "Try our new cold brew lattes, available in 3 flavors!",
                 "button_label": "Shop Now",
                 "button_link": "/"
@@ -426,7 +430,8 @@
         "title_type": "image",
         "title": "",
         "title_alt": "",
-        "title_image": "shopify://shop_images/Group_1327226589.svg",
+        "title_image": "shopify://shop_images/Group_1327226589-2.svg",
+        "title_image_mobile": "shopify://shop_images/on-tap-innovation-mobile_6d18829d-a82d-44be-9713-394659d47d33.svg",
         "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png"
       }
     },
