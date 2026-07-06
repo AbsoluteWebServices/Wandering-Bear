@@ -23,6 +23,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
+            "gap_tablet": 0,
             "gap_mobile": 14,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
@@ -188,7 +189,7 @@
         }
       },
       "settings": {
-        "bundle_collection": "test-cold-brew-on-tap-96oz",
+        "bundle_collection": "site-v2-groupedpdp-cold-brew-on-tap-96oz",
         "bundle_add_to_cart_text": "Add",
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
@@ -453,9 +454,11 @@
         "heading_VJVmPd": {
           "type": "_heading",
           "settings": {
+            "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family_mobile": "",
             "font_size": "3.438rem",
             "line_height": "tight",
             "letter_spacing": "normal",
@@ -572,9 +575,11 @@
         "heading_9RQfry": {
           "type": "_heading",
           "settings": {
+            "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family_mobile": "",
             "font_size": "2.813rem",
             "line_height": "normal",
             "letter_spacing": "normal",
