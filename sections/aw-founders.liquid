@@ -61,9 +61,30 @@
                 </div>
             </div>
         </div>
-          <div @click="togglePlay()">
-            {% render 'video', video: video, disable_controls: true, video_autoplay: true, video_from_url: false %}
-          </div>
+          <div @click="togglePlay()" class="video-wrapper h-full w-full relative wb-flex justify-center items-center group">
+            <span class="icon-play hidden">
+              {{- 'icon-play.svg' | inline_asset_content -}}
+            </span>
+            <span class="icon-pause">
+              {{- 'icon-pause.svg' | inline_asset_content -}}
+            </span>
+            {% for source in video.sources %}
+                {% if source.mime_type == 'video/mp4' %}
+                    <video
+                        class="h-full w-full object-cover cursor-pointer"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        webkit-playsinline
+                        preload="auto"
+                    >
+                        <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    </video>
+                  {% break %}
+                {% endif %}
+              {% endfor %}         
+            </div>
         </div>
     {% endif %}
 {% endcapture %}
@@ -98,6 +119,32 @@
     @media (max-width: 1024px) {
         .title-text {
             font-size: var(--font-size-mobile);
+        }
+    }
+
+    .video-wrapper {
+        .icon-play, .icon-pause {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover {
+            .icon-play, .icon-pause {
+                opacity: 1;
+            }
+        }
+    }
+
+    .icon-play, .icon-pause {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);     
+        color: #fff;   
+
+        svg {
+            height: 80px !important;
+            width: 80px !important;
         }
     }
 {% endstyle %}
