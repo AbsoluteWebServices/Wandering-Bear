@@ -22,7 +22,7 @@
     ]
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.BS9sBXu4.css",
+    "file": "wb-main.yF_K7FPf.css",
     "name": "main",
     "names": [
       "main.css"
@@ -31,7 +31,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.BfdhgTgC.js",
+    "file": "wb-main.C7fxUSAp.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -71,7 +71,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/cart.ts": {
-    "file": "wb-cart.BRlzP5K_.js",
+    "file": "wb-cart.CRLh8KCg.js",
     "name": "cart",
     "src": "frontend/scripts/components/cart.ts",
     "isDynamicEntry": true,

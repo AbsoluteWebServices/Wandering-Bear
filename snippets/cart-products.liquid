@@ -145,6 +145,7 @@
               {% for item in cart.items %}
                 {% if item.properties._bundle_id == bundle_id and item.properties._bundle_parent == 'true' %}
                   {% assign parent_item = item %}
+                  {% assign bundle_id = item.properties._bundle_id %}
                   {% break %}
                 {% endif %}
               {% endfor %}
@@ -199,9 +200,9 @@
                     endif
                 %}
                 
-                 <div x-data="{ open: false }" class="relative bg-[#F9F3ED] rounded-[5px]">
-                  <button @click="open = !open" type="button" class="border border-[#E0D2C6] rounded-[5px] cursor-pointer flex items-center justify-between relative p-4">
-                    {{ selector_value }}
+                 <div data-selector-container x-data="{ open: false }" class="relative bg-[#F9F3ED] py-3.5 px-4">
+                  <button @click="open = !open" type="button" class="w-full border border-[#E0D2C6] rounded-[5px] cursor-pointer flex items-center justify-between relative p-4">
+                    <span data-frequency>{{ selector_value }}</span>
                     {% render 'icons', icon: 'chevron-down', class: 'text-sm' %}
                   </button>
                   <div x-show="open" x-cloak class="absolute top-full h-full z-2 left-0 w-full right-0 bg-[#F9F3ED]">
@@ -210,8 +211,8 @@
                         {% if selling_plan.name contains '1 Month' or selling_plan.name contains '1 month' %}
                           <div class="flex items-center justify-between relative p-4">
                             <div class="flex items-center gap-1">
-                              <input type="radio" name="selling-plan-allocation" value="{{ selling_plan.id }}">
-                              <span>{{ selling_plan.name }}</span>
+                              <input data-selling-plan-name="{{ selling_plan.name }}" @change="changeBundleFrequency($event, '{{ selling_plan.id }},{{ bundle_id }}')" type="radio" name="selling-plan-allocation" value="{{ selling_plan.id }}">
+                              <span class="text-xs font-bold text-espresso">{{ selling_plan.name }}</span>
                             </div>
                           </div>
                       {% endif %}
@@ -219,7 +220,7 @@
                     {% endfor %}
                     <div class="flex items-center justify-between relative p-4">
                         <div class="flex items-center gap-1">
-                          <input type="radio" name="selling-plan-allocation" value="one-time-purchase">
+                          <input data-selling-plan-name="One Time Purchase" @change="changeFrequency($event, 'one-time-purchase')" type="radio" name="selling-plan-allocation" value="one-time-purchase">
                           <span>One Time Purchase</span>
                         </div>
                     </div>

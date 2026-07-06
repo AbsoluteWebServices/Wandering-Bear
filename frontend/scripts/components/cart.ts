@@ -16,7 +16,7 @@ export default (Alpine: AlpineType) => {
     bundleDetails: {},
     activeBundleDetails: {},
     progressBarWidth: 0,
-
+    
     get state() {
       return Alpine.store('cart').state;
     },
@@ -77,6 +77,34 @@ export default (Alpine: AlpineType) => {
 
       const data = await res.json();
       return data.products || [];
+    },
+
+    async changeBundleFrequency(event, sellingPlanId, bundleId) {
+      let frequencyEl = event.target.closest('[data-selector-container]').querySelector('[data-frequency]');
+
+      console.log('frequencyEl', frequencyEl);
+
+      frequencyEl.textContent = event.target.dataset.sellingPlanName;
+
+      
+      console.log('changing frequency', sellingPlanId);
+      console.log('bundleId', bundleId);
+
+      const updates = {};
+      updates[bundleId] = sellingPlanId;
+
+      const res = await fetch('/cart/update.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ updates }),
+      });
+
+      if (!res.ok) return;
+
+      this.cart = await res.json();
     },
 
     async removeBundle(bundleId) {
