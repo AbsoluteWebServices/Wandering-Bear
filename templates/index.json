@@ -37,13 +37,17 @@
       "name": "AW Hero",
       "settings": {
         "color_scheme": "",
-        "background_image": "shopify://shop_images/Background_image.png",
-        "background_image_tablet": "shopify://shop_images/wb-mobile-hero.jpg",
-        "background_image_mobile": "shopify://shop_images/wb-mobile-hero-2.jpg",
+        "foreground_image": "shopify://shop_images/Homepage_HeaderCoffee.png",
+        "foreground_image_mobile": "shopify://shop_images/Homepage_HeaderCoffee_Mobile.png",
+        "background_image": "shopify://shop_images/Homepage_Background.png",
+        "background_image_tablet": "shopify://shop_images/Homepage_Background.png",
+        "background_image_mobile": "shopify://shop_images/Homepage_Background_Mobile.jpg",
         "title_type": "image",
         "title_image": "shopify://shop_images/COFFEE_SHOP_QUALITY_DRINKS_MADE_EASY..svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226599.png",
         "title_text": "Coffee Shop Quality Drinks Made Easy",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "subtitle": "For the at-home pajama baristas"
       }
     },
@@ -68,7 +72,7 @@
         "collection_tile_qhQ8LF": {
           "type": "collection_tile",
           "settings": {
-            "collection": "cold-brew-boxes",
+            "url": "",
             "image": "shopify://shop_images/wb-col-1.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
@@ -81,7 +85,7 @@
         "collection_tile_rCwyCX": {
           "type": "collection_tile",
           "settings": {
-            "collection": "cold-brew-cartons",
+            "url": "",
             "image": "shopify://shop_images/wb-col-2.png",
             "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
             "mobile_image_alt": "",
@@ -93,7 +97,7 @@
         "collection_tile_RwjxDn": {
           "type": "collection_tile",
           "settings": {
-            "collection": "test-single-serve-12-cartons-11oz",
+            "url": "",
             "image": "shopify://shop_images/wb-col-3.png",
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
             "mobile_image_alt": "",
@@ -113,6 +117,8 @@
         "color_scheme": "scheme-2",
         "title_type": "image",
         "title": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/GO_BIG._OR_GO_BIGGER..svg",
         "badge": "shopify://shop_images/STAY_CAFFEINATED_d10f73c6-1af9-4362-a2ea-9998fc13f7d9.svg"
@@ -165,6 +171,8 @@
         "floating_image_mobile": "shopify://shop_images/Mobile_Hand.png",
         "title_type": "image",
         "title": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_image": "shopify://shop_images/lattes-got-benefits.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226608_9dce444c-5629-4918-85ff-0a441448ddb9.png",
         "title_alt": "This latte's got benefits",
@@ -248,6 +256,8 @@
         "background_image_mobile": "shopify://shop_images/Group_1327226600_552c72fa-3873-4ef2-bb39-0b50a3ec9db2.png",
         "title_type": "image",
         "title": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_BETTER_PRICES_WITH_EVERY_SIP.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226609.svg",
         "title_alt": "Our members unlock better prices with every sip",
@@ -329,6 +339,8 @@
         "color_scheme": "",
         "title_type": "image",
         "title": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589_62e3d5a1-7d02-4e2b-bbe7-4026e639b7de.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226590_164fb897-49ec-422d-88c8-0c23c0483ea0.svg",

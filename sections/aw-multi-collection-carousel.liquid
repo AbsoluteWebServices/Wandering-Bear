@@ -14,7 +14,7 @@
 <div x-data="swiperSlider('{{ active_collection_title }}', '{{ active_collection_accent_text }}','{{ active_collection_handle }}')" class="relative z-1 pt-2 pb-[60px] max-w-[100vw] overflow-x-hidden" style="background-color: {{ color_scheme.settings.background }}">
     <div class="container flex-col items-center !gap-1.5 md:!gap-5 md:!items-start md:!flex-row mx-auto flex justify-center md:!justify-start relative md:!ml-20 max-w-[100vw]">
     {% if title_image != blank %}
-        <div class="h-[101px] md:!h-[133px] w-[270px] md:!mb-6 relative z-[2]">
+        <div class="h-[101px] md:!h-[133px] w-[270px] md:!mb-6 relative z-[2] mt-5 md:!mt-0">
             {{ title_image | image_url: width: 365 | image_tag: class: '!w-full max-h-full object-contain', alt: title_alt }}
         </div>
     {% endif %}
@@ -24,22 +24,22 @@
             <span class="body uppercase mb-1 hidden md:!block">Select your size</span>
             <div class="w-[282px] relative">
                 <div @click="toggleDropdown()" class="flex items-center justify-between relative rounded-[4px] cursor-pointer bg-[#F4ECE5] py-2 px-3 border border-espresso">
-                    <div class="flex items-center whitespace-nowrap">
+                    <div class="flex items-center whitespace-nowrap gap-4">
                         <span x-text="activeCollectionTitle" class="font-kurdis-semi-condensed text-base font-bold whitespace-nowrap">{{ section.blocks[0].settings.title }}</span>
                         <span x-text="activeCollectionAccentText" class="font-parslay whitespace-nowrap text-kraft text-lg">{{ section.blocks[0].settings.accent_text }}</span>
                     </div>
-                    <span :class="{ 'rotate-180': dropdownOpen }" class="!min-w-4 transition-transform duration-300">
+                    <span :class="{ 'rotate-180': dropdownOpen }" class="!min-w-4 transition-all duration-300">
                         {% render 'icons', icon: 'chevron-down' %}
                     </span>
                 </div>
                 <div x-show="dropdownOpen"
                  @click.outside="dropdownOpen = false"
-                 x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="transform -translate-y-1"
-                 x-transition:enter-end="opacity-100 transform translate-y-0"
-                 x-transition:leave="transition ease-in duration-300"
-                 x-transition:leave-start="opacity-100 transform translate-y-0"
-                 x-transition:leave-end="transform -translate-y-1"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 -translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 -translate-y-2"
                  x-cloak class="absolute top-full rounded-b-[10px] left-0 w-full bg-white z-[2] overflow-hidden -mt-1 border-t border-espresso">
                     <ul class="custom-dropdown-list  overflow-hidden !-mt-[2px] bg-[#F4ECE5] border border-espresso rounded-b-[10px]">
                     {% for block in section.blocks %}
@@ -47,7 +47,7 @@
                             assign collection = block.settings.collection
                         %}
                         <li x-cloak x-show="activeCollectionHandle !== '{{ collection.handle }}'" @click="changeCollection('{{ block.settings.title }}', '{{ block.settings.accent_text }}', '{{ collection.handle }}')"  
-                        class="dropdown-item p-3 border-t border-espresso cursor-pointer hover:bg-[#F4ECE5] hover:brightness-90 transition-all duration-300"
+                        class="dropdown-item px-3 py-2 border-t border-espresso cursor-pointer hover:bg-[#F4ECE5] hover:brightness-90 transition-[background-color,brightness,border-color] duration-300"
                         :class="{ 'active': activeCollectionHandle === '{{ collection.handle }}' }"
                         >
                             <span class="font-kurdis-semi-condensed text-base font-bold">{{ block.settings.title }}</span>
@@ -60,7 +60,8 @@
         </div>
     </div>
     <div class="swiper multi-collection-slider mt-[40px] md:!-mt-9 max-w-[100vw]">
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper"
+        :class="swiper.slides.length < 5 ? 'justify-center' : ''">
             {% for product in section.blocks[0].settings.collection.products %}
                 {% liquid
                     assign collection = block.settings.collection
@@ -68,10 +69,10 @@
                 {% render 'multi-coll-carousel-slide', product: product %}
             {% endfor %}
         </div>
-        <div class="hidden md:!flex swiper-button-next group transition-all duration-300" style="right: calc(calc(var(--slide-width) * 0.87) - 18px);">
+        <div class="!hidden md:!flex swiper-button-next group transition-all duration-300" style="right: calc(calc(var(--slide-width) * 0.87) - 18px);">
             {% render 'icons', icon: 'chevron-right' with class: 'translate-x-[10%] group-hover:!text-gold transition-all duration-300' %}
         </div>
-        <div class="hidden md:!flex swiper-button-prev group transition-all duration-300" style="left: calc(calc(var(--slide-width)) - 0px);">
+        <div class="!hidden md:!flex swiper-button-prev group transition-all duration-300" style="left: calc(calc(var(--slide-width)) - 0px);">
             {% render 'icons', icon: 'chevron-left' with class: '-translate-x-[10%] group-hover:!text-gold transition-all duration-300' %}
         </div>
     </div>
