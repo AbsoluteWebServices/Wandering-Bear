@@ -34,6 +34,7 @@ One Cloudflare Worker behind one Shopify App Proxy (`/apps/wb/*`). Keys server-s
 - **Reuse snippets:** `picture`, `wb-button`, `tooltip`, `accordion`, `icons`, `membership-widget`.
 - **JS:** Alpine plugins in `frontend/scripts/components/*.ts` + register in `frontend/entrypoints/main.js`. `x-cloak` to avoid FOUC.
 - **Text via locales** (`locales/en.default.json`, `customer.*`). Money via money filters.
+  - ⚠️ **Gotcha:** the `t` filter is NOT evaluated inside `{% render %}` arguments (renders the raw key). Assign the translated string to a variable in a `{% liquid %}` block first, then pass the variable: `assign t_x = 'key' | t` → `render 'snip', label: t_x`.
 - **Breakpoints (mobile-first):** mobile <750 · tablet `smd:` 750 · desktop `md:` ≥1024.
 - **A11y** (semantic, aria, focus, ≥44px targets) + **Theme Check** clean.
 - **Forms:** native `{% form %}`; `customer_address` needs a param (`customer.new_address`/`address`); order statuses via `order.financial_status_label`/`fulfillment_status_label`; activate/reset only via email token.
