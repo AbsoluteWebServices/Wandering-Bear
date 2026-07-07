@@ -31,6 +31,7 @@ One Cloudflare Worker behind one Shopify App Proxy (`/apps/wb/*`). Keys server-s
 - **Legacy accounts:** ⚠️ base theme ships NEW-accounts markup (`snippets/header-actions.liquid`); mode must be switched to Legacy in Admin → Settings → Customer accounts (not detectable from Liquid). Confirmed by client.
 - **Sections-first:** screen content in `sections/*.liquid` with `{% schema %}`; `templates/customers/*.liquid` = thin `{% section %}` wrapper.
 - **AW styling:** Tailwind `!` / `md:!` modifiers, typo classes `.h1–.h5/.body`, inline `{{ color_scheme.settings.* }}`, brand vars (`--color-espresso/-gold/...`).
+  - ⚠️ **Gotcha:** `grid-cols-1` is NOT in the compiled Tailwind build (only `grid-cols-2`+). Use `flex flex-col md:!flex-row` (theme idiom) for single→multi-column layouts instead of `grid grid-cols-1 md:!grid-cols-2`.
 - **Reuse snippets:** `picture`, `wb-button`, `tooltip`, `accordion`, `icons`, `membership-widget`.
 - **JS:** Alpine plugins in `frontend/scripts/components/*.ts` + register in `frontend/entrypoints/main.js`. `x-cloak` to avoid FOUC.
 - **Text via locales** (`locales/en.default.json`, `customer.*`). Money via money filters.
