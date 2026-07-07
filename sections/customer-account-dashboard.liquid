@@ -265,15 +265,17 @@
     </div>
 
     {%- comment -%} ---------- Contact CTA ---------- {%- endcomment -%}
-    <div class="relative rounded-[8px] overflow-hidden text-center px-6 pt-12 pb-10 md:!pt-14 md:!pb-12" style="background-color: var(--color-brand-light_cream);">
-      {%- comment -%} sky / cloud background at the bottom {%- endcomment -%}
-      <img src="{{ 'account-contact-clouds.png' | asset_url }}" alt="" aria-hidden="true" class="pointer-events-none select-none absolute inset-x-0 bottom-0 w-full">
-      {%- comment -%} bear "Cold Brew" badge, top-left {%- endcomment -%}
-      <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="80" height="80" class="absolute left-5 top-5 md:!left-8 md:!top-8 w-[56px] md:!w-[80px] h-auto" style="transform: rotate(-6deg);">
-      <div class="relative z-10">
-        <h2 class="font-kurdis-condensed font-extrabold text-espresso text-[24px] md:!text-[28px] uppercase mb-2">{{ 'customer.dashboard.contact_title' | t }}</h2>
-        <p class="body text-espresso mb-4">{{ 'customer.dashboard.contact_subtext' | t }}</p>
-        {%- render 'wb-button', style: 'secondary-gold', label: t_contact, link: '/pages/contact', class: 'mx-auto !h-[40px]' -%}
+    <div class="relative">
+      {%- comment -%} bear "Cold Brew" badge — sits OUTSIDE the card (top-left), tilted {%- endcomment -%}
+      <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="120" height="120" class="absolute z-20 w-[76px] md:!w-[118px] h-auto" style="top: -18px; left: -10px; transform: rotate(-12deg);">
+      {%- comment -%} card — sky / cloud image as full background {%- endcomment -%}
+      <div class="relative rounded-[8px] overflow-hidden text-center px-6 py-10 md:!py-12" style="background-color: var(--color-brand-light_cream);">
+        <img src="{{ 'account-contact-clouds.png' | asset_url }}" alt="" aria-hidden="true" class="pointer-events-none select-none absolute inset-0 w-full h-full" style="object-fit: cover;">
+        <div class="relative z-10">
+          <h2 class="font-kurdis-condensed font-extrabold text-espresso text-[24px] md:!text-[28px] uppercase mb-2">{{ 'customer.dashboard.contact_title' | t }}</h2>
+          <p class="body text-espresso mb-4">{{ 'customer.dashboard.contact_subtext' | t }}</p>
+          {%- render 'wb-button', style: 'secondary-gold', label: t_contact, link: '/pages/contact', class: 'mx-auto !h-[40px]' -%}
+        </div>
       </div>
     </div>
 
