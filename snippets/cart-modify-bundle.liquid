@@ -1,11 +1,11 @@
 <div class="">
     <div class="flex justify-between items-center pt-6 px-4.5 pb-1">
-    <button class="cursor-pointer flex items-center gap-1" type="button" @click="backToCart()">
+    <button class="cursor-pointer flex items-center gap-1 font-kurdis text-xs text-espresso font-bold" type="button" @click="backToCart()">
     {% render 'icons', icon: 'chevron-left', class: 'text-sm' %} 
     Back to Cart
     </button>
 
-    <h2>Modify Bundle</h2>
+    <h2 class="h6 uppercase font-gothic_condensed font-bold text-bear-black text-lg">Modify <span x-text="activeBundleDetails.headline"></span> Bundle</h2>
     </div>
     <div class="p-3">
 
@@ -64,33 +64,42 @@
 
         <form @submit.prevent="updateBundle()" class="flex flex-col gap-3">
             <template x-for="item in tempBundle" :key="item.id">
-              <div :data-key="item.id" class="flex bg-[#FFFFFF80] rounded-[5px] p-3">
+              <div :data-key="item.id" class="wb-flex bg-[#FFFFFF80] rounded-[5px] p-3 gap-3">
                 <div class="w-[68px]">
                   <img :src="item.image" :alt="item.title" class="!w-full !h-full object-cover">
                 </div>
+                <div class="flex items-center justify-between w-full gap-3">
+                  <div class="w-full wb-flex flex-col">
+                    <h3 class="font-gothic_condensed uppercase font-bold text-bear-black text-lg" x-text="item.flavorName || item.title"></h3>
+                    <p class="font-kurdis-semi-condensed text-xs text-kraft font-bold" x-text="item.price"></p>
+                  </div>
           
-                <div>
-                  <h3 x-text="item.title"></h3>
-                  <p x-text="item.price"></p>
-                </div>
-          
-                <div class="flex items-center gap-2 w-[100px]">
-                  <button class="p-2 cursor-pointer" type="button" @click="bundleDecrement(item.id)">
-                    -
-                  </button>
-          
-                  <input
-                    type="number"
-                    readonly
-                    x-model.number="item.quantity"
-                    class="w-6 text-center"
-                    name="quantity"
-                    @input="bundleChangesDetected()"
-                  >
-          
-                  <button class="p-2 cursor-pointer" type="button" @click="bundleIncrement(item.id)">
-                    +
-                  </button>
+                  <div x-show="item.quantity === 0" class="group relative flex items-center justify-center cursor-pointer shadow-button w-20 min-w-20" @click="bundleIncrement(item.id)">
+                    <span class="absolute whitespace-nowrap text-cream uppercase font-kurdis-condensed text-sm font-bold">+ Add</span>
+                    <svg class="text-kraft group-hover:text-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40" fill="none">
+                      <path d="M0.740482 4.15938C0.111533 6.47951 0.0863218 9.21376 0.0757066 11.8348C0.0504956 18.0724 0.0266114 24.3075 0.00140038 30.5451C-0.0052341 32.2401 -0.00390717 34.0047 0.38222 35.5249C1.31237 39.18 2.48668 39.9773 5.96049 39.9773C29.2608 39.9773 52.5624 40.1137 75.8641 39.7175C76.6907 39.7047 77.5983 39.787 78.2764 38.8687C80.1141 36.3814 79.9138 31.8363 79.858 28.4641C79.7545 22.1854 80 17.0255 80 10.7442C80 6.3509 79.7466 4.58636 78.9955 2.84755C78.0335 0.61745 76.0299 0.712621 74.5292 0.653461C64.6624 0.259913 54.7903 0.0567088 44.9195 0.0104091C34.985 -0.0384628 25.0506 0.0850031 15.1161 0.375662C12.3137 0.457973 9.5126 0.553144 6.71152 0.663749C4.59644 0.74606 1.91346 -0.159357 0.740482 4.15938Z" fill="currentColor"/>
+                    </svg>
+                  </div>
+                  <div x-show="item.quantity > 0" class="w-fit wb-flex justify-end items-center">
+                    <div class="wb-flex items-center gap-2 w-fit justify-end">
+                      <button class="group relative cursor-pointer wb-flex justify-center items-center shadow-button w-[30px]" type="button" @click="bundleDecrement(item.id)">
+                        <span class="absolute whitespace-nowrap text-cream uppercase font-kurdis text-sm font-bold">-</span>
+                        <svg class="text-espresso group-hover:text-gold" xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40" fill="none">
+                          <path d="M0.277681 4.15938C0.0418248 6.47951 0.0323707 9.21376 0.02839 11.8348C0.0189358 18.0724 0.00997928 24.3075 0.000525143 30.5451C-0.00196279 32.2401 -0.0014652 34.0047 0.143332 35.5249C0.49214 39.18 0.932504 39.9773 2.23518 39.9773C10.9728 39.9773 19.7109 40.1137 28.449 39.7175C28.759 39.7047 29.0994 39.787 29.3536 38.8687C30.0428 36.3814 29.9677 31.8363 29.9468 28.4641C29.9079 22.1854 30 17.0256 30 10.7442C30 6.3509 29.905 4.58636 29.6233 2.84755C29.2626 0.617449 28.5112 0.712621 27.9485 0.653461C24.2484 0.259913 20.5464 0.0567088 16.8448 0.0104091C13.1194 -0.0384628 9.39396 0.0850031 5.66853 0.375662C4.61763 0.457973 3.56722 0.553144 2.51682 0.663749C1.72367 0.74606 0.717547 -0.159357 0.277681 4.15938Z" fill="currentColor"/>
+                        </svg>
+                      </button>
+            
+                      <span class="font-kurdis-semi-condensed text-lg text-espresso font-bold w-6 text-center" x-text="item.quantity"></span>
+              
+                      <div class="flex items-center gap-2">
+                      <button class="group relative cursor-pointer wb-flex justify-center items-center shadow-button w-[30px]" type="button" @click="bundleIncrement(item.id)">
+                        <span class="absolute whitespace-nowrap text-cream uppercase font-kurdis text-sm font-bold">+</span>
+                        <svg class="text-espresso group-hover:text-gold" xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40" fill="none">
+                          <path d="M0.277681 4.15938C0.0418248 6.47951 0.0323707 9.21376 0.02839 11.8348C0.0189358 18.0724 0.00997928 24.3075 0.000525143 30.5451C-0.00196279 32.2401 -0.0014652 34.0047 0.143332 35.5249C0.49214 39.18 0.932504 39.9773 2.23518 39.9773C10.9728 39.9773 19.7109 40.1137 28.449 39.7175C28.759 39.7047 29.0994 39.787 29.3536 38.8687C30.0428 36.3814 29.9677 31.8363 29.9468 28.4641C29.9079 22.1854 30 17.0256 30 10.7442C30 6.3509 29.905 4.58636 29.6233 2.84755C29.2626 0.617449 28.5112 0.712621 27.9485 0.653461C24.2484 0.259913 20.5464 0.0567088 16.8448 0.0104091C13.1194 -0.0384628 9.39396 0.0850031 5.66853 0.375662C4.61763 0.457973 3.56722 0.553144 2.51682 0.663749C1.72367 0.74606 0.717547 -0.159357 0.277681 4.15938Z" fill="currentColor"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </template>

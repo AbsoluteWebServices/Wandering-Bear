@@ -36,7 +36,6 @@ export default (Alpine: AlpineType) => {
 
     async init() {
       document.addEventListener('cart-open', async () => {
-        console.log('cart open event received', this.state);
       
         await this.refreshCart();
         this.resetModifyBundle();
@@ -197,6 +196,8 @@ export default (Alpine: AlpineType) => {
         .map(item => ({ ...item }));
 
       this.tempBundle = flavorCollection.map(product => {
+        console.log('product', product);
+
         const cartItem = this.bundleItems.find(item =>
           Number(item.product_id) === Number(product.id)
         );
@@ -211,7 +212,7 @@ export default (Alpine: AlpineType) => {
           quantity: cartItem?.quantity ?? 0,
           bundleId,
           collectionHandle: collectionHandle,
-          flavorName: cartItem?.properties?._flavor_name,
+          flavorName: cartItem?.properties?._flavor,
           variants: product.variants,
           cartVariantId: cartItem?.variant_id,
         };
