@@ -1,0 +1,21 @@
+{%- comment -%} SCAFFOLD — styled in Task 06. Reached via the invite email token. {%- endcomment -%}
+<section class="w-full" style="background-color: var(--color-brand-beige);">
+  <div class="container mx-auto px-4 py-14 md:!py-20">
+    <div class="mx-auto w-full max-w-[535px]">
+      <h1 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[45px] md:!text-[60px] leading-none text-center mb-8">
+        {{ 'customer.activate.title' | t }}
+      </h1>
+      {%- form 'activate_customer_password', novalidate: 'novalidate', class: 'flex flex-col !gap-4' -%}
+        {%- if form.errors -%}
+          <div class="body text-sunrise_orange" role="alert">{{ form.errors | default_errors }}</div>
+        {%- endif -%}
+        {%- render 'customer-input', name: 'customer[password]', type: 'password', label: 'customer.activate.password' | t, id: 'ActivatePassword', autocomplete: 'new-password', required: true -%}
+        {%- render 'customer-input', name: 'customer[password_confirmation]', type: 'password', label: 'customer.activate.password_confirm' | t, id: 'ActivatePasswordConfirm', autocomplete: 'new-password', required: true -%}
+        {%- render 'customer-form-button', label: 'customer.activate.submit' | t, style: 'secondary-gold', class: '!w-full !h-[52px] !text-[20px] mt-1' -%}
+      {%- endform -%}
+      <div class="text-center mt-4">
+        <button type="submit" name="decline" form="" class="tag text-espresso underline bg-transparent border-0 cursor-pointer">{{ 'customer.activate.decline' | t }}</button>
+      </div>
+    </div>
+  </div>
+</section>
