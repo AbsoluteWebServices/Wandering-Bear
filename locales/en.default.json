@@ -94,6 +94,8 @@
       "col_fulfillment": "Fulfillment Status",
       "col_total": "Total",
       "no_orders": "You have no orders yet.",
+      "no_orders_sub": "When you place your first order, it'll show up here.",
+      "no_orders_cta": "Start Shopping",
       "contact_title": "Still Wandering Around?",
       "contact_subtext": "Let our team help you get where you need to go.",
       "contact_cta": "Contact Us"

@@ -54,6 +54,10 @@
   assign t_redeem = 'customer.dashboard.redeem_credits' | t
   assign t_upgrade = 'customer.dashboard.upgrade_elite_cta' | t
   assign t_contact = 'customer.dashboard.contact_cta' | t
+  assign t_shop = 'customer.dashboard.no_orders_cta' | t
+
+  # PREVIEW-ONLY mock orders — rendered only when there is no customer (the preview page).
+  assign mock_orders = '#743463|June 3, 2026|2342425325|Paid|Fulfilled|$69.98;#729582|May 3, 2026|2342425325|Paid|Fulfilled|$69.98;#718841|April 3, 2026|2342425325|Paid|Fulfilled|$69.98;#708921|March 3, 2026|2342425325|Paid|Fulfilled|$117.16;#701085|February 3, 2026|2342425325|Paid|Fulfilled|$113.87;#693096|January 3, 2026|2342425325|Paid|Fulfilled|$109.97' | split: ';'
 -%}
 
 {%- capture crown -%}
@@ -63,7 +67,7 @@
 {%- endcapture -%}
 
 <section class="w-full" style="background-color: var(--color-brand-beige);">
-  <div class="max-w-[640px] mx-auto px-4 py-8 md:!py-12">
+  <div class="container mx-auto px-4 py-8 md:!py-12">
 
     {%- comment -%} ---------- Welcome + Log Out ---------- {%- endcomment -%}
     <div class="flex flex-col smd:!flex-row smd:!items-start smd:!justify-between mb-6 !gap-1">
@@ -123,13 +127,13 @@
         {%- comment -%} Tier column {%- endcomment -%}
         <div class="md:!flex-1 {% unless is_elite %}md:!pr-6{% endunless %}">
           <div class="flex items-start justify-between mb-1">
-            <span class="body text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
+            <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
             <div class="flex flex-col items-end !gap-1">
               {%- if is_elite -%}
-                <a href="#" class="tag text-espresso hover-underline">{{ 'customer.dashboard.change_tier' | t }}</a>
-                <a href="#" class="tag text-espresso hover-underline">{{ 'customer.dashboard.update_payment' | t }}</a>
+                <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+                <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
               {%- endif -%}
-              <a href="{{ membership_url }}" class="tag text-espresso hover-underline">{{ 'customer.dashboard.membership_faq' | t }}</a>
+              <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
             </div>
           </div>
           <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3">{{ display_tier }}</div>
@@ -145,19 +149,19 @@
         {%- unless is_elite -%}
           <div class="md:!flex-1 md:!pl-6 md:!border-l md:!border-espresso/15">
             <div class="flex items-start justify-between mb-2">
-              <span class="body text-espresso">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
-              <a href="#" class="tag text-espresso hover-underline">{{ 'customer.dashboard.change_tier' | t }}</a>
+              <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
+              <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
             </div>
             <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3">{{ next_tier_label }}</div>
             <div class="w-full h-[10px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
               <div class="h-full rounded-full" style="width: {{ progress_percent }}%; background-color: var(--color-brand-gold);"></div>
             </div>
-            <p class="tag text-espresso mb-4">{{ progress_text }}</p>
+            <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4" style="color: #431A03;">{{ progress_text }}</p>
 
             <div class="border-t border-espresso/15 pt-4 text-center">
               <p class="body font-bold text-espresso mb-1">{{ 'customer.dashboard.upgrade_today' | t }} <span class="font-parslay text-gold">{{ 'customer.dashboard.why_wait' | t }}</span></p>
-              <p class="tag text-espresso mb-3">{{ 'customer.dashboard.elite_upsell_desc' | t }}</p>
-              {%- render 'wb-button', style: 'primary', label: t_upgrade, link: membership_url, class: '!w-full !h-[48px]' -%}
+              <p class="font-kurdis-semi-condensed font-semibold text-[12px] leading-[1.2] text-center mb-3" style="color: #1B1B1B;">{{ 'customer.dashboard.elite_upsell_desc' | t }}</p>
+              {%- render 'wb-button', style: 'secondary-gold', label: t_upgrade, link: membership_url, class: '!w-full !h-[40px] !text-[15px]' -%}
             </div>
           </div>
         {%- endunless -%}
@@ -210,8 +214,41 @@
             <div class="mt-4 body text-espresso">{{ paginate | default_pagination }}</div>
           {%- endif -%}
         {%- endpaginate -%}
+      {%- elsif customer == blank -%}
+        {%- comment -%} PREVIEW-only mock table (no customer = preview page) {%- endcomment -%}
+        <div class="overflow-x-auto">
+          <table class="w-full border border-espresso/20 border-collapse">
+            <thead>
+              <tr class="text-left tag text-espresso uppercase">
+                <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_order' | t }}</th>
+                <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_date' | t }}</th>
+                <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_tracking' | t }}</th>
+                <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_payment' | t }}</th>
+                <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_fulfillment' | t }}</th>
+                <th class="p-3 border-b border-espresso/20 hidden md:!table-cell text-right">{{ 'customer.dashboard.col_total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for row in mock_orders -%}
+                {%- assign c = row | split: '|' -%}
+                <tr class="body text-espresso">
+                  <td class="p-3 border-b border-espresso/10"><span class="font-bold underline">{{ c[0] }}</span></td>
+                  <td class="p-3 border-b border-espresso/10 whitespace-nowrap">{{ c[1] }}</td>
+                  <td class="p-3 border-b border-espresso/10"><span class="underline">{{ c[2] }}</span></td>
+                  <td class="p-3 border-b border-espresso/10 hidden md:!table-cell">{{ c[3] }}</td>
+                  <td class="p-3 border-b border-espresso/10 hidden md:!table-cell">{{ c[4] }}</td>
+                  <td class="p-3 border-b border-espresso/10 hidden md:!table-cell text-right whitespace-nowrap">{{ c[5] }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
       {%- else -%}
-        <p class="body text-espresso">{{ 'customer.dashboard.no_orders' | t }}</p>
+        <div class="text-center py-10">
+          <p class="h3 text-espresso mb-2">{{ 'customer.dashboard.no_orders' | t }}</p>
+          <p class="body text-espresso mb-5">{{ 'customer.dashboard.no_orders_sub' | t }}</p>
+          {%- render 'wb-button', style: 'secondary-gold', label: t_shop, link: routes.all_products_collection_url, class: 'mx-auto !h-[43px]' -%}
+        </div>
       {%- endif -%}
     </div>
 
