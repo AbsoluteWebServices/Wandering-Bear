@@ -52,7 +52,9 @@
           <a href="#recover" class="tag text-espresso hover-underline" data-recover-open>{{ 'customer.login.forgot_password' | t }}</a>
         </div>
 
-        <div class="nav text-espresso text-center my-6">{{ 'customer.login.or' | t }}</div>
+        <div class="text-center my-6">
+          <span class="inline-block font-kurdis-condensed font-extrabold text-[20px] leading-none text-espresso" style="transform: rotate(4.07deg);">{{ 'customer.login.or' | t }}</span>
+        </div>
 
         {%- render 'wb-button',
           style: 'primary', label: t_manage,
