@@ -63,7 +63,7 @@
 {%- endcapture -%}
 
 <section class="w-full" style="background-color: var(--color-brand-beige);">
-  <div class="container mx-auto px-4 py-8 md:!py-12">
+  <div class="max-w-[640px] mx-auto px-4 py-8 md:!py-12">
 
     {%- comment -%} ---------- Welcome + Log Out ---------- {%- endcomment -%}
     <div class="flex flex-col smd:!flex-row smd:!items-start smd:!justify-between mb-6 !gap-1">
@@ -84,35 +84,35 @@
         <div class="flex-1 rounded-[8px] p-5 md:!p-6" style="{{ card_bg }}">
           <div class="flex items-center justify-between mb-3">
             <span class="body font-bold text-espresso">{{ 'customer.dashboard.next_autoship' | t }}</span>
-            <span class="tag text-espresso px-2 py-1 rounded" style="background-color: var(--color-brand-foam);">{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}</span>
+            <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[10px] leading-none text-espresso" style="background-color: #BFD7E9;">{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}</span>
           </div>
-          <div class="flex items-baseline justify-between mb-2">
+          <div class="flex items-baseline justify-between mb-2 !gap-2">
             <span class="body font-bold text-espresso">{{ autoship_bundle }}</span>
-            <span class="tag text-espresso">{{ 'customer.dashboard.next_shipment' | t: date: autoship_next_date }}</span>
+            <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none whitespace-nowrap" style="color: #1B1B1B;">{{ 'customer.dashboard.next_shipment' | t: date: autoship_next_date }}</span>
           </div>
-          <ul class="mb-2">
+          <ul class="flex flex-col !gap-1.5 mb-2">
             {%- for item in autoship_items -%}
-              <li class="tag text-gold leading-[1.6]">{{ item }}</li>
+              <li class="font-kurdis-semi-condensed font-bold text-[10px] leading-none" style="color: #955325;">{{ item }}</li>
             {%- endfor -%}
           </ul>
           {%- if autoship_more > 0 -%}
-            <a href="#" class="tag text-espresso hover-underline block mb-4">{{ 'customer.dashboard.more_count' | t: count: autoship_more }}</a>
+            <a href="#" class="inline-block font-kurdis-semi-condensed font-bold text-[10px] leading-none underline mb-4" style="color: #955325;">{{ 'customer.dashboard.more_count' | t: count: autoship_more }}</a>
           {%- endif -%}
-          {%- render 'customer-form-button', type: 'button', label: t_manage, style: 'secondary-gold', class: '!w-full !h-[48px]' -%}
+          {%- render 'customer-form-button', type: 'button', label: t_manage, style: 'secondary-gold', class: '!w-full !h-[43px]' -%}
         </div>
       {%- endif -%}
 
       {%- comment -%} Credits (balance native; expiry/history MOCK) {%- endcomment -%}
       <div class="flex-1 rounded-[8px] p-5 md:!p-6 flex flex-col justify-between" style="{{ card_bg }}">
-        <div class="flex items-start justify-between">
-          <div class="flex items-baseline !gap-2">
-            <span class="font-gothic_condensed font-extrabold text-espresso text-base leading-[1.1] uppercase max-w-[70px]">{{ 'customer.dashboard.your_credit' | t }}</span>
-            <span class="font-gothic_condensed font-extrabold text-gold text-[40px] leading-none">{{ credits_formatted }}</span>
+        <div class="relative mb-4">
+          <a href="#" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+          <span class="absolute left-0 top-1/2 -translate-y-1/2 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+          <div class="text-center pt-4">
+            <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none" style="color: #AF7404;">{{ credits_formatted }}</div>
+            <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-2" style="color: #AF7404;">{{ 'customer.dashboard.expires' | t: date: credits_expiry }}</div>
           </div>
-          <a href="#" class="tag text-espresso hover-underline">{{ 'customer.dashboard.view_credit_history' | t }}</a>
         </div>
-        <div class="tag text-espresso mt-1 mb-4">{{ 'customer.dashboard.expires' | t: date: credits_expiry }}</div>
-        {%- render 'customer-form-button', type: 'button', label: t_redeem, style: 'secondary-gold', class: '!w-full !h-[48px]' -%}
+        {%- render 'customer-form-button', type: 'button', label: t_redeem, style: 'secondary-gold', class: '!w-full !h-[43px]' -%}
       </div>
     </div>
 
