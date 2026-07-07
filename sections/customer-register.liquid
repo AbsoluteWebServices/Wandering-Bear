@@ -41,11 +41,11 @@
           class: '!w-full !h-[52px] !text-[20px] mt-1' -%}
       {%- endform -%}
 
-      <div class="flex flex-row justify-center items-center !gap-1 mt-4">
-        <span class="tag text-espresso">{{ 'customer.register.have_account' | t }}</span>
-        <a href="{{ routes.account_login_url }}" class="tag text-espresso hover-underline">{{ 'customer.register.sign_in' | t }}</a>
-      </div>
-      <div class="text-center mt-3">
+      <div class="flex flex-row justify-between items-center mt-4">
+        <div class="flex flex-row items-center !gap-1">
+          <span class="tag text-espresso">{{ 'customer.register.have_account' | t }}</span>
+          <a href="{{ routes.account_login_url }}" class="tag text-espresso hover-underline">{{ 'customer.register.sign_in' | t }}</a>
+        </div>
         <a href="{{ shop.privacy_policy.url | default: '/policies/privacy-policy' }}" class="tag text-espresso hover-underline">{{ 'customer.register.privacy' | t }}</a>
       </div>
     </div>
