@@ -104,21 +104,21 @@
               </li>
             {%- endfor -%}
           </ul>
-          {%- render 'customer-form-button', type: 'button', label: t_manage, style: 'secondary-gold', class: '!w-full !h-[43px]' -%}
+          {%- render 'customer-form-button', type: 'button', label: t_manage, style: 'secondary-gold', class: '!w-full !h-[40px]' -%}
         </div>
       {%- endif -%}
 
       {%- comment -%} Credits (balance native; expiry/history MOCK) {%- endcomment -%}
       <div class="flex-1 rounded-[8px] p-5 md:!p-6 flex flex-col justify-between" style="{{ card_bg }}">
         <div class="relative mb-4">
-          <a href="#" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+          <a href="#" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
           <span class="absolute left-0 top-1/2 -translate-y-1/2 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
           <div class="text-center pt-4">
             <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none" style="color: #AF7404;">{{ credits_formatted }}</div>
             <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-2" style="color: #AF7404;">{{ 'customer.dashboard.expires' | t: date: credits_expiry }}</div>
           </div>
         </div>
-        {%- render 'customer-form-button', type: 'button', label: t_redeem, style: 'secondary-gold', class: '!w-full !h-[43px]' -%}
+        {%- render 'customer-form-button', type: 'button', label: t_redeem, style: 'secondary-gold', class: '!w-full !h-[40px]' -%}
       </div>
     </div>
 
@@ -132,10 +132,10 @@
             <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
             <div class="flex flex-col items-end !gap-1">
               {%- if is_elite -%}
-                <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
-                <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
+                <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+                <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
               {%- endif -%}
-              <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
+              <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
             </div>
           </div>
           <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3">{{ display_tier }}</div>
@@ -152,7 +152,7 @@
           <div class="md:!flex-1 md:!pl-6 md:!border-l md:!border-espresso/15">
             <div class="flex items-start justify-between mb-2">
               <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
-              <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+              <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
             </div>
             <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3">{{ next_tier_label }}</div>
             <div class="w-full h-[10px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
@@ -249,7 +249,7 @@
         <div class="text-center py-10">
           <p class="h3 text-espresso mb-2">{{ 'customer.dashboard.no_orders' | t }}</p>
           <p class="body text-espresso mb-5">{{ 'customer.dashboard.no_orders_sub' | t }}</p>
-          {%- render 'wb-button', style: 'secondary-gold', label: t_shop, link: routes.all_products_collection_url, class: 'mx-auto !h-[43px]' -%}
+          {%- render 'wb-button', style: 'secondary-gold', label: t_shop, link: routes.all_products_collection_url, class: 'mx-auto !h-[40px]' -%}
         </div>
       {%- endif -%}
     </div>
