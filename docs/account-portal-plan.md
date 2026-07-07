@@ -79,7 +79,7 @@ Empty/no-autoship → `{ "member": true, "subscriptions": [] }`. Not logged in �
 ---
 
 ## 0. Confirmed facts (2026-07) — verified against shopify.dev / client
-- ✅ **Classic (Legacy) customer accounts confirmed by client** — they will switch the store to Legacy in Admin → Settings → Customer accounts. ⚠️ Base theme ships NEW-accounts markup (`snippets/header-actions.liquid` `<shopify-account>` styles + `menu=`); the mode must be switched/verified **in Admin** — not detectable from Liquid (`shop.customer_accounts_enabled` is `true` for both modes).
+- ✅ **Classic (Legacy) customer accounts.** Store setting is **Legacy** (verified in Admin). ⚠️ But the **theme has no `templates/customers/*` yet**, so Shopify flags it NEW accounts ("Publishing this theme will upgrade you to the new version of customer accounts"). **There is no theme toggle** — adding the classic customer templates (Task 01+) is what "downgrades" the theme. Until then: **never Publish a theme** (it upgrades the whole store to new accounts) and don't click "Upgrade now". Preview via GitHub-connected **draft** themes per branch. Base theme also ships `<shopify-account>` markup in `snippets/header-actions.liquid` to clean up.
 - **Form types are correct:** `customer_login`, `recover_customer_password`, `reset_customer_password`, `activate_customer_password`, `create_customer`, `customer_address`.
 - **`customer_address` requires a parameter:** `{% form 'customer_address', customer.new_address %}` (create) / `{% form 'customer_address', address %}` (edit); it exposes `set_as_default_checkbox`.
 - **Order statuses:** output `order.financial_status_label` / `order.fulfillment_status_label` (localized), not the raw enum.

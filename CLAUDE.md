@@ -38,7 +38,9 @@ Build a custom account portal per Figma. Full build plan: `docs/account-portal-p
 
 ### Decisions made
 - **Account system: Classic customer accounts (Liquid).** Implemented via `templates/customers/*.liquid` + custom `sections`/`snippets`. Reuse existing membership components and natively read `customer` / `customer.tags` / `customer.metafields.inveterate.*`.
-  - ✅ **Confirmed by client (2026-07):** store will switch to **Legacy (classic)** accounts in Admin → Settings → Customer accounts.
+  - ✅ **Store setting = Legacy (verified in Admin, 2026-07):** `Settings → Customer accounts` shows "You're using legacy customer accounts". Do NOT click "Upgrade now".
+  - ⚠️ **The THEME is still flagged NEW accounts** because it has no `templates/customers/*` yet → Shopify shows *"Publishing this theme will upgrade you to the new version of customer accounts"* on the draft themes. **There is no theme toggle** — adding the classic customer templates (`templates/customers/*`, our Task 01+) is what "downgrades" the theme to classic. Until those exist: **do NOT Publish any theme** (publishing upgrades the whole store to new accounts) and do NOT click "Upgrade now".
+  - Preview via GitHub-connected **draft** themes per branch (e.g. `Wandering-Bear/feat/account-portal`) — never Publish. (`git push` the branch → Shopify creates the draft theme; this is not `shopify theme push`.)
   - ⚠️ Base theme was originally built for **NEW** accounts (`snippets/header-actions.liquid` has `<shopify-account>` web-component styles + `menu="{{ customer_account_menu }}"`), so the mode must actually be switched/verified in Admin — it is **not** detectable from Liquid (`shop.customer_accounts_enabled` is `true` for both modes).
 - **Figma:** https://www.figma.com/design/IaDINDvZYnKMfT8nprQZUy/WB-x-AW-Account-Portal?node-id=0-1&m=dev&t=OM3waSKZSUn65uJQ-1
 

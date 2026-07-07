@@ -1,0 +1,123 @@
+{%- doc -%}
+  Customer login section (classic accounts). Hosts the login form and the
+  recover-password (forgot password) form, toggled by the #recover hash.
+  Figma: WB x AW Ancillary Pages — Login 14:9 (mobile 14:242), error 14:57.
+{%- enddoc -%}
+{%- liquid
+  assign manage_autoship_url = section.settings.manage_autoship_url
+  if manage_autoship_url == blank
+    assign manage_autoship_url = '#'
+  endif
+-%}
+
+<section class="w-full" style="background-color: var(--color-brand-beige);">
+  <div class="container mx-auto px-4 py-14 md:!py-20">
+    <div class="mx-auto w-full max-w-[535px]">
+
+      {%- comment -%} ---------- LOGIN ---------- {%- endcomment -%}
+      <div id="customer-login">
+        <h1 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[45px] md:!text-[60px] leading-none text-center mb-8 md:!mb-10">
+          {{ 'customer.login.title' | t }}
+        </h1>
+
+        {%- form 'customer_login', novalidate: 'novalidate', class: 'flex flex-col !gap-4' -%}
+          {%- if form.errors -%}
+            <div class="body text-sunrise_orange" role="alert">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          {%- render 'customer-input',
+            name: 'customer[email]', type: 'email', label: 'customer.login.email' | t,
+            id: 'CustomerEmail', autocomplete: 'email', required: true -%}
+
+          {%- render 'customer-input',
+            name: 'customer[password]', type: 'password', label: 'customer.login.password' | t,
+            id: 'CustomerPassword', autocomplete: 'current-password', required: true -%}
+
+          {%- render 'customer-form-button',
+            label: 'customer.login.submit' | t, style: 'secondary-gold',
+            class: '!w-full !h-[52px] !text-[20px] mt-1' -%}
+        {%- endform -%}
+
+        <div class="flex flex-row justify-between items-center mt-4">
+          <a href="{{ routes.account_register_url }}" class="tag text-espresso underline">{{ 'customer.login.create_account' | t }}</a>
+          <a href="#recover" class="tag text-espresso underline" data-recover-open>{{ 'customer.login.forgot_password' | t }}</a>
+        </div>
+
+        <div class="nav text-espresso text-center my-6">{{ 'customer.login.or' | t }}</div>
+
+        {%- render 'wb-button',
+          style: 'primary', label: 'customer.login.manage_autoship' | t,
+          link: manage_autoship_url, class: '!w-full !h-[52px] !text-[20px]' -%}
+      </div>
+
+      {%- comment -%} ---------- RECOVER PASSWORD (forgot) ---------- {%- endcomment -%}
+      <div id="recover-password" style="display: none;">
+        <h1 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[45px] md:!text-[60px] leading-none text-center mb-4 md:!mb-6">
+          {{ 'customer.recover.title' | t }}
+        </h1>
+
+        {%- form 'recover_customer_password', class: 'flex flex-col !gap-4' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="body text-espresso text-center">{{ 'customer.recover.success' | t }}</p>
+            <script>
+              document.getElementById('recover-password').style.display = 'block';
+              document.getElementById('customer-login').style.display = 'none';
+            </script>
+          {%- else -%}
+            <p class="body text-espresso text-center mb-2">{{ 'customer.recover.subtext' | t }}</p>
+            {%- if form.errors -%}
+              <div class="body text-sunrise_orange" role="alert">{{ form.errors | default_errors }}</div>
+            {%- endif -%}
+            {%- render 'customer-input',
+              name: 'email', type: 'email', label: 'customer.recover.email' | t,
+              id: 'RecoverEmail', autocomplete: 'email', required: true -%}
+            {%- render 'customer-form-button',
+              label: 'customer.recover.submit' | t, style: 'secondary-gold',
+              class: '!w-full !h-[52px] !text-[20px] mt-1' -%}
+          {%- endif -%}
+        {%- endform -%}
+
+        <div class="text-center mt-4">
+          <a href="#" class="tag text-espresso underline" data-recover-close>{{ 'customer.recover.back_to_login' | t }}</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var login = document.getElementById('customer-login');
+      var recover = document.getElementById('recover-password');
+      function show(which) {
+        if (!login || !recover) return;
+        var isRecover = which === 'recover';
+        login.style.display = isRecover ? 'none' : 'block';
+        recover.style.display = isRecover ? 'block' : 'none';
+      }
+      if (window.location.hash === '#recover') show('recover');
+      document.querySelectorAll('[data-recover-open]').forEach(function (el) {
+        el.addEventListener('click', function () { show('recover'); });
+      });
+      document.querySelectorAll('[data-recover-close]').forEach(function (el) {
+        el.addEventListener('click', function (e) { e.preventDefault(); history.replaceState(null, '', window.location.pathname); show('login'); });
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Customer login",
+  "settings": [
+    {
+      "type": "url",
+      "id": "manage_autoship_url",
+      "label": "Manage Autoship URL",
+      "info": "Stay AI customer portal link for the 'Manage Autoship' button (Task 04)."
+    }
+  ]
+}
+{% endschema %}

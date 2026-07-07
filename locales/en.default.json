@@ -8,6 +8,62 @@
  * ------------------------------------------------------------
  */
 {
+  "customer": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "create_account": "Create Account",
+      "forgot_password": "Forgot Password",
+      "or": "OR",
+      "manage_autoship": "Manage Autoship"
+    },
+    "recover": {
+      "title": "Reset Password",
+      "subtext": "Enter your email and we'll send you a link to reset your password.",
+      "email": "Email",
+      "submit": "Reset Password",
+      "success": "We've sent you an email with a link to update your password.",
+      "back_to_login": "Back to login"
+    },
+    "reset": {
+      "title": "Reset Password",
+      "password": "New password",
+      "password_confirm": "Confirm password",
+      "submit": "Reset Password"
+    },
+    "register": {
+      "title": "Create Account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create Account",
+      "have_account": "Already have an account?",
+      "sign_in": "Login"
+    },
+    "activate": {
+      "title": "Activate Account",
+      "password": "Password",
+      "password_confirm": "Confirm password",
+      "submit": "Activate Account",
+      "decline": "Decline Invitation"
+    },
+    "account": {
+      "title": "My Account",
+      "welcome": "Welcome Back, {{ first_name }}",
+      "log_out": "Log Out"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "subscriptions": "Subscriptions",
+      "credits": "Credits",
+      "addresses": "Addresses",
+      "log_out": "Log Out"
+    }
+  },
   "accessibility": {
     "account": "Account",
     "active_filters": "Active filters:",

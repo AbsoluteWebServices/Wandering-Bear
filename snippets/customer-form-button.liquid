@@ -1,0 +1,17 @@
+{%- doc -%}
+  Submit button that matches the theme's `.btn` blob styling (wb-button is an <a>,
+  so forms need this <button type="submit"> variant).
+
+  @param {string} label - Button text.
+  @param {string} [style] - primary | secondary-gold | secondary-cream (default: secondary-gold).
+  @param {string} [class] - Extra classes (e.g. '!w-full !h-[52px]').
+  @param {string} [type] - Button type (default: submit).
+{%- enddoc -%}
+{%- assign btn_style = style | default: 'secondary-gold' -%}
+{%- assign btn_type = type | default: 'submit' -%}
+<button type="{{ btn_type }}" class="btn {{ btn_style }} {% if class %}{{ class }}{% endif %}">
+  <span class="mt-0.5">{{ label }}</span>
+  <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]" width="280" height="47" viewBox="0 0 280 47" fill="none" aria-hidden="true">
+    <path d="M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z"/>
+  </svg>
+</button>
