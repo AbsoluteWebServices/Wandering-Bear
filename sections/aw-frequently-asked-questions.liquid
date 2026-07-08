@@ -16,12 +16,12 @@
 
 
 <div class="wb-flex justify-center relative" style="background: {{ background_color }};">
-    <div class="max-w-[640px] w-full mx-auto wb-flex flex-col px-4 py-9">
-    <div class="wb-flex flex-col gap-4 max-w-[601px] w-full mx-auto">
+    <div class="max-w-[1096px] w-full mx-auto wb-flex flex-col px-4 py-9">
+    <div class="wb-flex flex-col gap-4 max-w-[640px] w-full mx-auto">
         <div class="wb-flex flex-col justify-center items-start mx-auto w-full">
             {% if title_type == 'image' %}
                 {% if title_image != blank %}
-                    <div class="max-w-[442px] w-full md:!mb-5 mx-auto">
+                    <div class="max-w-[336px] w-full md:mb-4 mx-auto">
                         {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                     </div>
                 {% endif %}
@@ -39,8 +39,8 @@
                             {% assign content = faq.answer | metafield_tag %}
                             {% assign open = '' %}
                             {% assign class = 'border-b border-bear-black w-full text-black-bear' %}
-                            {% assign title_class = 'text-bear-black text-[20px] font-bold font-gothic_condensed' %}
-                            {% assign content_class = 'body text-bear-black font-kurdis pb-6' %}
+                            {% assign title_class = 'text-bear-black text-[20px]/none font-extrabold font-gothic_condensed uppercase md:text-base/none' %}
+                            {% assign content_class = 'body text-sm/[130%] text-bear-black font-kurdis-semi-condensed pb-6' %}
                             {% if forloop.first %}
                                 {% assign open = 'open' %}
                                 {% assign class = class | append: ' border-t' %}

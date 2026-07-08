@@ -3,7 +3,7 @@
   assign subscription_value_props_mobile = settings.subscription_value_props_mobile | default: subscription_value_props
 %}
 
-<div x-show="bundleSize >= 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="mb-0 mt-3 md:mb-5 md:mt-4">
+<div x-show="bundleSize >= 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="mb-0 mt-3 md:mb-5{% if template.suffix == '96oz' %} md:mt-1.5{% else %} md:mt-4{% endif %}">
   <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
   <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
   <fieldset>

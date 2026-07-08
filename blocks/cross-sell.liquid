@@ -4,10 +4,15 @@
     assign text_color = color_scheme.settings.foreground
     assign button_bg = color_scheme.settings.primary_button_background
     assign button_text = color_scheme.settings.primary_button_text
+    assign button_border = color_scheme.settings.primary_button_border
+    assign button_hover_bg = color_scheme.settings.primary_button_hover_background
+    assign button_hover_text = color_scheme.settings.primary_button_hover_text
+    assign button_hover_border = color_scheme.settings.primary_button_hover_border
     assign title = block.settings.title
     assign subtitle = block.settings.subtitle
     assign button_label = block.settings.button_label
     assign button_link = block.settings.button_link
+    
     assign image = block.settings.image
 %}
 
@@ -22,7 +27,7 @@
     <h2 class="text-[20px] font-gothic_condensed font-extrabold leading-[100%] md:text-base" style="color: {{ text_color }}">{{ title }}</h2>
     <span class="text-[12px] font-semibold font-kurdis-semi-condensed leading-[120%]" style="color: {{ text_color }}">{{ subtitle }}</span>
     {% if button_label != blank and button_link != blank %}
-      {% render 'wb-button', style: 'custom', class: 'z-[3] !w-[98px] !h-[25px] !text-[12px]', width: 98, height: 25, label: button_label, link: button_link, button_bg: button_bg, button_text: button_text %}
+      {% render 'wb-button', style: 'custom', class: 'z-[3] !w-[98px] !h-[25px] !text-[12px]', width: 98, height: 25, label: button_label, link: button_link, button_bg: button_bg, button_text: button_text, button_hover_bg: button_hover_bg, button_hover_text: button_hover_text, button_hover_border: button_hover_border %}
     {% endif %}
   </div>
 </div>
