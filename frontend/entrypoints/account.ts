@@ -62,13 +62,17 @@ type Envelope<T> = { ok: true; data: T } | { ok: false; error?: { code?: string;
 const root = document.querySelector<HTMLElement>('[data-wb-account]');
 const workerUrl = (root?.dataset.workerUrl ?? '').trim().replace(/\/$/, '');
 const customerId = root?.dataset.customerId ?? '';
+const devToken = (root?.dataset.workerToken ?? '').trim();
 
-/** Build a worker URL: dev surface ({url}/dev/<path>?customerId=) or App Proxy (/apps/wb/<path>). */
+/** Build a worker URL: dev surface ({url}/dev/<path>?customerId=[&token=]) or App Proxy (/apps/wb/<path>). */
 function wbUrl(path: string, params: Record<string, string> = {}): string {
   const u = workerUrl
     ? new URL(`${workerUrl}/dev/${path}`)
     : new URL(`/apps/wb/${path}`, window.location.origin);
-  if (workerUrl) u.searchParams.set('customerId', customerId);
+  if (workerUrl) {
+    u.searchParams.set('customerId', customerId);
+    if (devToken) u.searchParams.set('token', devToken); // required when the worker sets DEV_TOKEN
+  }
   for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v);
   return u.toString();
 }

@@ -40,6 +40,7 @@
        data-wb-account
        data-wb-loading
        data-worker-url="{{ settings.account_worker_url | default: '' }}"
+       data-worker-token="{{ settings.account_worker_dev_token | default: '' }}"
        data-customer-id="{{ customer.id }}">
     {%- render 'customer-dashboard', tier: real_tier, autoship_state: real_autoship, credits_formatted: credits_formatted -%}
   </div>
