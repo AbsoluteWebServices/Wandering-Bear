@@ -87,6 +87,7 @@
       "manage_orders": "Manage Upcoming Orders",
       "reactivate": "Reactivate",
       "more_count": "+ {{ count }} more",
+      "timeframe": "Timeframe:",
       "order_history": "Order History",
       "all_orders": "All Orders",
       "timeframe": "Timeframe:",
