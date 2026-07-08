@@ -78,7 +78,7 @@
           </div>
         </div>
       {% elsif is_oos %}
-          <div class="wb-flex justify-end items-center">
+        <div class="wb-flex justify-end items-center">
           <button
             @click.prevent.stop="$dispatch('modal-open', { modal: 'restock-notify', flavor: '{{ child_product.handle }}', variant: '{{ child_product.selected_or_first_available_variant.id }}' })"
             class="group !h-8 w-20 flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer"
