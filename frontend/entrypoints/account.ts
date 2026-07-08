@@ -9,10 +9,10 @@
  * interaction, but account data must appear on load. This runs eagerly and is injected
  * only on account templates via `vite-tag`.
  *
- * Source of truth: tier name + credit balance stay SSR-native (Inveterate tags /
- * metafield) to avoid flicker. The worker hydrates only progress / autoship / expiry.
- * If the worker is unreachable the SSR fallback values remain and the root gets
- * data-wb-error.
+ * Source of truth: tier name stays SSR-native (drives the card layout). The worker
+ * hydrates the data inside the cards — credit balance + expiry, tier progress, autoship.
+ * SSR values (native credit metafield, mock progress) are the pre-hydration fallback;
+ * if the worker is unreachable they remain and the root gets data-wb-error.
  *
  * Endpoint (data-worker-url on the root):
  *   set   → {url}/dev/<path>?customerId=<id>   (local/dev worker, DEV_MODE=1, CORS)
@@ -101,7 +101,9 @@ function setText(scope: ParentNode, hook: string, value: string | null | undefin
 function renderMembership(m: Membership | null): void {
   if (!root || !m) return;
 
-  // Credit expiry (the label is static SSR; the hook wraps only the date).
+  // Credit balance + expiry from the worker (balance_formatted is the source of truth;
+  // the native metafield is only the pre-hydration fallback). Expiry label is static SSR.
+  setText(root, 'credit', m.credits.balance_formatted);
   setText(root, 'credit-expiry', formatExpiry(m.credits.expires_at));
 
   // Progress column. progress === null ⇒ top tier (ELITE) — SSR already hides the column.
@@ -111,7 +113,8 @@ function renderMembership(m: Membership | null): void {
     setText(root, 'progress-tier', m.progress.next_tier ?? undefined);
     setText(root, 'progress-text', m.progress.message);
   }
-  // NOTE: tier name + credit balance are intentionally left SSR-native (no flicker).
+  // NOTE: tier name stays SSR-native (drives the card layout); everything else here is
+  // from the worker. SSR credit balance is the instant fallback until this overwrites it.
 }
 
 /** Fill a localized "{n} …" template ("{n} Active Autoships", "+ {n} more"). */
