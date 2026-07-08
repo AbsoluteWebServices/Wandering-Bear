@@ -195,7 +195,8 @@
             <div class="membership-upsell">
               <p class="body font-bold text-espresso mb-1">{{ 'customer.dashboard.upgrade_today' | t }} <span class="font-parslay text-gold">{{ 'customer.dashboard.why_wait' | t }}</span></p>
               <p class="font-kurdis-semi-condensed font-semibold text-[12px] leading-[1.2] text-center mb-3" style="color: #1B1B1B;">{{ 'customer.dashboard.elite_upsell_desc' | t }}</p>
-              {%- render 'wb-button', style: 'secondary-gold', label: t_upgrade, link: membership_url, class: '!w-full !h-[40px] !text-[15px]' -%}
+              {%- comment -%} Same brand blob button as REDEEM CREDITS (Figma: 335×40, drop-shadow 4/4/4 25%) {%- endcomment -%}
+              {%- render 'wb-button', style: 'secondary-gold', label: t_upgrade, link: membership_url, class: 'shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
             </div>
           </div>
         {%- endunless -%}
