@@ -11,12 +11,12 @@ Everything we write is in **English** — code, comments, commit messages, branc
 ## ✍️ COMMIT RULE: NO AI ATTRIBUTION
 - Commits must **not** contain any Claude/AI annotation — no `Co-Authored-By: Claude…` trailer, no "🤖 Generated with Claude", no AI mention in the message or PR body. Enforced via `attribution.commit/pr = ""` + `includeCoAuthoredBy: false` in `.claude/settings.local.json`.
 
-## 🎨 CSS RULE: BEM COMPONENTS, NOT UTILITY SOUP
-- **No arbitrary-utility soup in markup:** don't ship `w-[76px] md:!w-[118px]`, `text-[45px]`, `h-[52px]`, `!important` overrides (`!w-full`, `md:!p-6`), or inline `style="color:#…"` clusters. That's the anti-pattern.
-- **Use named BEM component classes** (`.block`, `.block__element`, `.block--modifier`) in a component stylesheet (`frontend/styles/*.css`, imported in `frontend/entrypoints/main.js`) — the same way the theme already does `.btn`, and account styles live in `frontend/styles/account.css`. This is standard Shopify/Dawn practice.
-- Style with **theme design tokens** (`var(--color-espresso)`, `var(--color-dark-gold)`, `var(--color-foam)`, `var(--font-kurdis-condensed)`, …) — never raw hex when a token exists.
-- **OK to keep as utilities:** simple layout (`flex`, `grid`, `gap`, `mb-*`) and the theme's type/color primitives (`.body`, `.tag`, `.h3`, `text-espresso`). Anything sized to a Figma token, repeated, or needing `!`/inline hacks → a named class.
-- **Dynamic values are the only inline exception:** a Liquid `asset_url` background, a `{{ progress_percent }}%` width, etc. must be inline because a static stylesheet can't hold Liquid.
+## 🎨 CSS RULE: TAILWIND-FIRST (utilities win over base.css)
+- **Tailwind-first.** Style with Tailwind utilities + theme tokens directly in markup. Prefer token utilities (`text-espresso`, `bg-foam`, `text-dark-gold`, `bg-sky-blue`, `bg-bear-black`) over raw hex; arbitrary values (`text-[45px]`, `w-[118px]`, `aspect-[782/161]`, `-translate-x-[20%]`) are fine for one-offs. Runtime brand colours with no `@theme` token: `bg-(--color-brand-light_cream)`.
+- **Cascade layers (critical):** `assets/base.css` (Horizon base) is wrapped in `@layer horizon-base`, and the layer order `theme, base, horizon-base, components, utilities` is declared in `snippets/stylesheets.liquid`. Result: **Tailwind utilities beat base.css resets (e.g. `img{width:100%}`) WITHOUT `!important`.** So do **not** sprinkle `!` to fight base styles — plain utilities win now. `horizon-base` still beats Tailwind's own preflight, preserving the theme look.
+- **Known non-compiling utilities** (theme/other rules still shadow them): `grid-cols-1` → use `flex`; arbitrary `gap-[Npx]` → standard `gap-N`/`space-y-*`; `hover:underline` → `.hover-underline` helper.
+- **Component CSS only when genuinely reusable** (like the theme's `.btn`): put it in `frontend/styles/account.css` (imported in `main.js`). Don't build BEM for one-off blocks — utilities are the default.
+- **Dynamic values stay inline:** a Liquid `asset_url` background, a `{{ progress_percent }}%` width, etc. can't live in a static stylesheet.
 
 ## Stack
 - Shopify Online Store 2.0 (JSON templates, sections/blocks).

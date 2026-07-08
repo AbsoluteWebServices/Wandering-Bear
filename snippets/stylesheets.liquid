@@ -1,2 +1,9 @@
+{%- comment -%}
+  Cascade layer order (must be declared before base.css and the Tailwind bundle load).
+  base.css is wrapped in the `horizon-base` layer (see assets/base.css) so Tailwind
+  utilities win over base resets (e.g. `img { width: 100% }`) WITHOUT !important, while
+  horizon-base still beats Tailwind's own preflight (`base`) to preserve the theme look.
+{%- endcomment -%}
+<style>@layer theme, base, horizon-base, components, utilities;</style>
 {{ 'overflow-list.css' | asset_url | preload_tag: as: 'style' }}
 {{ 'base.css' | asset_url | stylesheet_tag: preload: true }}

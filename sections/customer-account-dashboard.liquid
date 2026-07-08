@@ -285,13 +285,17 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} ---------- Contact CTA (styles: frontend/styles/account.css → .contact-cta) ---------- {%- endcomment -%}
-    <div class="contact-cta">
-      <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="120" height="120" class="contact-cta__badge">
-      <div class="contact-cta__card" style="background-image: url({{ 'account-contact-clouds.png' | asset_url }});">
-        <h2 class="contact-cta__title">{{ 'customer.dashboard.contact_title' | t }}</h2>
-        <p class="contact-cta__text body">{{ 'customer.dashboard.contact_subtext' | t }}</p>
-        {%- render 'wb-button', style: 'secondary-gold', label: t_contact, link: '/pages/contact', class: 'contact-cta__button', height: 40 -%}
+    {%- comment -%} ---------- Contact CTA ---------- {%- endcomment -%}
+    <div class="relative">
+      {%- comment -%} badge overflows the card top-left by 20% of its own size, tilted {%- endcomment -%}
+      <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="120" height="120"
+           class="absolute top-0 left-0 z-20 w-[76px] md:w-[118px] h-auto -translate-x-[20%] -translate-y-[20%] rotate-[-12deg]">
+      {%- comment -%} sky/cloud background; card height tracks the image aspect (smd+); transparent top shows cream {%- endcomment -%}
+      <div class="relative flex flex-col items-center justify-center overflow-hidden rounded-lg text-center px-6 py-7 smd:py-4 smd:aspect-[782/161] bg-cover bg-top bg-no-repeat bg-(--color-brand-light_cream)"
+           style="background-image: url({{ 'account-contact-clouds.png' | asset_url }});">
+        <h2 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[24px] md:text-[28px] mb-2">{{ 'customer.dashboard.contact_title' | t }}</h2>
+        <p class="body text-espresso mb-4">{{ 'customer.dashboard.contact_subtext' | t }}</p>
+        {%- render 'wb-button', style: 'secondary-gold', label: t_contact, link: '/pages/contact', class: '!h-[40px]' -%}
       </div>
     </div>
 
