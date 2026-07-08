@@ -27,12 +27,33 @@
 <section class="w-full" style="background-color: var(--color-brand-beige);">
   {%- comment -%}
     data-wb-account marks the hydration root; account.ts fetches the worker summary
-    and fills the SSR cards with real membership/autoship data. data-customer-id is
-    only used by the local dev endpoint (/dev/summary?customerId=) — production goes
-    through the App Proxy, which injects the signed logged_in_customer_id server-side.
+    and fills the SSR cards with real membership/autoship data.
+    - data-wb-worker: worker base URL. When set, account.ts calls the worker directly
+      at {base}/dev/summary?customerId= (no Shopify App Proxy needed). Leave the setting
+      blank to fall back to the signed same-origin /apps/wb/summary once App Proxy is set.
+    - data-customer-id: passed to the direct /dev endpoint (App Proxy injects the signed
+      logged_in_customer_id itself, so it is ignored on the /apps/wb path).
   {%- endcomment -%}
-  <div class="account-container py-8 md:!py-12" data-wb-account data-customer-id="{{ customer.id }}">
+  <div class="account-container py-8 md:!py-12"
+       data-wb-account
+       data-wb-worker="{{ section.settings.worker_base_url | strip }}"
+       data-customer-id="{{ customer.id }}">
     {%- render 'customer-dashboard', tier: real_tier, autoship_state: real_autoship, credits_formatted: credits_formatted -%}
   </div>
   {%- render 'vite-tag' with 'account.ts' -%}
 </section>
+
+{% schema %}
+{
+  "name": "Account dashboard",
+  "settings": [
+    {
+      "type": "text",
+      "id": "worker_base_url",
+      "label": "Worker base URL",
+      "info": "Cloudflare worker origin for account data (e.g. https://wb-account-worker.dmitryp.workers.dev). When set, the theme calls {base}/dev/summary?customerId= directly. Leave blank to use the signed same-origin /apps/wb/summary via Shopify App Proxy.",
+      "default": "https://wb-account-worker.dmitryp.workers.dev"
+    }
+  ]
+}
+{% endschema %}

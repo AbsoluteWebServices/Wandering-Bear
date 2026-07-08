@@ -53,9 +53,6 @@ type Summary = {
   errors?: { section: string; code: string }[];
 };
 
-const DEV_HOSTS = ['localhost', '127.0.0.1'];
-const DEV_WORKER = 'http://localhost:8787';
-
 /** Format an ISO date (YYYY-MM-DD) as MM/DD/YYYY (Figma credit-expiry format). */
 function formatExpiry(iso: string | null): string | null {
   if (!iso) return null;
@@ -104,15 +101,18 @@ function hydrateAutoship(root: HTMLElement, subs: Subscriptions): void {
 }
 
 function resolveEndpoint(root: HTMLElement): { url: string; credentials: RequestCredentials } {
-  const isDev = DEV_HOSTS.includes(window.location.hostname);
-  if (isDev) {
+  const base = (root.getAttribute('data-wb-worker') ?? '').trim().replace(/\/$/, '');
+  if (base) {
+    // Direct to the worker's /dev surface (no Shopify App Proxy). customerId is passed
+    // explicitly; the worker must run with DEV_MODE=1. Cross-origin, so no credentials.
     const customerId = root.getAttribute('data-customer-id') ?? '';
     return {
-      url: `${DEV_WORKER}/dev/summary?customerId=${encodeURIComponent(customerId)}`,
+      url: `${base}/dev/summary?customerId=${encodeURIComponent(customerId)}`,
       credentials: 'omit',
     };
   }
-  // Production: Shopify App Proxy appends the signed logged_in_customer_id server-side.
+  // No worker base set → signed same-origin path: Shopify App Proxy appends the
+  // logged_in_customer_id + signature server-side.
   return { url: '/apps/wb/summary', credentials: 'same-origin' };
 }
 
