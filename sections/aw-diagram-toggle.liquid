@@ -113,7 +113,7 @@
                 {% if background_image != blank %}
                     {% render 'picture', source: background_image, class: 'w-full !h-full object-cover object-top !max-w-none absolute inset-0 lg:!-mt-[77px]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
                 {% endif %}
-            <div class="wb-flex flex-col mx-auto relative z-[2]">
+            <div class="wb-flex flex-col mx-auto relative z-1">
                 {% if title_type == 'image' %}
                     {% if title_image != blank %}
                         <div class="max-w-[442px] w-full mx-auto lg:!mb-5">

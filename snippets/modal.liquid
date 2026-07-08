@@ -22,7 +22,7 @@
   assign base_content_class = 'w-full'
   assign base_body_class = 'wb-flex flex-col items-center justify-center py-14 px-4.5 md:px-15 md:pt-7.5 md:pb-11'
   assign base_panel_class = 'relative bg-white rounded-[5px] overflow-hidden w-full'
-  assign base_wrapper_class = 'z-20 w-[90%] max-w-[441px] h-fit flex flex-col mx-auto px-4'
+  assign base_wrapper_class = 'z-20 max-w-[calc(100%-20px)] smd:max-w-[90%] h-fit flex flex-col mx-auto'
 %}
 
 <div
@@ -32,7 +32,7 @@
   @keydown.escape.window="isOpen && close()"
 >
   <template x-if="isOpen">
-    <aside class="fixed inset-0 h-full w-full z-99999 wb-flex justify-center items-center">
+    <aside class="{{ handle }}-modal fixed inset-0 h-full w-full z-99999 wb-flex justify-center items-center">
       <div
         class="absolute inset-0 h-full w-full bg-black/50 z-10"
         x-show="isShown"

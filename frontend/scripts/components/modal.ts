@@ -19,6 +19,7 @@ export default (Alpine: AlpineType) => {
       if (targetHandle !== this.handle) return
 
       this.payload = payload
+      this.lockBodyScroll()
       this.isOpen = true
       await new Promise((resolve) => setTimeout(resolve, 50))
       this.isShown = true
@@ -32,7 +33,16 @@ export default (Alpine: AlpineType) => {
       this.isShown = false
       await new Promise((resolve) => setTimeout(resolve, 300))
       this.isOpen = false
+      this.unlockBodyScroll()
       this.payload = null
+    },
+
+    lockBodyScroll() {
+      document.body.classList.add('no-scroll')
+    },
+
+    unlockBodyScroll() {
+      document.body.classList.remove('no-scroll')
     },
   }))
 }

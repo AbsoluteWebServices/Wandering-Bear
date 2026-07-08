@@ -32,6 +32,11 @@
     .wb-flex {
         display: flex;
     }
+
+    html:has(body.no-scroll),
+    body.no-scroll {
+        overflow: hidden;
+    }
 }
 
 .wb-grid {
