@@ -57,5 +57,19 @@
     }
 }
 
+/* ---- Membership card — dashed column divider (Figma "Line 1") ------------ */
+/* 1px vertical dashed line, 2px dash / 2px gap, #706F6F. Desktop only (columns
+   stack on mobile). Drawn as a left-edge background so the dash pattern is exact
+   (CSS `border: dashed` can't hit 2/2). Progress column keeps its pl-6 offset. */
+@media (min-width: 1024px) {
+    .tier-divider {
+        padding-left: 1.5rem;
+        background-image: repeating-linear-gradient(to bottom, #706F6F 0 2px, transparent 2px 4px);
+        background-repeat: no-repeat;
+        background-size: 1px 100%;
+        background-position: left top;
+    }
+}
+
 /* Contact CTA is styled with Tailwind utilities directly in the section markup
    (Tailwind-first) — no component class needed here. */

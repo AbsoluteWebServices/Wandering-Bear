@@ -149,7 +149,7 @@
 
     {%- comment -%} Tier column {%- endcomment -%}
     <div class="md:!flex-1 {% unless is_elite %}md:!pr-6{% endunless %}">
-      <div class="flex items-start justify-between mb-1">
+      <div class="flex items-start justify-between mb-3">
         <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
         <div class="flex flex-col items-end !gap-1">
           {%- if is_elite -%}
@@ -170,8 +170,8 @@
 
     {%- comment -%} Progress column (hidden for Elite) {%- endcomment -%}
     {%- unless is_elite -%}
-      <div class="flex flex-col md:!flex-1 md:!pl-6 md:!border-l md:!border-espresso/15">
-        <div class="flex items-start justify-between mb-2">
+      <div class="flex flex-col md:!flex-1 tier-divider">
+        <div class="flex items-start justify-between mb-3">
           <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
           <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
         </div>
