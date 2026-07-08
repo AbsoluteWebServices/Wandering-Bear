@@ -9,8 +9,8 @@
     assign klaviyo_public_key = section.settings.klaviyo_public_key | default: 'NBGeDz'
 %}
 
-<div class="{% if bundle_collection.products.size > 4 %} h-[486px] md:h-[436px] {% endif %} overflow-hidden relative">
-  <div class="flavor-container flex flex-col gap-2.5{% if bundle_collection.products.size > 4 %} overflow-y-auto absolute {% endif %} top-0 left-0 w-full h-full py-2.5 px-1 md:pr-4">
+<div class="{% if bundle_collection.products.size > 4 %} h-[486px] md:h-[436px] {% endif %} overflow-hidden relative py-2">
+  <div class="flavor-container flex flex-col gap-2.5{% if bundle_collection.products.size > 4 %} overflow-y-auto absolute {% endif %} top-0 left-0 w-full h-full py-0.5 pl-1 pr-2.25 md:pr-4">
     {% for child_product in bundle_collection.products %}
       {% liquid
         assign title = child_product.title | split: ' - ' | last
