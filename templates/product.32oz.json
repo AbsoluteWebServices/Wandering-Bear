@@ -23,6 +23,8 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
+            "gap_tablet": 0,
+            "gap_mobile": 12,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
             "color_scheme": "scheme-1",
@@ -36,59 +38,124 @@
             "padding-block-start": 24,
             "padding-block-end": 24,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
-            "review_LerwXW": {
-              "type": "review",
-              "name": "t:names.product_review_stars",
+            "group_header_32oz": {
+              "type": "group",
+              "name": "Header",
               "settings": {
-                "stars_style": "shaded",
-                "show_number": true,
-                "text_color": "#000000",
-                "star_color": "#bd8053",
-                "rating_color": "primary",
-                "type_preset": "paragraph",
-                "width": "100%",
-                "alignment": "left"
-              },
-              "blocks": {}
-            },
-            "product_title_bundle_ipqizL": {
-              "type": "product-title-bundle",
-              "name": "Product Title Bundle",
-              "settings": {
-                "product_title": "{{ closest.product.metafields.custom.product_group.value.headline.value }}",
-                "product_title_small": "{{ closest.product.metafields.custom.product_group.value.size.value }}"
-              },
-              "blocks": {}
-            },
-            "text_aEtTtq": {
-              "type": "text",
-              "name": "Product description",
-              "settings": {
-                "block_class": "product-description",
-                "text": "{{ closest.product.metafields.custom.product_group.value.description | metafield_tag }}",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
+                "class": "",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 8,
+                "gap_mobile": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
-              "blocks": {}
+              "blocks": {
+                "review_LerwXW": {
+                  "type": "review",
+                  "name": "t:names.product_review_stars",
+                  "settings": {
+                    "stars_style": "shaded",
+                    "show_number": true,
+                    "text_color": "#000000",
+                    "star_color": "#bd8053",
+                    "rating_color": "primary",
+                    "type_preset": "paragraph",
+                    "width": "100%",
+                    "alignment": "left",
+                    "star_height_desktop": 13,
+                    "star_height_mobile": 13,
+                    "star_gap_desktop": 1,
+                    "star_gap_mobile": 1
+                  },
+                  "blocks": {}
+                },
+                "product_title_bundle_ipqizL": {
+                  "type": "product-title-bundle",
+                  "name": "Product Title Bundle",
+                  "settings": {
+                    "product_title": "{{ closest.product.metafields.custom.product_group.value.headline.value }}",
+                    "product_title_small": "{{ closest.product.metafields.custom.product_group.value.size.value }}"
+                  },
+                  "blocks": {}
+                },
+                "text_aEtTtq": {
+                  "type": "text",
+                  "name": "Product description",
+                  "settings": {
+                    "block_class": "product-description",
+                    "text": "{{ closest.product.metafields.custom.product_group.value.description | metafield_tag }}",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-primary--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "review_LerwXW",
+                "product_title_bundle_ipqizL",
+                "text_aEtTtq"
+              ]
             },
             "variant_picker_bundle_32_rVA7hm": {
               "type": "variant-picker-bundle-32",
@@ -119,9 +186,7 @@
             }
           },
           "block_order": [
-            "review_LerwXW",
-            "product_title_bundle_ipqizL",
-            "text_aEtTtq",
+            "group_header_32oz",
             "variant_picker_bundle_32_rVA7hm",
             "cross_sell_KfwHDf"
           ]
@@ -131,6 +196,14 @@
         "bundle_collection": "32oz-bundle",
         "bundle_add_to_cart_text": "Add",
         "bundle_placeholder_image": "shopify://shop_images/image_88.png",
+        "oos_badge_text": "Out of Stock",
+        "oos_button_text": "Get Notified",
+        "restock_modal_title": "Get notified when your favorite flavors return",
+        "restock_modal_description": "Sign up below for restock notifications",
+        "restock_modal_placeholder": "Enter your email",
+        "restock_modal_button_text": "Sign Up",
+        "restock_modal_success_text": "You're on the list! We'll email you when it's back in stock.",
+        "klaviyo_public_key": "NBGeDz",
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
         "equal_columns": false,
@@ -169,7 +242,11 @@
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {}
         },
@@ -396,151 +473,54 @@
         "description": "It's that simple because we are obsessive over our quality standards from bean to box. We stand behind our products, so if for any reason you are not satisfied with a product you purchased from us or one of our authorized sellers, you may request a refund or replacement product within 60 days of the date of purchase."
       }
     },
-    "1777580187e490aceb": {
-      "type": "_blocks",
+    "okendo_reviews_widget_PUYwdr": {
+      "type": "okendo-reviews-widget",
       "blocks": {
-        "okendo_reviews_widget_BT7C9F": {
-          "type": "shopify://apps/okendo/blocks/reviews-widget/bb689e69-ea70-4661-8fb7-ad24a2e23c29",
+        "heading_VJVmPd": {
+          "type": "_heading",
           "settings": {
-            "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
-            "widget_type": "reviews_widget"
-          }
-        }
-      },
-      "block_order": [
-        "okendo_reviews_widget_BT7C9F"
-      ],
-      "disabled": true,
-      "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
-    "17780948450c5a87e1": {
-      "type": "_blocks",
-      "blocks": {
-        "group_Y3rAwi": {
-          "type": "group",
-          "name": "t:names.group",
-          "settings": {
-            "class": "",
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
+            "block_class": "",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family_mobile": "",
+            "font_size": "3.438rem",
+            "line_height": "tight",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "text": "<h2><strong>WE WANT TO IMPRESS YOU</strong></h2>",
+            "read_only": false,
+            "type_preset_mobile": "custom",
+            "font_mobile": "var(--font-heading--family)",
+            "font_size_mobile": "2.188rem",
+            "line_height_mobile": "",
+            "letter_spacing_mobile": "",
+            "case_mobile": "",
+            "wrap_mobile": "",
+            "color_mobile": "",
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "show_alignment": true,
             "padding-block-start": 0,
-            "padding-block-end": 40,
+            "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
-          "blocks": {
-            "heading_FCM3iE": {
-              "type": "_heading",
-              "settings": {
-                "block_class": "review-heading",
-                "text": "<h2>WE WANT TO IMPRESS YOU</h2>",
-                "type_preset": "h2",
-                "color": "var(--color-foreground-heading)",
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "heading_FCM3iE"
-          ]
-        },
-        "okendo_reviews_widget_GnH68q": {
-          "type": "shopify://apps/okendo/blocks/reviews-widget/bb689e69-ea70-4661-8fb7-ad24a2e23c29",
-          "settings": {
-            "product": "{{product}}",
-            "widget_type": "reviews_widget"
-          }
+          "blocks": {}
         }
       },
       "block_order": [
-        "group_Y3rAwi",
-        "okendo_reviews_widget_GnH68q"
+        "heading_VJVmPd"
       ],
+      "name": "Okendo Reviews Widget",
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 80,
-        "padding-block-end": 80
+        "product": "32oz-cold-brew-carton-bundle-unit-straight-black"
       }
     },
     "aw_member_comparison_EAjQ8J": {
@@ -554,6 +534,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li>Get $5 off your first order</li><li>Earn $5 for every $50 spent</li></ul>",
             "background_color": "#ffffff",
             "button_label": "Join for Free",
+            "button_action": "link",
             "button_link": "shopify://pages/membership"
           }
         },
@@ -565,6 +546,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
             "background_color": "#fdede0",
             "button_label": "BROWSE AUTOSHIP",
+            "button_action": "link",
             "button_link": "shopify://pages/membership"
           }
         },
@@ -576,7 +558,8 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li>All Free & VIP Member perks plus...</li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
             "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
             "button_label": "Add ELITE · $25",
-            "button_action": "elite_add_to_cart"
+            "button_action": "elite_add_to_cart",
+            "button_link": ""
           }
         }
       },
@@ -621,8 +604,7 @@
     "aw_diagram_toggle_rEY8ba",
     "aw_image_text_icons_6YkxCz",
     "aw_guarantee_banner_GxEGrE",
-    "1777580187e490aceb",
-    "17780948450c5a87e1",
+    "okendo_reviews_widget_PUYwdr",
     "aw_member_comparison_EAjQ8J",
     "aw_frequently_asked_questions_33izYW"
   ]

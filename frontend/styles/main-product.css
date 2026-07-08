@@ -42,6 +42,11 @@ rte-formatter.product-description {
     margin-bottom: 1rem !important;
 }
 
+.product-information-32oz rte-formatter.product-description {
+    margin-bottom: 1.125rem !important;
+    margin-top: 0.25rem;
+}
+
 input[name="purchase_option"]:checked + label {
     background-color: var(--color-dark-foam);
     border: 1px solid var(--color-espresso);

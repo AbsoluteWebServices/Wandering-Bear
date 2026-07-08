@@ -87,7 +87,7 @@
 
 <div class="section-background color-{{ settings.color_scheme }}"></div>
 <div
-  class="product-information {% if template.suffix == '96oz' %} product-information-96oz {% endif %}section section--{{ content_width }} spacing-style color-{{ settings.color_scheme }} relative z-2"
+  class="product-information product-information-{% if template.suffix == '96oz' %}96oz{% elsif template.suffix == '32oz' %}32oz{% elsif template.suffix == 'gallon' %}gallon{% elsif template.suffix == 'concentrate' %}concentrate{% else %}simple{% endif %} section section--{{ content_width }} spacing-style color-{{ settings.color_scheme }} relative z-2"
   style="{% render 'spacing-style', settings: settings %} --gap: {{ section_gap }}px; --gap-mobile: {{ section_gap_mobile }}px;"
   data-testid="product-information"
 >

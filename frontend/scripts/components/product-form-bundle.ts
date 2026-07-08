@@ -63,7 +63,27 @@ export default (Alpine: AlpineType) => {
         },
 
         get addToCartText() {
+            if (this.bundleType === '32oz') {
+              if (this.flavorType === 'mix') {
+                return this.canAddToCart ? 'Add to bag' : `Add ${this.qtyLimit} flavors`;
+              }
+
+              return this.bundleSize >= 1 ? 'Add to bag' : 'Add 1 flavor';
+            }
+
             return this.bundleSize >= 1 ? 'Add to bag' : 'Add 1 flavor';
+        },
+
+        get canAddToCart() {
+          if (this.bundleType !== '32oz') {
+            return this.bundleSize >= 1;
+          }
+
+          if (this.flavorType === 'single') {
+            return this.bundleSize >= 1;
+          }
+
+          return this.bundleSize === this.qtyLimit;
         },
 
         get currentSavingsAmount() {
@@ -427,6 +447,10 @@ export default (Alpine: AlpineType) => {
         },
 
         async addToCart() {
+            if (!this.canAddToCart || this.loading) {
+              return;
+            }
+
             this.loading = true;
 
             let guid = this._createGuid();

@@ -95,9 +95,9 @@
 {% endstyle %}
 
 
-<div class="flex flex-col gap-2.5 mb-6">
+<div class="flex flex-col mb-6{% if template.suffix == '32oz' %} gap-4.5{% else %} gap-2.5{% endif %}">
     <div class="flex flex-col">
-    <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Quantity</span>
+    <span class="font-bold font-gothic_condensed text-bear-black block uppercase mb-1.5">Choose Quantity</span>
         <div class="wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px]">
             {% for i in (1..bundle_products_count) %}
               {%- case i -%}
@@ -117,11 +117,11 @@
               <fieldset class="flex flex-col h-full w-full justify-center items-center">
                 <input
                  @change="changeBundleQuantity({{ qty }})"
-                 class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden peer"
+                 class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  x-model="bundleQty"
                  type="radio" name="bundle-qty" id="bundle-qty-{{ i }}" value="{{ qty }}" {% if forloop.first %}checked{% endif %}>
-                <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center" for="bundle-qty-{{ i }}">
-                  <span class="font-gothic_condensed text-bear-black text-base font-bold uppercase">{{ qty }} Cartons</span>
+                <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-qty-{{ i }}">
+                  <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">{{ qty }} Cartons</span>
                   <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
                   <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save {{ savings }}</span>
                 </label>
@@ -130,27 +130,27 @@
         </div>
     </div>
     <div class="flex flex-col">
-    <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Flavors</span>
+    <span class="font-bold font-gothic_condensed text-bear-black block uppercase mb-1.5">Choose Flavors</span>
         <div class="wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px] overflow-hidden">
             <fieldset class="flex flex-col h-full w-full justify-center items-center">
                 <input
                  @change="changeFlavorType('mix')"
                  x-model="flavorType"
-                 class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden peer"
+                 class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  type="radio" name="bundle-flavor" id="bundle-flavor-mix" value="mix">
-                <label class="rounded-tl-[5px] rounded-bl-[5px] peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center" for="bundle-flavor-mix">
-                  <span class="font-gothic_condensed text-bear-black text-base font-bold uppercase">Mix & Match</span>
-                  <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">Pick up to <span x-text="bundleQty">3</span> flavors</span>
+                <label class="rounded-tl-[5px] rounded-bl-[5px] peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-flavor-mix">
+                  <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase">Mix & Match</span>
+                  <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold transition-colors duration-300">Pick up to <span x-text="bundleQty">3</span> flavors</span>
                 </label>
             </fieldset>
             <fieldset class="flex flex-col h-full w-full justify-center items-center">
                 <input
                  @change="changeFlavorType('single')"
                  x-model="flavorType"
-                 class="absolute top-0 left-0 w-0 h-0 opacity-0 hidden peer"
+                 class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  type="radio" name="bundle-flavor" id="bundle-flavor-single" value="single" checked>
-                <label class="rounded-tr-[5px] rounded-br-[5px] peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center" for="bundle-flavor-single">
-                  <span class="font-gothic_condensed text-bear-black text-base font-bold uppercase">Single Flavor</span>
+                <label class="rounded-tr-[5px] rounded-br-[5px] peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-flavor-single">
+                  <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">Single Flavor</span>
                   <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save an additional 5%</span>
 
                 </label>
@@ -164,9 +164,9 @@
     x-transition:leave="transition ease-in duration-300"
     x-transition:leave-start="opacity-100 transform scale-100"
     x-transition:leave-end="opacity-0 transform scale-0"
-    x-cloak class="wb-flex justify-center gap-2 lg:!gap-2.5 h-[87px] mt-1.5 max-w-full">
+    x-cloak class="wb-flex justify-center gap-2 lg:gap-2.25! h-[87px] max-w-full">
       <template x-for="(product, index) in bundleSlots" :key="index">
-        <div class="flex flex-col gap-2.5 py-5 px-1 md:!px-4 justify-center items-center border border-[#CFBDB1] rounded-[5px] !max-w-[50px] lg:!max-w-[62px] !aspect-[51/72] lg:!aspect-[62/87]"
+        <div class="flex flex-col gap-2.5 py-5 px-1 md:!px-4 justify-center items-center border border-dashed border-[#CFBDB1] rounded-[5px] !max-w-[50px] lg:!max-w-[62px] !aspect-[51/72] lg:!aspect-[62/87]"
         :class="{ 'bg-[#F9F3ED] !px-1 md:!px-2 !py-1.5 md:!py-5': product }"
         >
           <template x-if="product">

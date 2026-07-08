@@ -12,7 +12,7 @@
       href="{{ closest.product.selected_or_first_available_variant.url }}"
     >
       <span class="font-gothic_condensed text-[35px] lg:!text-[45px] font-extrabold leading-[100%] uppercase">{{ block.settings.product_title }}</span>
-      <span class="font-kurdis-semi-condensed text-base font-bold leading-[120%] capitalize md:text-[20px]">{{ block.settings.product_title_small }}</span>
+      <span class="font-kurdis-semi-condensed text-base font-bold leading-[120%] md:text-[20px]{% if template.suffix == '96oz' or template.suffix == '32oz' %} uppercase{% else %} capitalize{% endif %}">{{ block.settings.product_title_small }}</span>
     </a>
   {% endif %}
   
