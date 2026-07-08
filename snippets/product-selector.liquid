@@ -1,104 +1,183 @@
 {% liquid
   assign is_selected = false
   if child_product.id == product.id
-    assign is_selected = true
-  endif    
+  assign is_selected = true
+  endif
 
   assign bundle_add_to_cart_text = section.settings.bundle_add_to_cart_text
+
+  assign is_oos = false
+  unless member_only
+    if child_product.available == false
+      assign is_oos = true
+    endif
+  endunless
+
+  assign oos_badge_text = section.settings.oos_badge_text | default: 'Out of Stock'
+  assign oos_button_text = section.settings.oos_button_text | default: 'Get Notified'
 %}
 
-<div @click="selectProduct({{ child_product.id }})"
-data-product-id="{{ child_product.id }}"
-:class="{ 'selected-product': selectedProduct?.id === {{ child_product.id }}}"
-class="wb-flex bg-[#F9F3ED] items-start rounded-[5px] cursor-pointer h-auto flex-nowrap{% if is_selected %} selected-product{% endif %}">
-   <div class="min-w-[77px] w-[77px] shrink-0 self-stretch min-h-22.5 md:min-h-20 bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
-     {% if image != blank %}
-       {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
-     {% else %}
-       <div class="absolute inset-0 z-[2] wb-flex justify-center items-center">
-         <span class="text-xs text-center">Missing Image</span>
-       </div>
-       {{ child_product.featured_image | image_url: width: 300 | image_tag: class: 'w-full h-full object-cover opacity-50' }}
-     {% endif %}
-   </div>
-   <div class="wb-flex w-full h-full min-w-0 py-2 pl-3 pr-2 items-center gap-2">
-       <div class="wb-flex flex-col !gap-2 lg:!gap-0.5 flex-1 min-w-0">
-           <div class="wb-flex items-center gap-1 w-full flex-wrap">
-             <span class="text-lg/none! lg:text-base/none! font-extrabold! uppercase text-bear-black font-gothic_condensed">{{ title }}</span>
-             {% if product_badge != blank %}
-               <div class="flex items-center justify-center rounded-full py-0.75 px-1.5 h-fit" style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
-                 <span class="text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap mt-0.5 md:mt-px">{{ product_badge_text }}</span>
-               </div>
-             {% elsif member_only %}
-                 <span class="flex items-center justify-center gap-0.5 text-[10px]/none font-kurdis uppercase font-bold text-cream whitespace-nowrap pb-0.75 pt-1.25 pl-1.75 pr-1 rounded-full relative md:pt-1" style="background-color: var(--color-brand-gold); color: var(--color-cream)">
-                  VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only
-                  {% render 'tooltip', content: settings.member_tooltip, class: 'relative', badge: true %}
-                 </span>
-             {% endif %}
-           </div>
-           <span class="text-[12px] lg:!text-[11px] font-kurdis font-semibold leading-[120%] text-bear-black">{{ flavor_description }}</span>
-       </div>
-       <div class="shrink-0 flex-none w-auto self-center">
-         {% if member_only %}
-           <div class="flex justify-end">
-             <div @click.prevent.stop="$dispatch('modal-open', { modal: 'membership-info' })" class="group !h-[30px] !w-[80px] flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button">
-                 <span class="relative text-[12px] text-cream z-1 font-kurdis uppercase font-bold whitespace-nowrap">{% render 'icons', icon: 'unlock' %} Unlock</span>
-                 <div class="absolute top-0 left-0 w-full h-full">
-                   <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
-                     <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
-                   </svg>
-                 </div>
-             </div>
-           </div>
-         {% else %}
-            <div x-show="!isInBundle({{ child_product.id }})" class="flex justify-end">
-              <div class="group !h-10 lg:!h-[30px] !w-[80px] flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button" 
-              @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})"
-              :disabled="disabled"
-              :class="{ 'opacity-50 pointer-events-none': disabled }">
-                  <span 
-                  x-text="flavorType !== 'single' ? '+ Add' : 'Select'" 
-                  class="relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">+ Add</span>
-                  <div class="absolute top-0 left-0 w-full h-full">
-                    <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
-                      <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
-                    </svg>
-                  </div>
-              </div>
+<div
+  @click="selectProduct({{ child_product.id }})"
+  data-product-id="{{ child_product.id }}"
+  :class="{ 'selected-product': selectedProduct?.id === {{ child_product.id }}}"
+  class="wb-flex bg-[#F9F3ED] items-stretch rounded-[5px] cursor-pointer h-auto flex-nowrap{% if is_selected %} selected-product{% endif %}"
+>
+  <div class="min-w-[77px] w-[77px] shrink-0 self-stretch min-h-22.5 md:min-h-20 bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
+    {% if image != blank %}
+      {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
+    {% else %}
+      <div class="absolute inset-0 z-[2] wb-flex justify-center items-center">
+        <span class="text-xs text-center">Missing Image</span>
+      </div>
+
+      {{ child_product.featured_image | image_url: width: 300 | image_tag: class: 'w-full h-full object-cover opacity-50' }}
+    {% endif %}
+  </div>
+  <div class="wb-flex w-full min-w-0 flex-1 self-stretch py-2 pl-3 pr-2 items-center gap-2">
+    <div class="wb-flex flex-col !gap-2 lg:!gap-0.5 flex-1 min-w-0 self-stretch justify-center">
+      <div class="wb-flex items-center gap-1 w-full flex-wrap">
+        <span class="text-lg/none! lg:text-base/none! font-extrabold! uppercase text-bear-black font-gothic_condensed">
+          {{ title }}
+        </span>
+        {% if is_oos %}
+          <div class="flex items-center justify-center rounded-full py-0.75 px-1.5 h-fit bg-espresso">
+            <span class="text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap mt-0.5 md:mt-px text-cream">
+              {{ oos_badge_text }}
+            </span>
+          </div>
+        {% elsif product_badge != blank %}
+          <div
+            class="flex items-center justify-center rounded-full py-0.75 px-1.5 h-fit"
+            style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}"
+          >
+            <span class="text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap mt-0.5 md:mt-px">
+              {{ product_badge_text }}
+            </span>
+          </div>
+        {% elsif member_only %}
+          <span
+            class="flex items-center justify-center gap-0.5 text-[10px]/none font-kurdis uppercase font-bold text-cream whitespace-nowrap pb-0.75 pt-1.25 pl-1.75 pr-1 rounded-full relative md:pt-1"
+            style="background-color: var(--color-brand-gold); color: var(--color-cream)"
+          >
+            VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only
+            {% render 'tooltip', content: settings.member_tooltip, class: 'relative', badge: true %}
+          </span>
+        {% endif %}
+      </div>
+      <span class="text-[12px] lg:!text-[11px] font-kurdis font-semibold leading-[120%] text-bear-black">
+        {{ flavor_description }}
+      </span>
+    </div>
+    <div class="shrink-0 flex-none w-auto self-center">
+      {% if member_only %}
+        <div class="flex justify-end">
+          <button
+            @click.prevent.stop="$dispatch('modal-open', { modal: 'membership' })"
+            class="group !h-7.5 !w-20 flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button"
+          >
+            <span class="relative inline-flex items-center gap-1.25 text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold whitespace-nowrap">
+              {% render 'icons', icon: 'unlock' %} Unlock
+            </span>
+            <div class="absolute top-0 left-0 w-full h-full">
+              <svg
+                preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold"
+                xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none"
+              >
+                <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
+              </svg>
             </div>
-            <div x-cloak x-show="isInBundle({{ child_product.id }}) && flavorType === 'single'" class="flex justify-end">
-              <div class="group !h-10 lg:!h-[30px] !w-[80px] whitespace-nowrap wb-flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button" 
-              @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})">
-                  <span 
-                  class="wb-flex justify-center items-center gap-1 relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">
-                  {% render 'icons', icon: 'checkmark', class: 'text-cream min-w-[10px] min-h-[10px]' %} 
-                  Selected</span>
-                  <div class="absolute top-0 left-0 w-full h-full">
-                    <svg preserveAspectRatio="none" class="h-full w-full fill-gold group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
-                      <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
-                    </svg>
-                  </div>
-              </div>
+          </button>
+        </div>
+      {% elsif is_oos %}
+        <div class="flex justify-end">
+          <button
+            @click.prevent.stop="$dispatch('modal-open', { modal: 'restock-notify', flavor: '{{ child_product.handle }}', variant: '{{ child_product.selected_or_first_available_variant.id }}' })"
+            class="group !h-10 lg:!h-[30px] w-20 flex flex-nowrap justify-center items-center relative whitespace-nowrap h-fit cursor-pointer"
+          >
+            <span class="relative text-[12px]/none text-espresso z-1 mt-0.5 font-kurdis-condensed uppercase font-extrabold whitespace-nowrap group-hover:text-gold transition-colors">
+              {{ oos_button_text }}
+            </span>
+            <div class="absolute top-0 left-0 w-full h-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="32" viewBox="0 0 80 32" fill="none">
+                <path d="M44.7991 0.507812C54.427 0.542555 64.057 0.694928 73.6819 0.990234C74.3826 1.01147 75.3069 1.00363 76.1614 1.2168C77.0414 1.43641 77.9023 1.90113 78.4573 2.89062C79.2562 4.31347 79.5002 5.74875 79.5002 9.05859C79.5002 13.8208 79.2605 17.6203 79.3616 22.3369C79.3884 23.5841 79.4532 25.1131 79.2795 26.5586C79.1061 28.002 78.6867 29.4499 77.6799 30.498C77.052 31.152 76.2523 31.2641 75.5852 31.2832L74.9739 31.2881C52.2506 31.5852 29.5264 31.4834 6.81177 31.4834C5.11469 31.4834 3.85663 31.3393 2.90552 30.7705C1.92779 30.1857 1.36504 29.2104 0.898682 27.8008H0.897705C0.491122 26.5695 0.494836 25.1611 0.501221 23.9062L0.537354 16.8896C0.54932 14.5511 0.562173 12.2121 0.574463 9.87305C0.584722 7.92464 0.604172 5.78643 1.25024 3.95312H1.25122C1.55923 3.08082 1.97789 2.43888 2.49048 1.97949C3.00398 1.5193 3.58437 1.26616 4.17603 1.12988C4.76124 0.995145 5.36447 0.973083 5.92896 0.977539C6.51931 0.982204 7.02156 1.0132 7.52856 0.998047C10.2609 0.915054 12.9934 0.843984 15.7268 0.782227C25.4172 0.564135 35.1085 0.471142 44.7991 0.507812Z" stroke="#431A03"/>
+              </svg>
             </div>
-            <div class="flex items-center !gap-0 shrink-0" x-cloak x-show="isInBundle({{ child_product.id }}) && flavorType !== 'single'">
-                <button class="group cursor-pointer relative shadow-button h-[30px] w-[30px]" @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity--">
-                  <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pb-1">-</span>
-                  <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                    <path d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
-                  </svg>
-                </button>
-                <span class="text-[12px] w-10 text-espresso text-center font-kurdis uppercase font-bold" x-text="getBundleProductQuantity({{ child_product.id }})"></span>
-                <button
-                :disabled="getBundleProductQuantity({{ child_product.id }}) >= qtyLimit"
-                :class="{ 'opacity-50 pointer-events-none': disabled }"
-                 class="group cursor-pointer relative shadow-button h-[30px] w-[30px]" @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity++">
-                  <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pt-1">+</span>
-                  <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                    <path d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
-                  </svg>
-                </button>
+          </button>
+        </div>
+      {% else %}
+      <button x-show="!isInBundle({{ child_product.id }})" class="flex justify-end">
+        <div
+          class="group !h-10 lg:!h-[30px] !w-[80px] flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button"
+          @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})"
+          :disabled="disabled" :class="{ 'opacity-50 pointer-events-none': disabled }">
+          <span x-text="flavorType !== 'single' ? '+ Add' : 'Select'"
+            class="relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">+ Add</span>
+          <div class="absolute top-0 left-0 w-full h-full">
+            <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold"
+              xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none">
+              <path
+                d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
+            </svg>
+          </div>
+        </div>
+      </button>
+        <div x-cloak x-show="isInBundle({{ child_product.id }}) && flavorType === 'single'" class="flex justify-end">
+          <div
+            class="group !h-10 lg:!h-[30px] !w-[80px] whitespace-nowrap wb-flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button"
+            @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})"
+          >
+            <span class="wb-flex justify-center items-center gap-1 relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">
+              {% render 'icons', icon: 'checkmark', class: 'text-cream min-w-[10px] min-h-[10px]' %} Selected
+            </span>
+
+            <div class="absolute top-0 left-0 w-full h-full">
+              <svg
+                preserveAspectRatio="none" class="h-full w-full fill-gold group-hover:fill-gold"
+                xmlns="http://www.w3.org/2000/svg" width="80" height="30" viewBox="0 0 80 30" fill="none"
+              >
+                <path d="M0.740482 3.11953C0.111533 4.85963 0.0863218 6.91032 0.0757066 8.87613C0.0504956 13.5543 0.0266114 18.2306 0.00140038 22.9088C-0.0052341 24.1801 -0.00390717 25.5035 0.38222 26.6436C1.31237 29.385 2.48668 29.983 5.96049 29.983C29.2608 29.983 52.5624 30.0853 75.8641 29.7882C76.6907 29.7785 77.5983 29.8402 78.2764 29.1515C80.1141 27.286 79.9138 23.8772 79.858 21.3481C79.7545 16.639 80 12.7692 80 8.05817C80 4.76317 79.7466 3.43977 78.9955 2.13566C78.0335 0.463087 76.0299 0.534466 74.5292 0.490095C64.6624 0.194935 54.7903 0.0425316 44.9195 0.00780683C34.985 -0.0288471 25.0506 0.0637523 15.1161 0.281747C12.3137 0.34348 9.5126 0.414858 6.71152 0.497812C4.59644 0.559545 1.91346 -0.119518 0.740482 3.11953Z" />
+              </svg>
             </div>
-         {% endif %}
-       </div>
-   </div>
+          </div>
+        </div>
+        <div
+          class="flex items-center !gap-0 shrink-0"
+          x-cloak
+          x-show="isInBundle({{ child_product.id }}) && flavorType !== 'single'"
+        >
+          <button
+            class="group cursor-pointer relative shadow-button h-[30px] w-[30px]"
+            @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity--"
+          >
+            <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pb-1">-</span>
+            <svg
+              class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold"
+              xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none"
+            >
+              <path d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
+            </svg>
+          </button>
+
+          <span
+            class="text-[12px] w-10 text-espresso text-center font-kurdis uppercase font-bold"
+            x-text="getBundleProductQuantity({{ child_product.id }})"></span>
+          <button
+            :disabled="getBundleProductQuantity({{ child_product.id }}) >= qtyLimit"
+            :class="{ 'opacity-50 pointer-events-none': disabled }"
+            class="group cursor-pointer relative shadow-button h-[30px] w-[30px]"
+            @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity++"
+          >
+            <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pt-1">+</span>
+            <svg
+              class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold"
+              xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none"
+            >
+              <path d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
+            </svg>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 </div>

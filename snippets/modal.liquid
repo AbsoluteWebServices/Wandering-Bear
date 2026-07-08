@@ -1,0 +1,87 @@
+{%- doc -%}
+  Modal shell with optional title and description.
+
+  Open via: $dispatch('modal-open', { modal: '<handle>', ...payload })
+  Close via: $dispatch('modal-close', { modal: '<handle>' }) or close() inside scope.
+
+  @param {string} handle - Unique modal id (required)
+  @param {string} content - Modal body HTML (required)
+  @param {string} [title] - Optional heading
+  @param {string} [description] - Optional subheading
+  @param {string} [title_class] - Extra classes for the title
+  @param {string} [description_class] - Extra classes for the description
+  @param {string} [content_class] - Extra classes for the content wrapper
+  @param {string} [body_class] - Extra classes for the body section
+  @param {string} [panel_class] - Extra classes for the panel
+  @param {string} [wrapper_class] - Extra classes for the dialog wrapper
+{%- enddoc -%}
+
+{% liquid
+  assign base_title_class = 'text-[25px] font-bold leading-[100%] uppercase font-gothic_condensed text-center text-balance mb-3 max-w-[280px]'
+  assign base_description_class = 'text-center text-balance text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed mb-6'
+  assign base_content_class = 'w-full'
+  assign base_body_class = 'wb-flex flex-col items-center justify-center py-14 px-4.5 md:px-15 md:pt-7.5 md:pb-11'
+  assign base_panel_class = 'relative bg-white rounded-[5px] overflow-hidden w-full'
+  assign base_wrapper_class = 'z-20 w-[90%] max-w-[441px] h-fit flex flex-col mx-auto px-4'
+%}
+
+<div
+  x-data="modal({ handle: '{{ handle }}' })"
+  @modal-open.window="open($event.detail)"
+  @modal-close.window="close($event.detail)"
+  @keydown.escape.window="isOpen && close()"
+>
+  <template x-if="isOpen">
+    <aside class="fixed inset-0 h-full w-full z-99999 wb-flex justify-center items-center">
+      <div
+        class="absolute inset-0 h-full w-full bg-black/50 z-10"
+        x-show="isShown"
+        @click="close()"
+        x-transition.opacity.duration.300ms
+      ></div>
+      <div
+        class="{{ base_wrapper_class }}{% if wrapper_class != blank %} {{ wrapper_class }}{% endif %}"
+        x-show="isShown"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+      >
+        <div
+          class="overflow-auto mx-auto w-full"
+          @wheel.stop
+          @touchmove.stop
+        >
+          <div class="{{ base_panel_class }}{% if panel_class != blank %} {{ panel_class }}{% endif %}">
+            <div
+              @click="close()"
+              class="cursor-pointer flex justify-center items-center text-bear-black shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-full w-11 h-11 absolute top-4 right-3 bg-foam hover:bg-gold hover:!text-white transition-all duration-300 z-10"
+            >
+              {% render 'icons', icon: 'close', class: 'w-4 h-4 relative' %}
+            </div>
+
+            <div class="{{ base_body_class }}{% if body_class != blank %} {{ body_class }}{% endif %}">
+              {% if title != blank %}
+                <span class="{{ base_title_class }}{% if title_class != blank %} {{ title_class }}{% endif %}">
+                  {{ title }}
+                </span>
+              {% endif %}
+
+              {% if description != blank %}
+                <span class="{{ base_description_class }}{% if description_class != blank %} {{ description_class }}{% endif %}">
+                  {{ description }}
+                </span>
+              {% endif %}
+
+              <div class="{{ base_content_class }}{% if content_class != blank %} {{ content_class }}{% endif %}">
+                {{ content }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </template>
+</div>

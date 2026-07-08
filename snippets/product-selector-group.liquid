@@ -1,3 +1,14 @@
+
+{% liquid
+    assign restock_title = section.settings.restock_modal_title | default: 'Get notified when your favorite flavors return'
+    assign restock_description = section.settings.restock_modal_description | default: 'Sign up below for restock notifications'
+    assign restock_placeholder = section.settings.restock_modal_placeholder | default: 'Enter your email'
+    assign restock_button_text = section.settings.restock_modal_button_text | default: 'Sign Up'
+
+    assign restock_success_text = section.settings.restock_modal_success_text | default: "You're on the list! We'll email you when it's back in stock."
+    assign klaviyo_public_key = section.settings.klaviyo_public_key | default: 'NBGeDz'
+%}
+
 <div class="{% if bundle_collection.products.size > 4 %} h-[486px] md:h-[436px] {% endif %} overflow-hidden relative">
     <div class="flavor-container flex flex-col gap-2.5
     {% if bundle_collection.products.size > 4 %} overflow-y-auto absolute {% endif %} top-0 left-0 w-full h-full py-2.5 px-1 md:pr-4">
@@ -17,3 +28,71 @@
         {% endfor %}
     </div>
 </div>
+
+{% capture restock_modal_content %}
+  <div x-data="backInStock({ companyId: '{{ klaviyo_public_key }}' })" class="w-full">
+    <form
+      x-show="status !== 'success'"
+      @submit.prevent="subscribe(payload?.variant)"
+      class="w-full wb-flex flex-col items-center"
+    >
+      <div class="w-full flex flex-nowrap items-stretch gap-2">
+        <label for="RestockEmail" class="visually-hidden">{{ restock_placeholder }}</label>
+        <input
+          id="RestockEmail"
+          type="email"
+          x-model="email"
+          :disabled="status === 'loading'"
+          autocorrect="off"
+          autocapitalize="off"
+          autocomplete="email"
+          required
+          placeholder="{{ restock_placeholder }}"
+          class="flex-1 min-w-0 rounded-[5px] border border-espresso/30 bg-[#FAF2ED] px-4 py-3 text-sm font-kurdis-semi-condensed font-semibold text-espresso placeholder:text-espresso/60 focus:outline-none focus:border-espresso disabled:opacity-60"
+        >
+        <button
+          type="submit"
+          :disabled="status === 'loading'"
+          class="group relative shrink-0 h-auto min-h-[46px] px-5 cursor-pointer shadow-button disabled:opacity-60 disabled:pointer-events-none"
+          aria-label="{{ restock_button_text }}"
+        >
+          <span
+            class="relative z-1 text-[14px] text-cream font-kurdis-semi-condensed uppercase font-bold whitespace-nowrap"
+          >
+            <span x-show="status !== 'loading'">{{ restock_button_text }}</span>
+            <span x-show="status === 'loading'" x-cloak>...</span>
+          </span>
+          <svg
+            preserveAspectRatio="none" class="absolute top-0 left-0 w-full h-full fill-gold group-hover:fill-espresso transition-colors"
+            xmlns="http://www.w3.org/2000/svg" width="80" height="46" viewBox="0 0 80 46" fill="none"
+          >
+            <path d="M0.740482 4.79C0.111533 7.45 0.0863218 10.59 0.0757066 13.6C0.0504956 20.77 0.0266114 27.94 0.00140038 35.11C-0.0052341 37.06 -0.00390717 39.09 0.38222 40.83C1.31237 45.03 2.48668 45.94 5.96049 45.94C29.2608 45.94 52.5624 46.1 75.8641 45.65C76.6907 45.63 77.5983 45.73 78.2764 44.67C80.1141 41.81 79.9138 36.59 79.858 32.72C79.7545 25.5 80 19.57 80 12.35C80 7.3 79.7466 5.27 78.9955 3.27C78.0335 0.71 76.0299 0.82 74.5292 0.75C64.6624 0.3 54.7903 0.065 44.9195 0.012C34.985 -0.044 25.0506 0.098 15.1161 0.432C12.3137 0.526 9.5126 0.636 6.71152 0.763C4.59644 0.857 1.91346 -0.183 0.740482 4.79Z" />
+          </svg>
+        </button>
+      </div>
+
+      <div
+        x-show="status === 'error'"
+        x-text="errorMessage"
+        x-cloak
+        class="w-full mt-3 text-center text-[13px] font-kurdis-semi-condensed font-semibold text-red-600"
+      ></div>
+    </form>
+
+    <div
+      x-show="status === 'success'"
+      x-cloak
+      class="w-full text-center text-[14px] font-kurdis-semi-condensed font-semibold leading-[160%] text-espresso"
+    >
+      {{ restock_success_text }}
+    </div>
+  </div>
+{% endcapture %}
+
+{% render 'modal',
+  handle: 'restock-notify',
+  title: restock_title,
+  description: restock_description,
+  content: restock_modal_content
+%}
+

@@ -1,7 +1,7 @@
 <div
     x-data="modal({ handle: '{{ modal.system.handle }}' })"
     @modal-open.window="e => open(e.detail)"
-    @modal-close.window="close()"
+    @modal-close.window="close($event.detail)"
 >
     <template x-if="isOpen">
         <aside class="fixed inset-0 h-full w-full z-99999 wb-flex justify-center items-center ">
