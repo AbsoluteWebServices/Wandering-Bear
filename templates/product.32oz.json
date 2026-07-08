@@ -110,7 +110,7 @@
               "settings": {
                 "color_scheme": "scheme-40eec688-b970-4f1a-96a1-8b50c977616b",
                 "image": "shopify://shop_images/3f3d11dcd1b175853b80f970707145ec401faff7.png",
-                "title": "Looking for cold brew on‑the‑go?",
+                "title": "Looking for cold brew on-the-go?",
                 "subtitle": "Try our new cold brew lattes, available in 3 flavors!",
                 "button_label": "Shop Now",
                 "button_link": "/"
@@ -483,14 +483,26 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "heading_FCM3iE": {
-              "type": "_heading",
+            "subscription_value_prop_FCM3iE": {
+              "type": "subscription-value-prop",
+              "name": "t:names.heading",
               "settings": {
                 "block_class": "review-heading",
                 "text": "<h2>WE WANT TO IMPRESS YOU</h2>",
-                "type_preset": "h2",
-                "color": "var(--color-foreground-heading)",
+                "width": "fit-content",
+                "max_width": "normal",
                 "alignment": "left",
+                "type_preset": "h2",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground-heading)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -500,7 +512,7 @@
             }
           },
           "block_order": [
-            "heading_FCM3iE"
+            "subscription_value_prop_FCM3iE"
           ]
         },
         "okendo_reviews_widget_GnH68q": {

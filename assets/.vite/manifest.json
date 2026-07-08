@@ -29,7 +29,7 @@
     ]
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.HSk-l9Bs.css",
+    "file": "wb-main.BuABWKcP.css",
     "name": "main",
     "names": [
       "main.css"
@@ -38,7 +38,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.DSEOk3yO.js",
+    "file": "wb-main.BrUeY2wB.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -79,7 +79,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/cart.ts": {
-    "file": "wb-cart.U1hz2ULN.js",
+    "file": "wb-cart.CIzaus3v.js",
     "name": "cart",
     "src": "frontend/scripts/components/cart.ts",
     "isDynamicEntry": true,
@@ -134,7 +134,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/product-form-bundle.ts": {
-    "file": "wb-product-form-bundle.Bh_vqb2S.js",
+    "file": "wb-product-form-bundle.qijkjyTL.js",
     "name": "product-form-bundle",
     "src": "frontend/scripts/components/product-form-bundle.ts",
     "isDynamicEntry": true,

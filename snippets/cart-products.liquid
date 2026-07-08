@@ -186,15 +186,15 @@
 
                       <div data-key="{{ item.key }}" 
                       data-bundle-id="{{ bundle_id }}" 
-                      class="relative flex p-4">
-                        <div class="w-20">
+                      class="relative flex p-4 gap-2">
+                        <div class="w-12">
                           {{ item.image | image_url: width: 100 | image_tag }}
                         </div>
                         <div class="flex flex-col">
-                          <div class="font-bold">
+                          <div class="font-bold text-bear-black text-sm">
                             {{ item.properties._flavor }}
                           </div>
-                          <div class="flex items-center gap-1 font-bold">
+                          <div class="flex items-center gap-1 font-bold text-xs">
                             <div>
                               <s>{{ compare_at_price }}</s>
                             </div>
@@ -221,44 +221,82 @@
                         endif
                     endif
                 %}
-                 <div data-selector-container class="relative bg-[#F9F3ED] py-3.5 px-4">
-                  <button @click="toggleDropdown($event)" type="button" class="w-full border border-[#E0D2C6] rounded-[5px] cursor-pointer flex items-center justify-between relative p-4 text-left">
-                    <span data-frequency>
-                      {% if has_selling_plan %}
-                        {% render 'icons', icon: 'recurring', class: 'text-sm inline-flex' %} 
-                       {% endif %}
-                        {{ selector_value }}
-                    </span>
-                    {% render 'icons', icon: 'chevron-down', class: 'text-sm' %}
-                  </button>
-                  <div
-                  data-frequency-dropdown
-                  class="absolute top-0 h-full z-2 left-0 w-full right-0 bg-[#F9F3ED] hidden">
-                    {% for selling_plan_group in parent_item.product.selling_plan_groups %}
-                      {% for selling_plan in selling_plan_group.selling_plans %}
-                        {% if selling_plan.name contains '1 Month' or selling_plan.name contains '1 month' %}
-                          <div class="flex items-center justify-between relative p-4">
-                            <div class="flex items-center gap-1">
-                              <input id="selling-plan-{{ selling_plan.id }}" data-selling-plan-name="{{ selling_plan.name }}" @change="changeBundleFrequency($event,'{{ selling_plan.id }}','{{ bundle_id }}')" type="radio" name="selling-plan-allocation" value="{{ selling_plan.id }}"
-                              class="absolute top-0 left-0 h-0 w-0 opacity-0">
-                              <label for="selling-plan-{{ selling_plan.id }}" class="text-espresso">
-                                {% render 'icons', icon: 'recurring', class: 'text-sm inline-flex' %} 
-                                {{ selling_plan.name }}
-                              </label>
-                            </div>
-                          </div>
-                      {% endif %}
-                      {% endfor %}
-                    {% endfor %}
-                    <div class="flex items-center justify-between relative p-4">
-                        <div class="flex items-center gap-1">
-                          <input id="one-time-purchase" data-selling-plan-name="One Time Purchase" @change="changeBundleFrequency($event, 'one-time-purchase', '{{ bundle_id }}')" type="radio" name="selling-plan-allocation" value="one-time-purchase"
-                          class="absolute top-0 left-0 h-0 w-0 opacity-0">
-                          <label for="one-time-purchase" class="text-espresso">One Time Purchase</label>
+                
+                 {% comment %} Frequency Dropdown {% endcomment %}
+
+                 <div data-selector-container class="flex justify-center w-full bg-[#F9F3ED] py-3.5 px-4">
+                    <div
+                        x-data="{
+                            open: false,
+                            toggle() {
+                                if (this.open) {
+                                    return this.close()
+                                }
+
+                                this.$refs.button.focus()
+
+                                this.open = true
+                            },
+                            close(focusAfter) {
+                                if (! this.open) return
+
+                                this.open = false
+
+                                focusAfter && focusAfter.focus()
+                            }
+                        }"
+                        x-on:keydown.escape.prevent.stop="close($refs.button)"
+                        x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
+                        x-id="['dropdown-button']"
+                        class="relative w-full"
+                    >
+                        <!-- Button -->
+                        <button
+                            x-ref="button"
+                            x-on:click="toggle()"
+                            :aria-expanded="open"
+                            :aria-controls="$id('dropdown-button')"
+                            type="button"
+                            class="relative text-left flex items-center whitespace-nowrap justify-between gap-2 py-2 rounded-[5px] w-full border border-[#E0D2C6] px-4"
+                        >
+                        <span data-frequency>
+                        {% if has_selling_plan %}
+                            {% render 'icons', icon: 'recurring', class: 'text-sm inline-flex' %} 
+                          {% endif %}
+                            {{ selector_value }}
+                        </span>
+                            <!-- Heroicon: micro chevron-down -->
+                            {% render 'icons', icon: 'chevron-down', class: 'text-sm' %}
+                        </button>
+
+                        <!-- Panel -->
+                        <div
+                            data-frequency-dropdown
+                            id="frequency-dropdown"
+                            x-ref="panel"
+                            x-show="open"
+                            x-transition.origin.top.left
+                            x-on:click.outside="close($refs.button)"
+                            :id="$id('dropdown-button')"
+                            x-cloak
+                            class="absolute left-0 min-w-48 rounded-lg shadow-sm z-10 origin-top-left bg-white p-1.5 outline-none border border-gray-200 w-full"
+                        >
+                        {% for selling_plan_group in parent_item.product.selling_plan_groups %}
+                            {% for selling_plan in selling_plan_group.selling_plans %}
+                              {% if selling_plan.name contains '1 Month' or selling_plan.name contains '1 month' %}
+                                <a href="#{{ selling_plan.id }}" class="relative px-2 lg:py-1.5 py-2 w-full flex items-center rounded-md transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                      {% render 'icons', icon: 'recurring', class: 'text-sm inline-flex' %} 
+                                      {{ selling_plan.name | split: ' - ' | first }}
+                                </a>
+                              {% endif %}
+                            {% endfor %}
+                          {% endfor %}
+                          <a href="#one-time-purchase" class="relative px-2 lg:py-1.5 py-2 w-full flex items-center rounded-md transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                              One Time Purchase
+                          </a>
                         </div>
                     </div>
                   </div>
-                 </div>
 
                   <div class="flex items-center justify-between relative p-4">
                   <div @click="modifyBundle('{{ collection_handle }}', '{{ parent_item.properties._bundle_name | handleize }}', '{{ parent_item.properties._bundle_id }}')" class="inline-flex items-center gap-1 cursor-pointer text-kraft">

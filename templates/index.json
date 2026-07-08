@@ -45,9 +45,9 @@
         "title_type": "image",
         "title_image": "shopify://shop_images/COFFEE_SHOP_QUALITY_DRINKS_MADE_EASY..svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226599.png",
-        "title_text": "Coffee Shop Quality Drinks Made Easy",
-        "font_size": 24,
-        "font_size_mobile": 24,
+        "title_text": "COFFEE SHOP\\bQUALITY DRINKS\\bMADE EASY",
+        "font_size": 75,
+        "font_size_mobile": 45,
         "subtitle": "For the at-home pajama baristas"
       }
     },
@@ -72,8 +72,9 @@
         "collection_tile_qhQ8LF": {
           "type": "collection_tile",
           "settings": {
-            "url": "",
-            "image": "shopify://shop_images/wb-col-1.png",
+            "url": "shopify://products/extra-strong-cold-brew-on-tap-128oz-straight-black",
+            "image": "shopify://shop_images/Mask_group_30f23a8a-b3e9-4e36-aad6-ded3bcb9f8f1.png",
+            "hover_image": "shopify://shop_images/Mask_group_4695ca2c-feed-41ac-bfe0-32f6adbc7cee.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
             "title": "Cold Brew Boxes",
@@ -85,8 +86,9 @@
         "collection_tile_rCwyCX": {
           "type": "collection_tile",
           "settings": {
-            "url": "",
-            "image": "shopify://shop_images/wb-col-2.png",
+            "url": "shopify://products/cold-brew-coffee-6-cartons-32oz-caramel",
+            "image": "shopify://shop_images/Mask_group-1_afb629f4-62b3-45c7-9f3c-fec184d45059.png",
+            "hover_image": "shopify://shop_images/Mask_group-1_efd91f61-d803-4a91-bbc9-5b1ba9ed80fb.png",
             "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
             "mobile_image_alt": "",
             "title": "Multi-Serve Cartons",
@@ -97,12 +99,13 @@
         "collection_tile_RwjxDn": {
           "type": "collection_tile",
           "settings": {
-            "url": "",
-            "image": "shopify://shop_images/wb-col-3.png",
+            "url": "shopify://collections/test-single-serve-12-cartons-11oz",
+            "image": "shopify://shop_images/Mask_group-2_d98d8fdc-e384-4898-9bca-98d2dc42c8e6.png",
+            "hover_image": "shopify://shop_images/Mask_group-2_b38ea12b-556f-43a2-9c52-b5f06f96a9ac.png",
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
             "mobile_image_alt": "",
             "title": "Single Serves",
-            "subtitle": "Perfect for mornings on the move and afternoons out",
+            "subtitle": "Perfect for mornings on the move\\band afternoons out",
             "accent_text": ""
           }
         }
@@ -116,8 +119,8 @@
       "settings": {
         "color_scheme": "scheme-2",
         "title_type": "image",
-        "title": "",
-        "font_size": 24,
+        "title": "GO BIG. OR GO BIGGER.",
+        "font_size": 46,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/GO_BIG._OR_GO_BIGGER..svg",
@@ -169,12 +172,13 @@
         "background_image_mobile": "shopify://shop_images/Group_1327226600.png",
         "floating_image": "shopify://shop_images/LatteHands_Badge.png",
         "floating_image_mobile": "shopify://shop_images/Mobile_Hand.png",
+        "badge": "shopify://shop_images/NEW_BADGE_3c9b0304-61d1-4e60-8f8d-7999b8b005cd.svg",
         "title_type": "image",
-        "title": "",
-        "font_size": 24,
-        "font_size_mobile": 24,
-        "title_image": "shopify://shop_images/lattes-got-benefits.svg",
-        "title_image_mobile": "shopify://shop_images/Group_1327226608_9dce444c-5629-4918-85ff-0a441448ddb9.png",
+        "title": "THIS LATTE'S\\bGOT BENEFITS",
+        "font_size": 70,
+        "font_size_mobile": 45,
+        "title_image": "shopify://shop_images/Group_1327226591.svg",
+        "title_image_mobile": "shopify://shop_images/Group_1327226591.svg",
         "title_alt": "This latte's got benefits",
         "button_label": "Shop Lattes",
         "button_link": "shopify://collections/lattes"
@@ -255,9 +259,9 @@
         "background_image": "shopify://shop_images/Unlock_Background.jpg",
         "background_image_mobile": "shopify://shop_images/Group_1327226600_552c72fa-3873-4ef2-bb39-0b50a3ec9db2.png",
         "title_type": "image",
-        "title": "",
-        "font_size": 24,
-        "font_size_mobile": 24,
+        "title": "OUR MEMBERS UNLOCK\\bBETTER PRICES WITH EVERY SIP",
+        "font_size": 43,
+        "font_size_mobile": 33,
         "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_BETTER_PRICES_WITH_EVERY_SIP.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226609.svg",
         "title_alt": "Our members unlock better prices with every sip",
@@ -338,8 +342,8 @@
       "settings": {
         "color_scheme": "",
         "title_type": "image",
-        "title": "",
-        "font_size": 24,
+        "title": "A MESSAGE FROM\\bOUR FOUNDERS",
+        "font_size": 54,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589_62e3d5a1-7d02-4e2b-bbe7-4026e639b7de.svg",
@@ -349,7 +353,7 @@
         "video": "shopify://files/videos/wb-about.mp4",
         "signature_image": "shopify://shop_images/signatures_1.png",
         "title_badge": "shopify://shop_images/WB_TAG_ca8ddfb1-2800-48d0-8ac6-bea8ab75af42.svg",
-        "badge": "shopify://shop_images/Group_1327226585.svg"
+        "badge": "shopify://shop_images/Group_1327226585_3c795ecf-5307-404f-9d7d-965f8cf2b5c2.png"
       }
     }
   },

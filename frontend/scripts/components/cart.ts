@@ -17,7 +17,8 @@ export default (Alpine: AlpineType) => {
     activeBundleDetails: {},
     progressBarWidth: 0,
     activeBundleName: null,
-    
+    tempBundleIndex: 0,
+
     get state() {
       return Alpine.store('cart').state;
     },
@@ -28,6 +29,12 @@ export default (Alpine: AlpineType) => {
 
     get cart() {
       return Alpine.store('cart').cart;
+    },
+
+    get tempBundleCount() {
+      return this.tempBundle.reduce((total, item) => {
+        return total + Number(item.quantity || 0);
+      }, 0);
     },
 
     set cart(value) {
@@ -45,6 +52,7 @@ export default (Alpine: AlpineType) => {
 
       this.bundleDetails = JSON.parse(document.getElementById('bundleDetails')?.textContent || '{}');
       console.log('bundleDetails', this.bundleDetails);
+      console.log('tempBundleCount', this.tempBundleCount);
     },
 
     async refreshCart() {
@@ -57,7 +65,7 @@ export default (Alpine: AlpineType) => {
 
     async modifyBundle(collectionHandle, bundleName, bundleId) {
       this.activeBundleName = bundleName;
-      await this.hydrateModifyBundle(collectionHandle, bundleId);
+      await this.hydrateModifyBundle(collectionHandle, bundleName, bundleId);
       this.setupProgressBar(bundleName);
 
     
@@ -187,7 +195,19 @@ export default (Alpine: AlpineType) => {
       this.state = state;
     },
 
-    async hydrateModifyBundle(collectionHandle, bundleId) {
+    getIndexFromCount(count) {
+      if (count <= 0) return 0;
+      return count < 3 ? count - 1 : 2;
+    },
+
+    hasSellingPlan(bundleId) {
+      if (document.querySelector(`[data-bundle-id="${bundleId}"]`).checked) {
+        return true;
+      }
+      return false;
+    },
+
+    async hydrateModifyBundle(collectionHandle, bundleName, bundleId) {
       const flavorCollection = await this._getFlavorCollection(collectionHandle);
 
       this.bundleItems = this.cart.items
@@ -196,18 +216,19 @@ export default (Alpine: AlpineType) => {
         .map(item => ({ ...item }));
 
       this.tempBundle = flavorCollection.map(product => {
-        console.log('product', product);
 
         const cartItem = this.bundleItems.find(item =>
           Number(item.product_id) === Number(product.id)
         );
+
+        const price = this.bundleItems[0].price
 
         return {
           id: product.id,
           variantId: product.variants?.[0]?.id,
           key: cartItem?.key ?? null,
           title: product.title,
-          price: product.variants?.[0]?.price ?? product.price,
+          price: price,
           image: product.images?.[0]?.src ?? '',
           quantity: cartItem?.quantity ?? 0,
           bundleId,
@@ -217,6 +238,11 @@ export default (Alpine: AlpineType) => {
           cartVariantId: cartItem?.variant_id,
         };
       });
+
+      this.tempBundleIndex = this.getIndexFromCount(this.tempBundleCount);
+
+      // change price based on index (its an object)
+      this.tempBundle[this.tempBundleIndex].price = this.bundleDetails[this.activeBundleName].bundle_products[this.tempBundleIndex].price;
 
       this.bundleChanged = false;
 
@@ -253,6 +279,7 @@ export default (Alpine: AlpineType) => {
       this.tempBundle = [...this.tempBundle];
       this.bundleChangesDetected();
       this.setupProgressBar(this.activeBundleName);
+      this.recalculateItemPrices()
     },
 
     bundleIncrement(id) {
@@ -264,6 +291,16 @@ export default (Alpine: AlpineType) => {
       this.tempBundle = [...this.tempBundle];
       this.bundleChangesDetected();
       this.setupProgressBar(this.activeBundleName);
+      this.recalculateItemPrices()
+    },
+
+    recalculateItemPrices() {
+
+      this.tempBundle.forEach(item => {
+        const variantIndex = this.getIndexFromCount(this.tempBundleCount);
+        const itemPrice = item.variants?.[variantIndex]?.selling_plan_price ?? item.variants?.[variantIndex]?.price;
+        item.price = itemPrice;
+      });
     },
 
     bundleChangesDetected() {

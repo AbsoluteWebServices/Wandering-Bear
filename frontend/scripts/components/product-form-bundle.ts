@@ -125,6 +125,7 @@ export default (Alpine: AlpineType) => {
                     _bundle_size: this.bundleSize,
                     _flavor_name: product.flavor_name ? product.flavor_name : '',
                     _bundle_name: product.bundle_name ? product.bundle_name : '',
+                    _product_badge: product.badge ? product.badge : '',
                   },
                 }
               })
