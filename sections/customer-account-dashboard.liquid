@@ -61,7 +61,8 @@
     assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service|Early access to sales and launches|VIP Anniversary rewards' | split: '|'
   endif
 
-  assign card_bg = 'background-color: var(--color-brand-light_cream);'
+  # Figma: every dashboard card — foam #FEF8F3, 10px radius, drop-shadow 0/4/4/0 #000 25%.
+  assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
   assign membership_url = routes.root_url | append: '/pages/membership'
 
   # t filter is not evaluated inside render arguments — translate first.
@@ -97,8 +98,8 @@
 
     {%- comment -%} ---------- Row 1: FREE → wide YOUR CREDIT (no autoship); VIP/Elite → autoship + compact credit ---------- {%- endcomment -%}
     {%- if is_free -%}
-    <div class="relative rounded-[8px] px-6 py-7 md:!px-10 mb-4 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between bg-foam">
-      <a href="#" class="absolute top-5 right-6 md:!right-10 font-kurdis-semi-condensed font-bold text-[11px] leading-none underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+    <div class="relative {{ card }} px-6 py-7 md:!px-10 mb-4 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
+      <a href="#" class="absolute top-5 right-6 md:!right-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
       <div class="flex-1 pt-5 md:!pt-0">
         <div class="flex items-end !gap-3">
           <span class="font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
@@ -114,7 +115,7 @@
 
       {%- if has_autoship -%}
         {%- comment -%} Next autoship order (MOCK — Stay AI) {%- endcomment -%}
-        <div class="flex-1 rounded-[8px] p-5 md:!p-6" style="{{ card_bg }}">
+        <div class="flex-1 {{ card }} p-5 md:!p-6">
           <div class="flex items-center justify-between mb-3">
             <span class="body font-bold text-espresso">{{ 'customer.dashboard.next_autoship' | t }}</span>
             <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[10px] leading-none text-espresso" style="background-color: #BFD7E9;">{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}</span>
@@ -139,7 +140,7 @@
 
       {%- comment -%} Credits (balance native; expiry/history MOCK; hidden for FREE) {%- endcomment -%}
       {%- if show_credit -%}
-      <div class="flex-1 rounded-[8px] p-5 md:!p-6 flex flex-col justify-between" style="{{ card_bg }}">
+      <div class="flex-1 {{ card }} p-5 md:!p-6 flex flex-col justify-between">
         <div class="relative mb-4">
           <a href="#" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
           <span class="absolute left-0 top-1/2 -translate-y-1/2 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
@@ -155,7 +156,7 @@
     {%- endif -%}
 
     {%- comment -%} ---------- Row 2: Membership tier (+ Progress unless Elite) ---------- {%- endcomment -%}
-    <div class="rounded-[8px] p-5 md:!p-6 mb-4" style="{{ card_bg }}">
+    <div class="{{ card }} p-5 md:!p-6 mb-4">
       <div class="flex flex-col {% unless is_elite %}md:!flex-row{% endunless %} !gap-6">
 
         {%- comment -%} Tier column {%- endcomment -%}
@@ -204,7 +205,7 @@
     </div>
 
     {%- comment -%} ---------- Order history (native) ---------- {%- endcomment -%}
-    <div class="rounded-[8px] p-5 md:!p-6 mb-8" style="{{ card_bg }}">
+    <div class="{{ card }} p-5 md:!p-6 mb-8">
       <div class="flex items-center justify-between mb-4">
         <div>
           <div class="tag text-espresso uppercase">{{ 'customer.dashboard.order_history' | t }}</div>
@@ -293,7 +294,7 @@
       <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="120" height="120"
            class="absolute top-0 left-0 z-20 w-[76px] md:w-[118px] h-auto -translate-x-[20%] -translate-y-[20%] rotate-[-12deg]">
       {%- comment -%} sky/cloud background; card height tracks the image aspect (smd+); transparent top shows cream {%- endcomment -%}
-      <div class="relative flex flex-col items-center justify-center overflow-hidden rounded-lg text-center px-6 py-7 smd:py-4 smd:aspect-[782/161] bg-cover bg-top bg-no-repeat bg-(--color-brand-light_cream)"
+      <div class="relative flex flex-col items-center justify-center overflow-hidden rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] text-center px-6 py-7 smd:py-4 smd:aspect-[782/161] bg-cover bg-top bg-no-repeat bg-(--color-brand-light_cream)"
            style="background-image: url({{ 'account-contact-clouds.png' | asset_url }});">
         <h2 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[24px] md:text-[28px] mb-2">{{ 'customer.dashboard.contact_title' | t }}</h2>
         <p class="body text-espresso mb-4">{{ 'customer.dashboard.contact_subtext' | t }}</p>
