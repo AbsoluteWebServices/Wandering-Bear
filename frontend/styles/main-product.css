@@ -86,32 +86,40 @@ input[name="purchase_option"]:checked + label {
 }
 
 .flavor-container {
-    overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-espresso) rgba(67, 26, 3, 0.2);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.flavor-container::-webkit-scrollbar {
-    width: 8px;
-    -webkit-appearance: none;
+.flavor-container .os-scrollbar {
+    --os-size: 8px;
+    --os-padding-axis: 0px;
+    --os-padding-perpendicular: 0px;
+    --os-track-bg: rgba(67, 26, 3, 0.2);
+    --os-handle-bg: var(--color-espresso);
+    --os-handle-bg-hover: var(--color-espresso);
+    --os-handle-bg-active: var(--color-espresso);
+    --os-track-border-radius: 999px;
+    --os-handle-border-radius: 999px;
 }
 
-.flavor-container::-webkit-scrollbar-track {
+.flavor-container .os-scrollbar-track {
     background: rgba(67, 26, 3, 0.2);
     border-radius: 999px;
 }
 
-.flavor-container::-webkit-scrollbar-thumb {
+.flavor-container .os-scrollbar-handle {
     background: var(--color-espresso);
     border-radius: 999px;
-
-    /* makes it render more solid on macOS */
-    border: 2px solid transparent;
-    background-clip: padding-box;
 }
 
 .review-heading h2 {
     font-size: 60px !important;
+}
+
+.flavor-container [data-overlayscrollbars-viewport] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
 }
 
 @media screen and (max-width: 1023px) {
@@ -127,6 +135,10 @@ input[name="purchase_option"]:checked + label {
     .subscription-value-props ul {
         gap: 4px;
         padding-inline: 6px;
+    }
+
+    .flavor-container .os-scrollbar {
+        --os-size: 5px;
     }
 }
 

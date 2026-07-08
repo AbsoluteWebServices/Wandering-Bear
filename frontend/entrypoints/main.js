@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import 'overlayscrollbars/overlayscrollbars.css';
 
 import '../styles/typography.css';
 import '../styles/colors.css';
@@ -48,6 +49,7 @@ const init = async () => {
     const { default: WaysToEnjoy } = await import("~/scripts/components/ways-to-enjoy")
     const { default: ProductValueProps } = await import("~/scripts/components/productValueProps")
     const { default: registerProductsSlider } = await import("~/scripts/components/productsSlider")
+    const { default: OverlayScrollbar } = await import("~/scripts/components/overlayScrollbar")
 
     Alpine.plugin(morph)
 
@@ -68,6 +70,7 @@ const init = async () => {
     Alpine.plugin(HowToMix)
     Alpine.plugin(WaysToEnjoy)
     Alpine.plugin(ProductValueProps)
+    Alpine.plugin(OverlayScrollbar)
 
     Alpine.start()
     registerProductsSlider()
@@ -79,4 +82,5 @@ document.addEventListener("mousemove", init, { once: true })
 document.addEventListener("scroll", init, { once: true })
 document.addEventListener("touchstart", init, { once: true })
 document.addEventListener("keydown", init, { once: true })
+document.addEventListener("DOMContentLoaded", init, { once: true })
 
