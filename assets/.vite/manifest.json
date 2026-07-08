@@ -1,17 +1,29 @@
 {
+  "../../../node_modules/.pnpm/@alpinejs+morph@3.15.12/node_modules/@alpinejs/morph/dist/module.esm.js": {
+    "file": "wb-module.esm.C5Cm1j7-.js",
+    "name": "module.esm",
+    "src": "../../../node_modules/.pnpm/@alpinejs+morph@3.15.12/node_modules/@alpinejs/morph/dist/module.esm.js",
+    "isDynamicEntry": true
+  },
+  "../../../node_modules/.pnpm/alpinejs@3.15.12/node_modules/alpinejs/dist/module.esm.js": {
+    "file": "wb-module.esm.CsSrxHv5.js",
+    "name": "module.esm",
+    "src": "../../../node_modules/.pnpm/alpinejs@3.15.12/node_modules/alpinejs/dist/module.esm.js",
+    "isDynamicEntry": true
+  },
   "_wb-events.CKdcfN1K.js": {
     "file": "wb-events.CKdcfN1K.js",
     "name": "events"
   },
-  "_wb-swiper.CA8E8q-A.js": {
-    "file": "wb-swiper.CA8E8q-A.js",
+  "_wb-swiper.BPSVRiOJ.js": {
+    "file": "wb-swiper.BPSVRiOJ.js",
     "name": "swiper",
     "imports": [
       "frontend/entrypoints/main.js"
     ]
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.Bwg_T5va.css",
+    "file": "wb-main.Cj3Vjvel.css",
     "name": "main",
     "names": [
       "main.css"
@@ -20,13 +32,13 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.BThf3LUs.js",
+    "file": "wb-main.CWRjxT_K.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
     "dynamicImports": [
-      "node_modules/.pnpm/alpinejs@3.15.12/node_modules/alpinejs/dist/module.esm.js",
-      "node_modules/.pnpm/@alpinejs+morph@3.15.12/node_modules/@alpinejs/morph/dist/module.esm.js",
+      "../../../node_modules/.pnpm/alpinejs@3.15.12/node_modules/alpinejs/dist/module.esm.js",
+      "../../../node_modules/.pnpm/@alpinejs+morph@3.15.12/node_modules/@alpinejs/morph/dist/module.esm.js",
       "frontend/scripts/components/swiperSlider.ts",
       "frontend/scripts/components/videoPlayer.ts",
       "frontend/scripts/components/header.ts",
@@ -47,7 +59,7 @@
       "frontend/scripts/components/productsSlider.ts"
     ],
     "css": [
-      "wb-main.BFH_iTRq.css"
+      "wb-main.BMV8ZJrL.css"
     ]
   },
   "frontend/scripts/components/accordion.ts": {
@@ -102,13 +114,13 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "wb-media-gallery-bundle.CqwXVCWo.js",
+    "file": "wb-media-gallery-bundle.CDtO8ZhF.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
     "imports": [
       "frontend/entrypoints/main.js",
-      "_wb-swiper.CA8E8q-A.js"
+      "_wb-swiper.BPSVRiOJ.js"
     ]
   },
   "frontend/scripts/components/modal.ts": {
@@ -142,23 +154,23 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/productsSlider.ts": {
-    "file": "wb-productsSlider.Dm46uLGi.js",
+    "file": "wb-productsSlider.D7IVJwNX.js",
     "name": "productsSlider",
     "src": "frontend/scripts/components/productsSlider.ts",
     "isDynamicEntry": true,
     "imports": [
       "frontend/entrypoints/main.js",
-      "_wb-swiper.CA8E8q-A.js"
+      "_wb-swiper.BPSVRiOJ.js"
     ]
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.GFjUp-Zm.js",
+    "file": "wb-swiperSlider.CmMAMBGk.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,
     "imports": [
       "frontend/entrypoints/main.js",
-      "_wb-swiper.CA8E8q-A.js"
+      "_wb-swiper.BPSVRiOJ.js"
     ]
   },
   "frontend/scripts/components/tooltip.ts": {
@@ -177,18 +189,6 @@
     "file": "wb-ways-to-enjoy.Cmbafzdl.js",
     "name": "ways-to-enjoy",
     "src": "frontend/scripts/components/ways-to-enjoy.ts",
-    "isDynamicEntry": true
-  },
-  "node_modules/.pnpm/@alpinejs+morph@3.15.12/node_modules/@alpinejs/morph/dist/module.esm.js": {
-    "file": "wb-module.esm.-9GTL5jr.js",
-    "name": "module.esm",
-    "src": "node_modules/.pnpm/@alpinejs+morph@3.15.12/node_modules/@alpinejs/morph/dist/module.esm.js",
-    "isDynamicEntry": true
-  },
-  "node_modules/.pnpm/alpinejs@3.15.12/node_modules/alpinejs/dist/module.esm.js": {
-    "file": "wb-module.esm.CG1dmWgH.js",
-    "name": "module.esm",
-    "src": "node_modules/.pnpm/alpinejs@3.15.12/node_modules/alpinejs/dist/module.esm.js",
     "isDynamicEntry": true
   }
 }

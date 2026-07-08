@@ -7,8 +7,8 @@
   assign path = entry | replace: '~/', '../' | replace: '@/', '../'
 %}
 {% if path == "/frontend/entrypoints/main.css" or path == "main.css" %}
-  {{ 'wb-main.Bwg_T5va.css' | asset_url | stylesheet_tag: preload: preload_stylesheet }}
+  {{ 'wb-main.Cj3Vjvel.css' | asset_url | stylesheet_tag: preload: preload_stylesheet }}
 {% elsif path == "/frontend/entrypoints/main.js" or path == "main.js" %}
-  <script src="{{ 'wb-main.BThf3LUs.js' | asset_url }}" type="module" crossorigin="anonymous"></script>
-  {{ 'wb-main.BFH_iTRq.css' | asset_url | stylesheet_tag: preload: preload_stylesheet }}
+  <script src="{{ 'wb-main.CWRjxT_K.js' | asset_url }}" type="module" crossorigin="anonymous"></script>
+  {{ 'wb-main.BMV8ZJrL.css' | asset_url | stylesheet_tag: preload: preload_stylesheet }}
 {% endif %}
