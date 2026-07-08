@@ -1,0 +1,31 @@
+{%- doc -%}
+  Customer account dashboard (classic accounts). Thin driver: resolves the
+  customer's tier + autoship state, then renders snippets/customer-dashboard,
+  which shifts blocks per state (VIP / Elite / Free no-autoship / Free cancelled).
+
+  Data: tier + credits = native (Inveterate tags + metafield). Autoship state is
+  a placeholder until the Stay AI worker ships — replace `real_autoship` below.
+{%- enddoc -%}
+{%- liquid
+  capture membership_tier
+    render 'customer-membership-tier'
+  endcapture
+  assign membership_tier = membership_tier | strip
+  assign real_tier = membership_tier | default: 'FREE'
+
+  assign credits_earned = customer.metafields.inveterate.credits_earned | default: 0
+  assign credits_formatted = credits_earned | money_without_trailing_zeros
+
+  # TODO worker (/apps/wb/subscriptions): real autoship state (none|active|cancelled).
+  # Mock: members have an active autoship, FREE has none.
+  assign real_autoship = 'none'
+  unless real_tier == 'FREE'
+    assign real_autoship = 'active'
+  endunless
+-%}
+
+<section class="w-full" style="background-color: var(--color-brand-beige);">
+  <div class="account-container py-8 md:!py-12">
+    {%- render 'customer-dashboard', tier: real_tier, autoship_state: real_autoship, credits_formatted: credits_formatted -%}
+  </div>
+</section>

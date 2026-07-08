@@ -1,0 +1,28 @@
+{%- doc -%}
+  Outputs the customer's Inveterate membership tier as a single word:
+  FREE | VIP | ELITE (or empty string for non-members / logged-out).
+
+  Single source of truth for the `inveterate-tier#...` tag mapping.
+  Because `render` runs in an isolated scope, capture the output in the caller:
+
+    {%- capture membership_tier -%}{%- render 'customer-membership-tier' -%}{%- endcapture -%}
+    {%- assign membership_tier = membership_tier | strip -%}
+
+  @param {object} [customer] - Optional customer override (defaults to global `customer`).
+{%- enddoc -%}
+{%- liquid
+  assign wb_customer = customer | default: customer
+  assign tier = ''
+  for tag in wb_customer.tags
+    if tag contains 'inveterate-tier#72ccf378'
+      assign tier = 'VIP'
+    elsif tag contains 'inveterate-tier#dc38b982'
+      assign tier = 'ELITE'
+    elsif tag contains 'inveterate-tier#99a431e2'
+      assign tier = 'ELITE'
+    elsif tag contains 'inveterate-tier#c4057f2f'
+      assign tier = 'FREE'
+    endif
+  endfor
+  echo tier
+-%}

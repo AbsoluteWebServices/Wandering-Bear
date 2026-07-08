@@ -1,0 +1,28 @@
+{%- doc -%}
+  Themed form input for customer account forms (light-cream field, brand type).
+
+  @param {string} name - Input name attribute.
+  @param {string} label - Accessible label / placeholder text.
+  @param {string} [type] - Input type (default: text).
+  @param {string} [id] - Input id (default: name).
+  @param {string} [value] - Prefilled value.
+  @param {string} [autocomplete] - autocomplete token.
+  @param {boolean} [required] - Marks the field required.
+  @param {string} [class] - Extra wrapper classes.
+{%- enddoc -%}
+{%- assign input_type = type | default: 'text' -%}
+{%- assign input_id = id | default: name -%}
+<div class="w-full {% if class %}{{ class }}{% endif %}">
+  <label for="{{ input_id }}" class="sr-only">{{ label }}</label>
+  <input
+    type="{{ input_type }}"
+    id="{{ input_id }}"
+    name="{{ name }}"
+    {% if value %}value="{{ value | escape }}"{% endif %}
+    {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+    {% if required %}required aria-required="true"{% endif %}
+    placeholder="{{ label }}"
+    class="body w-full h-[51px] rounded-[5px] px-5 text-espresso placeholder:text-espresso/60 border border-transparent focus:border-espresso focus:outline-none transition-colors"
+    style="background-color: var(--color-brand-light_cream);"
+  >
+</div>

@@ -1,0 +1,53 @@
+{%- doc -%}
+  Customer registration section (classic accounts).
+  Figma: WB x AW Ancillary Pages — New Account 14:106 (mobile 14:317).
+{%- enddoc -%}
+{%- liquid
+  # `t` is not evaluated inside render arguments — translate first.
+  assign t_first = 'customer.register.first_name' | t
+  assign t_last = 'customer.register.last_name' | t
+  assign t_email = 'customer.register.email' | t
+  assign t_password = 'customer.register.password' | t
+  assign t_submit = 'customer.register.submit' | t
+-%}
+<section class="w-full" style="background-color: var(--color-brand-beige);">
+  <div class="account-container py-14 md:!py-20">
+    <h1 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[45px] md:!text-[60px] leading-none text-center mb-8 md:!mb-10">
+      {{ 'customer.register.title' | t }}
+    </h1>
+    <div class="account-form">
+      {%- form 'create_customer', novalidate: 'novalidate', class: 'flex flex-col !gap-4' -%}
+        {%- if form.errors -%}
+          <div class="body text-sunrise_orange" role="alert">{{ form.errors | default_errors }}</div>
+        {%- endif -%}
+
+        {%- render 'customer-input',
+          name: 'customer[first_name]', label: t_first,
+          id: 'RegisterFirstName', autocomplete: 'given-name', required: true -%}
+        {%- render 'customer-input',
+          name: 'customer[last_name]', label: t_last,
+          id: 'RegisterLastName', autocomplete: 'family-name', required: true -%}
+
+        {%- render 'customer-input',
+          name: 'customer[email]', type: 'email', label: t_email,
+          id: 'RegisterEmail', autocomplete: 'email', required: true -%}
+
+        {%- render 'customer-input',
+          name: 'customer[password]', type: 'password', label: t_password,
+          id: 'RegisterPassword', autocomplete: 'new-password', required: true -%}
+
+        {%- render 'customer-form-button',
+          label: t_submit, style: 'secondary-gold',
+          class: '!w-full !h-[43px] !text-[20px] mt-1' -%}
+      {%- endform -%}
+
+      <div class="flex flex-row justify-between items-center mt-4">
+        <div class="flex flex-row items-center !gap-1">
+          <span class="tag text-espresso">{{ 'customer.register.have_account' | t }}</span>
+          <a href="{{ routes.account_login_url }}" class="tag text-espresso hover-underline">{{ 'customer.register.sign_in' | t }}</a>
+        </div>
+        <a href="{{ shop.privacy_policy.url | default: '/policies/privacy-policy' }}" class="tag text-espresso hover-underline">{{ 'customer.register.privacy' | t }}</a>
+      </div>
+    </div>
+  </div>
+</section>

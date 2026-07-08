@@ -1,3 +1,4 @@
+@layer horizon-base {
 * {
   box-sizing: border-box;
 }
@@ -4186,4 +4187,6 @@ product-recommendations:has([data-has-recommendations='false']) {
     opacity: var(--atc-opacity, 1);
     translate: 0px var(--atc-destination, 0px);
   }
+}
+
 }
