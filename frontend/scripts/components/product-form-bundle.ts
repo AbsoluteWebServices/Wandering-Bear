@@ -91,16 +91,17 @@ export default (Alpine: AlpineType) => {
                 return 0;
             }
 
-            const bundleSize = (this.bundleSize <= 2) ? (this.bundleSize - 1) : 2;
-            const originalPrice = this.selectedProduct?.variants[0].price;
-            const newSellingPlanPrice = this.selectedProduct?.variants[bundleSize]?.selling_plan_price;
-            const savingsAmountAutoship = this.bundleSize * (originalPrice - newSellingPlanPrice);
+            return this.assignedBundleProducts.reduce((acc: number, product: any) => {
+              const originalPrice = Number(product.originalPrice || 0);
+              const sellingPlanPrice = Number(product.sellingPlanPrice || 0);
+              const quantity = Number(product.quantity || 0);
 
-            return savingsAmountAutoship;
+              return acc + (originalPrice - sellingPlanPrice) * quantity;
+            }, 0);
         },
 
         get currentSavingsAmountFormatted() {
-            return this._formatPrice(this.currentSavingsAmount, { withoutCents: true });
+            return this._formatPrice(this.currentSavingsAmount);
         },
 
         get parentProduct() {

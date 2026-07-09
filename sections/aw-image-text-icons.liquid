@@ -25,7 +25,7 @@
 {% endcapture %}
 
 <div class="wb-flex relative pt-0 pb-[54px] smd:pt-13.5 md:pb-11 md:pt-8" style="background-color: {{ background_color }}">
-    <div class="grid !grid-cols-2 max-w-[1092px] w-full mx-auto">
+    <div class="grid smd:!grid-cols-2 max-w-[1092px] w-full mx-auto">
         <div class="wb-flex mx-auto relative z-[2] justify-center order-2 md:!order-1 pt-[30px] md:!pt-0 px-6 md:!px-0 md:pb-14">
             <div class="wb-flex flex-col justify-center items-start mx-auto max-w-[440px]">
                 {% if title_type == 'image' %}
@@ -43,7 +43,7 @@
                 {{ value_props }}
             </div>
             </div>
-            <div class="order-1 md:order-2! md:max-w-[500px] md:ml-auto">
+            <div class="order-1 smd:order-2! smd:pr-7.5 lg:pr-0 md:max-w-[500px] md:ml-auto">
                 {% if large_image != blank %}
                     {% render 'picture', source: large_image, tablet_source: large_image_tablet, mobile_source: large_image_mobile, class: 'w-full h-full', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
                 {% endif %}

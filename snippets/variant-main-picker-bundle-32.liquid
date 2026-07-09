@@ -95,7 +95,7 @@
 {% endstyle %}
 
 
-<div class="flex flex-col mb-6{% if template.suffix == '32oz' %} gap-4.5{% else %} gap-2.5{% endif %}">
+<div class="flex flex-col {% if template.suffix == '32oz' %} gap-3.5 md:gap-4.5 mb-1 md:mb-6{% else %} gap-2.5 mb-6{% endif %}">
     <div class="flex flex-col">
     <span class="font-bold font-gothic_condensed text-bear-black block uppercase mb-1.5">Choose Quantity</span>
         <div class="wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px]">
@@ -167,7 +167,7 @@
     x-cloak class="wb-flex justify-center gap-2 lg:gap-2.25! h-[87px] max-w-full">
       <template x-for="(product, index) in bundleSlots" :key="index">
         <div class="flex flex-col gap-2.5 py-5 px-1 md:!px-3 justify-center items-center border border-dashed border-[#CFBDB1] rounded-[5px] !max-w-[50px] lg:!max-w-[62px] !aspect-[51/72] lg:!aspect-[62/87]"
-        :class="{ 'bg-[#F9F3ED] px-1! md:px-2! py-1.5! md:pt-3! md:pb-1! border-solid! border-[#F9F3ED]!': product }"
+        :class="{ 'bg-[#F9F3ED] px-1! md:px-2! pt-2.5! pb-1.5! md:pt-3! md:pb-1! border-solid! border-[#F9F3ED]!': product }"
         >
           <template x-if="product">
             <div class="h-full wb-flex flex-col justify-center items-center gap-2">
@@ -179,7 +179,7 @@
                 width="24"
                 height="48"
               >
-              <span class="font-kurdis-semi-condensed whitespace-nowrap text-[10px] text-bear-black font-bold text-center mx-auto w-fit block" x-text="product.flavorName"></span>
+              <span class="font-kurdis-semi-condensed text-[10px] text-bear-black font-bold text-center mx-auto w-fit block md:whitespace-nowrap" x-text="product.flavorName"></span>
             </div>
           </template>
     

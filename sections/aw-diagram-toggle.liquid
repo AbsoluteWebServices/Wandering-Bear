@@ -1,25 +1,29 @@
 
-{% assign class = '' %}
 {% liquid
+    assign class = ''
     assign title_type = section.settings.title_type
     assign title = section.settings.title
     assign title_alt = section.settings.title_alt
     assign title_image = section.settings.title_image
     assign title_image_mobile = section.settings.title_image_mobile
 %}
-<div x-data="diagramToggle(0)">
+
+<div
+    x-data="diagramToggle(0)"
+    class="{% if template.suffix == '32oz' %}mt-3{% endif %}"
+>
     <div
-    x-ref="toggle"
-    @pointerdown="startDrag($event)"
-    @pointermove.window="onDrag($event)"
-    @pointerup.window="endDrag()"
-    @pointercancel.window="endDrag()"
-    @click.window="endDrag()"
-    class="wb-flex relative user-select-none touch-pan-y select-none flex-col mx-auto relative z-[3] items-center justify-center"
+        x-ref="toggle"
+        @pointerdown="startDrag($event)"
+        @pointermove.window="onDrag($event)"
+        @pointerup.window="endDrag()"
+        @pointercancel.window="endDrag()"
+        @click.window="endDrag()"
+        class="wb-flex relative user-select-none touch-pan-y select-none flex-col mx-auto relative z-[3] items-center justify-center"
     >
         {% if title_type == 'image' %}
             {% if title_image != blank %}
-                <div class="max-w-[442px] w-full mx-auto lg:!mb-5">
+                <div class="{% if template.suffix == '32oz' %}max-w-[600px]{% else %}max-w-[442px]{% endif %} w-full mx-auto {% if template.suffix == '32oz' %}lg:mb-0.5!{% else %}lg:mb-5!{% endif %}">
                     {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                 </div>
             {% endif %}
@@ -30,24 +34,24 @@
         {% endif %}
 
         <div
-        class="relative wb-flex flex-row gap-4 bg-foam border-2 border-espresso rounded-[30px] p-2 w-fit"
-        x-ref="toggle"
-      >
-        <div
-          class="absolute top-2 bottom-2 rounded-[25px] bg-[#E6CDB7] transition-all duration-300 ease-out"
-          :style="indicatorStyle"
-        ></div>
-      
-        {% for block in section.blocks %}
-          <button
-            class="relative z-[2] cursor-pointer py-3 px-5 rounded-[25px] uppercase font-kurdis-semi-condensed font-bold text-espresso text-[15px] leading-[120%]"
-            data-toggle-button
-            @click="setState({{ forloop.index0 }})"
-          >
-            {{ block.settings.toggle_title }}
-          </button>
-        {% endfor %}
-      </div>
+            class="relative wb-flex flex-row gap-0.5 bg-foam border border-espresso rounded-[30px] py-1.5 px-2 w-fit"
+            x-ref="toggle"
+        >
+            <div
+            class="absolute top-1.5 bottom-1.5 rounded-[25px] bg-[#E6CDB7] transition-all duration-300 ease-out"
+            :style="indicatorStyle"
+            ></div>
+
+            {% for block in section.blocks %}
+            <button
+                class="relative z-[2] cursor-pointer py-3 px-5 rounded-[25px] uppercase font-gothic_condensed font-extrabold text-espresso text-[15px] leading-[120%] min-w-[140px]"
+                data-toggle-button
+                @click="setState({{ forloop.index0 }})"
+            >
+                {{ block.settings.toggle_title }}
+            </button>
+            {% endfor %}
+        </div>
     </div>
 
     <div x-ref="content" class="relative z-[1] overflow-hidden"></div>        
@@ -75,39 +79,62 @@
                         assign icon_key = 'icon_' | append: i
                         assign title_key = 'title_' | append: i
                         assign description_key = 'description_' | append: i
-                    
+
                         assign icon = block_settings[icon_key]
                         assign title = block_settings[title_key]
                         assign description = block_settings[description_key]
                     %}
-            
+
                     {% case forloop.index %}
                         {% when 1 %}
-                            {% assign class = 'mt-[53px] mb-6 lg:!mb-0 lg:!mt-0 order-2 lg:!w-[215px] lg:absolute lg:left-[82%] lg:top-[12%]' %}
-                            {% assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto' %}
+                            {% liquid 
+                                assign class_width = ' lg:!w-[215px]'
+
+                                if template.suffix == '32oz'
+                                    assign class_width = ' lg:!w-[228px]'
+                                endif
+
+                                assign class = 'mt-[53px] mb-6 lg:!mb-0 lg:!mt-0 order-2 lg:absolute lg:left-[82%] lg:top-[12%]' | append: class_width
+                                assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto'
+                            %}
                         {% when 2 %}
-                            {% assign class = 'order-3 mb-6 lg:!mb-0 lg:!w-[215px] lg:absolute lg:right-[82%] lg:top-[23%]' %}
-                            {% assign icon_class = '!w-[54px] !h-[54px] lg:!ml-auto lg:!mr-0'  %}
+                            {% liquid 
+                                assign class_width = ' lg:!w-[215px]'
+
+                                if template.suffix == '32oz'
+                                    assign class_width = ' lg:!w-[223px]'
+                                endif
+
+                                assign class = 'order-3 mb-6 lg:!mb-0 lg:absolute lg:right-[82%] lg:top-[23%]' | append: class_width
+                                assign icon_class = '!w-[54px] !h-[54px] lg:!ml-auto lg:!mr-0'
+                            %}
                         {% when 3 %}
-                            {% assign class = 'mb-[53px] lg:!mb-0 order-4 lg:!w-[287px] lg:absolute lg:left-[82%] lg:top-[58%]' %}
-                            {% assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto' %}
+                            {% liquid 
+                                assign class_width = ' lg:!w-[287px]'
+
+                                if template.suffix == '32oz'
+                                    assign class_width = ' lg:!w-[236px]'
+                                endif
+
+                                assign class = 'mb-[53px] lg:!mb-0 order-4 lg:absolute lg:left-[82%] lg:top-[58%]' | append: class_width
+                                assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto'
+                            %}
                     {% endcase %}
+
                     {% if icon != blank %}
                         <div class="wb-flex flex-row {% unless forloop.last %} lg:!flex-col {% endunless %} gap-4 {{ class }}"
                         data-callout
                         data-index="{{ forloop.index0 }}">
                             {{ icon | image_url: width: 100 | image_tag: class: icon_class, alt: title }}
+
                             <div class="wb-flex flex-col gap-4">
-                                <span class="h2 uppercase">{{ title }}</span>
+                                <span class="h2 leading-none uppercase">{{ title }}</span>
                                 <span class="body">{{ description }}</span>
                             </div>
                         </div>
                     {% endif %}
                 {% endfor %}
             {% endcapture %}
-
-
-
 
             <div class="wb-flex flex-col gap-4 relative" style="background-color: {{ background_color }}">
                 {% if background_image != blank %}
@@ -116,7 +143,7 @@
             <div class="wb-flex flex-col mx-auto relative z-1">
                 {% if title_type == 'image' %}
                     {% if title_image != blank %}
-                        <div class="max-w-[442px] w-full mx-auto lg:!mb-5">
+                        <div class="{% if template.suffix == '32oz' %}max-w-[600px]{% else %}max-w-[442px]{% endif %} w-full mx-auto lg:!mb-5">
                             {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                         </div>
                     {% endif %}
@@ -141,7 +168,7 @@
                     stroke-width="1"
                     stroke-dasharray="4 4"
                     />
-                
+
                     <line
                     x-show="lines[1]"
                     :x1="lines[1]?.x1 || 0"
@@ -152,7 +179,7 @@
                     stroke-width="1"
                     stroke-dasharray="4 4"
                     />
-                
+
                     <line
                     x-show="lines[2]"
                     :x1="lines[2]?.x1 || 0"

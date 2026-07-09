@@ -102,7 +102,11 @@
                     "rating_color": "primary",
                     "type_preset": "paragraph",
                     "width": "100%",
-                    "alignment": "center"
+                    "alignment": "center",
+                    "star_height_desktop": 13,
+                    "star_height_mobile": 13,
+                    "star_gap_desktop": 1,
+                    "star_gap_mobile": 1
                   },
                   "blocks": {}
                 },
@@ -369,6 +373,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li>Get $5 off your first order</li><li>Earn $5 for every $50 spent</li></ul>",
             "background_color": "#ffffff",
             "button_label": "Join for Free",
+            "button_action": "link",
             "button_link": "shopify://pages/membership"
           }
         },
@@ -380,6 +385,7 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
             "background_color": "#fdede0",
             "button_label": "BROWSE AUTOSHIP",
+            "button_action": "link",
             "button_link": "shopify://collections"
           }
         },
@@ -391,7 +397,8 @@
             "description": "<p><strong>What's Included:</strong></p><ul><li>All Free & VIP Member perks plus...</li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
             "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
             "button_label": "Add ELITE · $25",
-            "button_action": "elite_add_to_cart"
+            "button_action": "elite_add_to_cart",
+            "button_link": ""
           }
         }
       },
@@ -438,7 +445,7 @@
             "block_class": "",
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
-            "font_family": "var(--font-kurdis-semi-condensed)",
+            "font_family": "var(--font-kurdis-condensed)",
             "font_family_mobile": "",
             "font_size": "2.813rem",
             "line_height": "normal",

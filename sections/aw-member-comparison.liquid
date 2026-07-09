@@ -155,10 +155,11 @@
                                 {% if tier_item.settings.button_action == 'elite_add_to_cart' %}
                                     {% render 'elite-atc-button',
                                         label: tier_item.settings.button_label,
-                                        class: 'min-w-[260px] order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:min-w-[158px]'
+                                        class: 'w-[260px]! col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:w-[158px]!',
+                                        wrapper_classes: 'order-4 md:!order-3 w-[260px]! md:w-[158px]!'
                                     %}
                                 {% else %}
-                                    {% render 'wb-button', style: 'secondary-gold', label: tier_item.settings.button_label, link: tier_item.settings.button_link, class: 'min-w-[260px] order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:min-w-[158px]' %}
+                                    {% render 'wb-button', style: 'secondary-gold', label: tier_item.settings.button_label, link: tier_item.settings.button_link, class: 'w-[260px]! order-4 md:!order-3 col-start-1 mx-auto md:!mx-7 mt-3 !text-[15px] md:w-[158px]!' %}
                                 {% endif %}
                             {% endif %}
 
@@ -167,7 +168,7 @@
                     {% endfor %}
 
                     {% if button_label != blank and button_link != blank %}
-                        {% assign button_class = 'w-full! h-15! md:h-12! md:!w-[280px] mx-auto button-styles' %}
+                        {% assign button_class = 'w-full! h-15! md:h-12! md:!w-[280px] mx-auto mt-1.5 md:mt-0 button-styles' %}
 
                         {% render 'wb-button',
                             style: 'custom',
