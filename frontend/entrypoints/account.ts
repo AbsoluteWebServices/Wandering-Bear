@@ -57,6 +57,26 @@ type Summary = {
   errors?: { section: string; code: string }[];
 };
 
+type CreditTxn = {
+  id: string;
+  type: 'EARNED' | 'REDEEMED' | 'EXPIRED' | 'ADJUSTED' | string;
+  amount: number;
+  amount_formatted: string;
+  date: string;
+  order_name: string | null;
+  order_url: string | null;
+  description: string;
+};
+
+type Credits = {
+  balance: number;
+  balance_formatted: string;
+  currency: string;
+  expires_at: string | null;
+  transactions: CreditTxn[];
+  pagination: { page: number; per_page: number; total: number; has_next: boolean };
+};
+
 type Envelope<T> = { ok: true; data: T } | { ok: false; error?: { code?: string; message?: string } };
 
 const root = document.querySelector<HTMLElement>('[data-wb-account]');
@@ -185,18 +205,88 @@ function renderSubscriptions(subs: Subscriptions | null): void {
   // portal) — the worker's portal_url/manage_url come back empty, so no JS wiring here.
 }
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** ISO date (YYYY-MM-DD) → "Aug 21, 2024" for the credit-history table. */
+function formatDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  return m ? `${MONTHS[+m[2] - 1]} ${+m[3]}, ${m[1]}` : iso;
+}
+
+/** Credit history page: fill the summary-card expiry + the transaction table (GET /credits). */
+function renderCredits(d: Credits): void {
+  if (!root) return;
+
+  const expiry = formatExpiry(d.expires_at);
+  setText(root, 'credit-expiry', expiry);
+  root.querySelectorAll<HTMLElement>('[data-wb-expiry-line]').forEach((el) => {
+    el.style.display = expiry ? '' : 'none';
+  });
+
+  const tbody = root.querySelector<HTMLElement>('[data-wb-credit-rows]');
+  if (!tbody) return;
+  const txns = d.transactions ?? [];
+  if (!txns.length) {
+    root.querySelector<HTMLElement>('[data-wb-credit-empty]')?.removeAttribute('hidden');
+    return;
+  }
+
+  const label = (t: string): string =>
+    tbody.getAttribute(`data-wb-type-${t.toLowerCase()}`) || t.charAt(0) + t.slice(1).toLowerCase();
+
+  tbody.textContent = '';
+  txns.forEach((t) => {
+    const positive = t.type === 'EARNED' || t.type === 'ADJUSTED';
+    const amtColor = t.type === 'EARNED' ? 'text-dark-gold' : t.type === 'EXPIRED' ? 'text-espresso/50' : 'text-espresso';
+    const tr = document.createElement('tr');
+    tr.className = 'body text-espresso';
+
+    const date = document.createElement('td');
+    date.className = 'p-3 border-b border-espresso/10 whitespace-nowrap';
+    date.textContent = formatDate(t.date);
+
+    const activity = document.createElement('td');
+    activity.className = 'p-3 border-b border-espresso/10';
+    activity.textContent = label(t.type);
+
+    const orderCell = document.createElement('td');
+    orderCell.className = 'p-3 border-b border-espresso/10 hidden md:!table-cell';
+    if (t.order_name) {
+      const a = document.createElement('a');
+      a.href = t.order_url || '#';
+      a.className = 'hover-underline';
+      a.textContent = t.order_name;
+      orderCell.appendChild(a);
+    } else {
+      orderCell.textContent = '—';
+    }
+
+    const amount = document.createElement('td');
+    amount.className = `p-3 border-b border-espresso/10 text-right whitespace-nowrap font-bold ${amtColor}`;
+    amount.textContent = `${positive ? '+' : '-'}${t.amount_formatted}`;
+
+    tr.append(date, activity, orderCell, amount);
+    tbody.appendChild(tr);
+  });
+}
+
 async function hydrate(): Promise<void> {
   if (!root) return;
+  const isCreditHistory = root.querySelector('[data-wb-credit-history]') != null;
   try {
-    const data = await wbFetch<Summary>('summary');
-    renderMembership(data.membership);
-    renderSubscriptions(data.subscriptions);
+    if (isCreditHistory) {
+      const d = await wbFetch<Credits>('credits', { page: '1', per_page: '50' });
+      renderCredits(d);
+    } else {
+      const data = await wbFetch<Summary>('summary');
+      renderMembership(data.membership);
+      renderSubscriptions(data.subscriptions);
+    }
     root.removeAttribute('data-wb-loading');
   } catch (err) {
     root.setAttribute('data-wb-error', '');
     root.removeAttribute('data-wb-loading');
     // eslint-disable-next-line no-console
-    console.warn('[wb-account] summary fetch failed:', err);
+    console.warn('[wb-account] fetch failed:', err);
   }
 }
 

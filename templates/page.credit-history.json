@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "main": {
+      "type": "customer-credits"
+    }
+  },
+  "order": ["main"]
+}

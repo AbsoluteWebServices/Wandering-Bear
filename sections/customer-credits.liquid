@@ -1,0 +1,85 @@
+{%- doc -%}
+  Membership Credit History page (classic accounts). Figma: Account_Dashboard_IndividualOrder
+  frame 1:1208 ("Membership Credit History"). Rendered by templates/page.credit-history.liquid.
+
+  Credit balance = native (same as header widget: inveterate.credits_earned). Expiry +
+  transaction history = worker GET /apps/wb/credits (hydrated by account.ts). Reuses the
+  [data-wb-account] hydration root + account.ts entrypoint.
+{%- enddoc -%}
+{%- liquid
+  assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
+  assign credits_earned = customer.metafields.inveterate.credits_earned | default: 0
+  assign credits_formatted = credits_earned | money_without_trailing_zeros
+  assign credits_expiry = '01/01/2028'
+  assign t_redeem = 'customer.dashboard.redeem_credits' | t
+-%}
+
+<section class="w-full" style="background-color: var(--color-brand-beige);">
+  <div class="account-container py-8 md:!py-12"
+       data-wb-account
+       data-wb-loading
+       data-worker-url="{{ settings.account_worker_url | default: '' }}"
+       data-worker-token="{{ settings.account_worker_dev_token | default: '' }}"
+       data-customer-id="{{ customer.id }}">
+
+    {%- comment -%} Back link {%- endcomment -%}
+    <a href="{{ routes.account_url }}" class="inline-flex items-center !gap-2 font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-espresso hover-underline mb-5">
+      <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {{ 'customer.credits.back_to_account' | t }}
+    </a>
+
+    <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[25px] md:!text-[32px] leading-none mb-6">{{ 'customer.credits.title' | t }}</h1>
+
+    {%- comment -%} ---------- Credit summary card (native balance + worker expiry) ---------- {%- endcomment -%}
+    <div class="relative {{ card }} px-6 py-7 md:!px-10 mb-4 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
+      <div class="flex-1">
+        <div class="flex items-end !gap-3">
+          <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+          <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
+        </div>
+        <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+      </div>
+      {%- render 'wb-button', style: 'secondary-gold', label: t_redeem, link: routes.cart_url, class: 'shrink-0 shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
+    </div>
+
+    {%- comment -%} ---------- Transaction history (worker /credits, filled by account.ts) ---------- {%- endcomment -%}
+    <div class="{{ card }} p-5 md:!p-6" data-wb-credit-history>
+      <div class="tag text-espresso uppercase mb-4">{{ 'customer.credits.history' | t }}</div>
+
+      {%- comment -%} Worker load-failure note {%- endcomment -%}
+      <p data-wb-error-note class="font-kurdis-semi-condensed font-semibold text-[12px] leading-[1.3] text-[#BD2121] mb-4" role="status">{{ 'customer.dashboard.load_error' | t }}</p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full border border-espresso/20 border-collapse">
+          <thead>
+            <tr class="text-left tag text-espresso uppercase">
+              <th class="p-3 border-b border-espresso/20">{{ 'customer.credits.col_date' | t }}</th>
+              <th class="p-3 border-b border-espresso/20">{{ 'customer.credits.col_activity' | t }}</th>
+              <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.credits.col_order' | t }}</th>
+              <th class="p-3 border-b border-espresso/20 text-right">{{ 'customer.credits.col_amount' | t }}</th>
+            </tr>
+          </thead>
+          <tbody data-wb-credit-rows
+                 data-wb-type-earned="{{ 'customer.credits.type_earned' | t }}"
+                 data-wb-type-redeemed="{{ 'customer.credits.type_redeemed' | t }}"
+                 data-wb-type-expired="{{ 'customer.credits.type_expired' | t }}"
+                 data-wb-type-adjusted="{{ 'customer.credits.type_adjusted' | t }}">
+            {%- comment -%} Rows injected by account.ts from GET /apps/wb/credits {%- endcomment -%}
+          </tbody>
+        </table>
+      </div>
+
+      {%- comment -%} Empty state — shown by account.ts when there are no transactions {%- endcomment -%}
+      <p data-wb-credit-empty class="body text-espresso text-center py-8" hidden>{{ 'customer.credits.empty' | t }}</p>
+    </div>
+
+  </div>
+  {%- render 'vite-tag' with 'account.ts' -%}
+</section>
+
+{% schema %}
+{
+  "name": "Credit history",
+  "settings": []
+}
+{% endschema %}

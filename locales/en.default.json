@@ -121,6 +121,20 @@
       "track": "Track Order",
       "tracking": "Tracking",
       "payment": "Payment"
+    },
+    "credits": {
+      "back_to_account": "Back to Account",
+      "title": "Membership Credit History",
+      "history": "Credit History",
+      "col_date": "Date",
+      "col_activity": "Activity",
+      "col_order": "Order",
+      "col_amount": "Amount",
+      "type_earned": "Earned",
+      "type_redeemed": "Redeemed",
+      "type_expired": "Expired",
+      "type_adjusted": "Adjusted",
+      "empty": "No credit activity yet."
     }
   },
   "accessibility": {
