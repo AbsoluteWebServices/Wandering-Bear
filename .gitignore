@@ -24,3 +24,6 @@ snippets/vite-tag.liquid
 /CLAUDE.md
 /docs/
 /scripts/figma-pull.sh
+
+# Build assets
+assets/wb-*
