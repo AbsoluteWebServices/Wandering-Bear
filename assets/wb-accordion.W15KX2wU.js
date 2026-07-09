@@ -1,1 +1,0 @@
-var e=e=>{e.data(`accordion`,()=>({init(){},toggleAccordion(e){e.preventDefault(),e.stopPropagation();let t=e.currentTarget.closest(`[data-accordion-item]`);if(!t)return;let n=this.$root.querySelectorAll(`[data-accordion-item]`),r=t.hasAttribute(`open`);n.forEach(e=>e.removeAttribute(`open`)),r||t.setAttribute(`open`,``)}}))};export{e as default};
