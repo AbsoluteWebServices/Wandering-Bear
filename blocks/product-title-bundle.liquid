@@ -7,7 +7,7 @@
   {% else %}
     {% assign product_title = '<p role="heading" aria-level="3">' | append: closest.product.title | append: '</p>' %}
     <a
-      class="contents user-select-text text-bear-black! !flex !whitespace-nowrap !items-end !gap-2 block"
+      class="contents user-select-text text-bear-black! !flex flex-col  !gap-2 md:flex-row md:!whitespace-nowrap md:items-end!"
       ref="productTitleLink"
       href="{{ closest.product.selected_or_first_available_variant.url }}"
     >

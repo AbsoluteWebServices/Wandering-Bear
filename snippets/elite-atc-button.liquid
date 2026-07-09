@@ -3,6 +3,7 @@
 
   @param {string} label - Button label
   @param {string} [class] - Additional button classes
+  @param {string} [wrapper_classes] - Additional button classes for wrapper
   @param {number} [width] - Button SVG width
   @param {number} [height] - Button SVG height
   @param {string} [style] - wb-button style, default secondary-gold
@@ -24,6 +25,7 @@
   <div
     x-data="eliteAtc"
     @click.stop.prevent="addEliteToCart({{ elite_variant.id }}, 1{% if elite_selling_plan != blank %}, {{ elite_selling_plan }}{% else %}, null{% endif %})"
+    class="{{ wrapper_classes }}"
   >
     {% render 'wb-button',
       style: button_style,

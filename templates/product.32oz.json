@@ -35,11 +35,11 @@
             "border_width": 1,
             "border_opacity": 100,
             "border_radius": 0,
-            "padding-block-start": 24,
+            "padding-block-start": 10,
             "padding-block-end": 24,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
-            "padding-block-start-mobile": 0,
+            "padding-block-start-mobile": 40,
             "padding-block-end-mobile": 0,
             "padding-inline-start-mobile": 0,
             "padding-inline-end-mobile": 0
@@ -176,9 +176,9 @@
               "name": "Cross Sell Call-out",
               "settings": {
                 "color_scheme": "scheme-40eec688-b970-4f1a-96a1-8b50c977616b",
-                "image": "shopify://shop_images/3f3d11dcd1b175853b80f970707145ec401faff7.png",
-                "title": "Looking for cold brew on‑the‑go?",
-                "subtitle": "Try our new cold brew lattes, available in 3 flavors!",
+                "image": "shopify://shop_images/HERO_1_0cda21ca-1de5-4e2e-8c56-e84d94c9f089.png",
+                "title": "Looking for MORE of our Cold Brew?",
+                "subtitle": "Try our bestselling 96oz box!",
                 "button_label": "Shop Now",
                 "button_link": "/"
               },
@@ -400,12 +400,12 @@
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "SUPER PREMIUM COFFEE",
             "description_1": "Made with our signature cold brew from organic, specialty-grade beans",
-            "icon_2": "shopify://shop_images/Group_1327226584.svg",
-            "title_2": "SUBTLY SWEET,NO COMPROMISE",
-            "description_2": "Only 100 calories and just 5 grams of real sugar",
-            "icon_3": "shopify://shop_images/Group_1327226583.svg",
-            "title_3": "CREAMY & PROTEIN RICH",
-            "description_3": "Ultra-filtered skim milk protein for creaminess with nutrition cred"
+            "icon_2": "shopify://shop_images/Group_1327226583.svg",
+            "title_2": "CREAMY & PROTEIN RICH",
+            "description_2": "Ultra-filtered skim milk protein for creaminess with nutrition cred",
+            "icon_3": "shopify://shop_images/Group_1327226584.svg",
+            "title_3": "SUBTLY SWEET, NO COMPROMISE",
+            "description_3": "Only 100 calories and just 5 grams of real sugar"
           }
         }
       },
@@ -428,14 +428,14 @@
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226586_4387d08b-9ccc-456b-bb51-886c3448c5b4.svg",
-            "text": "We were the first to put cold brew in a box"
+            "text": "The best premium cold brew or lattes, at home and on the go!"
           }
         },
         "icon_item_w3HbfU": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226587.svg",
-            "text": "These big boxes are designed to keep light and air away so your coffee is never stale and always tastes fresh"
+            "text": "Our 32oz packs are meant for ease of use: bring them to the office, to your next AirBnB, or to your mom’s house"
           }
         },
         "icon_item_bgBnVE": {
@@ -587,7 +587,7 @@
       "name": "AW FAQs",
       "settings": {
         "color_scheme": "",
-        "background": "linear-gradient(180deg, #F2E6DC 0%, #BFD7E9 100%)",
+        "background": "",
         "title_type": "image",
         "title": "",
         "title_alt": "",
@@ -595,6 +595,142 @@
         "faqs_metaobject": "96-oz-cold-brew-straight-black",
         "button_label": "",
         "button_link": ""
+      }
+    },
+    "products_slider_eeqjML": {
+      "type": "products-slider",
+      "blocks": {
+        "heading_9RQfry": {
+          "type": "_heading",
+          "settings": {
+            "block_class": "",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_family": "var(--font-kurdis-condensed)",
+            "font_family_mobile": "",
+            "font_size": "2.813rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "text": "<h2><strong>More to explore</strong></h2>",
+            "read_only": false,
+            "type_preset_mobile": "custom",
+            "font_mobile": "var(--font-body--family)",
+            "font_size_mobile": "2.188rem",
+            "line_height_mobile": "",
+            "letter_spacing_mobile": "",
+            "case_mobile": "",
+            "wrap_mobile": "",
+            "color_mobile": "",
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "show_alignment": true,
+            "padding-block-start": 0,
+            "padding-block-end": 52,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 28,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_VDnkkq": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "extra-strong-cold-brew-coffee-32oz-straight-black",
+            "title": "Original Black",
+            "title_small": "32oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/Original-Black-11oz.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_nATbyK": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "cold-brew-latte-8oz",
+            "title": "Mocha Latte",
+            "title_small": "8oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/Mocha-Latte-8oz.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_EU3AT8": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "32oz-3-to-1-coffee-concentrate-bundle-unit-straight-black",
+            "title": "3:1 Concentrate",
+            "title_small": "32oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/3-1-Concentrate-32oz_bd218ab7-f7e2-4a56-a053-4b1b50efd297.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        },
+        "cart_product_slider_yPtdRp": {
+          "type": "cart_product_slider",
+          "settings": {
+            "product": "extra-strong-organic-cold-brew-coffee-11oz-straight-black",
+            "title": "Original Black",
+            "title_small": "11oz",
+            "show_badge": true,
+            "badge_text": "",
+            "image": "shopify://shop_images/Original-Black-32oz.png",
+            "card_background_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_9RQfry",
+        "cart_product_slider_VDnkkq",
+        "cart_product_slider_nATbyK",
+        "cart_product_slider_EU3AT8",
+        "cart_product_slider_yPtdRp"
+      ],
+      "name": "AW Products Slider",
+      "settings": {
+        "color_scheme": "",
+        "background": "",
+        "section_image": "shopify://shop_images/more-to-explore-banner.png",
+        "section_image_mobile": "shopify://shop_images/more-to-explore-banner-mobile.png",
+        "section_image_fit": "full-width",
+        "section_image_vertical_align": "center",
+        "section_image_vertical_align_tablet": "bottom",
+        "section_image_vertical_align_mobile": "bottom",
+        "section_width": "page-width",
+        "layout_type": "slider",
+        "slides_per_view_mobile": "2.25",
+        "slides_per_view_tablet": "3",
+        "slides_per_view_desktop": "4",
+        "space_between_mobile": 14,
+        "space_between_tablet": 24,
+        "space_between_desktop": 44,
+        "slide_offset_mobile": 16,
+        "slide_offset_desktop": 0,
+        "show_navigation": false,
+        "columns_mobile": "2",
+        "columns_desktop": 4,
+        "grid_gap_mobile": 12,
+        "grid_gap_desktop": 16,
+        "padding-block-start": 20,
+        "padding-block-end": 52,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 36,
+        "padding-block-end-mobile": 36,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
       }
     }
   },
@@ -606,6 +742,7 @@
     "aw_guarantee_banner_GxEGrE",
     "okendo_reviews_widget_PUYwdr",
     "aw_member_comparison_EAjQ8J",
-    "aw_frequently_asked_questions_33izYW"
+    "aw_frequently_asked_questions_33izYW",
+    "products_slider_eeqjML"
   ]
 }

@@ -46,7 +46,7 @@ export default (Alpine: AlpineType) => {
         },
 
         get currentSavingsAmountFormatted() {
-            return this._formatPrice(this.currentSavingsAmount, { withoutCents: true });
+            return this._formatPrice(this.currentSavingsAmount);
         },
 
         _formatPrice(price, { withoutCents = false } = {}) {

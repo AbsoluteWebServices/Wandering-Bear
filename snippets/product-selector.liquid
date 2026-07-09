@@ -139,13 +139,20 @@
           x-show="isInBundle({{ child_product.id }}) && flavorType !== 'single'"
         >
           <button
-            class="group cursor-pointer relative shadow-button h-[30px] w-[30px]"
+            class="group cursor-pointer relative shadow-button w-7.5 h-10 smd:h-7.5"
             @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity--"
           >
             <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pb-1.25">-</span>
-            <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold"
+            <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold hidden smd:inline-block"
               xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
               <path
+                d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
+            </svg>
+
+            <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold smd:hidden"
+              xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40" fill="none">
+              <path
+                transform="scale(1 1.3333333333)"
                 d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
             </svg>
           </button>
@@ -156,13 +163,20 @@
           <button
             :disabled="getBundleProductQuantity({{ child_product.id }}) >= qtyLimit"
             :class="{ 'opacity-50 pointer-events-none': disabled }"
-            class="group cursor-pointer relative shadow-button h-[30px] w-[30px]"
+            class="group cursor-pointer relative shadow-button  w-7.5 h-10 smd:h-7.5"
             @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity++"
           >
             <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pb-1.25">+</span>
-            <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold"
+            <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold hidden smd:inline-block"
               xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
               <path
+                d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
+            </svg>
+
+            <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold smd:hidden"
+              xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40" fill="none">
+              <path
+                transform="scale(1 1.3333333333)"
                 d="M0.277681 3.11953C0.0418248 4.85963 0.0323707 6.91032 0.02839 8.87613C0.0189358 13.5543 0.00997928 18.2306 0.000525143 22.9088C-0.00196279 24.1801 -0.0014652 25.5035 0.143332 26.6436C0.49214 29.385 0.932504 29.983 2.23518 29.983C10.9728 29.983 19.7109 30.0853 28.449 29.7882C28.759 29.7785 29.0994 29.8403 29.3536 29.1515C30.0428 27.286 29.9677 23.8772 29.9468 21.3481C29.9079 16.639 30 12.7692 30 8.05817C30 4.76317 29.905 3.43977 29.6233 2.13566C29.2626 0.463087 28.5112 0.534466 27.9485 0.490095C24.2484 0.194935 20.5464 0.0425316 16.8448 0.00780683C13.1194 -0.0288471 9.39396 0.0637523 5.66853 0.281747C4.61763 0.34348 3.56722 0.414858 2.51682 0.497812C1.72367 0.559545 0.717547 -0.119518 0.277681 3.11953Z" />
             </svg>
           </button>
