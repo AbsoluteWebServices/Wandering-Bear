@@ -2428,10 +2428,10 @@
         "info": "Only if the worker's /dev requires a token (DEV_TOKEN on the deployed worker). Sent as ?token= next to customerId. Leave EMPTY for a local worker or the App Proxy path."
       },
       {
-        "type": "url",
+        "type": "text",
         "id": "manage_autoship_url",
         "label": "Manage subscriptions URL (Stay AI)",
-        "info": "Stay AI customer portal link for the 'Manage Upcoming Orders' / 'Manage Autoship' buttons. The Stay AI portal auto-detects the logged-in customer, so one static URL works for everyone."
+        "info": "Stay AI customer portal link for the 'Manage Upcoming Orders' / 'Manage Autoship' buttons, e.g. https://wandering-bear.myshopify.com/apps/retextion (or /apps/retextion). The Stay AI portal auto-detects the logged-in customer, so one static URL works for everyone."
       }
     ]
   }
