@@ -166,14 +166,20 @@
     x-transition:leave-end="opacity-0 transform scale-0"
     x-cloak class="wb-flex justify-center gap-2 lg:gap-2.25! h-[87px] max-w-full">
       <template x-for="(product, index) in bundleSlots" :key="index">
-        <div class="flex flex-col gap-2.5 py-5 px-1 md:!px-4 justify-center items-center border border-dashed border-[#CFBDB1] rounded-[5px] !max-w-[50px] lg:!max-w-[62px] !aspect-[51/72] lg:!aspect-[62/87]"
-        :class="{ 'bg-[#F9F3ED] !px-1 md:!px-2 !py-1.5 md:!py-5': product }"
+        <div class="flex flex-col gap-2.5 py-5 px-1 md:!px-3 justify-center items-center border border-dashed border-[#CFBDB1] rounded-[5px] !max-w-[50px] lg:!max-w-[62px] !aspect-[51/72] lg:!aspect-[62/87]"
+        :class="{ 'bg-[#F9F3ED] px-1! md:px-2! py-1.5! md:pt-3! md:pb-1! border-solid! border-[#F9F3ED]!': product }"
         >
           <template x-if="product">
-            <div class="h-full wb-flex flex-col justify-center items-center gap-1">
-              <img :class="index % 2 === 0 ? 'rotate-[9.03deg]' : '-rotate-[9.03deg]'"
-              :src="product.image" alt="Product Image" class="!max-w-5 !h-10 md:!w-6 md:!h-12 object-cover mx-auto">
-              <span class="font-kurdis-semi-condensed whitespace-nowrap text-[10px] text-bear-black font-semibold text-center mx-auto w-fit block" x-text="product.flavorName"></span>
+            <div class="h-full wb-flex flex-col justify-center items-center gap-2">
+              <img 
+                :class="index % 2 === 0 ? 'rotate-[9.03deg]' : '-rotate-[9.03deg]'"
+                :src="product.image"
+                alt="Product Image"
+                class="!max-w-5 !h-10 md:!w-6 md:!h-12 object-cover mx-auto"
+                width="24"
+                height="48"
+              >
+              <span class="font-kurdis-semi-condensed whitespace-nowrap text-[10px] text-bear-black font-bold text-center mx-auto w-fit block" x-text="product.flavorName"></span>
             </div>
           </template>
     

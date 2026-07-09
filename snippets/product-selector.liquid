@@ -102,7 +102,6 @@
             :disabled="disabled" :class="{ 'opacity-50 pointer-events-none': disabled }"
           >
             <span
-              x-text="flavorType !== 'single' ? '+ Add' : 'Select'"
               class="relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold mt-0.5"
             >
               + Add
@@ -118,11 +117,11 @@
         </div>
         <div x-cloak x-show="isInBundle({{ child_product.id }}) && flavorType === 'single'" class="wb-flex justify-end items-center">
           <div
-            class="group !h-10 lg:!h-[30px] !w-[80px] whitespace-nowrap wb-flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button"
+            class="group !h-10 lg:!h-[30px] !w-[88px] whitespace-nowrap wb-flex justify-center items-center relative whitespace-nowrap h-fit cursor-pointer shadow-button"
             @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})"
           >
             <span class="wb-flex justify-center items-center gap-1 relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">
-              {% render 'icons', icon: 'checkmark', class: 'text-cream min-w-[10px] min-h-[10px]' %} Selected
+              {% render 'icons', icon: 'checkmark', class: 'text-cream min-w-[10px] min-h-[10px]' %} <span class="inline-block mt-0.5">Selected</span>  
             </span>
 
             <div class="absolute top-0 left-0 w-full h-full">
