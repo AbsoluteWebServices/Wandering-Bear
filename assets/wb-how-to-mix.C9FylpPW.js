@@ -1,0 +1,1 @@
+var e=e=>{e.data(`howToMix`,e=>({activeTitle:e,init(){},setActive(e){console.log(`active title`,e),this.activeTitle=e}}))};export{e as default};
