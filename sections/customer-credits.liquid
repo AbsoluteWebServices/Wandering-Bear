@@ -44,7 +44,11 @@
         </div>
         <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
       </div>
-      {%- render 'wb-button', style: 'secondary-gold', label: t_redeem, link: redeem_url, class: 'shrink-0 shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
+      {%- comment -%} Redeem → account.ts opens the Inveterate member widget (membership view) when the
+        app embed is loaded; fallback href = checkout/cart (native store-credits field). {%- endcomment -%}
+      <span data-wb-redeem>
+        {%- render 'wb-button', style: 'secondary-gold', label: t_redeem, link: redeem_url, class: 'shrink-0 shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
+      </span>
     </div>
 
     {%- comment -%} ---------- Transaction history (worker /credits, filled by account.ts) ---------- {%- endcomment -%}

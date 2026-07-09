@@ -120,6 +120,13 @@
     background: rgba(67, 26, 3, 0.08);
     animation: wb-pulse 1.1s ease-in-out infinite;
 }
+/* Redeem control wrapper: account.ts listens on [data-wb-redeem] to open the Inveterate
+   widget; display:contents keeps the inner <a> as the flex/grid child so width/layout
+   utilities on the button still apply (the span itself must not become a box). */
+[data-wb-redeem] {
+    display: contents;
+}
+
 /* MANAGE control (Stay AI portal) — account.ts wires the click / disables it. */
 [data-wb-autoship-manage] {
     cursor: pointer;

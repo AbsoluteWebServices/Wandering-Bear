@@ -79,6 +79,18 @@ type Credits = {
 
 type Envelope<T> = { ok: true; data: T } | { ok: false; error?: { code?: string; message?: string } };
 
+/** Inveterate Account Widget Frontend API (help.inveterate.com — `window.IAW.Widget.instance`).
+ *  Present only when the Inveterate app embed is enabled on the theme; absent otherwise, so
+ *  every access is guarded and the redeem control falls back to its `<a href>`. */
+type InveterateWidget = {
+  setView?: (view: string, options?: unknown, cb?: unknown) => void;
+  show?: (cb?: unknown) => void;
+};
+function inveterateWidget(): InveterateWidget | null {
+  const iaw = (window as unknown as { IAW?: { Widget?: { instance?: InveterateWidget } } }).IAW;
+  return iaw?.Widget?.instance ?? null;
+}
+
 const root = document.querySelector<HTMLElement>('[data-wb-account]');
 const workerUrl = (root?.dataset.workerUrl ?? '').trim().replace(/\/$/, '');
 const customerId = root?.dataset.customerId ?? '';
@@ -283,6 +295,29 @@ function renderCredits(d: Credits): void {
   });
 }
 
+/** Redeem Credits → open the Inveterate member portal (widget) at the membership view, where
+ *  the native "Redeem credits" modal lives. The button is an `<a href>` to checkout/cart
+ *  (Inveterate's native store-credit field) — the fallback used when JS is off or the widget
+ *  isn't loaded (Inveterate app embed disabled). When the widget IS present we intercept the
+ *  click and drive it via the Frontend API instead. The API exposes no dedicated redeem/credits
+ *  view or modal method, so `membership` (documented) is the closest entry to the redeem flow. */
+function wireRedeem(): void {
+  document.querySelectorAll<HTMLElement>('[data-wb-redeem]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      const widget = inveterateWidget();
+      if (!widget?.setView) return; // no widget → let the <a> navigate to the fallback URL
+      e.preventDefault();
+      try {
+        widget.show?.();
+        widget.setView('membership');
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[wb-account] Inveterate redeem view failed:', err);
+      }
+    });
+  });
+}
+
 async function hydrate(): Promise<void> {
   if (!root) return;
   const isCreditHistory = root.querySelector('[data-wb-credit-history]') != null;
@@ -304,8 +339,13 @@ async function hydrate(): Promise<void> {
   }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', hydrate, { once: true });
-} else {
+function init(): void {
+  wireRedeem();
   void hydrate();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init, { once: true });
+} else {
+  init();
 }
