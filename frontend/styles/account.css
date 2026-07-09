@@ -130,6 +130,90 @@ body.no-scroll {
     overflow: hidden;
 }
 
+/* ---- Credit redemption modal (customer-credit-redeem + creditRedemption.ts) --------
+   Self-styled (not Tailwind utilities) so it renders correctly regardless of which
+   utilities the JIT compiled for this snippet. Brand colours via theme CSS vars. */
+.wb-redeem-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.wb-redeem-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+.wb-redeem-modal__panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--color-foam, #fbf6ec);
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    padding: 1.5rem;
+}
+@media (min-width: 768px) {
+    .wb-redeem-modal__panel { padding: 2rem; }
+}
+.wb-redeem-modal input[type="radio"] {
+    accent-color: var(--color-dark-gold, #955325);
+    width: 1rem;
+    height: 1rem;
+}
+.wb-redeem-card {
+    border: 1px solid color-mix(in srgb, var(--color-espresso, #431a03) 20%, transparent);
+    border-radius: 10px;
+    padding: 1rem;
+}
+.wb-redeem-input {
+    width: 100%;
+    border: 1px solid color-mix(in srgb, var(--color-espresso, #431a03) 30%, transparent);
+    border-radius: 6px;
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-espresso, #431a03);
+}
+.wb-redeem-code {
+    flex: 1;
+    border: 1px dashed color-mix(in srgb, var(--color-espresso, #431a03) 40%, transparent);
+    border-radius: 6px;
+    background: #fff;
+    padding: 0.75rem;
+    letter-spacing: 0.03em;
+    word-break: break-all;
+}
+.wb-redeem-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 44px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--color-dark-gold, #955325);
+    color: var(--color-foam, #fbf6ec);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    font-weight: 700;
+}
+.wb-redeem-btn:hover { opacity: 0.92; }
+.wb-redeem-btn:disabled { opacity: 0.6; pointer-events: none; }
+.wb-redeem-btn--ghost {
+    width: auto;
+    height: auto;
+    background: transparent;
+    color: var(--color-espresso, #431a03);
+    border: 1px solid color-mix(in srgb, var(--color-espresso, #431a03) 30%, transparent);
+    box-shadow: none;
+    padding: 0.6rem 0.85rem;
+}
+
 /* MANAGE control (Stay AI portal) — account.ts wires the click / disables it. */
 [data-wb-autoship-manage] {
     cursor: pointer;

@@ -6,6 +6,10 @@
   cart (no checkout needed). Falls back to the /community/membership portal link when JS is off.
   Contract + flow: docs/tasks/09-redemption.md. Worker config is read from [data-wb-account].
 
+  The trigger is an inlined secondary-gold button (matches wb-button) so the Alpine @click binds
+  directly on the anchor; its href is the no-JS fallback. The modal is self-styled via account.css
+  (.wb-redeem-modal*) rather than Tailwind utilities so it renders regardless of the JIT output.
+
   @param {string} label - button label (already translated)
   @param {string} link - no-JS fallback href (Inveterate portal link)
   @param {string} class - button classes
@@ -14,26 +18,24 @@
 
 <div class="wb-redeem-root"
      x-data="creditRedemption({ balanceFormatted: '{{ balance_formatted | default: '' }}', currency: '{{ shop.currency }}' })"
-     @click.prevent="open()"
      @keydown.escape.window="isOpen && close()">
 
-  {%- render 'wb-button', style: 'secondary-gold', label: label, link: link, class: class -%}
+  <a href="{{ link }}" @click.prevent="open()" class="btn secondary-gold {% if class %}{{ class }}{% endif %}">
+    <span class="mt-0.5">{{ label }}</span>
+    <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]" width="280" height="47" viewBox="0 0 280 47" fill="none">
+      <path d="M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z"/>
+    </svg>
+  </a>
 
   <template x-teleport="body">
-    <div x-show="isOpen" x-cloak class="fixed inset-0 z-[99999] flex items-center justify-center px-4" role="dialog" aria-modal="true" aria-label="{{ 'customer.dashboard.redeem_title' | t }}" style="display:none">
+    <div class="wb-redeem-modal" x-show="isOpen" style="display:none" role="dialog" aria-modal="true" aria-label="{{ 'customer.dashboard.redeem_title' | t }}">
+      <div class="wb-redeem-modal__backdrop" x-show="isShown" @click="close()" x-transition.opacity></div>
 
-      {%- comment -%} Backdrop {%- endcomment -%}
-      <div class="absolute inset-0 bg-black/50" x-show="isShown" @click="close()" x-transition.opacity.duration.300ms></div>
-
-      {%- comment -%} Panel {%- endcomment -%}
-      <div class="relative z-10 w-full max-w-[440px] rounded-[10px] bg-foam shadow-[0px_4px_16px_0px_rgba(0,0,0,0.35)] p-6 md:!p-8"
-           x-show="isShown" @click.stop
-           x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-           x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+      <div class="wb-redeem-modal__panel" x-show="isShown" @click.stop x-transition>
 
         <div class="flex items-start justify-between mb-5">
           <h2 class="font-kurdis-condensed font-extrabold text-espresso text-[22px] leading-none">{{ 'customer.dashboard.redeem_title' | t }}</h2>
-          <button type="button" @click="close()" aria-label="{{ 'customer.dashboard.redeem_close' | t }}" class="shrink-0 -mt-1 -mr-1 p-1 text-espresso hover:opacity-70">
+          <button type="button" @click="close()" aria-label="{{ 'customer.dashboard.redeem_close' | t }}" class="wb-redeem-close">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           </button>
         </div>
@@ -42,14 +44,14 @@
         <div x-show="step === 'select'">
           <p class="font-kurdis-condensed font-extrabold text-espresso text-[18px] leading-none mb-3">{{ 'customer.dashboard.redeem_for' | t }}</p>
 
-          <div class="rounded-[10px] border border-espresso/20 p-4 mb-5">
+          <div class="wb-redeem-card mb-5">
             <div class="flex items-center !gap-2 font-kurdis-semi-condensed font-bold text-espresso text-[14px] mb-3">
               <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7S8 7 8 4.5 12 7 12 7zm0 0s4 0 4-2.5S12 7 12 7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
               {{ 'customer.dashboard.redeem_single_order' | t }}
             </div>
 
             <label class="flex items-start !gap-3 py-2 cursor-pointer">
-              <input type="radio" name="wb-redeem-mode" value="full" x-model="mode" class="mt-0.5 accent-dark-gold w-4 h-4">
+              <input type="radio" name="wb-redeem-mode" value="full" x-model="mode" class="mt-0.5">
               <span class="leading-tight">
                 <span class="block font-kurdis-semi-condensed font-bold text-espresso text-[14px]">{{ 'customer.dashboard.redeem_fully' | t }}</span>
                 <span class="block font-kurdis-semi-condensed text-espresso/60 text-[12px]"><span x-text="balanceFormatted"></span> {{ 'customer.dashboard.redeem_available_suffix' | t }}</span>
@@ -57,34 +59,31 @@
             </label>
 
             <label class="flex items-start !gap-3 py-2 cursor-pointer">
-              <input type="radio" name="wb-redeem-mode" value="partial" x-model="mode" class="mt-0.5 accent-dark-gold w-4 h-4">
+              <input type="radio" name="wb-redeem-mode" value="partial" x-model="mode" class="mt-0.5">
               <span class="leading-tight w-full">
                 <span class="block font-kurdis-semi-condensed font-bold text-espresso text-[14px]">{{ 'customer.dashboard.redeem_partially' | t }}</span>
-                <span x-show="mode === 'partial'" x-cloak class="mt-2 block" style="display:none">
+                <span x-show="mode === 'partial'" class="mt-2 block" style="display:none">
                   <label class="block font-kurdis-semi-condensed text-espresso/60 text-[11px] mb-1">{{ 'customer.dashboard.redeem_amount_label' | t }}</label>
-                  <input type="number" min="0" step="0.01" x-model="amount" @click.stop
-                         class="w-full rounded-[6px] border border-espresso/30 bg-white px-3 py-2 text-espresso text-[14px] focus:outline-none focus:border-dark-gold">
+                  <input type="number" min="0" step="0.01" x-model="amount" @click.stop class="wb-redeem-input font-kurdis-semi-condensed text-[14px]">
                 </span>
               </span>
             </label>
           </div>
 
-          <p x-show="error === 'invalid_amount'" x-cloak class="font-kurdis-semi-condensed text-[12px] text-[#BD2121] mb-3" style="display:none">{{ 'customer.dashboard.redeem_err_invalid_amount' | t }}</p>
-          <p x-show="error && error !== 'invalid_amount'" x-cloak class="font-kurdis-semi-condensed text-[12px] text-[#BD2121] mb-3" style="display:none">{{ 'customer.dashboard.redeem_err_failed' | t }}</p>
+          <p x-show="error === 'invalid_amount'" class="font-kurdis-semi-condensed text-[12px] text-[#BD2121] mb-3" style="display:none">{{ 'customer.dashboard.redeem_err_invalid_amount' | t }}</p>
+          <p x-show="error && error !== 'invalid_amount'" class="font-kurdis-semi-condensed text-[12px] text-[#BD2121] mb-3" style="display:none">{{ 'customer.dashboard.redeem_err_failed' | t }}</p>
 
-          <button type="button" @click="submit()" :disabled="loading"
-                  class="btn secondary-gold shadow-button !w-full !h-[44px] !text-[15px]"
-                  :class="loading && 'opacity-60 pointer-events-none'">
-            <span class="mt-0.5" x-text="loading ? '…' : '{{ 'customer.dashboard.redeem_generate' | t }}'"></span>
+          <button type="button" @click="submit()" :disabled="loading" class="wb-redeem-btn font-kurdis-condensed font-extrabold uppercase text-[15px]">
+            <span x-text="loading ? '…' : '{{ 'customer.dashboard.redeem_generate' | t }}'"></span>
           </button>
         </div>
 
         {%- comment -%} ---------- Step: result ---------- {%- endcomment -%}
-        <div x-show="step === 'result'" x-cloak style="display:none">
+        <div x-show="step === 'result'" style="display:none">
           <p class="font-kurdis-semi-condensed font-bold text-espresso text-[13px] mb-2">{{ 'customer.dashboard.redeem_your_code' | t }}</p>
           <div class="flex items-center !gap-2 mb-4">
-            <code class="flex-1 rounded-[6px] border border-dashed border-espresso/40 bg-white px-3 py-3 font-kurdis-semi-condensed font-bold text-espresso text-[16px] tracking-wide break-all" x-text="result && result.code"></code>
-            <button type="button" @click="copyCode()" class="shrink-0 rounded-[6px] border border-espresso/30 px-3 py-3 font-kurdis-semi-condensed font-bold text-espresso text-[12px] hover:bg-espresso/5">
+            <code class="wb-redeem-code font-kurdis-semi-condensed font-bold text-espresso text-[16px]" x-text="result && result.code"></code>
+            <button type="button" @click="copyCode()" class="wb-redeem-btn--ghost font-kurdis-semi-condensed font-bold text-[12px]">
               <span x-text="copied ? '{{ 'customer.dashboard.redeem_copied' | t }}' : '{{ 'customer.dashboard.redeem_copy' | t }}'"></span>
             </button>
           </div>
@@ -93,8 +92,8 @@
 
           <p class="font-kurdis-semi-condensed text-espresso text-[12px] mb-4">{{ 'customer.dashboard.redeem_remaining' | t }} <span class="font-bold text-dark-gold" x-text="result && result.new_balance_formatted"></span></p>
 
-          <button type="button" @click="applyToCart()" x-show="!isMock" class="btn secondary-gold shadow-button !w-full !h-[44px] !text-[15px]">
-            <span class="mt-0.5">{{ 'customer.dashboard.redeem_apply' | t }}</span>
+          <button type="button" @click="applyToCart()" x-show="!isMock" class="wb-redeem-btn font-kurdis-condensed font-extrabold uppercase text-[15px]">
+            {{ 'customer.dashboard.redeem_apply' | t }}
           </button>
         </div>
 
