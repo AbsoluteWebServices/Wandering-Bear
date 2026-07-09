@@ -1,0 +1,13 @@
+.multi-collection-slider .swiper-wrapper {
+    transform: translate3d(12px, 0, 0);
+}
+
+.multi-collection-slider .swiper-slide {
+    width: var(--width); 
+    margin-right: var(--margin-right);
+
+    @media (max-width: 768px) {
+        width: var(--width-mobile);
+        margin-right: var(--margin-right-mobile);
+    }
+}

@@ -15,29 +15,30 @@
     assign title_badge = section_settings.title_badge
 %}
 
+{% capture title_styles %}
+    --font-size: {{ section.settings.font_size }}px;
+    --font-size-mobile: {{ section.settings.font_size_mobile }}px;
+{% endcapture %}
+
 {% capture founders_content %}
-    <div class="wb-flex flex-col gap-3 relative md:!mt-[100px] relative">
+    <div class="wb-flex flex-col gap-3 relative relative">
     {% if title_badge != blank %}
-        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-2 -right-12 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
+        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-11 -right-18 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
     {% endif %}
-    {% if title_type == 'image' %}
-        {% if title_image != blank %}
-            <div class="max-w-[442px] w-full mx-auto md:!mb-2 md:!mt-11">
-                {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
-            </div>
-        {% endif %}
-    {% elsif title_type == 'text' %}
-        {% if title != blank %}
-            <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
-        {% endif %}
+    {% if title_type == 'image' and title_image != blank %}
+        <div class="max-w-[442px] w-full mx-auto mb-2">
+            {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+        </div>
+    {% elsif title_type == 'text' and title != blank %}
+        <span class="h1 mb-8 title-text leading-[1.2] text-center" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     {% if content != blank %}
-        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:mt-5">
+        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:!mt-5">
             {{ content }}
         </div>
     {% endif %}
     {% if signature_image != blank %}
-        <div class="w-full max-w-[141px] md:!max-w-[224px] w-full mx-auto md:!mb-5">
+        <div class="w-full max-w-[141px] md:!max-w-[224px] w-full mx-auto">
             {{ signature_image | image_url: width: 365 | image_tag: class: 'w-full max-h-full object-contain', alt: title_alt }}
         </div>
     {% endif %}
@@ -46,38 +47,59 @@
  
 {% capture video_content %}
     {% if video != blank %}
-    <div x-data="VideoPlayer()" class="rounded-[10px] overflow-hidden relative shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+    <div x-data="VideoPlayer()" class="founders-video rounded-[10px] overflow-hidden relative shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
         <div @click="toggleSound()" class="absolute bottom-5 left-5 z-5 cursor-pointer">
             <span class="visually-hidden">Toggle Sound</span>
-            <div class="flex items-center justify-center h-10 w-10 rounded-full bg-[rgba(249,222,88,0.7)] text-white">
+            <div class="flex items-center justify-center h-6 w-6 rounded-full bg-[rgba(249,222,88,0.7)] text-white">
                 <div class="w-6 h-6 flex items-center justify-center">
                 <span x-show="videoMuted" x-cloak class="block">
-                        {% render 'icons', icon: 'mute' class: 'w-8 h-auto mt-1.5 -ml-0.5' %}
+                        {% render 'icons', icon: 'mute' class: 'w-5 h-auto mt-1 -ml-0.5' %}
                     </span>
                     <span x-show="!videoMuted" x-cloak class="block">
-                        {% render 'icons', icon: 'unmute' class: 'w-8 h-auto mt-1.5' %}
+                        {% render 'icons', icon: 'unmute' class: 'w-5 h-auto mt-1' %}
                     </span>
                 </div>
             </div>
         </div>
-          <div @click="togglePlay()">
-            {% render 'video', video: video, disable_controls: true, video_autoplay: true %}
-          </div>
+          <div @click="togglePlay()" class="video-wrapper h-full w-full relative wb-flex justify-center items-center group">
+            <span class="icon-play hidden">
+              {{- 'icon-play.svg' | inline_asset_content -}}
+            </span>
+            <span class="icon-pause">
+              {{- 'icon-pause.svg' | inline_asset_content -}}
+            </span>
+            {% for source in video.sources %}
+                {% if source.mime_type == 'video/mp4' %}
+                    <video
+                        class="h-full w-full object-cover cursor-pointer"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                        webkit-playsinline
+                        preload="auto"
+                    >
+                        <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    </video>
+                  {% break %}
+                {% endif %}
+              {% endfor %}         
+            </div>
         </div>
     {% endif %}
 {% endcapture %}
 <div class="relative pt-[84px] md:!pt-[110px] pb-[46px] md:!pb-[90px]" style="background-color: {{ color_scheme.background }}">
-    <div class="absolute top-0 left-0 right-0 h-5 z-[2]"
+    <div class="absolute top-0 left-0 right-0 h-[100px] z-[2]"
     style="background: linear-gradient(to bottom, {{ color_scheme.settings.background }} 0%, transparent 100%);"></div>
 
     {% if background_image != blank %}
         {% render 'picture', source: background_image, class: 'w-full !h-full object-cover absolute inset-0' %}
     {% endif %}
     <div class="max-w-[936px] w-full container mx-auto relative">
-        <div class="wb-flex flex-col-reverse md:!flex-row gap-4 justify-between items-center px-[50px] md:!px-0">
+        <div class="wb-flex flex-col-reverse md:!flex-row gap-4 md:gap-10 lg:gap-4 justify-between items-center px-[50px] md:!px-0 w-full md:w-fit lg:w-full">
             <div class="max-w-[281px] md:!max-w-[400px] w-full relative">
                 {% if badge != blank %}
-                    {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] bottom-[72px] -left-10 md:!-left-[55px] !w-[68px] md:!w-[104px] !h-auto' }}
+                    {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] bottom-[60px] md:bottom-[72px] -rotate-[15deg] -left-11 sm:-left-10 md:!-left-[55px] !w-[68px] md:!w-[104px] !h-auto' }}
                 {% endif %}
                 {{ video_content }}
             </div>
@@ -88,6 +110,44 @@
         </div>
     </div>
 </div>
+
+{% style %}
+    .title-text {
+        font-size: var(--font-size);
+    }
+
+    @media (max-width: 1024px) {
+        .title-text {
+            font-size: var(--font-size-mobile);
+        }
+    }
+
+    .video-wrapper {
+        .icon-play, .icon-pause {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover {
+            .icon-play, .icon-pause {
+                opacity: 1;
+            }
+        }
+    }
+
+    .icon-play, .icon-pause {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);     
+        color: #fff;   
+
+        svg {
+            height: 80px !important;
+            width: 80px !important;
+        }
+    }
+{% endstyle %}
 
 {% schema %}
 {
@@ -119,6 +179,29 @@
             "type": "text",
             "id": "title",
             "label": "Title",
+            "visible_if": "{{ section.settings.title_type == 'text' }}",
+            "info": "Add '\\b' for line breaks"
+        },
+        {
+            "type": "range",
+            "id": "font_size",
+            "label": "Font Size",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
+            "visible_if": "{{ section.settings.title_type == 'text' }}"
+        },
+        {
+            "type": "range",
+            "id": "font_size_mobile",
+            "label": "Font Size Mobile",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
             "visible_if": "{{ section.settings.title_type == 'text' }}"
         },
         {
