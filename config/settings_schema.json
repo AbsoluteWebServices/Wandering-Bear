@@ -2425,8 +2425,7 @@
         "type": "text",
         "id": "account_worker_dev_token",
         "label": "Account worker dev token",
-        "info": "Only if the worker's /dev requires a token (DEV_TOKEN on the deployed worker). Sent as ?token= next to customerId. Leave EMPTY for a local worker or the App Proxy path.",
-        "default": ""
+        "info": "Only if the worker's /dev requires a token (DEV_TOKEN on the deployed worker). Sent as ?token= next to customerId. Leave EMPTY for a local worker or the App Proxy path."
       }
     ]
   }

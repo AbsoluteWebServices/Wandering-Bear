@@ -102,10 +102,11 @@
         <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black">
           {%- if is_cancelled -%}{{ 'customer.dashboard.previous_autoship' | t }}{%- else -%}{{ 'customer.dashboard.next_autoship' | t }}{%- endif -%}
         </span>
+        {%- capture active_autoships_template -%}{{ 'customer.dashboard.active_autoships' | t: count: 0 }}{%- endcapture -%}
         {%- if is_cancelled -%}
           <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-foam bg-[#BD2121]">{{ 'customer.dashboard.cancelled' | t }}</span>
         {%- else -%}
-          <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '{n}' }}">{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}</span>
+          <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ active_autoships_template | replace: '0', '{n}' }}">{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}</span>
         {%- endif -%}
       </div>
       <div class="flex items-baseline justify-between mb-2 !gap-2">
@@ -114,7 +115,8 @@
           <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none whitespace-nowrap text-bear-black">{{ 'customer.dashboard.next_shipment_label' | t }} <span data-wb-autoship-date>{{ autoship_next_date }}</span></span>
         {%- endunless -%}
       </div>
-      <ul class="flex flex-col !gap-1.5 mb-4" data-wb-autoship-items data-wb-more-template="{{ 'customer.dashboard.more_count' | t: count: '{n}' }}">
+      {%- capture more_count_template -%}{{ 'customer.dashboard.more_count' | t: count: 0 }}{%- endcapture -%}
+      <ul class="flex flex-col !gap-1.5 mb-4" data-wb-autoship-items data-wb-more-template="{{ more_count_template | replace: '0', '{n}' }}">
         {%- for item in autoship_items -%}
           <li class="flex items-center justify-between !gap-2 font-kurdis-semi-condensed font-bold text-[10px] leading-none text-[#955325]">
             <span>{{ item }}</span>

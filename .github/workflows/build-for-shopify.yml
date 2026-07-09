@@ -74,7 +74,7 @@ jobs:
           # Only commit the built assets, not any workflow changes
           git reset --soft HEAD~1 || true  # Undo the current commit but keep changes staged
           git reset HEAD .  # Unstage everything
-          git add -f assets/ snippets/ sections/  # Only stage the built assets
+          git add -f assets/*.js assets/*.css assets/*.svg snippets/vite-tag.liquid sections/  # Only stage valid built assets
 
           # Create a clean commit with just the built assets
           git commit -m "Update built assets for ${{ steps.extract_branch.outputs.BRANCH_NAME }}"
