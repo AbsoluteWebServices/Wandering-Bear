@@ -10,7 +10,7 @@
   assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
   assign credits_earned = customer.metafields.inveterate.credits_earned | default: 0
   assign credits_formatted = credits_earned | money_without_trailing_zeros
-  assign credits_expiry = '01/01/2028'
+  assign credits_expiry = ''
   assign t_redeem = 'customer.dashboard.redeem_credits' | t
   # Items in cart → checkout (Inveterate's native "Store credits to use" field); empty → cart.
   assign redeem_url = routes.cart_url

@@ -96,6 +96,30 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
 }
+/* Skeleton for worker-driven values: they render EMPTY in SSR (no preset/mock data), so while
+   [data-wb-loading] an empty hook shows a shimmer bar. account.ts fills the text (no longer :empty)
+   and removes data-wb-loading → real value shows, skeleton gone. */
+[data-wb-account][data-wb-loading] [data-wb-autoship-bundle]:empty,
+[data-wb-account][data-wb-loading] [data-wb-autoship-date]:empty,
+[data-wb-account][data-wb-loading] [data-wb-autoship-count]:empty,
+[data-wb-account][data-wb-loading] [data-wb-progress-tier]:empty,
+[data-wb-account][data-wb-loading] [data-wb-progress-text]:empty,
+[data-wb-account][data-wb-loading] [data-wb-credit-expiry]:empty {
+    display: inline-block;
+    min-width: 8ch;
+    min-height: 0.9em;
+    border-radius: 4px;
+    background: rgba(67, 26, 3, 0.10);
+    animation: wb-pulse 1.1s ease-in-out infinite;
+}
+/* Worker fills the autoship line-item list; empty until then (no preset rows). */
+[data-wb-account][data-wb-loading] [data-wb-autoship-items]:empty {
+    display: block;
+    min-height: 2.5em;
+    border-radius: 6px;
+    background: rgba(67, 26, 3, 0.08);
+    animation: wb-pulse 1.1s ease-in-out infinite;
+}
 /* MANAGE control (Stay AI portal) — account.ts wires the click / disables it. */
 [data-wb-autoship-manage] {
     cursor: pointer;

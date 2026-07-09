@@ -23,26 +23,24 @@
   endif
 
   assign credits_formatted = credits_formatted | default: '$0'
-  assign credits_expiry = '01/01/2028'
   assign fname = first_name | default: customer.first_name
 
-  # ---- SSR fallback only (account.ts overwrites from the worker). Title = product_group.headline
-  # + product.metafields.custom.flavor_name; "+N more" links to the Stay AI portal. ----
-  assign autoship_count = 2
-  assign autoship_bundle = 'Cold Brew On Tap (96oz) - Straight Black'
-  assign autoship_next_date = 'July 25, 2025'
-  assign autoship_more = 3
-  assign autoship_items = 'Cold Brew On Tap (96oz) - Straight Black' | split: '|'
+  # ---- Worker-hydrated fields start EMPTY — NO preset/mock data. account.ts fills them from the
+  # worker; a skeleton shimmer shows while [data-wb-loading]. (Tier, credit balance + benefits are
+  # SSR-native and stay.) ----
+  assign credits_expiry = ''
+  assign autoship_count = ''
+  assign autoship_bundle = ''
+  assign autoship_next_date = ''
+  assign autoship_more = 0
+  assign autoship_items = '' | split: '|'
+  assign next_tier_label = ''
+  assign progress_percent = 0
+  assign progress_text = ''
 
   if display_tier == 'FREE'
-    assign next_tier_label = 'VIP'
-    assign progress_percent = 55
-    assign progress_text = 'Spend $50.23 more to reach VIP status or sign up for autoship'
     assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service' | split: '|'
   elsif display_tier == 'VIP'
-    assign next_tier_label = 'ELITE'
-    assign progress_percent = 65
-    assign progress_text = 'Spend $207.15 more to reach Elite status or upgrade below'
     assign benefits = 'Earn $5 for every $50 spent|Access exclusive flavors|Autoship discount on all orders|VIP Customer Service' | split: '|'
   else
     assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service|Early access to sales and launches|VIP Anniversary rewards' | split: '|'
@@ -122,7 +120,7 @@
         {%- if is_cancelled -%}
           <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-foam bg-[#BD2121]">{{ 'customer.dashboard.cancelled' | t }}</span>
         {%- else -%}
-          <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}">{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}</span>
+          <span class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}"></span>
         {%- endif -%}
       </div>
       <div class="flex items-baseline justify-between mb-2 !gap-2">
@@ -133,12 +131,14 @@
       </div>
       <ul class="flex flex-col !gap-1.5 mb-4" data-wb-autoship-items data-wb-more-template="{{ 'customer.dashboard.more_count' | t: count: '__N__' }}">
         {%- for item in autoship_items -%}
+          {%- if item != blank -%}
           <li class="flex items-center justify-between !gap-2 font-kurdis-semi-condensed font-bold text-[10px] leading-none text-[#955325]">
             <span>{{ item }}</span>
             {%- if forloop.last and autoship_more > 0 -%}
               <a href="{{ settings.manage_autoship_url }}" class="hover-underline shrink-0 whitespace-nowrap text-[#955325]">{{ 'customer.dashboard.more_count' | t: count: autoship_more }}</a>
             {%- endif -%}
           </li>
+          {%- endif -%}
         {%- endfor -%}
       </ul>
       {%- if is_cancelled -%}
