@@ -11,23 +11,24 @@
     assign badge = section_settings.badge
 %}
 
-<div class="pt-5 pb-0 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
+{% capture title_styles %}
+    --font-size: {{ section.settings.font_size }}px;
+    --font-size-mobile: {{ section.settings.font_size_mobile }}px;
+{% endcapture %}
+
+<div class="pt-5 pb-3 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[60px] md:!-top-[120px] right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[100px] !h-auto shadow-button' }}
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[70px] sm:-top-[60px] md:!-top-[100px] right-[2.5vw] sm:right-[5vw] md:right-[13vw] xl:right-[25vw] 2xl:right-[28vw] 4xl:right-[30vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
     {% endif %}
-    {% if title_type == 'image' %}
-        {% if title_image != blank %}
+    {% if title_type == 'image' and title_image != blank %}
             <div class="h-[36px] mx-auto mb-5 md:!mb-7.5">
               {{ title_image | image_url: width: 365 | image_tag: class: 'w-full !max-w-[228px] md:!max-w-full max-h-full object-contain mx-auto', alt: title_alt }}
             </div>
-        {% endif %}
-    {% elsif title_type == 'text' %}
-        {% if title != blank %}
-            <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
-        {% endif %}
+    {% elsif title_type == 'text' and title != blank %}
+        <span class="h1 mb-8 title-text leading-[1.2] text-center mx-auto mb-5 md:!mb-7.5 block" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     <div class="container max-w-[1140px] mx-auto">
-        <div class="wb-grid grid-cols-1 lg:!px-5 xl:!px-0 md:grid-cols-3 gap-0 md:gap-[90px] relative z-[1]">
+        <div class="wb-grid grid-cols-1 gap-2 px-0 md:!px-5 xl:!px-0 md:grid-cols-3 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none">
             {% for block in section.blocks %}
                 {% liquid
                     assign image = block.settings.image
@@ -37,32 +38,46 @@
                     assign subtitle = block.settings.subtitle
                     assign accent_text = block.settings.accent_text
                     assign badge = block.settings.badge
+                    assign url = block.settings.url
+                    assign hover_image = block.settings.hover_image
                 %}
-                <div class="relative group {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
-                    <a href="{{ collection.url }}">
+                <div class="relative group w-full h-full {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
+                    <a href="{{ url }}" class="relative block w-full h-fit">
                     {% if badge != blank %}
-                        {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-[50px] -left-[50px] !w-[148px] !h-auto' }}
+                        {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:block absolute z-[3] -top-[50px] -left-[50px] !w-[148px] !h-auto' }}
                     {% endif %}
-                    {% if image != blank %}
-                        {% render 'picture', 
-                            source: image, 
-                            tablet_source: image_mobile,
-                            mobile_source: image_mobile,
-                            class: 'w-full h-full object-cover group-hover:brightness-110 transition-all duration-300',
-                            preload: 'eager',
-                            loading: 'eager'
-                        %}
-                    {% endif %}
+                    <div class="wb-grid grid-cols-1 grid-rows-1 relative block w-full h-full">
+                        {% if image != blank %}
+                            {% render 'picture', 
+                                source: image, 
+                                image: image,
+                                image_mobile: image_mobile,
+                                tablet_source: image_mobile,
+                                mobile_source: image_mobile,
+                                class: ' w-full h-full relative z-[1] top-0 left-0 object-cover group-hover:md:opacity-0 transition-opacity duration-300',
+                                preload: 'eager',
+                                loading: 'eager'
+                            %}
+                        {% endif %}
+                        {% if hover_image != blank %}
+                            {% render 'picture', 
+                                source: hover_image,
+                                class: 'hidden md:block opacity-0 absolute h-[calc(100%+4px)] w-[calc(100%+4px)] z-[2] top-0 left-0 object-cover w-full h-full group-hover:!opacity-100 transition-opacity duration-300'
+                                preload: 'eager',
+                                loading: 'eager'
+                            %}
+                        {% endif %}
+                    </div>
                     </a>
                     <div class="hidden md:!flex flex-col mt-2 {% unless accent_text != blank %} {% endunless %} items-center">
                         {% if title != blank %}
-                            <a href="{{ collection.url }}" class="h1 text-center group-hover:!text-gold transition-all duration-300" style="color: {{ text_color }}">{{ title }}</a>
+                            <a href="{{ collection.url }}" class="h1 text-center" style="color: {{ text_color }}">{{ title }}</a>
                         {% endif %}
                         {% if accent_text != blank %}
                             <span class="accent text-gold text-center !text-lg">{{ accent_text }}</span>
                         {% endif %}
                         {% if subtitle != blank %}
-                            <span class="body text-espresso text-center text-balance group-hover:!text-gold transition-all duration-300" style="color: {{ text_color }}">{{ subtitle }}</span>
+                            <span class="body text-espresso text-center text-balance" style="color: {{ text_color }}">{{ subtitle | replace: '\b', '<br>' }}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -73,6 +88,18 @@
     <path d="M1290 27.249L970 28L352 21.9804L3.62444e-07 23.854L2.44783e-06 -1.16568e-06L1290 0.00011161L1290 27.249Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
 </div>
+
+{% style %}
+    .title-text {
+        font-size: var(--font-size);
+    }
+
+    @media (max-width: 1024px) {
+        .title-text {
+            font-size: var(--font-size-mobile);
+        }
+    }
+{% endstyle %}
 
 
 {% schema %}
@@ -105,6 +132,29 @@
             "type": "text",
             "id": "title",
             "label": "Title",
+            "visible_if": "{{ section.settings.title_type == 'text' }}",
+            "info": "Add '\\b' for line breaks"
+        },
+        {
+            "type": "range",
+            "id": "font_size",
+            "label": "Font Size",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
+            "visible_if": "{{ section.settings.title_type == 'text' }}"
+        },
+        {
+            "type": "range",
+            "id": "font_size_mobile",
+            "label": "Font Size Mobile",
+            "min": 16,
+            "max": 100,
+            "step": 1,
+            "unit": "px",
+            "default": 24,
             "visible_if": "{{ section.settings.title_type == 'text' }}"
         },
         {
@@ -131,14 +181,19 @@
             "name": "Collection Tile",
             "settings": [
                 {
-                    "type": "collection",
-                    "id": "collection",
-                    "label": "Collection"
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
                 },
                 {
                     "type": "image_picker",
                     "id": "image",
                     "label": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "hover_image",
+                    "label": "Hover Image"
                 },
                 {
                     "type": "image_picker",
@@ -158,7 +213,8 @@
                 {
                     "type": "text",
                     "id": "subtitle",
-                    "label": "Subtitle"
+                    "label": "Subtitle",
+                    "info": "Use '\\b' for line breaks"
                 },
                 {
                     "type": "text",

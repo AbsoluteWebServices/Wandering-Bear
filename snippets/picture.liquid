@@ -31,13 +31,22 @@
 {% if sources %}
     {{ sources }}
 {% else %}
-    <source srcset="{{ desktop_source | image_url: width: 1920 }}" media="(min-width: 1920px)">
-    <source srcset="{{ desktop_source | image_url: width: 1440 }}" media="(min-width: 1440px)">
-    <source srcset="{{ desktop_source | image_url: width: 1200 }}" media="(min-width: 1200px)">
-    <source srcset="{{ desktop_source | image_url: width: 1920 }}" media="(min-width: 1024px)">
-    <source srcset="{{ resolved_tablet | image_url: width: 768 }}" media="(min-width: 768px)">
-    <source srcset="{{ resolved_mobile | image_url: width: 480 }}" media="(min-width: 480px)">
-    <source srcset="{{ resolved_mobile | image_url: width: 320 }}" media="(min-width: 320px)">
+    <source srcset="{{ source | image_url: width: 1920 }}" media="(min-width: 1920px)">
+    <source srcset="{{ source | image_url: width: 1440 }}" media="(min-width: 1440px)">
+    <source srcset="{{ source | image_url: width: 1200 }}" media="(min-width: 1200px)">
+    <source srcset="{{ source | image_url: width: 1920 }}" media="(min-width: 1024px)">
+    {% if tablet_source %}
+        <source srcset="{{ tablet_source | image_url: width: 768 }}" media="(min-width: 768px)">
+    {% else %}
+        <source srcset="{{ source | image_url: width: 768 }}" media="(min-width: 768px)">
+    {% endif %}
+    {% if mobile_source %}
+        <source srcset="{{ mobile_source | image_url: width: 500 }}" media="(max-width: 480px)">
+        <source srcset="{{ mobile_source | image_url: width: 767 }}" media="(max-width: 767px)">
+    {% else %}
+        <source srcset="{{ source | image_url: width: 500 }}" media="(max-width: 480px)">
+        <source srcset="{{ source | image_url: width: 767 }}" media="(max-width: 767px)">
+    {% endif %}
 {% endif %}
 {% endcapture %}
 
