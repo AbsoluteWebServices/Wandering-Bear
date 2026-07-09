@@ -8,6 +8,11 @@
 ehthumbs.db
 Thumbs.db
 node_modules
+.shopify
+.env
+.idea
+.cursor/screenshots/
+snippets/vite-tag.liquid
 
 # Claude local settings (personal, per-worktree)
 .claude/settings.local.json
