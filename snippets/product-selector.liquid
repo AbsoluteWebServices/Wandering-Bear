@@ -18,7 +18,7 @@
   assign oos_button_text = section.settings.oos_button_text | default: 'Get Notified'
 %}
 
-<div @click="selectProduct({{ child_product.id }})" data-product-id="{{ child_product.id }}"
+<div @click="selectProduct({{ child_product.id }},'{{ child_product.handle }}')" data-product-id="{{ child_product.id }}"
   :class="{ 'selected-product': selectedProduct?.id === {{ child_product.id }}}"
   class="wb-flex bg-[#F9F3ED] items-stretch rounded-[5px] cursor-pointer h-auto flex-nowrap{% if is_selected %} selected-product{% endif %}"
 >

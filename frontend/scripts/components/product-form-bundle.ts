@@ -235,6 +235,12 @@ export default (Alpine: AlpineType) => {
           this.selectedBundleProducts = {};
         },
 
+        _updateUrl(productHandle) {
+          const url = new URL(window.location.href)
+          url.pathname = `/products/${productHandle}`
+          window.history.pushState({}, "", url.toString())
+        },
+
         _addQueryParam(key, value) {
           const url = new URL(window.location)
           url.searchParams.set(key, value)
@@ -343,21 +349,7 @@ export default (Alpine: AlpineType) => {
 
             this.bundleProducts = JSON.parse(this.$refs.productObject.textContent);
             this.bundleParentProducts = JSON.parse(this.$refs.bundleParentProducts.textContent);
-            this.selectedProduct = queryParams && productId ? this.bundleProducts[productId] : this.bundleProducts[this.selectedProductId];
-
-            if (productId && (productId !== this.selectedProductId)) {
-              this.selectProduct(productId);
-            } else {
-              this.$nextTick(() => {
-                window.dispatchEvent(new CustomEvent('product-loaded', {
-                  detail: {
-                    jsLoaded: true
-                  },
-                  bubbles: true,
-                  composed: true
-                }));
-              })
-            }
+            this.selectedProduct = this.bundleProducts[this.selectedProductId];
 
             if (this.bundleQty) {
               this.qtyLimit = this.bundleQty;
@@ -394,8 +386,8 @@ export default (Alpine: AlpineType) => {
 
         },
         
-        selectProduct(productId) {
-            this._addQueryParam('product', productId);
+        selectProduct(productId, productHandle) {
+            this._updateUrl(productHandle);
             this.selectedProduct = this.bundleProducts[productId];
             this._setProgressBarPrices();
             this.$nextTick(() => {

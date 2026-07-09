@@ -15,8 +15,8 @@
     "file": "wb-events.CKdcfN1K.js",
     "name": "events"
   },
-  "_wb-swiper.DKvx4XeA.js": {
-    "file": "wb-swiper.DKvx4XeA.js",
+  "_wb-swiper.DjTz7BiD.js": {
+    "file": "wb-swiper.DjTz7BiD.js",
     "name": "swiper",
     "imports": [
       "frontend/entrypoints/main.js"
@@ -38,7 +38,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.CzkuFa3Y.js",
+    "file": "wb-main.Ds0DW59d.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -121,13 +121,13 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "wb-media-gallery-bundle.Bg0MzXxk.js",
+    "file": "wb-media-gallery-bundle.DKBc2OJE.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
     "imports": [
       "frontend/entrypoints/main.js",
-      "_wb-swiper.DKvx4XeA.js"
+      "_wb-swiper.DjTz7BiD.js"
     ]
   },
   "frontend/scripts/components/modal.ts": {
@@ -143,7 +143,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/product-form-bundle.ts": {
-    "file": "wb-product-form-bundle.D-kPskXZ.js",
+    "file": "wb-product-form-bundle.vmnkqbtX.js",
     "name": "product-form-bundle",
     "src": "frontend/scripts/components/product-form-bundle.ts",
     "isDynamicEntry": true,
@@ -167,23 +167,23 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/productsSlider.ts": {
-    "file": "wb-productsSlider.Ca8wUNPK.js",
+    "file": "wb-productsSlider.CnmhpG-9.js",
     "name": "productsSlider",
     "src": "frontend/scripts/components/productsSlider.ts",
     "isDynamicEntry": true,
     "imports": [
       "frontend/entrypoints/main.js",
-      "_wb-swiper.DKvx4XeA.js"
+      "_wb-swiper.DjTz7BiD.js"
     ]
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.BoMELpS0.js",
+    "file": "wb-swiperSlider.Cr33D7IQ.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,
     "imports": [
       "frontend/entrypoints/main.js",
-      "_wb-swiper.DKvx4XeA.js"
+      "_wb-swiper.DjTz7BiD.js"
     ]
   },
   "frontend/scripts/components/tooltip.ts": {

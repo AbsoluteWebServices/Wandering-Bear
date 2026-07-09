@@ -1,7 +1,13 @@
 {% liquid
     assign vip = product.metafields.custom.vip
     assign product_data = product.metafields.custom.product_group.value
-    assign pdp_link = product_data.pdp_link | append: '?product=' | append: product.id
+    assign template_suffix = product_data.template_suffix
+    #TODO: Remove the view query param once live
+    if template_suffix != blank
+      assign product_url = product.url | append: '?view=' | append: template_suffix
+    else
+      assign product_url = product.url
+    endif
 %}
 
 
@@ -20,7 +26,9 @@
             </div>
         </div>
     {% endif %}
-    <a href="{{ pdp_link | default: product.url }}">
+
+    {% comment %} TODO: Remove the view query param once live {% endcomment %}
+    <a href="{{ product_url }}">
         
         {% if product.metafields.custom.carousel_image != blank %}
             {% render 'picture', source: product.metafields.custom.carousel_image, class: 'w-full h-full object-cover w-full h-full shadow-button border border-transparent group-hover:border-gold rounded-[14px] lg:rounded-[1vw] transition-all duration-300' %}
