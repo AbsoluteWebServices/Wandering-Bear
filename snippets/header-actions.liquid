@@ -217,7 +217,7 @@
                     <div
                       class="cart-drawer__summary"
                     >
-                      {% render 'cart-summary', section_id: section.id %}
+                      {% render 'aw-cart-summary', section_id: section.id %}
                     </div>
                   </scroll-hint>
                 {%- endif -%}
@@ -445,7 +445,7 @@
   }
 
   .cart-drawer__summary {
-    --cart-drawer-summary-padding: var(--padding-lg);
+    --cart-drawer-summary-padding: 0;
 
     position: sticky;
     bottom: 0;
@@ -461,7 +461,7 @@
     mask-image: linear-gradient(to bottom, transparent, black var(--cart-drawer-summary-padding));
 
     @media screen and (min-width: 750px) {
-      --cart-drawer-summary-padding: var(--padding-2xl);
+      --cart-drawer-summary-padding: 0;
     }
   }
 

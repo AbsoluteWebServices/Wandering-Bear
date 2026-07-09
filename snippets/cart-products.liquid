@@ -257,7 +257,7 @@
                             :aria-expanded="open"
                             :aria-controls="$id('dropdown-button')"
                             type="button"
-                            class="relative text-left flex items-center whitespace-nowrap justify-between gap-2 py-2 rounded-[5px] w-full border border-[#E0D2C6] px-4"
+                            class="relative cursor-pointer text-left flex items-center whitespace-nowrap font-kurdis-semi-condensed text-espresso font-bold justify-between gap-2 py-2 rounded-[2px] w-full border border-[#E0D2C6] px-4"
                         >
                         <span data-frequency>
                         {% if has_selling_plan %}
@@ -279,19 +279,20 @@
                             x-on:click.outside="close($refs.button)"
                             :id="$id('dropdown-button')"
                             x-cloak
-                            class="absolute left-0 min-w-48 rounded-lg shadow-sm z-10 origin-top-left bg-white p-1.5 outline-none border border-gray-200 w-full"
+                            class="absolute top-0 left-0 min-w-48 rounded-[2px] shadow-button z-10 origin-top-left bg-[#F9F3ED] outline-none border border-[#E0D2C6] w-full"
                         >
                         {% for selling_plan_group in parent_item.product.selling_plan_groups %}
                             {% for selling_plan in selling_plan_group.selling_plans %}
                               {% if selling_plan.name contains '1 Month' or selling_plan.name contains '1 month' %}
-                                <a href="#{{ selling_plan.id }}" class="relative px-2 lg:py-1.5 py-2 w-full flex items-center rounded-md transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <a href="#{{ selling_plan.id }}" class="relative font-kurdis-semi-condensed text-espresso font-bold px-4 lg:py-2 py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 gap-2 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                                       {% render 'icons', icon: 'recurring', class: 'text-sm inline-flex' %} 
                                       {{ selling_plan.name | split: ' - ' | first }}
+                                      <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#E0D2C6]"></div>
                                 </a>
                               {% endif %}
                             {% endfor %}
                           {% endfor %}
-                          <a href="#one-time-purchase" class="relative px-2 lg:py-1.5 py-2 w-full flex items-center rounded-md transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                          <a href="#one-time-purchase" class="relative pl-6 pr-4 py-4 font-kurdis-semi-condensed text-espresso font-bold py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
                               One Time Purchase
                           </a>
                         </div>

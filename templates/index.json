@@ -38,7 +38,6 @@
       "settings": {
         "color_scheme": "",
         "foreground_image": "shopify://shop_images/Homepage_HeaderCoffee.png",
-        "foreground_image_mobile": "shopify://shop_images/Homepage_HeaderCoffee_Mobile.png",
         "background_image": "shopify://shop_images/Homepage_Background.png",
         "background_image_tablet": "shopify://shop_images/Homepage_Background.png",
         "background_image_mobile": "shopify://shop_images/Homepage_Background_Mobile.jpg",
@@ -46,8 +45,6 @@
         "title_image": "shopify://shop_images/COFFEE_SHOP_QUALITY_DRINKS_MADE_EASY..svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226599.png",
         "title_text": "COFFEE SHOP\\bQUALITY DRINKS\\bMADE EASY",
-        "font_size": 75,
-        "font_size_mobile": 45,
         "subtitle": "For the at-home pajama baristas"
       }
     },
