@@ -15,7 +15,7 @@
     assign right_blocks = section.blocks | where: 'type', 'value_prop_right'
 %}
 
-<div class="relative pt-[70px]" style="background-color: {{ background_color }}; color: {{ text_color }}">
+<div class="relative pt-10 md:pt-18" style="background-color: {{ background_color }}; color: {{ text_color }}">
   {% if background_image != blank %}
     <div class="absolute inset-0 w-full h-full z-[0]">
       {{ background_image | image_url: width: 1000 | image_tag: class: 'w-full !h-full object-cover' }}
@@ -33,7 +33,7 @@
           <h2 class="font-bold text-[45px] font-gothic_condensed" style="color: {{ text_color }}">{{ title }}</h2>
         {% endif %}
         {% if subtitle != blank %}
-          <p class="body max-w-[520px]" style="color: {{ text_color }}">{{ subtitle }}</p>
+          <p class="body text-base/[120%]! max-w-[460px] font-kurdis-semi-condensed! text-bear-black! font-semibold! md:text-lg/[120%]!" style="color: {{ text_color }}">{{ subtitle }}</p>
         {% endif %}
       </div>
 
@@ -56,12 +56,12 @@
               <div class="wb-flex flex-col items-center gap-2 mr-auto w-[150px]" data-prop {{ block.shopify_attributes }}>
                 {% if block.settings.icon != blank %}
                   <div class="wb-flex items-center justify-center !w-[72px] !h-[72px] rounded-full bg-[#f0ebe3] shrink-0" data-icon data-side="left">
-                    {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain', alt: block.settings.label }}
+                    {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain md:w-18! md:h-18!' , alt: block.settings.label }}
                   </div>
                 {% endif %}
-                <span class="font-bold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
+                <span class="font-extrabold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
                 {% if block.settings.subtext != blank %}
-                  <span class="uppercase text-[0.6rem] opacity-70 text-center font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
+                  <span class="uppercase text-xs/[120%] font-semibold! text-center font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
                 {% endif %}
               </div>
             {% endfor %}
@@ -80,12 +80,12 @@
               <div class="wb-flex flex-col items-center gap-2 ml-auto w-[150px]" data-prop {{ block.shopify_attributes }}>
                 {% if block.settings.icon != blank %}
                   <div class="wb-flex items-center justify-center !w-[72px] !h-[72px] rounded-full bg-[#f0ebe3] shrink-0" data-icon data-side="right">
-                    {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain', alt: block.settings.label }}
+                    {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain md:w-18! md:h-18!' , alt: block.settings.label }}
                   </div>
                 {% endif %}
-                <span class="font-bold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
+                <span class="font-extrabold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
                 {% if block.settings.subtext != blank %}
-                  <span class="uppercase text-[0.6rem] opacity-70 text-center font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
+                  <span class="uppercase text-xs/[120%] font-semibold! text-center font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
                 {% endif %}
               </div>
             {% endfor %}
@@ -103,16 +103,16 @@
         {{ crown_icon | image_url: width: 60 | image_tag: class: '!w-[28px] !h-auto', alt: '' }}
       {% endif %}
       {% if title != blank %}
-        <h2 class="h1" style="color: {{ text_color }}">{{ title }}</h2>
+        <h2 class="h1 text-[35px]/none! font-extrabold md:text-[45px]/none!" style="color: {{ text_color }}">{{ title }}</h2>
       {% endif %}
       {% if subtitle != blank %}
-        <p class="body" style="color: {{ text_color }}">{{ subtitle }}</p>
+        <p class="body text-bear-black! font-kurdis-semi-condensed! font-semibold! text-base/[120%]! md:text-lg/[120%]!" style="color: {{ text_color }}">{{ subtitle }}</p>
       {% endif %}
     </div>
 
     {% if product_image != blank %}
       <div class="wb-flex justify-center lg:!mb-8 px-6">
-        <img src="{{ product_image | image_url: width: 560 }}" alt="{{ product_image.alt }}" loading="lazy" class="w-full !max-w-[280px] h-auto object-contain mx-auto">
+        <img src="{{ product_image | image_url: width: 560 }}" alt="{{ product_image.alt }}" loading="lazy" class="w-full h-auto object-contain mx-auto max-w-[40vw] md:!max-w-[280px]">
       </div>
     {% endif %}
 
@@ -120,14 +120,14 @@
       {% for block in section.blocks %}
         <div class="wb-flex items-center gap-4" {{ block.shopify_attributes }}>
           {% if block.settings.icon != blank %}
-            <div class="wb-flex items-center justify-center !w-[54px] !h-[54px] rounded-full bg-[#f0ebe3] shrink-0">
-              {{ block.settings.icon | image_url: width: 60 | image_tag: class: '!w-[28px] !h-[28px] object-contain', alt: block.settings.label }}
+            <div class="wb-flex items-center justify-center w-11! h-11! rounded-full bg-[#f0ebe3] shrink-0">
+              {{ block.settings.icon | image_url: width: 60 | image_tag: class: 'w-11! h-11! object-contain', alt: block.settings.label }}
             </div>
           {% endif %}
           <div class="wb-flex flex-col">
-            <span class="font-bold uppercase text-base font-gothic_condensed leading-snug">{{ block.settings.label }}</span>
+            <span class="font-extrabold uppercase text-xl/none font-gothic_condensed leading-snug">{{ block.settings.label }}</span>
             {% if block.settings.subtext != blank %}
-              <span class="uppercase text-[0.6rem] opacity-70 font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
+              <span class="uppercase text-base/none font-semibold font-kurdis-condensed">{{ block.settings.subtext }}</span>
             {% endif %}
           </div>
         </div>

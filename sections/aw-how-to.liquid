@@ -20,16 +20,18 @@
 {% endstyle %}
 
 {% capture menu %}
-    <div class="wb-flex gap-4 bg-foam border-2 border-espresso rounded-[30px] p-1.5 w-fit mb-9">
+    <div class="wb-flex gap-0.5 bg-foam border-2 border-espresso rounded-[30px] p-1.5 w-fit mb-9">
         {% for block in section.blocks %}
             {% if block.type == 'how-to-mix' %}
                 {% liquid 
                     assign metaobject = block.settings.metaobject
                     assign title = block.settings.title
                     assign title_handleize = block.settings.title | handleize
-                %}    
-                <div @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} px-4 py-3 rounded-[25px] cursor-pointer font-gothic_condensed font-bold text-base leading-[22px] tracking-[1%] uppercase"
-                :class="{ 'active': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
+                %}
+
+                <div
+                    @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} px-4 py-3 rounded-[25px] cursor-pointer font-gothic_condensed font-bold text-base leading-[22px] tracking-[1%] text-center uppercase min-w-[140px]"
+                    :class="{ 'active': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
                     <span>{{ title }}</span>
                 </div>
                 
@@ -38,11 +40,11 @@
     </div>
 {% endcapture %}
 
-<div x-data="howToMix('{{ active_title }}')" class="w-full max-w-[1099px] mx-auto lg:pt-[64px] pb-5">
-    <div class="wb-flex flex-col-reverse lg:flex-row justify-between">
-        <div class="wb-flex flex-col gap-4 mt-6 px-6">
+<div x-data="howToMix('{{ active_title }}')" class="w-full max-w-[1099px] mx-auto smd:pt-10 lg:pt-[64px] pb-5">
+    <div class="wb-flex flex-col-reverse items-center lg:flex-row justify-between">
+        <div class="wb-flex flex-col gap-4 mt-6 px-6 w-full max-w-[440px] md:px-0">
             <div class="wb-flex items-center justify-center gap-4">
-                <h2 class="text-2xl font-bold text-center uppercase font-gothic_condensed font-bold text-[55px] leading-[61px] tracking-[1%] whitespace-nowrap">{{ section.settings.title }}</h2>
+                <h2 class="text-[35px]/none font-extrabold text-center uppercase font-gothic_condensed md:text-[45px]/none leading-[61px] tracking-[1%] whitespace-nowrap">{{ section.settings.title }}</h2>
                 {{ icon | image_url: width: 60 | image_tag: class: '!h-11 !w-fit' }}
             </div>
             <div class="wb-flex flex-col items-center">
@@ -53,6 +55,7 @@
                             assign metaobject = block.settings.metaobject
                             assign title_handleize = block.settings.title | handleize
                         %}
+
                         <div x-cloak x-show="activeTitle === '{{ title_handleize }}'" class="wb-flex flex-col gap-5">
                             {% for step in metaobject.steps.value %}
                                 {% liquid
@@ -62,8 +65,9 @@
                                     assign icon = step.icon | image_url: width: 100 | image_tag
                                     assign title = step.title | handleize
                                 %}
+
                                 <div class="wb-flex gap-4 items-center">
-                                    <div class="w-[54px] h-[54px]">
+                                    <div class="w-[54px] h-[54px] min-w-[54px] min-h-[54px]">
                                         {{ icon }}
                                     </div>
                                     <div class="wb-flex flex-col gap-1">
@@ -77,7 +81,7 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="max-w-[500px] w-full h-full mx-auto lg:mx-0">
+        <div class="w-full h-full mx-auto smd:max-w-[500px] lg:mx-0">
             {{ image | image_url: width: 1000 | image_tag }}
         </div>
     </div>

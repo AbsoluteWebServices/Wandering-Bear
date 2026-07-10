@@ -84,11 +84,10 @@
             endif
           endif
 
-            assign fieldset_id = section.id | append: '-' | append: product_resource.id | append: '-' | append: product_option.name | handleize
-            assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
-            assign longest_value = 0
+          assign fieldset_id = section.id | append: '-' | append: product_resource.id | append: '-' | append: product_option.name | handleize
+          assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
+          assign longest_value = 0
         -%}
-
 
           {%- assign fieldset_index = forloop.index0 -%}
           <fieldset
@@ -258,6 +257,11 @@
   .variant-option label:has(input:checked) {
     background-color: #F9F3ED;
     border-color: var(--color-espresso);
+  }
+
+  .variant-option label:not(:first-of-type):not(:last-of-type):not(:has(input:checked)) {
+    border-left-color: #CFBDB1;
+    border-right-color: #CFBDB1;
   }
 
   .variant-option label:first-of-type {

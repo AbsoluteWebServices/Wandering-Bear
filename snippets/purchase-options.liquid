@@ -3,7 +3,7 @@
     assign subscription_value_props_mobile = settings.subscription_value_props_mobile | default: subscription_value_props 
 %}
 
-<div class="mb-0 mt-3 md:mb-5 md:mt-0.5">
+<div class="mb-0 mt-3 md:mb-5{% if template.suffix == 'concentrate' %} md:mt-5{% else %} md:mt-0.5{% endif %}">
     <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
     <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
     <fieldset>

@@ -12,6 +12,7 @@
         endif
     endfor
 %}
+
 {% style %}
     [data-step-title].active {
         background: var(--color-beige);
@@ -19,7 +20,7 @@
 {% endstyle %}
 
 {% capture menu %}
-    <div class="wb-flex gap-1 lg:gap-4">
+    <div class="wb-flex gap-1 lg:gap-1.75 w-full lg:max-w-[420px] lg:mx-auto">
         {% for block in section.blocks %}
             {% if block.type == 'recipe' %}
                 {% liquid 
@@ -27,8 +28,9 @@
                     assign title = block.settings.title
                     assign title_handleize = block.settings.title | handleize
                 %}
-                <div class="wb-flex gap-4 bg-foam border-2 border-espresso rounded-[30px] p-1.5 w-fit mb-5">
-                    <div @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} px-1 sm:!px-4 py-3 rounded-[25px] cursor-pointer rounded-[30px] font-gothic_condensed font-bold text-base uppercase leading-[22px] tracking-[1%] whitespace-nowrap"
+
+                <div class="wb-flex min-w-[104px] grow bg-foam border-2 border-espresso rounded-[30px] p-1.25 md:mb-5 lg:p-1.5 lg:flex-1 lg:basis-0">
+                    <div @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} w-full flex justify-center items-center px-1 sm:px-1.25 py-3 rounded-[30px] cursor-pointer font-gothic_condensed font-bold text-base uppercase leading-[22px] tracking-[1%] text-center"
                     :class="{ 'active': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
                         <span>{{ title }}</span>
                     </div>
@@ -48,8 +50,9 @@
                 assign image = metaobject.image
                 assign text = metaobject.text | metafield_tag
             %}
+
             <div class="wb-flex flex-col mx-auto" x-cloak x-show="activeTitle === '{{ title_handleize }}'">
-                <h3 class="body font-bold text-lg font-bold text-bear-black mb-6 text-center">{{ title }}</h3>
+                <h3 class="body text-lg! font-bold! font-kurdis-semi-condensed! text-bear-black mb-6 text-center">{{ title }}</h3>
                 <div class="wb-flex flex-col gap-5 mb-5.5 w-fit mx-auto">
                     {% for step in metaobject.steps.value %}
                         {% liquid
@@ -59,13 +62,14 @@
                             assign icon = step.icon | image_url: width: 100 | image_tag
                             assign title = step.title | handleize
                         %}
+
                         <div class="wb-flex gap-1 items-center text-bear-black">
                             <h3 class="body font-bold text-lg font-bold">{{ step_title }}</h3>
                             <div class="body">{{ description }}</div>
                         </div>
                     {% endfor %}
                 </div>
-                <div class="body text-bear-black text-center [&_a]:underline">{{ text }}</div>
+                <div class="body text-bear-black text-center [&_a]:underline [&_a]:font-bold max-w-[240px] mx-auto md:max-0 md:max-w-full">{{ text }}</div>
             </div>
         {% endif %}
     {% endfor %}
@@ -81,8 +85,9 @@
                 assign image = metaobject.image
                 assign text = metaobject.text | metafield_tag
             %}
-            <div x-show="activeTitle === '{{ title_handleize }}'" class="block lg:!hidden">
-                <div class="body text-bear-black text-center [&_a]:underline">{{ text }}</div>
+
+            <div x-show="activeTitle === '{{ title_handleize }}'" class="mb-5 mb-0 block lg:!hidden">
+                <div class="body text-bear-black text-center [&_a]:underline [&_a]:font-bold max-w-[240px] mx-auto leading-[150%]! md:max-0 md:max-w-full md:leading-[130%]!">{{ text }}</div>
             </div>
         {% endif %}
     {% endfor %}
@@ -96,8 +101,9 @@
                 assign title_handleize = block.settings.title | handleize
                 assign image = metaobject.image
             %}
-            <div class="wb-flex justify-between mt-5" x-cloak x-show="activeTitle === '{{ title_handleize }}'" x-cloak>
-                <div class="max-w-[339px] mx-auto lg:mx-0">
+
+            <div class="wb-flex justify-center mt-5" x-cloak x-show="activeTitle === '{{ title_handleize }}'" x-cloak>
+                <div class="px-4.5 w-full mx-auto smd:px-0 smd:mx-0 smd:max-w-[339px]">
                     {{ image | image_url: width: 1000 | image_tag }}
                 </div>
             </div>
@@ -111,13 +117,14 @@
             {{ background_image | image_url: width: 1000 | image_tag }}
         </div>
     {% endif %}
+
     <div class="wb-flex justify-between w-full max-w-[966px] mx-auto relative z-[2]">
-        <div class="wb-flex flex-col-reverse lg:flex-row justify-between w-full mb-5.5">
+        <div class="wb-flex flex-col-reverse items-center lg:flex-row justify-between w-full mb-5.5">
             <div>
                 {{ recipe_image }}
             </div>
-            <div class="wb-flex flex-col gap-4 justify-center items-center px-6">
-                <h2 class="text-2xl font-bold text-center uppercase font-gothic_condensed font-bold text-[55px] leading-[61px] tracking-[1%]">{{ section.settings.title }}</h2>
+            <div class="wb-flex flex-col  justify-center items-center px-3.5 md:px-6">
+                <h2 class="text-[35px]/none font-extrabold text-center uppercase font-gothic_condensed md:text-[55px] leading-[61px] tracking-[1%]">{{ section.settings.title }}</h2>
                 {{ recipe_text }}
                 {{ menu }}
                 <div class="hidden lg:!block">
