@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Account portal — component styles.
+   Loaded in frontend/entrypoints/main.js (after components.css).
+
+   Convention (Shopify/Dawn-style BEM): one class per block/element, named
+   `.block` / `.block__element` / `.block--modifier`. Keep Liquid markup
+   semantic — no arbitrary Tailwind clusters (`w-[76px] md:!w-[118px]`, inline
+   styles, `!important` overrides) in account templates. Simple layout
+   (flex/grid/gap) may still use utilities; anything sized to a Figma token or
+   repeated belongs here as a named class using theme custom properties.
+   ========================================================================== */
+
+/* ---- Layout containers (single source of truth) ------------------------- */
+/* Content column: dashboard, order page, credit history, addresses. */
+.account-container {
+    width: 100%;
+    max-width: 774px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+}
+/* Form column: login / register / reset / activate input width (Figma 352px). */
+.account-form {
+    width: 100%;
+    max-width: 352px;
+    margin-inline: auto;
+}
+
+/* ---- Links: underline on hover (Tailwind hover:underline isn't compiled) - */
+.hover-underline {
+    text-decoration: none;
+}
+.hover-underline:hover {
+    text-decoration: underline;
+}
+
+/* ---- Membership card — Elite upsell panel (Figma Rectangle 10494) -------- */
+/* Full-bleed background pinned to the bottom of the progress column: the panel
+   fills its column edge-to-edge (mobile: card edges; desktop: divider → card
+   right edge, down to card bottom) while the content keeps the pl-6 offset.
+   Card padding = p-5 (20px) mobile / p-6 (24px) desktop; progress column adds
+   md:pl-6 (24px). */
+.membership-upsell {
+    background-color: var(--color-brand-light_cream);
+    text-align: center;
+    margin: 1rem -1.25rem -1.25rem;
+    padding: 1rem 1.25rem 1.25rem;
+    border-radius: 0 0 8px 8px;
+}
+@media (min-width: 1024px) {
+    .membership-upsell {
+        margin-top: auto;
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        margin-bottom: -1.5rem;
+        padding: 1rem 1.5rem 1.5rem;
+        border-radius: 0 0 8px 0;
+    }
+}
+
+/* ---- Membership card — dashed column divider (Figma "Line 1") ------------ */
+/* 1px vertical dashed line, 2px dash / 2px gap, #706F6F. Desktop only (columns
+   stack on mobile). Drawn as a left-edge background so the dash pattern is exact
+   (CSS `border: dashed` can't hit 2/2). Progress column keeps its pl-6 offset. */
+@media (min-width: 1024px) {
+    .tier-divider {
+        padding-left: 1.5rem;
+        background-image: repeating-linear-gradient(to bottom, #706F6F 0 2px, transparent 2px 4px);
+        background-repeat: no-repeat;
+        background-size: 1px 100%;
+        background-position: left top;
+    }
+}
+
+/* ---- Worker-driven visibility toggle (account.ts) ------------------------ */
+/* Row 1 renders both variants (autoship card / wide credit); account.ts hides one
+   with data-wb-hide based on the worker's active_count. Unlayered → beats utilities. */
+[data-wb-hide] {
+    display: none;
+}
+
+/* ---- Worker hydration states (account.ts) -------------------------------- */
+/* account.ts sets data-wb-loading (initial) → removed on success; data-wb-error on
+   failure. The error note is hidden until the root carries data-wb-error. */
+[data-wb-error-note] {
+    display: none;
+}
+[data-wb-account][data-wb-error] [data-wb-error-note] {
+    display: block;
+}
+/* Subtle "loading" pulse on the worker-driven progress bar until data arrives
+   (works regardless of the inline width the SSR sets). */
+[data-wb-account][data-wb-loading] [data-wb-progress-bar] {
+    animation: wb-pulse 1s ease-in-out infinite;
+}
+@keyframes wb-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+/* MANAGE control (Stay AI portal) — account.ts wires the click / disables it. */
+[data-wb-autoship-manage] {
+    cursor: pointer;
+}
+[data-wb-autoship-manage][data-wb-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Contact CTA is styled with Tailwind utilities directly in the section markup
+   (Tailwind-first) — no component class needed here. */

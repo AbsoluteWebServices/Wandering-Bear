@@ -112,7 +112,7 @@
         border: var(--button-hover-border);
 
         .btn-svg {
-            fill: var(--color-brand-cream);
+            fill: var(--svg-hover-fill);
             color: var(--button-hover-text);
         }
     }
@@ -140,6 +140,6 @@
         }
 
         padding-bottom: 0 !important;
-        margin-bottom: 24px;
+        margin-bottom: 1.125rem;
     }
 }

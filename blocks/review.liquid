@@ -18,6 +18,10 @@
   assign star_color = block_settings.star_color | default: '#BD8053'
   assign star_color_rgb = star_color | color_to_rgb
   assign text_color_rgb = text_color | color_to_rgb
+  assign star_height_desktop = block_settings.star_height_desktop | default: 15
+  assign star_height_mobile = block_settings.star_height_mobile | default: 15
+  assign star_gap_desktop = block_settings.star_gap_desktop | default: 2
+  assign star_gap_mobile = block_settings.star_gap_mobile | default: 2
 -%}
 {% comment %} {% capture star_color %}
   --star-fill-color: {{ star_color }};
@@ -70,7 +74,7 @@
     </svg>
     <div
       class="rating"
-      style="--star-size: calc(var(--font-{{ block_settings.type_preset }}--size) * 1.1);"
+      style="--star-size: {{ star_height_mobile }}px; --star-gap: {{ star_gap_mobile }}px;"
       aria-label="{{ 'accessibility.rating' | t: rating: rating }}"
     >
       {% if block_settings.stars_style == 'single' %}
@@ -98,7 +102,7 @@
         {%- endfor -%}
       {% endif %}
     </div>
-    <span class="text-espresso/20 font-bold">|</span>
+    <span class="text-espresso/20 font-bold inline-block ml-0.75 mr-1.5">|</span>
     {%- if block_settings.show_number or block_settings.stars_style == 'single' -%}
       <p class="rating-count {{ block_settings.type_preset }}">
         {%- if block_settings.stars_style == 'single' -%}
@@ -119,7 +123,7 @@
 
 {% style %}
   .rating-wrapper {
-    gap: var(--gap-xs);
+    gap: var(--gap-3xs);
     min-width: fit-content;
     font-family: var(--font-kurdis-semi-condensed) !important;
     font-size: 14px !important;
@@ -144,12 +148,12 @@
     align-items: center;
   }
 
-  .rating-wrapper.justify-right {
-    flex-direction: row-reverse;
+  .rating {
+    gap: var(--star-gap);
   }
 
-  .rating {
-    gap: var(--gap-3xs);
+  .rating-wrapper.justify-right {
+    flex-direction: row-reverse;
   }
 
   .rating-wrapper .rating-count,
@@ -175,9 +179,18 @@
     fill: var(--star-fill-color);
   }
 
+  .filled-star + .filled-star {
+    margin-left: -0.063rem;
+  }
+
   @media (min-width: 1024px) {
     .rating-wrapper {
       font-size: 12px !important;
+    }
+
+    .rating {
+      --star-size: {{ star_height_desktop }}px;
+      --star-gap: {{ star_gap_desktop }}px;
     }
   }
 {% endstyle %}
@@ -311,6 +324,50 @@
       "label": "t:settings.alignment",
       "default": "left",
       "visible_if": "{{ block.settings.width != 'fit-content' }}"
+    },
+    {
+      "type": "header",
+      "content": "Stars - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "star_height_desktop",
+      "label": "Star height",
+      "min": 8,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "star_height_mobile",
+      "label": "Star height (Mobile)",
+      "min": 8,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "star_gap_desktop",
+      "label": "Star gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "star_gap_mobile",
+      "label": "Star gap (Mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 1
     }
   ],
   "presets": [

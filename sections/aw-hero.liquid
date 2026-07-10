@@ -24,13 +24,13 @@
         {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover object-left sm:!object-[center_bottom] md:!object-center !max-w-none absolute inset-0 2xl:!object-[0%_30%]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
         {% if title_image != blank or title_text != blank or subtitle != blank %}
             <div class="container relative wb-flex pt-8 pb-[64px] smd:py-0
-            justify-center smd:justify-between w-full max-w-none smd:max-w-[700px] md:max-w-[970px] mx-0 md:mx-auto h-full pb-10 max-h-[528px]">
+            justify-center w-full max-w-none md:justify-start md:max-w-[1020px] min-h-[345px] smd:min-h-[415px] md:gap-[85px] mx-0 md:mx-auto lg:min-h-[555px] h-full pb-10 max-h-[528px]">
                 {% if foreground_image != blank or foreground_image_mobile != blank %}
-                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'absolute min-h-full -left-5 sm:left-0 bottom-0 smd:static w-fit h-full object-cover z-1 !max-w-[375px] object-top', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'absolute min-h-full left-0 bottom-0 md:static w-fit h-full object-cover z-1 !max-w-[375px] object-top', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
                 {% endif %}
-                <div class="relative wb-flex flex-col items-center justify-center sm:items-start md:items-start gap-4 z-1 w-fit max-w-full">
+                <div class="relative wb-flex flex-col items-center justify-center md:justify-start md:pt-[95px] sm:items-start md:items-start smd:left-20 md:left-0 gap-2.5 z-1 w-fit max-w-full">
                     {% if title_image != blank and title_type == 'image' %}
-                        {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative sm:left-0 w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
+                        {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative left-3 sm:left-0 w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
                     {% elsif title_text != blank and title_type == 'text'%}
                         <h1 class="h1 title-text leading-[1.2] text-center md:!text-left" style="color: {{ color_scheme.settings.foreground }}; {{ title_styles }}">{{ title_text | replace: '\b', '<br>' }}</h1>
                     {% endif %}
@@ -38,9 +38,9 @@
                         <span class="h3 text-center md:!text-xl title-text" style="color: {{ color_scheme.settings.foreground }};">{{ subtitle }}</span>
                     {% endif %}
                     {% if buttons != blank %}
-                        <div class="wb-flex flex-col md:!flex-row gap-4 w-fit mx-auto md:!mx-0">
+                        <div class="wb-flex flex-col md:!flex-row gap-3 md:gap-6.5 w-fit mx-auto md:!mx-0 mt-3 relative -left-2">
                             {% for button in buttons %}
-                                <div class="relative mx-auto md:!mx-0">
+                                <div class="relative mx-auto md:!mx-0" data-anchor="shop-cold-brew">
                                     {% if button.settings.badge != blank %}
                                         {{ button.settings.badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-5 -left-10 !w-[59px] !h-auto shadow-button', loading: 'eager', preload: 'eager' }}
                                     {% endif %}
@@ -56,11 +56,7 @@
 
 {% if hero_content != blank %}
 <div class="flex relative justify-center items-center relative overflow-hidden 
-{% comment %} py-8 md:py-20 lg:py-8 lg:h-[560px] {% endcomment %}
 ">
-    {% comment %} {% if foreground_image != blank or foreground_image_mobile != blank %}
-        {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'relative w-fit h-full object-contain z-1', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
-    {% endif %} {% endcomment %}
     <div class="flex justify-center items-center w-full">
       {{ hero_content }}
     </div>

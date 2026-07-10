@@ -27,11 +27,11 @@
    
     {% render 'picture', source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080 %}
     {% if floating_image != blank %}
-        {% render 'picture', source: floating_image, mobile_source: floating_image_mobile, class: '-bottom-6 sm:-bottom-2 xl:!bottom-auto !w-full sm:!w-fit sm:!max-w-[70vw] max-h-full h-full object-contain absolute right-0 z-[2] md:!w-[50vw] xl:!w-fit', alt: floating_image.alt, width: 1920, height: 1080 %}
+        {% render 'picture', source: floating_image, mobile_source: floating_image_mobile, class: 'bottom-7 !max-h-[300px] md:-bottom-2 xl:!bottom-auto !h-auto !w-auto sm:!max-w-[70vw] md:!max-h-full object-contain absolute right-0 z-[2] md:!w-[50vw] lg:!w-auto !flex justify-end', alt: floating_image.alt, width: 1920, height: 1080 %}
     {% endif %}
-    <div class="container max-w-[1000px] px-4 mx-auto lg:relative z-[2] pt-10 md:!pt-[84px] pb-[250px] md:!pb-20">
+    <div class="container max-w-[1000px] px-4 mx-auto lg:relative z-[2] pt-6 md:!pt-[60px] pb-[250px] md:!pb-20">
         <div class="relative z-[3] md:!w-1/2 wb-flex flex-col max-w-[263px] md:!max-w-[457px] mx-auto md:!mx-0">
-            <div class="wb-flex flex-col mb-6 md:!mb-8 relative">
+            <div class="wb-flex flex-col mb-6 md:!mb-8 relative -left-6.5">
                 {% if badge != blank %}
                     {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[30px] -left-[30px] !w-[60px] !h-auto', loading: 'eager', preload: 'eager' }}
                 {% endif %}
@@ -41,9 +41,9 @@
                     {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: '!max-w-[246px] md:!max-w-[438px] mx-auto md:!mx-0 w-full max-h-full object-contain' %}
                 {% endif %}
             </div>
-            <div class="wb-flex !leading-[16px] flex-col md:!pl-12 !gap-4.5 md:!gap-4 items-center sm:!pb-[24vw] md:!pb-0 md:!items-start">
+            <div class="wb-flex leading-[16px] flex-col md:pl-[30px] gap-3.5 md:gap-4 items-center md:pb-0 md:items-start">
             {% for bullet in bulletpoints %}
-                <div class="inline !leading-[16px] text-center md:!text-left md:!flex gap-2">
+                <div class="inline !leading-[16px] text-center md:text-left md:flex gap-2">
                     {% if bullet.settings.image != blank %}
                         {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!h-4 !w-4 !inline-block md:!flex', alt: bullet.settings.title }}
                     {% endif %}

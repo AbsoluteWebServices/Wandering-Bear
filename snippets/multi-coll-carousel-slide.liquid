@@ -1,5 +1,13 @@
 {% liquid
     assign vip = product.metafields.custom.vip
+    assign product_data = product.metafields.custom.product_group.value
+    assign template_suffix = product_data.template_suffix
+    #TODO: Remove the view query param once live
+    if template_suffix != blank
+      assign product_url = product.url | append: '?view=' | append: template_suffix
+    else
+      assign product_url = product.url
+    endif
 %}
 
 <div class="swiper-slide relative group sm:!min-w-[135px] pb-1.5" style="{{ slide_styles }}">
@@ -17,7 +25,9 @@
             </div>
         </div>
     {% endif %}
-    <a href="{{ collection.url }}">
+
+    {% comment %} TODO: Remove the view query param once live {% endcomment %}
+    <a href="{{ product_url }}">
         
         {% if product.metafields.custom.carousel_image != blank %}
             {% render 'picture', source: product.metafields.custom.carousel_image, class: 'w-full h-full object-cover w-full h-full shadow-button border border-transparent group-hover:border-gold rounded-[14px] lg:rounded-[1vw] transition-all duration-300' %}

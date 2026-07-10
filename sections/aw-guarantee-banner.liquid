@@ -22,13 +22,13 @@
     <div class="wb-flex justify-start items-center w-full lg:!w-1/2" style="color: {{ text_color }}">
         <div class="wb-flex flex-col gap-1.5! max-w-full w-1/2 py-[43px] px-[30px] md:!px-[77px] w-full text-center lg:!text-left lg:max-w-[645px]">
         {% if title != blank %}
-            <span class="h2 text-[28px]/none! font-(family-name:--font-gothic_condensed)! font-extrabold! text-[#F2E6DC] md:font-(family-name:--font-kurdis)! md:text-[25px]/none!{% if subtitle == blank and description != blank %} mb-4{% endif %}" style="color: {{ text_color }}">{{ title }}</span>
+            <span class="h2 text-[28px]/none! font-gothic_condensed font-extrabold! text-[#F2E6DC] md:text-[25px]/none!{% if subtitle == blank and description != blank %} mb-3!{% else %} mb-0.5!{% endif %}" style="color: {{ text_color }}">{{ title }}</span>
         {% endif %}
         {% if subtitle != blank %}
-            <span class="h3 text-[20px]/none! font-extrabold! font-(family-name:--font-gothic_condensed)! text-[#F2E6DC] md:text-base/none!{% if description != blank %} mb-4{% endif %}" style="color: {{ text_color }}">{{ subtitle }}</span>
+            <span class="h3 text-[20px]/none! font-extrabold! font-gothic_condensed! text-[#F2E6DC] md:text-base/none!{% if description != blank %} mb-3!{% endif %}" style="color: {{ text_color }}">{{ subtitle }}</span>
         {% endif %}
         {% if description != blank %}
-            <span class="body font-(family-name:--font-kurdis)! text-[#F2E6DC]" style="color: {{ text_color }}">{{ description }}</span>
+            <span class="body max-w-[422px] font-normal! font-kurdis-semi-condensed text-[#F2E6DC]" style="color: {{ text_color }}">{{ description }}</span>
         {% endif %}
         </div>
     </div>

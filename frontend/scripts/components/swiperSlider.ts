@@ -20,6 +20,8 @@ export default (Alpine: AlpineType) => {
         },
 
         initSwiper() {
+            const slideCount = this.el.querySelectorAll('.swiper-slide').length;
+            
             this.swiper = new Swiper(this.el.querySelector('.swiper'), {
                 modules: [Navigation, Mousewheel],
                 slidesPerView: 2.5,
@@ -47,7 +49,9 @@ export default (Alpine: AlpineType) => {
                     1024: {
                         slidesPerView: 5.8,
                         spaceBetween: 20,
-                
+                        centeredSlides: slideCount < 6,
+                        centerInsufficientSlides: slideCount < 6,
+                        centeredSlidesBounds: slideCount < 6,
                     },
                 },
                 on: {
@@ -89,6 +93,7 @@ export default (Alpine: AlpineType) => {
                     this.$nextTick(() => {
                         this.swiper.update();
                         this.checkNavButtons();
+                        console.log('this swiper', this.swiper);
                     });
 
                 })
@@ -104,11 +109,9 @@ export default (Alpine: AlpineType) => {
                 if (this.swiper.slides.length < this.swiper.params.slidesPerView) {
                     button?.classList.add('!opacity-0');
                     button?.classList.add('!pointer-events-none');
-                    console.log('hiding nav buttons', button);
                 } else {
                     button?.classList.remove('!opacity-0');
                     button?.classList.remove('!pointer-events-none');
-                    console.log('showing nav buttons', button);
                 }
             });
         },

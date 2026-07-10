@@ -8,3 +8,25 @@
 ehthumbs.db
 Thumbs.db
 node_modules
+<<<<<<< HEAD
+=======
+.shopify
+.env
+.idea
+.cursor/screenshots/
+snippets/vite-tag.liquid
+
+# Claude local settings (personal, per-worktree)
+.claude/settings.local.json
+
+# Figma pull secret
+.figma-token
+
+# Kept LOCAL ONLY — planning docs, Claude config, task scripts. Never merged to main.
+/CLAUDE.md
+/docs/
+/scripts/figma-pull.sh
+
+# Build assets
+assets/wb-*
+>>>>>>> main

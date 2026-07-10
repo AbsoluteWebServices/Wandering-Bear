@@ -10,11 +10,6 @@
 %}
 
 {% capture media_gallery %}
-  {% comment %} {%- content_for 'block',
-    type: '_product-media-gallery',
-    id: 'media-gallery',
-    closest.product: closest.product
-  -%} {% endcomment %}
   {% render 'media-gallery-bundle', bundle_product: product, hide_thumbnails_desktop: hide_thumbnails_desktop %}
 {% endcapture %}
 

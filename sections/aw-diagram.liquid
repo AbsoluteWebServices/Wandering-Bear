@@ -88,7 +88,7 @@
     {% endfor %}
 {% endcapture %}
 
-<div class="aw-diagram wb-flex flex-col gap-4 relative" style="background-color: {{ background_color }}">
+<div class="aw-diagram wb-flex flex-col gap-4 relative{% if template.suffix == 'gallon' %} mt-5.5 md:mt-8{% endif %}" style="background-color: {{ background_color }}">
     {% if background_image != blank %}
         {% render 'picture', source: background_image, class: 'w-full !h-full object-cover !max-w-none absolute inset-0 md:!-top-[77px]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
     {% endif %}
@@ -106,7 +106,7 @@
     {% endif %}
    </div>
 
-   <div x-data="diagram()" class="wb-flex flex-col md:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0">
+   <div x-data="diagram()" class="wb-flex flex-col md:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0{% if template.suffix == '96oz' %} mt-2 md:mt-0{% endif %}">
 
     <!-- SVG LINES -->
     <svg class="diagram-lines absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">

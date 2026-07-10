@@ -16,9 +16,19 @@
     --font-size-mobile: {{ section.settings.font_size_mobile }}px;
 {% endcapture %}
 
-<div class="pt-5 pb-3 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
+<div class="py-3 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[70px] sm:-top-[60px] md:!-top-[100px] right-[2.5vw] sm:right-[5vw] md:!right-[14vw] xl:!right-[25vw] 2xl:!right-[28vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
+        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] !w-[66px] md:!w-[86px] !h-auto shadow-button -rotate-[14deg] opacity-0 transition-opacity duration-300', 
+            data-anchor-target: 'shop-cold-brew',
+            data-anchor-target:"shop-cold-brew",
+            data-anchor-x:"220",
+            data-anchor-y:"40",
+            data-anchor-x-mobile:"4",
+            data-anchor-y-mobile:"40"
+         }}
+         <noscript>
+            {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[70px] sm:-top-[60px] md:!-top-[100px] right-[2.5vw] sm:right-[5vw] md:right-[13vw] xl:right-[25vw] 2xl:right-[28vw] 4xl:right-[30vw] !w-[80px] md:!w-[85px] !h-auto shadow-button' }}
+         </noscript>
     {% endif %}
     {% if title_type == 'image' and title_image != blank %}
             <div class="h-[36px] mx-auto mb-5 md:!mb-7.5">
@@ -28,7 +38,7 @@
         <span class="h1 mb-8 title-text leading-[1.2] text-center mx-auto mb-5 md:!mb-7.5 block" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     <div class="container max-w-[1140px] mx-auto">
-        <div class="wb-grid grid-cols-1 gap-2 px-0 md:!px-5 xl:!px-0 md:grid-cols-3 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none">
+        <div class="wb-grid grid-cols-1 gap-2 px-0 md:!px-5 lg:!px-0 md:grid-cols-3 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none">
             {% for block in section.blocks %}
                 {% liquid
                     assign image = block.settings.image
@@ -69,7 +79,7 @@
                         {% endif %}
                     </div>
                     </a>
-                    <div class="hidden md:!flex flex-col mt-2 {% unless accent_text != blank %} {% endunless %} items-center">
+                    <div class="hidden md:!flex flex-col mt-3 lg:pl-3 {% unless accent_text != blank %} {% endunless %} items-center">
                         {% if title != blank %}
                             <a href="{{ collection.url }}" class="h1 text-center" style="color: {{ text_color }}">{{ title }}</a>
                         {% endif %}
@@ -77,7 +87,7 @@
                             <span class="accent text-gold text-center !text-lg">{{ accent_text }}</span>
                         {% endif %}
                         {% if subtitle != blank %}
-                            <span class="body text-espresso text-center text-balance" style="color: {{ text_color }}">{{ subtitle | replace: '\b', '<br>' }}</span>
+                            <span class="body text-espresso text-center text-pretty" style="color: {{ text_color }}">{{ subtitle | replace: '\b', '<br>' }}</span>
                         {% endif %}
                     </div>
                 </div>

@@ -7,12 +7,12 @@
   {% else %}
     {% assign product_title = '<p role="heading" aria-level="3">' | append: closest.product.title | append: '</p>' %}
     <a
-      class="contents user-select-text text-bear-black! !flex !whitespace-nowrap !items-end !gap-2 block"
+      class="block user-select-text text-bear-black! md:flex! md:gap-2! md:whitespace-nowrap! md:items-end!"
       ref="productTitleLink"
       href="{{ closest.product.selected_or_first_available_variant.url }}"
     >
-      <span class="font-gothic_condensed text-[35px] lg:!text-[45px] font-extrabold leading-[100%] uppercase">{{ block.settings.product_title }}</span>
-      <span class="font-kurdis-semi-condensed text-base font-bold leading-[120%] capitalize md:text-[20px]">{{ block.settings.product_title_small }}</span>
+      <span class="font-gothic_condensed text-[35px] lg:text-[45px]! font-extrabold leading-[100%] uppercase">{{ block.settings.product_title }}</span>
+      <span class="font-kurdis-semi-condensed text-base font-bold leading-[120%] whitespace-nowrap md:text-[20px]{% if template.suffix == '96oz' or template.suffix == '32oz' %} uppercase{% else %} capitalize{% endif %}">{{ block.settings.product_title_small }}</span>
     </a>
   {% endif %}
   

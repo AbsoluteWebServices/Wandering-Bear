@@ -21,12 +21,12 @@
 {% endcapture %}
 
 {% capture founders_content %}
-    <div class="wb-flex flex-col gap-3 relative relative">
+    <div class="wb-flex flex-col relative relative top-7 mb-7 md:mb-0">
     {% if title_badge != blank %}
-        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-9 -right-15 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
+        {{ title_badge | image_url: width: 100 | image_tag: class: 'hidden md:!block absolute z-[2] -top-10 -right-16 !w-[118px] !h-auto rotate-[27deg] shadow-button', loading: 'eager', preload: 'eager' }}
     {% endif %}
     {% if title_type == 'image' and title_image != blank %}
-        <div class="max-w-[442px] w-full mx-auto mb-2">
+        <div class="max-w-[395px] w-full mx-auto mb-4">
             {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
         </div>
     {% elsif title_type == 'text' and title != blank %}
@@ -88,7 +88,7 @@
         </div>
     {% endif %}
 {% endcapture %}
-<div class="relative pt-[84px] md:!pt-[110px] pb-[46px] md:!pb-[90px]" style="background-color: {{ color_scheme.background }}">
+<div class="relative pt-[68px] md:!pt-[110px] pb-[46px] md:!pb-[90px]" style="background-color: {{ color_scheme.background }}">
     <div class="absolute top-0 left-0 right-0 h-[100px] z-[2]"
     style="background: linear-gradient(to bottom, {{ color_scheme.settings.background }} 0%, transparent 100%);"></div>
 
@@ -96,10 +96,10 @@
         {% render 'picture', source: background_image, class: 'w-full !h-full object-cover absolute inset-0' %}
     {% endif %}
     <div class="max-w-[936px] w-full container mx-auto relative">
-        <div class="wb-flex flex-col-reverse md:!flex-row gap-4 justify-between items-center px-[50px] md:!px-0">
+        <div class="wb-flex flex-col-reverse md:!flex-row gap-4 md:gap-10 lg:gap-4 justify-between items-center px-[50px] md:!px-0 w-full md:w-fit lg:w-full">
             <div class="max-w-[281px] md:!max-w-[400px] w-full relative">
                 {% if badge != blank %}
-                    {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] bottom-[60px] md:bottom-[72px] -rotate-[15deg] -left-11 sm:-left-10 md:!-left-[55px] !w-[68px] md:!w-[104px] !h-auto' }}
+                    {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] bottom-[60px] md:bottom-[65px] -rotate-[15deg] -left-11 sm:-left-10 md:!-left-[70px] !w-[68px] md:!w-[104px] !h-auto' }}
                 {% endif %}
                 {{ video_content }}
             </div>

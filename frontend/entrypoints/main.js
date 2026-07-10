@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import 'overlayscrollbars/overlayscrollbars.css';
 
 import '../styles/typography.css';
 import '../styles/colors.css';
@@ -16,10 +17,43 @@ import '../styles/header.css';
 import '../styles/media-gallery-bundle.css';
 import '../styles/main-product.css';
 import '../styles/products-slider.css';
-
-
+import '../styles/multi-coll-carousel.css';
 
 export {}
+
+const positionBadges = () => {
+    document.querySelectorAll('[data-anchor-target]').forEach((badge) => {
+      const anchor = document.querySelector(
+        `[data-anchor="${badge.dataset.anchorTarget}"]`
+      )
+  
+      if (!anchor || !badge.offsetParent) return
+  
+      const anchorRect = anchor.getBoundingClientRect()
+      const parentRect = badge.offsetParent.getBoundingClientRect()
+      const mobile = window.innerWidth < 1024
+  
+      const x = Number(
+        mobile
+          ? badge.dataset.anchorXMobile || badge.dataset.anchorX || 0
+          : badge.dataset.anchorX || 0
+      )
+  
+      const y = Number(
+        mobile
+          ? badge.dataset.anchorYMobile || badge.dataset.anchorY || 0
+          : badge.dataset.anchorY || 0
+      )
+  
+      badge.style.left = `${anchorRect.right - parentRect.left + x}px`
+      badge.style.top = `${anchorRect.bottom - parentRect.top + y}px`
+      badge.style.opacity = '1'
+    })
+  }
+  
+  document.addEventListener('DOMContentLoaded', positionBadges)
+  window.addEventListener('load', positionBadges)
+  window.addEventListener('resize', positionBadges)
 
 let loaded = false
 
@@ -45,7 +79,8 @@ const init = async () => {
     const { default: HowToMix } = await import("~/scripts/components/how-to-mix")
     const { default: WaysToEnjoy } = await import("~/scripts/components/ways-to-enjoy")
     const { default: ProductValueProps } = await import("~/scripts/components/productValueProps")
-    const { default: registerProductsSlider } = await import("~/scripts/components/productsSlider")
+    const { default: ProductsSlider } = await import("~/scripts/components/productsSlider")
+    const { default: OverlayScrollbar } = await import("~/scripts/components/overlayScrollbar")
 
     Alpine.plugin(morph)
 
@@ -65,13 +100,14 @@ const init = async () => {
     Alpine.plugin(HowToMix)
     Alpine.plugin(WaysToEnjoy)
     Alpine.plugin(ProductValueProps)
+    Alpine.plugin(ProductsSlider)
+    Alpine.plugin(OverlayScrollbar)
 
     Alpine.store('cart', {
         state: '',
     });
 
     Alpine.start()
-    registerProductsSlider()
     window.Alpine = Alpine
 
     
@@ -82,4 +118,5 @@ document.addEventListener("mousemove", init, { once: true })
 document.addEventListener("scroll", init, { once: true })
 document.addEventListener("touchstart", init, { once: true })
 document.addEventListener("keydown", init, { once: true })
+document.addEventListener("DOMContentLoaded", init, { once: true })
 

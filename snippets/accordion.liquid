@@ -3,7 +3,9 @@
         <span class="{{ title_class }}">
         {{ title }}
         </span>
-        {% render 'icons' with icon: 'chevron-down' %}
+        <span class="wb-flex items-center mx-3 md:mx-5">
+            {% render 'icons' with icon: 'chevron-down', class: '' %}
+        </span>
     </summary>
     <div data-accordion-content class="accordion-content {{ content_class }}">
         {{ content }}

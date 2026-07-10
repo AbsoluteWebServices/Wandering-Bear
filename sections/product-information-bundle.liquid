@@ -9,13 +9,17 @@
   assign product_id = product.id
   assign bundle_collection = section.settings.bundle_collection
   assign first_product = bundle_collection.products.first
-    
+
   for bundle_product in bundle_collection.products
-    if bundle_product.id == first_product.id
+    if bundle_product.id == product_id
       assign selected_product = bundle_product
       break
     endif
   endfor
+
+  if selected_product == blank
+    assign selected_product = first_product
+  endif
 
   assign is_32oz = false
   if template.suffix == '32oz'
@@ -31,7 +35,8 @@
 
 
 {% capture media_gallery %}
-  <div x-data="mediaGalleryBundle" data-media-gallery-bundle-container class="max-w-[580px] transition-opacity duration-300">
+  <div x-data="mediaGalleryBundle"
+   data-media-gallery-bundle-container class="max-w-[580px] transition-opacity duration-300">
     <div  class="max-w-full flex">
       {% render 'media-gallery-bundle', bundle_product: selected_product %}
     </div>

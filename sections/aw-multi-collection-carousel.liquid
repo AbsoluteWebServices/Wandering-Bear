@@ -8,13 +8,17 @@
 %}
 
 {% capture slide_styles %}
-    width: calc(100% / 5.8);
+    --width: calc(100% / 5.8);
+    --width-mobile: calc(100% / 2.8);
+
+    --margin-right: 20px;
+    --margin-right-mobile: 10px;
 {% endcapture %}
 
-<div x-data="swiperSlider('{{ active_collection_title }}', '{{ active_collection_accent_text }}','{{ active_collection_handle }}')" class="relative z-1 pt-2 pb-[60px] max-w-[100vw] overflow-x-hidden" style="background-color: {{ color_scheme.settings.background }}">
+<div x-data="swiperSlider('{{ active_collection_title }}', '{{ active_collection_accent_text }}','{{ active_collection_handle }}')" class="relative z-1 pt-2 pb-[60px] max-w-[100vw] overflow-x-hidden -mt-[60px] md:mt-0" style="background-color: {{ color_scheme.settings.background }}">
     <div class="container flex-col items-center !gap-1.5 md:!gap-5 md:!items-start md:!flex-row mx-auto flex justify-center md:!justify-start relative md:!ml-20 max-w-[100vw]">
     {% if title_image != blank %}
-        <div class="h-[101px] md:!h-[133px] w-[270px] md:!mb-6 relative z-[2] mt-5 md:!mt-0">
+        <div class="h-[101px] md:!h-[133px] w-[270px] md:!mb-6 relative z-[2] mt-7 md:!mt-0">
             {{ title_image | image_url: width: 365 | image_tag: class: '!w-full max-h-full object-contain', alt: title_alt }}
         </div>
     {% endif %}
@@ -22,7 +26,7 @@
        {% comment %} Custom Dropdown {% endcomment %}
         <div class="wb-flex flex-col md:!mt-6">
             <span class="body uppercase mb-1 hidden md:!block">Select your size</span>
-            <div class="w-[282px] relative">
+            <div class="w-[317px] md:w-[282px] relative">
                 <div @click="toggleDropdown()" class="flex items-center justify-between relative rounded-[4px] cursor-pointer bg-[#F4ECE5] py-2 px-3 border border-espresso">
                     <div class="flex items-center whitespace-nowrap gap-4">
                         <span x-text="activeCollectionTitle" class="font-kurdis-semi-condensed text-base font-bold whitespace-nowrap">{{ section.blocks[0].settings.title }}</span>
@@ -66,7 +70,7 @@
                 {% liquid
                     assign collection = block.settings.collection
                 %}
-                {% render 'multi-coll-carousel-slide', product: product %}
+                {% render 'multi-coll-carousel-slide', product: product, slide_styles: slide_styles %}
             {% endfor %}
         </div>
         <div class="!hidden md:!flex swiper-button-next group transition-all duration-300" style="right: calc(calc(var(--slide-width) * 0.87) - 18px);">

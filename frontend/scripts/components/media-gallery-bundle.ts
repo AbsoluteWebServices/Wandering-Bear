@@ -60,13 +60,13 @@ export default (Alpine: typeof Alpine) => {
         },
 
         init() {
+
           window.addEventListener('product-changed', (event: Event) => {
             this.selectedProduct = (event as CustomEvent).detail.product
             this.renderGallery(this.selectedProduct)
           })
 
           this._initSwiper()
-
         },
 
         async renderGallery(product) {

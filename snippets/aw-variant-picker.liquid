@@ -10,9 +10,15 @@
 {% liquid 
     assign one_month_allocation = blank
     assign product_object = product_resource.metafields.custom.product_group.value
+    assign is_concentrate_template = false
+    if template.suffix == 'concentrate'
+      assign is_concentrate_template = true
+    endif
     assign quantified = false
-    if product_object.quantified and variant.metafields.custom.quantified_units != blank
+    if variant.metafields.custom.quantified_units != blank
+      if is_concentrate_template or product_object.quantified
         assign quantified = true
+      endif
     endif
 
     for allocation in variant.selling_plan_allocations
@@ -172,9 +178,6 @@
       <script type="application/json">
         {{ product_resource.selected_or_first_available_variant | json }}
       </script>
-
-  
-
     </form>
   </variant-picker>
 
@@ -189,8 +192,11 @@
             assign product_object = product_resource.metafields.custom.product_group.value
             assign quantified = false
             assign quantified_units = variant.metafields.custom.quantified_units
-            if product_object.quantified and quantified_units != blank
+
+            if quantified_units != blank and quantified_units > 0
+              if is_concentrate_template or product_object.quantified
                 assign quantified = true
+              endif
             endif
 
             for allocation in variant.selling_plan_allocations
@@ -222,10 +228,10 @@
           "id": {{ variant.id | json }},
           "quantified": {{ quantified | json }},
           {% if quantified %}
-            "quantified_units": {{ variant.metafields.custom.quantified_units | json }},
+            "quantified_units": {{ quantified_units | json }},
           {% endif %}
           "price": {{ price | json }},
-          {% if compare_at_price and quantified_units != blank and quantified_units > 0 %}
+          {% if compare_at_price and quantified %}
             "compare_at_price": {{ compare_at_price | divided_by: quantified_units | json }}
           {% elsif compare_at_price %}
             "compare_at_price": {{ compare_at_price | json }}

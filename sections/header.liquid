@@ -569,6 +569,11 @@
     z-index: var(--layer-sticky);
   }
 
+  .no-scroll .header-section:has(> #header-component[sticky='always']),
+  .no-scroll .header-section:has(> #header-component[sticky='scroll-up'][data-sticky-state='active']) {
+    z-index: 1;
+  }
+
   .header[data-sticky-state] {
     transition: opacity var(--animation-speed) var(--animation-easing);
     opacity: 1;

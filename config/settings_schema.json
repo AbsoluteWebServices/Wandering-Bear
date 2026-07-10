@@ -2408,6 +2408,19 @@
         "type": "product",
         "id": "elite_product",
         "label": "Elite product"
+      },
+      {
+        "type": "text",
+        "id": "account_worker_url",
+        "label": "Account worker URL",
+        "info": "Worker origin for account data, e.g. https://wb-account-worker.dmitryp.workers.dev (or http://localhost:8788 locally). When set, the theme calls {url}/dev/<path>?customerId=. Leave EMPTY to use the signed App Proxy /apps/wb once that app exists.",
+        "default": "https://wb-account-worker.dmitryp.workers.dev"
+      },
+      {
+        "type": "text",
+        "id": "account_worker_dev_token",
+        "label": "Account worker dev token",
+        "info": "Only if the worker's /dev requires a token (DEV_TOKEN on the deployed worker). Sent as ?token= next to customerId. Leave EMPTY for a local worker or the App Proxy path."
       }
     ]
   }

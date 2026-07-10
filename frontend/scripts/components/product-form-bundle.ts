@@ -63,7 +63,27 @@ export default (Alpine: AlpineType) => {
         },
 
         get addToCartText() {
+            if (this.bundleType === '32oz') {
+              if (this.flavorType === 'mix') {
+                return this.canAddToCart ? 'Add to bag' : `Add ${this.qtyLimit} flavors`;
+              }
+
+              return this.bundleSize >= 1 ? 'Add to bag' : 'Add 1 flavor';
+            }
+
             return this.bundleSize >= 1 ? 'Add to bag' : 'Add 1 flavor';
+        },
+
+        get canAddToCart() {
+          if (this.bundleType !== '32oz') {
+            return this.bundleSize >= 1;
+          }
+
+          if (this.flavorType === 'single') {
+            return this.bundleSize >= 1;
+          }
+
+          return this.bundleSize === this.qtyLimit;
         },
 
         get currentSavingsAmount() {
@@ -71,16 +91,17 @@ export default (Alpine: AlpineType) => {
                 return 0;
             }
 
-            const bundleSize = (this.bundleSize <= 2) ? (this.bundleSize - 1) : 2;
-            const originalPrice = this.selectedProduct?.variants[0].price;
-            const newSellingPlanPrice = this.selectedProduct?.variants[bundleSize]?.selling_plan_price;
-            const savingsAmountAutoship = this.bundleSize * (originalPrice - newSellingPlanPrice);
+            return this.assignedBundleProducts.reduce((acc: number, product: any) => {
+              const originalPrice = Number(product.originalPrice || 0);
+              const sellingPlanPrice = Number(product.sellingPlanPrice || 0);
+              const quantity = Number(product.quantity || 0);
 
-            return savingsAmountAutoship;
+              return acc + (originalPrice - sellingPlanPrice) * quantity;
+            }, 0);
         },
 
         get currentSavingsAmountFormatted() {
-            return this._formatPrice(this.currentSavingsAmount, { withoutCents: true });
+            return this._formatPrice(this.currentSavingsAmount);
         },
 
         get parentProduct() {
@@ -226,6 +247,12 @@ export default (Alpine: AlpineType) => {
           this.selectedBundleProducts = {};
         },
 
+        _updateUrl(productHandle) {
+          const url = new URL(window.location.href)
+          url.pathname = `/products/${productHandle}`
+          window.history.pushState({}, "", url.toString())
+        },
+
         _addQueryParam(key, value) {
           const url = new URL(window.location)
           url.searchParams.set(key, value)
@@ -329,32 +356,17 @@ export default (Alpine: AlpineType) => {
 
 
         init() {
+            let queryParams = new URLSearchParams(window.location.search)
+            let productId = Number(queryParams.get('product'));
+
             this.bundleProducts = JSON.parse(this.$refs.productObject.textContent);
             this.bundleParentProducts = JSON.parse(this.$refs.bundleParentProducts.textContent);
             this.selectedProduct = this.bundleProducts[this.selectedProductId];
 
-            let queryParams = new URLSearchParams(window.location.search)
-
             if (this.bundleQty) {
               this.qtyLimit = this.bundleQty;
             }
-
-            // Populate bundle if sent a link with query params
-            queryParams.forEach((value, key) => {
-              if (key === "bundle") {
-                  let [variantId, quantity] = value.split("_")
-                  let parsedQuantity = parseInt(quantity, 10)
-
-                  this.selectedBundleProducts[variantId] = {
-                    productId: variantId,
-                    quantity: parsedQuantity,
-                  }
-                 
-              } else if (key === "bundle_interval") {
-                  this.purchaseOption = value === 'sub' ? 'autoship' : 'one_time';
-              }
-            })
-
+            this._setProgressBarPrices();
         },
 
         onPurchaseOptionChange() {
@@ -386,9 +398,13 @@ export default (Alpine: AlpineType) => {
 
         },
         
-        selectProduct(productId) {
+        selectProduct(productId, productHandle) {
+            this._updateUrl(productHandle);
             this.selectedProduct = this.bundleProducts[productId];
-            window.dispatchEvent(new CustomEvent('product-changed', { detail: { product: this.selectedProduct }, bubbles: true, composed: true }));
+            this._setProgressBarPrices();
+            this.$nextTick(() => {
+              window.dispatchEvent(new CustomEvent('product-changed', { detail: { product: this.selectedProduct }, bubbles: true, composed: true }));
+            })
         },
 
         changeFlavorType(type) {
@@ -437,6 +453,10 @@ export default (Alpine: AlpineType) => {
         },
 
         async addToCart() {
+            if (!this.canAddToCart || this.loading) {
+              return;
+            }
+
             this.loading = true;
 
             let guid = this._createGuid();

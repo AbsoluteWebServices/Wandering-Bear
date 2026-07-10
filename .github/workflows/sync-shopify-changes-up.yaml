@@ -1,0 +1,37 @@
+name: Cherry Pick to Non-Build Branch
+
+on:
+  push:
+    branches:
+      - '*-build' # matches every branch that doesn't contain a '/'
+      - '*/*-build' # matches every branch containing a single '/'
+      - '**-build' # matches every branch
+    paths-ignore:
+      - README.md
+
+permissions:
+  contents: write
+
+jobs:
+  cherry-pick:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.author.name, 'shopify[bot]')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Cherry-pick to non-build branch
+        run: |
+          git config user.name "Shopify Bot (Github Action)"
+          git config user.email "action@github.com"
+          cherry_pick_branch=${{ github.ref }}
+          cherry_pick_branch=${cherry_pick_branch#refs/heads/} # remove the "refs/heads/" prefix
+          original_branch=${cherry_pick_branch%-build}   # remove the "-build" suffix
+          echo "original_branch: $original_branch"
+          echo "cherry_pick_branch: $cherry_pick_branch"
+          git checkout $original_branch
+          git cherry-pick ${{ github.sha }}
+          git push --set-upstream origin $original_branch

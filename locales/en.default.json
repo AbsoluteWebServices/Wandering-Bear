@@ -8,6 +8,107 @@
  * ------------------------------------------------------------
  */
 {
+  "customer": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "error": "There were errors with your submission: incorrect email or password.",
+      "submit": "Login",
+      "create_account": "Create Account",
+      "forgot_password": "Forgot Password",
+      "or": "OR",
+      "manage_autoship": "Manage Autoship"
+    },
+    "recover": {
+      "title": "Reset Password",
+      "email": "Email",
+      "submit": "Submit",
+      "success": "We've sent you an email to update your password.",
+      "back_to_login": "Back to Login",
+      "cancel": "Cancel"
+    },
+    "reset": {
+      "title": "Reset Password",
+      "password": "New password",
+      "password_confirm": "Confirm password",
+      "submit": "Reset Password"
+    },
+    "register": {
+      "title": "Create Account",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create Account",
+      "have_account": "Already have an account?",
+      "sign_in": "Sign In",
+      "privacy": "Privacy Policy"
+    },
+    "activate": {
+      "title": "Activate Account",
+      "password": "Password",
+      "password_confirm": "Confirm password",
+      "submit": "Activate Account",
+      "decline": "Decline Invitation"
+    },
+    "account": {
+      "title": "My Account",
+      "welcome": "Welcome Back, {{ first_name }}",
+      "log_out": "Log Out"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "subscriptions": "Subscriptions",
+      "credits": "Credits",
+      "addresses": "Addresses",
+      "log_out": "Log Out"
+    },
+    "dashboard": {
+      "membership_tier": "Your membership tier",
+      "membership_faq": "Membership FAQ",
+      "progress_next_tier": "Progress to next tier",
+      "change_tier": "Change Membership Tier",
+      "update_payment": "Update Payment Info",
+      "whats_included": "What's Included:",
+      "upgrade_today": "Upgrade today!",
+      "why_wait": "Why wait?",
+      "upgrade_elite_cta": "Upgrade to Elite · $25",
+      "elite_upsell_desc": "Get an additional 5% off every order with our Elite Membership",
+      "your_credit": "Your Credit:",
+      "expires": "Expires {{ date }}",
+      "expires_label": "Expires",
+      "load_error": "We couldn't load your latest account data. Please refresh to try again.",
+      "view_credit_history": "View Credit History",
+      "redeem_credits": "Redeem Credits",
+      "next_autoship": "Your next autoship order",
+      "previous_autoship": "Your previous autoship order:",
+      "active_autoships": "{{ count }} Active Autoships",
+      "cancelled": "Cancelled",
+      "next_shipment": "Next shipment: {{ date }}",
+      "next_shipment_label": "Next shipment:",
+      "manage_orders": "Manage Upcoming Orders",
+      "reactivate": "Reactivate",
+      "more_count": "+ {{ count }} more",
+      "timeframe": "Timeframe:",
+      "order_history": "Order History",
+      "all_orders": "All Orders",
+      "timeframe": "Timeframe:",
+      "col_order": "Order",
+      "col_date": "Date",
+      "col_tracking": "Tracking",
+      "col_payment": "Payment Status",
+      "col_fulfillment": "Fulfillment Status",
+      "col_total": "Total",
+      "no_orders": "You have no orders yet.",
+      "no_orders_sub": "When you place your first order, it'll show up here.",
+      "no_orders_cta": "Start Shopping",
+      "contact_title": "Still Wandering Around?",
+      "contact_subtext": "Let our team help you get where you need to go.",
+      "contact_cta": "Contact Us"
+    }
+  },
   "accessibility": {
     "account": "Account",
     "active_filters": "Active filters:",

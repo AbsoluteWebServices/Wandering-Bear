@@ -43,10 +43,10 @@
     {% if mobile_source %}
         <source srcset="{{ mobile_source | image_url: width: 500 }}" media="(max-width: 480px)">
         <source srcset="{{ mobile_source | image_url: width: 767 }}" media="(max-width: 767px)">
-      {% else %}
+    {% else %}
         <source srcset="{{ source | image_url: width: 500 }}" media="(max-width: 480px)">
         <source srcset="{{ source | image_url: width: 767 }}" media="(max-width: 767px)">
-      {% endif %}
+    {% endif %}
 {% endif %}
 {% endcapture %}
 
