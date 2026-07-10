@@ -106,7 +106,7 @@
     {% endif %}
    </div>
 
-   <div x-data="diagram()" class="wb-flex flex-col md:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0">
+   <div x-data="diagram()" class="wb-flex flex-col md:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0{% if template.suffix == '96oz' %} mt-2 md:mt-0{% endif %}">
 
     <!-- SVG LINES -->
     <svg class="diagram-lines absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
