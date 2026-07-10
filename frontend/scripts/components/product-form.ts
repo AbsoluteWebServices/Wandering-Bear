@@ -21,17 +21,23 @@ export default (Alpine: AlpineType) => {
         modal: null,
 
         get addToCartText() {
-            return this.selectedVariant.available ? 'Add to bag' : 'Sold Out';
+            return this.selectedVariant?.available ? 'Add to bag' : 'Sold Out';
+        },
+
+        get canAddToCart() {
+            return Boolean(this.selectedVariant?.available);
         },
 
         get totalPrice() {
             const variant = this.selectedVariant;
-            const autoshipPrice = variant?.selling_plan_price ?? variant?.price ?? 0;
+            const quantity = this._getCartQuantity(variant);
+            const unitPrice = variant?.price ?? 0;
+            const unitAutoshipPrice = variant?.selling_plan_price ?? unitPrice;
 
             return {
-              original: this._formatPrice(variant?.price),
-              autoship: this._formatPrice(autoshipPrice),
-              oneTime: this._formatPrice(variant?.price),
+              original: this._formatPrice(unitPrice * quantity),
+              autoship: this._formatPrice(unitAutoshipPrice * quantity),
+              oneTime: this._formatPrice(unitPrice * quantity),
             }
           },
 
@@ -42,7 +48,8 @@ export default (Alpine: AlpineType) => {
                 return 0;
             }
 
-            return variant.price - variant.selling_plan_price;
+            const quantity = this._getCartQuantity(variant);
+            return (variant.price - variant.selling_plan_price) * quantity;
         },
 
         get currentSavingsAmountFormatted() {
@@ -72,8 +79,10 @@ export default (Alpine: AlpineType) => {
         },
 
         _getCartQuantity(variant: any) {
-            if (variant?.quantified && variant?.quantified_units > 0) {
-                return variant.quantified_units;
+            const units = Number(variant?.quantified_units);
+
+            if (units > 0) {
+                return units;
             }
 
             return 1;
@@ -189,6 +198,10 @@ export default (Alpine: AlpineType) => {
         },
 
         async addToCart() {
+            if (!this.canAddToCart || this.loading) {
+                return;
+            }
+
             this._syncSelectedVariant();
             this.loading = true;
 

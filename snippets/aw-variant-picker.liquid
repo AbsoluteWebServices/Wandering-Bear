@@ -189,8 +189,21 @@
             assign product_object = product_resource.metafields.custom.product_group.value
             assign quantified = false
             assign quantified_units = variant.metafields.custom.quantified_units
-            if product_object.quantified and quantified_units != blank
+            assign pack_label = variant.metafields.airf.boxes | default: variant.title
+
+            if quantified_units == blank or quantified_units == 0
+              assign parsed_units = pack_label | split: ' ' | first | plus: 0
+              if parsed_units > 0
+                assign quantified_units = parsed_units
+              endif
+            endif
+
+            if quantified_units > 0
+              if product_object.quantified
                 assign quantified = true
+              elsif product_resource.variants.size > 1
+                assign quantified = true
+              endif
             endif
 
             for allocation in variant.selling_plan_allocations
@@ -221,8 +234,8 @@
           "title": {{ variant.title | json }},
           "id": {{ variant.id | json }},
           "quantified": {{ quantified | json }},
-          {% if quantified %}
-            "quantified_units": {{ variant.metafields.custom.quantified_units | json }},
+          {% if quantified_units > 0 %}
+            "quantified_units": {{ quantified_units | json }},
           {% endif %}
           "price": {{ price | json }},
           {% if compare_at_price and quantified_units != blank and quantified_units > 0 %}

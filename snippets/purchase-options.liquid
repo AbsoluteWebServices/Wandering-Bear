@@ -70,14 +70,19 @@
     </fieldset>
 </div>
 
-<button class="group relative flex w-full items-center justify-center shadow-button cursor-pointer h-[61px] uppercase pointer-events-auto mb-0.5 md:mb-3.75" @click.prevent="addToCart">
+<button
+  :disabled="!canAddToCart || loading"
+  :class="canAddToCart ? 'cursor-pointer' : 'pointer-events-none cursor-default'"
+  class="group relative flex w-full items-center justify-center shadow-button h-[61px] uppercase mb-0.5 md:mb-3.75 disabled:pointer-events-none"
+  @click.prevent="addToCart"
+>
     <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold mt-0.5 uppercase">
         {{ 'products.product.add_to_bag' | t }}
     </span>
     {% render 'loading-animation', class: 'z-[2]' %}
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        :class="currentSavingsAmount > 0 ? 'text-espresso' : 'text-espresso/50'"
+        :class="canAddToCart ? 'text-espresso' : 'text-espresso/50'"
         class="absolute inset-0 z-[1] h-full w-full text-espresso/50 group-hover:!text-gold transition-all duration-300" viewBox="0 0 402 61" fill="none" preserveAspectRatio="none"
     >
         <path d="M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z" fill="currentColor"/>
