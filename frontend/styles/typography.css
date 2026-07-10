@@ -153,15 +153,17 @@
     font-display: swap;
 }
 
-@font-face {
+/* @font-face {
     font-family: "Gothic Condensed";
     src:
-        url("https://cdn.shopify.com/s/files/1/1418/5086/files/tablet-gothic-condensed.woff2?v=1783499803")
-            format("woff2");
+        url("//wanderingbearcoffee.com/cdn/shop/t/315/assets/tablet-gothic-condensed.woff2?v=132369543582702234641694525160")
+            format("woff2"),
+        url("//wanderingbearcoffee.com/cdn/shop/t/315/assets/tablet-gothic-condensed.woff?v=84834064318929526141694525160")
+            format("woff");
     font-weight: 800;
     font-style: normal;
     font-display: swap;
-}
+} */
 
 :root {
     --font-gt_pressura: "GT Pressura", sans-serif;
@@ -169,7 +171,7 @@
     --font-kurdis-semi-condensed: "Kurdis SemiCondensed", sans-serif;
     --font-kurdis-condensed: "Kurdis Condensed", sans-serif;
     --font-parslay: "Parslay", sans-serif;
-    --font-gothic_condensed: "Gothic Condensed", sans-serif;
+    --font-gothic_condensed: "tablet-gothic-condensed", sans-serif;
 }
 
 .font-gt_pressura {

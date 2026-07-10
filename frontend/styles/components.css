@@ -121,8 +121,6 @@
     }
 }
 
-/* Account portal styles moved to frontend/styles/account.css (own component sheet). */
-
 [data-accordion-item] {
     summary {
         svg {

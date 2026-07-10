@@ -9,6 +9,8 @@
     assign learn_more_button = item.learn_more_button
     assign login_text = item.login_text
     assign already_logged_in_text = item.already_logged_in_text
+    assign elite_product = settings.elite_product
+    assign elite_selling_plan = elite_product.selected_or_first_available_variant.selling_plan_allocations.first.selling_plan.id
 
     assign is_elite = false
     if customer.tags contains 'inveterate-tier#dc38b982'
@@ -24,27 +26,27 @@
     </div>
 {% endcapture %}
 
-<div class="max-w-[481px] bg-white rounded-[5px] overflow-hidden relative">
+<div class="max-w-[441px] bg-white rounded-[5px] overflow-hidden relative">
 {% if is_elite %}
     {{ elite_block }}
 {% endif %}
 <div @click="close()" class="cursor-pointer flex justify-center items-center text-bear-black shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] items-center rounded-full w-11 h-11 absolute top-4 right-3 bg-foam cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300">
     {% render 'icons', icon: 'close', class: 'w-4 h-4 relative' %}
 </div>
-<div class="wb-flex flex-col items-center justify-center {% if is_elite %} pt-5 {% else %} pt-10 {% endif %} pb-6 px-15">
-<span class="text-[25px] font-extrabold max-w-[260px] leading-[100%] uppercase font-gothic_condensed text-center wb-flex text-balance mb-4.5">{{ item.title }}</span>
-<span class="wb-flex text-center text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed text-center mb-6">{{ item.subtitle }}</span>
+<div class="wb-flex flex-col items-center justify-center {% if is_elite %} pt-5 {% else %} pt-10 {% endif %} pb-6 px-10">
+<span class="text-[25px] font-bold leading-[100%] uppercase font-gothic_condensed text-center wb-flex text-balance font-bold mb-4.5">{{ item.title }}</span>
+<span class="wb-flex text-center text-balance text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed text-center mb-6">{{ item.subtitle }}</span>
 <div class="wb-flex flex-col items-center justify-center bg-[#FAF2ED] p-4 rounded-[10px] border-espresso border-2">
     <span class="mb-2 text-gold text-[17px] font-kurdis-semi-condensed font-bold text-center">{{ item.autoship_block_title }}</span>
     <div class="text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-pretty">{{ item.autoship_block_description | metafield_tag }}</div>
 </div>
-<span class="wb-flex my-4 rotate-[-5.72deg] text-[25px] font-bold leading-[100%] uppercase font-gothic_condensed text-center wb-flex text-balance font-bold mb-4.5">OR</span>
+<span class="wb-flex my-4 rotate-[5.72deg] text-[25px] font-bold leading-[100%] uppercase font-gothic_condensed text-center wb-flex text-balance font-bold mb-4.5">OR</span>
 <div class="mb-9 wb-flex flex-col items-center justify-center bg-[#FAF2ED] p-4 rounded-[10px] border-espresso border-2">
     <span class="mb-2 text-gold text-[17px] font-kurdis-semi-condensed font-bold text-center">{{ item.elite_block_title }}</span>
     <div class="text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-pretty">{{ item.elite_block_description | metafield_tag }}</div>
     {% if item.learn_more_button != blank %}
         <div @click.stop.prevent="addToCart({{ elite_product.selected_or_first_available_variant.id }}, 1, {{ elite_selling_plan }})">
-        {% render 'wb-button', style: 'secondary-gold', class: 'z-[3] !w-[119px] !h-[25px] !text-[12px] mt-5 tracking-wide', width: 98, height: 25, label: item.elite_button_text, link: '' %}
+        {% render 'wb-button', style: 'secondary-gold', class: 'z-[3] !w-[119px] !h-[25px] !text-[12px] mt-5', width: 98, height: 25, label: item.elite_button_text, link: '' %}
         </div>
     {% endif %}
 </div>
@@ -54,7 +56,7 @@
 </div>
 {% if item.login_text != blank and is_elite == false %}
     <div class="bg-[#BFD7E9] p-4">
-        <div class="text-sm font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-espresso [&_p>a]:!text-espresso [&_p>a]:underline [&_strong]:font-bold">
+        <div class="text-sm font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-espresso [&_p>a]:!text-espresso [&_p>a]:underline">
             {{ item.login_text | metafield_tag }}
         </div>
     </div>

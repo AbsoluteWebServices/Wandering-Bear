@@ -10,7 +10,6 @@ import 'overlayscrollbars/overlayscrollbars.css';
 import '../styles/typography.css';
 import '../styles/colors.css';
 import '../styles/components.css';
-import '../styles/account.css';
 import '../styles/multi-collection-slider.css';
 import '../styles/divider.css';
 import '../styles/footer.css';
@@ -63,6 +62,7 @@ const init = async () => {
     loaded = true
     const { default: Alpine } = await import("alpinejs")
     const { default: morph } = await import("@alpinejs/morph")
+    const { default: Cart } = await import("~/scripts/components/cart")
 
     const { default: SwiperSlider } = await import("~/scripts/components/swiperSlider")
     const { default: VideoPlayer } = await import("~/scripts/components/videoPlayer")
@@ -74,8 +74,6 @@ const init = async () => {
     const { default: Accordion } = await import("~/scripts/components/accordion")
     const { default: Footer } = await import("~/scripts/components/footer")
     const { default: Modal } = await import("~/scripts/components/modal")
-    const { default: BackInStock } = await import("~/scripts/components/back-in-stock")
-    const { default: EliteAtc } = await import("~/scripts/components/elite-atc")
     const { default: DiagramToggle } = await import("~/scripts/components/diagramToggle")
     const { default: ProductForm } = await import("~/scripts/components/product-form")
     const { default: HowToMix } = await import("~/scripts/components/how-to-mix")
@@ -86,6 +84,7 @@ const init = async () => {
 
     Alpine.plugin(morph)
 
+    Alpine.plugin(Cart)
     Alpine.plugin(SwiperSlider)
     Alpine.plugin(VideoPlayer)
     Alpine.plugin(Header)
@@ -96,8 +95,6 @@ const init = async () => {
     Alpine.plugin(Accordion)
     Alpine.plugin(Footer)
     Alpine.plugin(Modal)
-    Alpine.plugin(BackInStock)
-    Alpine.plugin(EliteAtc)
     Alpine.plugin(DiagramToggle)
     Alpine.plugin(ProductForm)
     Alpine.plugin(HowToMix)
@@ -106,8 +103,14 @@ const init = async () => {
     Alpine.plugin(ProductsSlider)
     Alpine.plugin(OverlayScrollbar)
 
+    Alpine.store('cart', {
+        state: '',
+    });
+
     Alpine.start()
     window.Alpine = Alpine
+
+    
 }
 
 document.addEventListener("mousedown", init, { once: true })

@@ -105,7 +105,7 @@
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
             "mobile_image_alt": "",
             "title": "Single Serves",
-            "subtitle": "Perfect for mornings on the move and afternoons out",
+            "subtitle": "Perfect for mornings on the move\\band afternoons out",
             "accent_text": ""
           }
         }
@@ -172,6 +172,7 @@
         "background_image_mobile": "shopify://shop_images/Group_1327226600.png",
         "floating_image": "shopify://shop_images/LatteHands_Badge.png",
         "floating_image_mobile": "shopify://shop_images/Mobile_Hand.png",
+        "badge": "shopify://shop_images/NEW_BADGE_3c9b0304-61d1-4e60-8f8d-7999b8b005cd.svg",
         "title_type": "image",
         "title": "",
         "font_size": 24,
@@ -258,7 +259,7 @@
         "background_image": "shopify://shop_images/Unlock_Background.jpg",
         "background_image_mobile": "shopify://shop_images/Group_1327226600_552c72fa-3873-4ef2-bb39-0b50a3ec9db2.png",
         "title_type": "image",
-        "title": "",
+        "title": "OUR MEMBERS UNLOCK\\bBETTER PRICES WITH EVERY SIP",
         "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_BETTER_PRICES_WITH_EVERY_SIP.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226609.svg",
         "title_alt": "Our members unlock better prices with every sip",

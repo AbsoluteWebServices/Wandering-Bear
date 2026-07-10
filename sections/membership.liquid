@@ -63,6 +63,18 @@
     </svg>
 </div>
 
+{% style %}
+    .title-text {
+        font-size: var(--font-size);
+    }
+
+    @media (max-width: 1024px) {
+        .title-text {
+            font-size: var(--font-size-mobile);
+        }
+    }
+{% endstyle %}
+
 {% schema %}
     {
         "name": "Membership",
@@ -103,6 +115,28 @@
                 "type": "text",
                 "id": "title",
                 "label": "Title",
+                "visible_if": "{{ section.settings.title_type == 'text' }}"
+            },
+            {
+                "type": "range",
+                "id": "font_size",
+                "label": "Font Size",
+                "min": 16,
+                "max": 100,
+                "step": 1,
+                "unit": "px",
+                "default": 24,
+                "visible_if": "{{ section.settings.title_type == 'text' }}"
+            },
+            {
+                "type": "range",
+                "id": "font_size_mobile",
+                "label": "Font Size Mobile",
+                "min": 16,
+                "max": 100,
+                "step": 1,
+                "unit": "px",
+                "default": 24,
                 "visible_if": "{{ section.settings.title_type == 'text' }}"
             },
             {

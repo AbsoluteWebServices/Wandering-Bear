@@ -29,7 +29,7 @@
    assign plural_label = product_object.value.plural_label
    assign selling_plan_keywords = product_object.value.selling_plan_keywords.value
    assign discount_type = product_object.value.discount_type
-   assign col_width = 69
+   assign col_width = 63
 
    if product_object.value.multi_unit_product_quantity != blank and product_object.value.multi_unit_product_quantity > 1
     assign multi_unit_product = true
@@ -136,9 +136,9 @@
           {% endfor %}
         </div>
       </div>
-      <div class="flex items-center justify-between text-[12px] mt-1 w-full">
+      <div class="flex items-center justify-between text-[12px] w-full">
         {% for i in (1..bundle_products_count) %}
-          <div data-tier="{{ i }}" class="col-width wb-flex gap-0.75 flex-col items-center justify-center" style="{{ col_width_styles }}">
+          <div data-tier="{{ i }}" class="col-width wb-flex gap-1 flex-col items-center justify-center" style="{{ col_width_styles }}">
             <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
               {%- case i -%}
                 {%- when 1 -%}
@@ -190,6 +190,7 @@
       {
         "id": {{ bundle_product.id | json }},
         "handle": {{ bundle_product.handle | json }},
+        "bundle_type": "{{- bundle_product.metafields.custom.product_group.value.display_name -}}",
         "variant_id": {{ bundle_parent_variant.id | json }}{% if bundle_parent_variant.selling_plan_allocations.size > 0 %},{% endif %}
         {% for allocation in bundle_parent_variant.selling_plan_allocations %}
           {%- assign selling_plan_name = allocation.selling_plan.name -%}
@@ -209,6 +210,9 @@
             "id": {{- child_product.id -}},
             "title": "{{- child_product.title -}}",
             "handle": "{{- child_product.handle -}}",
+            "flavor_name": "{{- child_product.metafields.custom.flavor_name -}}",
+            "bundle_name": "{{- child_product.metafields.custom.product_group.value.display_name | handleize -}}",
+            "collection_handle": "{{- child_product.metafields.custom.flavor_collection.value.handle -}}",
             "variants": {
                 {% for child_variant in child_product.variants %}
                     "{{- forloop.index0 -}}": {

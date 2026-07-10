@@ -1,21 +1,10 @@
 {% liquid
   assign is_selected = false
-
   if child_product.id == product.id
     assign is_selected = true
-  endif
+  endif    
 
   assign bundle_add_to_cart_text = section.settings.bundle_add_to_cart_text
-  assign is_oos = false
-
-  unless member_only
-    if child_product.available == false
-      assign is_oos = true
-    endif
-  endunless
-
-  assign oos_badge_text = section.settings.oos_badge_text | default: 'Out of Stock'
-  assign oos_button_text = section.settings.oos_button_text | default: 'Get Notified'
 %}
 
 <div @click="selectProduct({{ child_product.id }},'{{ child_product.handle }}')" data-product-id="{{ child_product.id }}"

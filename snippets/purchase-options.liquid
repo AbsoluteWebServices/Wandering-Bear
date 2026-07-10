@@ -24,7 +24,7 @@
                 <span class="subscription-label-name transition-colors duration-300 font-bold">Monthly with Autoship</span>
             </div>
             <div class="col-start-2 wb-flex flex-col row-start-2 col-end-4">
-                <span class="text-sm font-kurdis-semi-condensed">Skip, reschedule, cancel at anytime</span>
+                <span class="text-sm">Skip, reschedule, cancel at anytime</span>
             </div>
             <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
                 <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.original !== totalPrice.autoship" x-text="totalPrice.original"></span>
@@ -90,5 +90,5 @@
 </button>
 
 <template x-if="purchaseOption === 'autoship' && currentSavingsAmount > 0">
-    <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-3.75 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+    <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-4 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>

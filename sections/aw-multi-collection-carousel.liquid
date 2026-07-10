@@ -64,7 +64,8 @@
         </div>
     </div>
     <div class="swiper multi-collection-slider mt-[40px] md:!-mt-9 max-w-[100vw]">
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper"
+        :class="swiper.slides.length < 5 ? 'justify-center' : ''">
             {% for product in section.blocks[0].settings.collection.products %}
                 {% liquid
                     assign collection = block.settings.collection
