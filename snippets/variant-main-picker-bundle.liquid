@@ -117,8 +117,8 @@
       <div>
         <div class="flex items-center justify-between relative">
           {% for i in (1..bundle_products_count) %}
-              <div class="col-width flex items-center justify-center" style="{{ col_width_styles }}">
-                <div class="flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC] first:-translate-x-px"
+              <div class="col-width flex items-center justify-center first:[&>div]:-translate-x-px" style="{{ col_width_styles }}">
+                <div class="flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC]"
                 :class="bundleSize >= {{ i }} ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
                 >
                   <div class="flex items-center justify-center h-3.5 w-3.5 bg-[#CFBDB1] rounded-full bg-transparent"
