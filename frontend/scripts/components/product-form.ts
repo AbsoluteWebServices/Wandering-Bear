@@ -79,6 +79,10 @@ export default (Alpine: AlpineType) => {
         },
 
         _getCartQuantity(variant: any) {
+            if (!variant?.quantified) {
+                return 1;
+            }
+
             const units = Number(variant?.quantified_units);
 
             if (units > 0) {
