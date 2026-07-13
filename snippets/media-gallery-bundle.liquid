@@ -21,9 +21,9 @@
     endif
 %}
 
-<div data-media-gallery-bundle class="max-w-[545px] w-full overflow-hidden mx-auto md:mx-0">
-    <div class="flex flex-col !max-w-[545px] gap-2 md:gap-4.5">
-        <div class="swiper swiper-main product-gallery max-w-[545px] max-h-[545px] w-full lg:aspect-square" x-ref="swiper">
+<div data-media-gallery-bundle class="w-full overflow-hidden mx-auto md:mx-0 md:max-w-[545px]">
+    <div class="flex flex-col gap-2 md:gap-4.5 md:!max-w-[545px]">
+        <div class="swiper swiper-main product-gallery w-full md:max-h-[545px] md:max-w-[545px] lg:aspect-square" x-ref="swiper">
             <div class="swiper-wrapper max-w-full max-h-full">
                 {% for media in product_media %}
                     <div
@@ -35,8 +35,8 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="swiper-thumbs !max-w-[545px] w-full {% if hide_thumbnails_desktop %} block lg:!hidden {% endif %}" x-ref="swiperThumbs">
-            <div class="swiper-wrapper flex !max-w-[545px]">
+        <div class="swiper-thumbs w-full {% if hide_thumbnails_desktop %} block md:!max-w-[545px] lg:!hidden {% endif %}" x-ref="swiperThumbs">
+            <div class="swiper-wrapper flex md:!max-w-[545px]">
                 {% for media in product_media %}
                     <div
                         class="swiper-slide rounded-[5px] max-w-17 md:max-w-27 overflow-hidden cursor-pointer !aspect-square before:transition-all before:duration-300

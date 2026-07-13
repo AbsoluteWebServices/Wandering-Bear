@@ -8,18 +8,31 @@ type Line = {
   y2: number
 }
 
+const VIEW_TRANSITION_MS = 750
+const VIEW_TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
+const VIEW_TRANSITION_CLASSES = [
+  'transition-opacity',
+  'duration-[750ms]',
+  'ease-in-out',
+  'motion-reduce:transition-none',
+] as const
+
 export default (Alpine: AlpineType) => {
   Alpine.data('diagramToggle', (initialState: number = 0) => ({
     lines: [] as Line[],
 
     state: initialState,
     pendingState: null as number | null,
+    swapId: 0,
+    swapTimeoutId: null as ReturnType<typeof setTimeout> | null,
 
     el: null as HTMLElement | null,
 
     indicatorStyle: '',
     isDragging: false,
     isSwapping: false,
+    pointerStartX: null as number | null,
+    pointerStartY: null as number | null,
 
     resizeHandler: null as (() => void) | null,
 
@@ -49,9 +62,58 @@ export default (Alpine: AlpineType) => {
     },
 
     async setState(index: number) {
-      if (index === this.state || this.isSwapping) return
+      if (index === this.state && !this.isSwapping) return
+      if (index === this.state && this.isSwapping) return
+
+      this.updateIndicator(index)
+
+      if (this.isSwapping) {
+        this.cancelSwap()
+      }
 
       await this.mountState(index, true)
+    },
+
+    isActiveSwap(id: number) {
+      return id === this.swapId
+    },
+
+    cancelSwap() {
+      this.swapId++
+
+      if (this.swapTimeoutId !== null) {
+        clearTimeout(this.swapTimeoutId)
+        this.swapTimeoutId = null
+      }
+
+      const content = this.$refs.content as HTMLElement | undefined
+      if (!content) {
+        this.isSwapping = false
+        return
+      }
+
+      content.style.height = ''
+      content.style.transition = ''
+      content.style.overflow = ''
+
+      const children = Array.from(content.children)
+      if (children.length > 1) {
+        children[children.length - 1].remove()
+      }
+
+      const active = content.firstElementChild
+      if (active instanceof HTMLElement) {
+        active.classList.remove(
+          'absolute',
+          'inset-0',
+          'w-full',
+          'opacity-0',
+          'opacity-100',
+          ...VIEW_TRANSITION_CLASSES
+        )
+      }
+
+      this.isSwapping = false
     },
 
     async mountState(index: number, animate = true) {
@@ -63,7 +125,16 @@ export default (Alpine: AlpineType) => {
 
       if (!template || !content) return
 
+      const swapId = ++this.swapId
+
+      if (this.swapTimeoutId !== null) {
+        clearTimeout(this.swapTimeoutId)
+        this.swapTimeoutId = null
+      }
+
       this.isSwapping = true
+      this.state = index
+      this.updateIndicator(index)
 
       const previousChildren = Array.from(content.children)
 
@@ -71,65 +142,116 @@ export default (Alpine: AlpineType) => {
       next.appendChild(template.content.cloneNode(true))
 
       if (animate && previousChildren.length) {
-        content.style.minHeight = `${content.offsetHeight}px`
+        const startHeight = content.offsetHeight
 
-        next.className =
-          'absolute inset-0 w-full opacity-0 transition-opacity duration-200'
+        content.style.height = `${startHeight}px`
+        content.style.transition = `height ${VIEW_TRANSITION_MS}ms ${VIEW_TRANSITION_EASING}`
+        content.style.overflow = 'hidden'
+
+        next.className = `absolute inset-0 w-full opacity-0 ${VIEW_TRANSITION_CLASSES.join(' ')}`
+
+        previousChildren.forEach((child) => {
+          if (child instanceof HTMLElement) {
+            child.classList.add(...VIEW_TRANSITION_CLASSES)
+          }
+        })
 
         content.appendChild(next)
         Alpine.initTree(next)
-       
 
         await this.$nextTick()
+        if (!this.isActiveSwap(swapId)) return
+
         await this.waitForImages(next)
+        if (!this.isActiveSwap(swapId)) return
+
+        const nextHeight = next.offsetHeight
 
         this.$nextTick(() => {
-          this.draw(next)
+          if (this.isActiveSwap(swapId)) {
+            this.draw(next)
+          }
         })
 
-        requestAnimationFrame(() => {
-          next.classList.remove('opacity-0')
-          next.classList.add('opacity-100')
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              if (!this.isActiveSwap(swapId)) {
+                resolve()
+                return
+              }
+
+              content.style.height = `${nextHeight}px`
+
+              previousChildren.forEach((child) => {
+                if (child instanceof HTMLElement) {
+                  child.classList.add('opacity-0')
+                }
+              })
+
+              next.classList.remove('opacity-0')
+              next.classList.add('opacity-100')
+
+              resolve()
+            })
+          })
         })
 
-        window.setTimeout(() => {
-          previousChildren.forEach((child) => child.remove())
+        if (!this.isActiveSwap(swapId)) return
 
-          next.classList.remove(
-            'absolute',
-            'inset-0',
-            'w-full',
-            'opacity-100',
-            'transition-opacity',
-            'duration-200'
-          )
+        await new Promise<void>((resolve) => {
+          this.swapTimeoutId = window.setTimeout(() => {
+            this.swapTimeoutId = null
 
-          content.style.minHeight = ''
+            if (!this.isActiveSwap(swapId)) {
+              resolve()
+              return
+            }
 
-          this.state = index
-          this.pendingState = null
-          this.updateIndicator(index)
+            previousChildren.forEach((child) => child.remove())
 
-          this.isSwapping = false
-        }, 220)
+            next.classList.remove(
+              'absolute',
+              'inset-0',
+              'w-full',
+              'opacity-100',
+              ...VIEW_TRANSITION_CLASSES
+            )
+
+            content.style.height = ''
+            content.style.transition = ''
+            content.style.overflow = ''
+
+            this.pendingState = null
+            this.isSwapping = false
+
+            resolve()
+          }, VIEW_TRANSITION_MS + 50)
+        })
 
         return
       }
 
+      if (!this.isActiveSwap(swapId)) return
+
       content.replaceChildren(next)
       Alpine.initTree(next)
-     
 
-      this.state = index
       this.pendingState = null
-      this.updateIndicator(index)
 
       await this.$nextTick()
+      if (!this.isActiveSwap(swapId)) return
+
       await this.waitForImages(content)
+      if (!this.isActiveSwap(swapId)) return
 
       this.$nextTick(() => {
-        this.draw(next)
+        if (this.isActiveSwap(swapId)) {
+          this.draw(next)
+        }
       })
+
+      if (!this.isActiveSwap(swapId)) return
 
       this.isSwapping = false
     },
@@ -151,16 +273,27 @@ export default (Alpine: AlpineType) => {
 
     startDrag(event: PointerEvent) {
       if (this.isSwapping) return
+      if ((event.target as HTMLElement).closest('[data-toggle-button]')) return
 
-      this.isDragging = true
-      this.pendingState = this.state
-
-      const toggle = this.$refs.toggle as HTMLElement | undefined
-      toggle?.setPointerCapture?.(event.pointerId)
+      this.pointerStartX = event.clientX
+      this.pointerStartY = event.clientY
     },
 
     onDrag(event: PointerEvent) {
-      if (!this.isDragging || this.isSwapping) return
+      if (this.isSwapping || this.pointerStartX === null) return
+
+      const dx = Math.abs(event.clientX - this.pointerStartX)
+      const dy = Math.abs(event.clientY - (this.pointerStartY ?? event.clientY))
+
+      if (!this.isDragging) {
+        if (dx < 8 && dy < 8) return
+
+        this.isDragging = true
+        this.pendingState = this.state
+
+        const toggle = this.$refs.toggle as HTMLElement | undefined
+        toggle?.setPointerCapture?.(event.pointerId)
+      }
 
       const closestIndex = this.getClosestIndex(event.clientX)
 
@@ -169,15 +302,21 @@ export default (Alpine: AlpineType) => {
     },
 
     endDrag() {
-      if (!this.isDragging) return
+      if (!this.isDragging) {
+        this.pointerStartX = null
+        this.pointerStartY = null
+        return
+      }
 
       this.isDragging = false
+      this.pointerStartX = null
+      this.pointerStartY = null
 
       if (
         typeof this.pendingState === 'number' &&
         this.pendingState !== this.state
       ) {
-        this.setState(this.pendingState)
+        void this.setState(this.pendingState)
       } else {
         this.updateIndicator(this.state)
       }

@@ -51,13 +51,15 @@
         margin-right: var(--mobile-margin-right);
     }
 
+    [data-media-gallery-bundle] .swiper-thumbs .swiper-slide {
+        aspect-ratio: auto;
+    }
+}
+
+@media screen and (max-width: 749px) {
     [data-media-gallery-bundle] .swiper-thumbs {
         width: calc(100% - 42px);
         margin: 0 auto;
-    }
-
-    [data-media-gallery-bundle] .swiper-thumbs .swiper-slide {
-        aspect-ratio: auto;
     }
 }
 

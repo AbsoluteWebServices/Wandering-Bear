@@ -35,65 +35,53 @@
             "border_width": 1,
             "border_opacity": 100,
             "border_radius": 0,
-            "padding-block-start": 24,
+            "padding-block-start": 10,
             "padding-block-end": 24,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
-            "padding-block-start-mobile": 0,
+            "padding-block-start-mobile": 40,
             "padding-block-end-mobile": 0,
             "padding-inline-start-mobile": 0,
             "padding-inline-end-mobile": 0
           },
           "blocks": {
-            "review_LerwXW": {
-              "type": "review",
-              "name": "t:names.product_review_stars",
+            "group_header_single_serve": {
+              "type": "group",
+              "name": "Header",
               "settings": {
-                "stars_style": "shaded",
-                "show_number": true,
-                "text_color": "#000000",
-                "star_color": "#bd8053",
-                "rating_color": "primary",
-                "type_preset": "paragraph",
-                "width": "100%",
-                "alignment": "left",
-                "star_height_desktop": 13,
-                "star_height_mobile": 13,
-                "star_gap_desktop": 1,
-                "star_gap_mobile": 1
-              },
-              "blocks": {}
-            },
-            "product_title_bundle_ipqizL": {
-              "type": "product-title-bundle",
-              "name": "Product Title Bundle",
-              "settings": {
-                "product_title": "{{ closest.product.metafields.custom.product_group.value.headline.value }}",
-                "product_title_small": "{{ closest.product.metafields.custom.product_group.value.size.value }}"
-              },
-              "blocks": {}
-            },
-            "text_aEtTtq": {
-              "type": "text",
-              "name": "Product description",
-              "settings": {
-                "block_class": "product-description",
-                "text": "{{ closest.product.metafields.custom.product_group.value.description | metafield_tag }}",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 16,
+                "class": "",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 8,
+                "gap_mobile": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
@@ -102,7 +90,72 @@
                 "padding-inline-start-mobile": 0,
                 "padding-inline-end-mobile": 0
               },
-              "blocks": {}
+              "blocks": {
+                "review_LerwXW": {
+                  "type": "review",
+                  "name": "t:names.product_review_stars",
+                  "settings": {
+                    "stars_style": "shaded",
+                    "show_number": true,
+                    "text_color": "#000000",
+                    "star_color": "#bd8053",
+                    "rating_color": "primary",
+                    "type_preset": "paragraph",
+                    "width": "100%",
+                    "alignment": "left",
+                    "star_height_desktop": 13,
+                    "star_height_mobile": 13,
+                    "star_gap_desktop": 1,
+                    "star_gap_mobile": 1
+                  },
+                  "blocks": {}
+                },
+                "product_title_bundle_ipqizL": {
+                  "type": "product-title-bundle",
+                  "name": "Product Title Bundle",
+                  "settings": {
+                    "product_title": "{{ closest.product.metafields.custom.product_group.value.headline.value }}",
+                    "product_title_small": "{{ closest.product.metafields.custom.product_group.value.size.value }}"
+                  },
+                  "blocks": {}
+                },
+                "text_aEtTtq": {
+                  "type": "text",
+                  "name": "Product description",
+                  "settings": {
+                    "block_class": "product-description",
+                    "text": "{{ closest.product.metafields.custom.product_group.value.description | metafield_tag }}",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-primary--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "review_LerwXW",
+                "product_title_bundle_ipqizL",
+                "text_aEtTtq"
+              ]
             },
             "variant_picker_bundle_xzyEcY": {
               "type": "variant-picker-bundle",
@@ -123,9 +176,9 @@
               "name": "Cross Sell Call-out",
               "settings": {
                 "color_scheme": "scheme-40eec688-b970-4f1a-96a1-8b50c977616b",
-                "image": "shopify://shop_images/3f3d11dcd1b175853b80f970707145ec401faff7.png",
-                "title": "Looking for cold brew on-the-go?",
-                "subtitle": "Try our new cold brew lattes, available in 3 flavors!",
+                "image": "shopify://shop_images/HERO_1_0cda21ca-1de5-4e2e-8c56-e84d94c9f089.png",
+                "title": "Looking for MORE of our Cold Brew?",
+                "subtitle": "Try our bestselling 96oz box!",
                 "button_label": "Shop Now",
                 "button_link": "/"
               },
@@ -133,9 +186,7 @@
             }
           },
           "block_order": [
-            "review_LerwXW",
-            "product_title_bundle_ipqizL",
-            "text_aEtTtq",
+            "group_header_single_serve",
             "variant_picker_bundle_xzyEcY",
             "cross_sell_KfwHDf"
           ]
@@ -376,14 +427,14 @@
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226586_4387d08b-9ccc-456b-bb51-886c3448c5b4.svg",
-            "text": "We were the first to put cold brew in a box"
+            "text": "The best premium cold brew latte, at home and on the go!"
           }
         },
         "icon_item_w3HbfU": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226587.svg",
-            "text": "These big boxes are designed to keep light and air away so your coffee is never stale and always tastes fresh"
+            "text": "Our single servings are meant for ease of use: bring them to the office, to your next AirBnB, or to your friend’s house."
           }
         },
         "icon_item_bgBnVE": {
@@ -406,7 +457,7 @@
         "title": "",
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589.svg",
-        "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png"
+        "large_image": "shopify://shop_images/image_140_1.png"
       }
     },
     "aw_guarantee_banner_GxEGrE": {

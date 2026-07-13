@@ -20,9 +20,12 @@
 
 <div @click="selectProduct({{ child_product.id }},'{{ child_product.handle }}')" data-product-id="{{ child_product.id }}"
   :class="{ 'selected-product': selectedProduct?.id === {{ child_product.id }}}"
-  class="wb-flex bg-[#F9F3ED] items-stretch rounded-[5px] cursor-pointer h-auto flex-nowrap{% if is_selected %} selected-product{% endif %}"
+  class="wb-flex bg-[#F9F3ED] items-stretch rounded-[6px] cursor-pointer h-auto flex-nowrap{% if is_selected %} selected-product{% endif %}"
 >
-  <div class="min-w-[77px] w-[77px] shrink-0 self-stretch min-h-22.5 md:min-h-20 bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden">
+  <div class="
+    min-w-[77px] w-[77px] shrink-0 self-stretch min-h-22.5 md:min-h-20 bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden
+    {% if template.suffix == 'single-serve' %} md:min-w-[83px] md:w-[83px]{% endif %}
+  ">
     {% if image != blank %}
       {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
     {% else %}
@@ -56,7 +59,7 @@
           </span>
         {% endif %}
       </div>
-      <span class="text-[12px] lg:!text-[11px] font-kurdis font-semibold leading-[120%] text-bear-black">{{ flavor_description }}</span>
+      <span class="text-xs/[120%] font-kurdis-semi-condensed font-semibold text-bear-black md:mt-0.75 md:text-[10px]/[120%]">{{ flavor_description }}</span>
     </div>
     <div class="min-w-20 w-fit shrink-0 self-stretch wb-flex items-center">
       {% if member_only %}
@@ -104,7 +107,7 @@
             <span
               class="relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold mt-0.5"
             >
-              + Add
+              + Add{% if template.suffix == 'single-serve' %} Case{% endif %}
             </span>
             <div class="absolute top-0 left-0 w-full h-full">
               <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold"

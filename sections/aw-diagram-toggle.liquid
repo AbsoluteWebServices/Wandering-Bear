@@ -10,15 +10,9 @@
 
 <div
     x-data="diagramToggle(0)"
-    class="{% if template.suffix == '32oz' %}mt-3{% endif %}"
+    class="aw-diagram-toggle {% if template.suffix == '32oz' %} mt-3{% endif %}{% if template.suffix == 'single-serve' %} mt-12.5 md:mt-14{% endif %}"
 >
     <div
-        x-ref="toggle"
-        @pointerdown="startDrag($event)"
-        @pointermove.window="onDrag($event)"
-        @pointerup.window="endDrag()"
-        @pointercancel.window="endDrag()"
-        @click.window="endDrag()"
         class="wb-flex relative user-select-none touch-pan-y select-none flex-col mx-auto relative z-[3] items-center justify-center"
     >
         {% if title_type == 'image' %}
@@ -36,9 +30,13 @@
         <div
             class="relative wb-flex flex-row gap-0.5 bg-foam border border-espresso rounded-[30px] py-1.5 px-2 w-fit"
             x-ref="toggle"
+            @pointerdown="startDrag($event)"
+            @pointermove.window="onDrag($event)"
+            @pointerup.window="endDrag()"
+            @pointercancel.window="endDrag()"
         >
             <div
-            class="absolute top-1.5 bottom-1.5 rounded-[25px] bg-[#E6CDB7] transition-all duration-300 ease-out"
+            class="absolute top-1.5 bottom-1.5 z-1 rounded-[25px] bg-[#E6CDB7] transition-all duration-300 ease-out"
             :style="indicatorStyle"
             ></div>
 
@@ -46,7 +44,8 @@
             <button
                 class="relative z-[2] cursor-pointer py-3 px-5 rounded-[25px] uppercase font-gothic_condensed font-extrabold text-espresso text-[15px] leading-[120%] min-w-[140px]"
                 data-toggle-button
-                @click="setState({{ forloop.index0 }})"
+                @pointerdown.stop
+                @click.stop="setState({{ forloop.index0 }})"
             >
                 {{ block.settings.toggle_title }}
             </button>
@@ -54,7 +53,7 @@
         </div>
     </div>
 
-    <div x-ref="content" class="relative z-[1] overflow-hidden"></div>        
+    <div x-ref="content" class="relative z-[1]"></div>        
 
     {% for block in section.blocks %}
         {% capture diagram_content %}
@@ -70,10 +69,45 @@
                 assign title_image = block_settings.title_image
                 assign title_image_mobile = block_settings.title_image_mobile
                 assign diagram_image = block_settings.diagram_image
+                assign diagram_image_mobile = block_settings.diagram_image_mobile
+                assign text_background_color = block_settings.text_background_color
+                assign text_background_opacity = block_settings.text_background_opacity | default: 100
+                assign text_background_alpha = text_background_opacity | times: 0.01
             %}
             {% capture diagram_icons %}
                 {% assign block_settings = block.settings %}
 
+                {% liquid
+                    assign min_mobile_order = 999999
+                    assign max_mobile_order = 0
+                    assign diagram_items_total = 0
+
+                    for i in (1..3)
+                        assign icon_key = 'icon_' | append: i
+                        assign icon_check = block_settings[icon_key]
+
+                        if icon_check != blank
+                            assign diagram_items_total = diagram_items_total | plus: 1
+
+                            assign order_mobile_key = 'order_mobile_' | append: i
+                            assign item_mobile_order = block_settings[order_mobile_key]
+
+                            if item_mobile_order == blank
+                                assign item_mobile_order = diagram_items_total | plus: 1
+                            endif
+
+                            if item_mobile_order < min_mobile_order
+                                assign min_mobile_order = item_mobile_order
+                            endif
+
+                            if item_mobile_order > max_mobile_order
+                                assign max_mobile_order = item_mobile_order
+                            endif
+                        endif
+                    endfor
+                %}
+
+                {% assign diagram_item_count = 0 %}
                 {% for i in (1..3) %}
                     {% liquid
                         assign icon_key = 'icon_' | append: i
@@ -92,10 +126,12 @@
 
                                 if template.suffix == '32oz'
                                     assign class_width = ' lg:!w-[228px]'
+                                elsif template.suffix == 'single-serve'
+                                    assign class_width = ' lg:!w-[256px]'
                                 endif
 
-                                assign class = 'mt-[53px] mb-6 lg:!mb-0 lg:!mt-0 order-2 lg:absolute lg:left-[82%] lg:top-[12%]' | append: class_width
-                                assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto'
+                                assign class = 'md:!mb-0 md:!mt-0 order-2 md:absolute md:left-[75%] md:top-[5%] lg:top-[9%] lg:left-[78%] xl:top-[1%] xl:left-[71%]' | append: class_width
+                                assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto'
                             %}
                         {% when 2 %}
                             {% liquid 
@@ -105,8 +141,8 @@
                                     assign class_width = ' lg:!w-[223px]'
                                 endif
 
-                                assign class = 'order-3 mb-6 lg:!mb-0 lg:absolute lg:right-[82%] lg:top-[23%]' | append: class_width
-                                assign icon_class = '!w-[54px] !h-[54px] lg:!ml-auto lg:!mr-0'
+                                assign class = 'order-3 md:!mb-0 md:!mt-0 md:absolute md:right-[82%] md:top-[38%] lg:right-[78%] lg:top-[30%] xl:right-[67%] xl:top-[27%]' | append: class_width
+                                assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-12!'
                             %}
                         {% when 3 %}
                             {% liquid 
@@ -116,19 +152,39 @@
                                     assign class_width = ' lg:!w-[236px]'
                                 endif
 
-                                assign class = 'mb-[53px] lg:!mb-0 order-4 lg:absolute lg:left-[82%] lg:top-[58%]' | append: class_width
-                                assign icon_class = '!w-[54px] !h-[54px] lg:!ml-0 lg:!mr-auto'
+                                assign class = 'md:!mb-0 md:!mt-0 order-4 md:absolute md:left-[75%] md:top-[58%] lg:top-[55%] lg:left-[75%] xl:left-[69%]' | append: class_width
+                                assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-3!'
                             %}
                     {% endcase %}
 
                     {% if icon != blank %}
-                        <div class="wb-flex flex-row {% unless forloop.last %} lg:!flex-col {% endunless %} gap-4 {{ class }}"
+                        {% liquid
+                            assign diagram_item_count = diagram_item_count | plus: 1
+
+                            assign order_mobile_key = 'order_mobile_' | append: i
+                            assign mobile_order = block_settings[order_mobile_key]
+
+                            if mobile_order == blank
+                                assign mobile_order = diagram_item_count | plus: 1
+                            endif
+
+                            assign mobile_margin_role = 'middle'
+
+                            if diagram_items_total == 1 or mobile_order == min_mobile_order
+                                assign mobile_margin_role = 'first'
+                            elsif mobile_order == max_mobile_order
+                                assign mobile_margin_role = 'last'
+                            endif
+                        %}
+                        <div class="diagram-item wb-flex flex-row {% unless forloop.last %} lg:!flex-col {% endunless %} gap-4 {{ class }}"
+                        style="--diagram-order-mobile: {{ mobile_order }};"
                         data-callout
+                        data-mobile-margin="{{ mobile_margin_role }}"
                         data-index="{{ forloop.index0 }}">
                             {{ icon | image_url: width: 100 | image_tag: class: icon_class, alt: title }}
 
-                            <div class="wb-flex flex-col gap-4">
-                                <span class="h2 leading-none uppercase">{{ title }}</span>
+                            <div class="wb-flex flex-col gap-2">
+                                <span class="h2 text-xl! leading-none uppercase">{{ title }}</span>
                                 <span class="body">{{ description }}</span>
                             </div>
                         </div>
@@ -136,73 +192,85 @@
                 {% endfor %}
             {% endcapture %}
 
-            <div class="wb-flex flex-col gap-4 relative" style="background-color: {{ background_color }}">
+            <div
+                class="wb-flex flex-col relative {% if title_image != blank and title_type == 'image' or title != blank and title_type == 'text' %}gap-4{% endif %}"
+                style="background-color: {{ background_color }}"
+            >
                 {% if background_image != blank %}
                     {% render 'picture', source: background_image, class: 'w-full !h-full object-cover object-top !max-w-none absolute inset-0 lg:!-mt-[77px]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
                 {% endif %}
-            <div class="wb-flex flex-col mx-auto relative z-1">
-                {% if title_type == 'image' %}
-                    {% if title_image != blank %}
+
+                {% if title_image != blank and title_type == 'image' %}
+                    <div class="wb-flex flex-col mx-auto relative z-1">
                         <div class="{% if template.suffix == '32oz' %}max-w-[600px]{% else %}max-w-[442px]{% endif %} w-full mx-auto lg:!mb-5">
                             {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                         </div>
-                    {% endif %}
-                {% elsif title_type == 'text' %}
-                    {% if title != blank %}
-                        <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
-                    {% endif %}
+                    </div>
                 {% endif %}
-            </div>
 
-            <div data-line-wrapper class="wb-flex flex-col lg:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0">
+                {% if title != blank and title_type == 'text' %}
+                    <div class="wb-flex flex-col mx-auto relative z-1">
+                        <span class="h1 mb-8" style="color: {{ text_color }}">{{ title }}</span>
+                    </div>
+                {% endif %}
 
-                <!-- SVG LINES -->
-                <svg class="hidden lg:!block absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
-                    <line
-                    x-show="lines[0]"
-                    :x1="lines[0]?.x1 || 0"
-                    :y1="lines[0]?.y1 || 0"
-                    :x2="lines[0]?.x2 || 0"
-                    :y2="lines[0]?.y2 || 0"
-                    stroke="#2f1a0f"
-                    stroke-width="1"
-                    stroke-dasharray="4 4"
-                    />
+                <div data-line-wrapper class="wb-flex flex-col lg:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0 mt-2.5 md:mt-0">
 
-                    <line
-                    x-show="lines[1]"
-                    :x1="lines[1]?.x1 || 0"
-                    :y1="lines[1]?.y1 || 0"
-                    :x2="lines[1]?.x2 || 0"
-                    :y2="lines[1]?.y2 || 0"
-                    stroke="#2f1a0f"
-                    stroke-width="1"
-                    stroke-dasharray="4 4"
-                    />
+                    <!-- SVG LINES -->
+                    <svg class="diagram-lines hidden lg:!block absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
+                        <line
+                        x-show="lines[0]"
+                        :x1="lines[0]?.x1 || 0"
+                        :y1="lines[0]?.y1 || 0"
+                        :x2="lines[0]?.x2 || 0"
+                        :y2="lines[0]?.y2 || 0"
+                        stroke="#2f1a0f"
+                        stroke-width="1"
+                        stroke-dasharray="4 4"
+                        />
 
-                    <line
-                    x-show="lines[2]"
-                    :x1="lines[2]?.x1 || 0"
-                    :y1="lines[2]?.y1 || 0"
-                    :x2="lines[2]?.x2 || 0"
-                    :y2="lines[2]?.y2 || 0"
-                    stroke="#2f1a0f"
-                    stroke-width="1"
-                    stroke-dasharray="4 4"
-                    />
-                </svg>
+                        <line
+                        x-show="lines[1]"
+                        :x1="lines[1]?.x1 || 0"
+                        :y1="lines[1]?.y1 || 0"
+                        :x2="lines[1]?.x2 || 0"
+                        :y2="lines[1]?.y2 || 0"
+                        stroke="#2f1a0f"
+                        stroke-width="1"
+                        stroke-dasharray="4 4"
+                        />
 
-                {{ diagram_icons }}
+                        <line
+                        x-show="lines[2]"
+                        :x1="lines[2]?.x1 || 0"
+                        :y1="lines[2]?.y1 || 0"
+                        :x2="lines[2]?.x2 || 0"
+                        :y2="lines[2]?.y2 || 0"
+                        stroke="#2f1a0f"
+                        stroke-width="1"
+                        stroke-dasharray="4 4"
+                        />
+                    </svg>
+
+                    {% if text_background_color != blank %}
+                      <div
+                        class="diagram-text-background w-full flex flex-col max-lg:order-2"
+                        style="background-color: {{ text_background_color | color_modify: 'alpha', text_background_alpha }};"
+                      >
+                        {{ diagram_icons }}
+                      </div>
+                    {% else %}
+                      {{ diagram_icons }}
+                    {% endif %}
                     {% if diagram_image != blank %}
                         <div class="mx-auto h-auto">
-                            <picture>
-                                <source srcset="{{ diagram_image | image_url: width: 1920 }}" media="(min-width: 1920px)">
-                                <source srcset="{{ diagram_image | image_url: width: 1440 }}" media="(min-width: 1440px)">
-                                <source srcset="{{ diagram_image | image_url: width: 1200 }}" media="(min-width: 1200px)">
-                                <source srcset="{{ diagram_image | image_url: width: 1024 }}" media="(min-width: 1024px)">
-                                <source srcset="{{ diagram_image | image_url: width: 768 }}" media="(min-width: 768px)">
-                                <img data-diagram-image src="{{ diagram_image | image_url: width: 365 }}" alt="{{ title_alt }}" class="!h-[355px] lg:!h-[573px] !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto">
-                            </picture>
+                            {% render 'diagram-image',
+                              image: diagram_image,
+                              image_mobile: diagram_image_mobile,
+                              alt: title_alt,
+                              class: '!h-[355px] lg:!h-[573px] !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto',
+                              img_attributes: 'data-diagram-image'
+                            %}
                         </div>
                     {% endif %}
                 </div>
@@ -212,10 +280,71 @@
             {{ diagram_content }}
         </template>
     {% endfor %}
-  
 </div>
 
+{% stylesheet %}
+    @media screen and (max-width: 1023px) {
+        .aw-diagram-toggle .diagram-lines {
+            display: none !important;
+        }
 
+        .aw-diagram-toggle .diagram-item {
+            order: var(--diagram-order-mobile) !important;
+        }
+
+        .aw-diagram-toggle .diagram-text-background {
+            width: 100vw;
+            max-width: 100vw;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
+            margin-top: -1.5rem;
+            padding: 2.25rem 1rem 1.875rem;
+            box-sizing: border-box;
+        }
+
+        .aw-diagram-toggle .diagram-text-background .diagram-item[data-mobile-margin='first'],
+        .aw-diagram-toggle .diagram-text-background .diagram-item[data-mobile-margin='middle'],
+        .aw-diagram-toggle .diagram-text-background .diagram-item[data-mobile-margin='last'] {
+            margin-top: 0;
+        }
+
+        .aw-diagram-toggle .diagram-text-background .diagram-item[data-mobile-margin='last'] {
+            margin-bottom: 0;
+        }
+
+        .aw-diagram-toggle .diagram-item[data-mobile-margin='first'] {
+            margin-top: 3.313rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .aw-diagram-toggle .diagram-item[data-mobile-margin='middle'] {
+            margin-bottom: 1.25rem;
+        }
+
+        .aw-diagram-toggle .diagram-item[data-mobile-margin='last'] {
+            margin-top: 0;
+            margin-bottom: 2.25rem;
+        }
+
+        .aw-diagram-toggle .diagram-item[data-mobile-margin='first'] > img {
+            margin-top: 0.938rem;
+        }
+
+        .aw-diagram-toggle .diagram-item[data-mobile-margin='middle'] > img {
+            margin-top: 1.625rem;
+        }
+    }
+
+    @media screen and (min-width: 1024px) {
+        .aw-diagram-toggle .diagram-lines {
+            display: block;
+        }
+
+        .aw-diagram-toggle .diagram-text-background {
+            display: contents;
+        }
+    }
+{% endstylesheet %}
 
 {% schema %}
     {
@@ -335,6 +464,28 @@
                     },
                     {
                         "type": "image_picker",
+                        "id": "diagram_image_mobile",
+                        "label": "Diagram Image Mobile"
+                    },
+                    {
+                        "type": "color",
+                        "id": "text_background_color",
+                        "label": "Text Background Color",
+                        "info": "Optional background behind all callout text on mobile"
+                    },
+                    {
+                        "type": "range",
+                        "id": "text_background_opacity",
+                        "label": "Text background opacity",
+                        "min": 0,
+                        "max": 100,
+                        "step": 5,
+                        "unit": "%",
+                        "default": 100,
+                        "visible_if": "{{ block.settings.text_background_color != blank }}"
+                    },
+                    {
+                        "type": "image_picker",
                         "id": "icon_1",
                         "label": "Icon 1"
                     },
@@ -347,6 +498,11 @@
                         "type": "text",
                         "id": "description_1",
                         "label": "Description 1"
+                    },
+                    {
+                        "type": "number",
+                        "id": "order_mobile_1",
+                        "label": "Order Mobile 1"
                     },
                     {
                         "type": "image_picker",
@@ -364,6 +520,11 @@
                         "label": "Description 2"
                     },
                     {
+                        "type": "number",
+                        "id": "order_mobile_2",
+                        "label": "Order Mobile 2"
+                    },
+                    {
                         "type": "image_picker",
                         "id": "icon_3",
                         "label": "Icon 3"
@@ -377,6 +538,11 @@
                         "type": "text",
                         "id": "description_3",
                         "label": "Description 3"
+                    },
+                    {
+                        "type": "number",
+                        "id": "order_mobile_3",
+                        "label": "Order Mobile 3"
                     }
                 ]
             }

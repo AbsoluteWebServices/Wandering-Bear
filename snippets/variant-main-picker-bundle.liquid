@@ -29,7 +29,7 @@
    assign plural_label = product_object.value.plural_label
    assign selling_plan_keywords = product_object.value.selling_plan_keywords.value
    assign discount_type = product_object.value.discount_type
-   assign col_width = 69
+   assign col_width = 70
 
    if product_object.value.multi_unit_product_quantity != blank and product_object.value.multi_unit_product_quantity > 1
     assign multi_unit_product = true
@@ -92,9 +92,9 @@
 {% endstyle %}
 
 <div class="flex flex-col gap-2.5">
-    <span class="text-base font-bold font-gothic_condensed uppercase text-gold">Build Your Bundle</span>
+    <span class="text-xl font-gothic_condensed uppercase text-gold md:text-base">Build Your Bundle</span>
 
-    <div class="wb-flex gap-0.5 flex-col w-full bg-white/50 px-4.5 pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase">
+    <div class="wb-flex gap-0.5 flex-col w-full bg-white/50 pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase {% if template.suffix == '96oz' %} px-1.25{% else %} px-4.5{% endif %}">
       <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
         {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%] mt-px', svg_class: 'text-gold'%}
       </div>
@@ -117,7 +117,7 @@
       <div>
         <div class="flex items-center justify-between relative">
           {% for i in (1..bundle_products_count) %}
-              <div class="col-width flex items-center justify-center first:[&>div]:-translate-x-px" style="{{ col_width_styles }}">
+              <div class="col-width flex items-center justify-center" style="{{ col_width_styles }}">
                 <div class="flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC]"
                 :class="bundleSize >= {{ i }} ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
                 >
@@ -126,7 +126,7 @@
                   ></div>
                  </div>
               </div>
-              <div class="absolute {% if col_width == 121 %} left-[50px] right-[50px] md:right-[66px] md:left-[66px] {% else %} right-6 left-6 {% endif %} rounded-full mx-auto">
+              <div class="absolute {% if col_width == 121 %} left-[50px] right-[50px] md:right-[66px] md:left-[66px] {% else %} right-6.25 left-6.25 {% endif %} rounded-full mx-auto">
                 <div class="relative h-[2px] bg-[#CFBDB1]">
                   <div class="absolute top-0 left-0 h-full max-w-full bg-gold transition-all duration-300"
                   :style="progressBarWidth"

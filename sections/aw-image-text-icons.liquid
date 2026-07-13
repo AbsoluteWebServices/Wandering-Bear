@@ -45,7 +45,7 @@
             </div>
             <div class="order-1 smd:order-2! smd:pr-7.5 lg:pr-0 md:max-w-[500px] md:ml-auto">
                 {% if large_image != blank %}
-                    {% render 'picture', source: large_image, tablet_source: large_image_tablet, mobile_source: large_image_mobile, class: 'w-full h-full', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+                    {% render 'picture', source: large_image, tablet_source: large_image_tablet, mobile_source: large_image_mobile, class: 'w-full h-full rounded-[5px]', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
                 {% endif %}
             </div>
     </div>
