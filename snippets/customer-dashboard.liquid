@@ -243,13 +243,15 @@
     {%- comment -%} Timeframe filter (Figma). TODO: wire to order filtering (JS/worker). {%- endcomment -%}
     <div class="flex items-center !gap-2 shrink-0">
       <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-espresso whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
-      <div class="flex items-center border border-espresso/25 rounded-[6px] h-[34px] px-3">
-        <select class="bg-transparent font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-espresso focus:outline-none cursor-pointer">
+      {%- comment -%} Link-style timeframe (Figma): no box, blue underline + chevron. {%- endcomment -%}
+      <div class="inline-flex items-center !gap-1.5">
+        <select class="appearance-none bg-transparent border-b-2 border-[#4A9FE8] pb-0.5 font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso focus:outline-none cursor-pointer">
           <option>Last 3 Months</option>
           <option>Last 6 Months</option>
           <option>Last Year</option>
           <option>All Time</option>
         </select>
+        <svg class="w-3 h-3 shrink-0 text-espresso pointer-events-none" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
     </div>
   </div>
