@@ -186,8 +186,15 @@ function renderSubscriptions(subs: Subscriptions | null): void {
   if (!root || !subs) return;
 
   const subsList = subs.subscriptions ?? [];
-  const first = subsList[0];
   const hasActive = subs.active_count > 0;
+  // Feature the soonest upcoming ACTIVE subscription. The worker may list a cancelled
+  // subscription before the active one, so don't blindly take subsList[0] — pick the
+  // active entry with the nearest next order date. Fall back to the first entry (for the
+  // cancelled-state card) only when there's no active subscription.
+  const activeSubs = subsList
+    .filter((s) => s.status === 'ACTIVE')
+    .sort((a, b) => (a.next_order_date ?? '9999-99-99').localeCompare(b.next_order_date ?? '9999-99-99'));
+  const first = hasActive ? (activeSubs[0] ?? subsList[0]) : subsList[0];
   // Show the autoship card for an active autoship OR a cancelled-only one (worker returns no
   // active but still has a cancelled subscription); the wide credit block only when there's none.
   const isCancelled = !hasActive && first != null;
