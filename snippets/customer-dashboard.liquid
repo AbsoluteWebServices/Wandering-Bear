@@ -234,6 +234,8 @@
 
 {%- comment -%} ---------- Order history ---------- {%- endcomment -%}
 <div class="{{ card }} p-5 md:!p-6 mb-8">
+  {%- comment -%} Header (title + timeframe) — hidden when the customer has no orders. {%- endcomment -%}
+  {%- if customer.orders.size > 0 -%}
   <div class="flex items-center justify-between mt-2.5 mb-4 !gap-3">
     <div>
       {%- comment -%} Figma: "Order History" = Kurdis SemiCondensed Bold 10px / 100%. {%- endcomment -%}
@@ -254,6 +256,7 @@
       </div>
     </div>
   </div>
+  {%- endif -%}
 
   {%- if customer.orders.size > 0 -%}
     {%- paginate customer.orders by 10 -%}
