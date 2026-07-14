@@ -24,8 +24,13 @@
         <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         {{ 'customer.order.back_to_account' | t }}
       </a>
+      {%- liquid
+        assign tracking_class = 'font-gothic_condensed font-extrabold text-[16px] leading-none text-right underline text-espresso'
+      -%}
       {%- if tracking_number -%}
-        <a href="{{ tracking_url | default: '#' }}"{% if tracking_url %} target="_blank" rel="noopener"{% endif %} class="font-gothic_condensed font-extrabold text-[16px] leading-none text-right underline text-espresso">{{ 'customer.order.tracking_number' | t }}: {{ tracking_number }}</a>
+        <a href="{{ tracking_url | default: '#' }}"{% if tracking_url %} target="_blank" rel="noopener"{% endif %} class="{{ tracking_class }}">{{ 'customer.order.tracking_number' | t }}: {{ tracking_number }}</a>
+      {%- else -%}
+        <span class="{{ tracking_class }}">{{ 'customer.order.tracking_number' | t }}: {{ 'customer.order.tracking_pending' | t }}</span>
       {%- endif -%}
     </div>
 

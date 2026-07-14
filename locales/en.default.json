@@ -140,6 +140,7 @@
       "track": "Track Order",
       "tracking": "Tracking",
       "tracking_number": "Tracking Number",
+      "tracking_pending": "Not available yet",
       "placed_on": "Placed on {{ date }}",
       "col_product": "Product",
       "col_sku": "SKU",
