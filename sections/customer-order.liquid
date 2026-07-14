@@ -73,14 +73,14 @@
         {%- for tax_line in order.tax_lines -%}
           <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.tax' | t }} ({{ tax_line.title }})</span><span>{{ tax_line.price | money }}</span></div>
         {%- endfor -%}
-        <div class="flex w-full max-w-[360px] justify-between font-bold"><span>{{ 'customer.order.total' | t }}</span><span>{{ order.total_price | money }}</span></div>
+        <div class="flex w-full max-w-[360px] justify-between font-kurdis-condensed font-extrabold"><span>{{ 'customer.order.total' | t }}</span><span>{{ order.total_price | money }}</span></div>
       </div>
     </div>
 
     {%- comment -%} ---------- Card 2: Billing Address ---------- {%- endcomment -%}
     <div class="{{ card }} p-5 md:!p-8 mb-6">
       <h2 class="font-kurdis-condensed font-extrabold text-espresso text-[18px] leading-none mb-3">{{ 'customer.order.billing_address' | t }}</h2>
-      <div class="body text-espresso mb-6">{{ 'customer.order.payment_status' | t }}: {{ order.financial_status_label }}</div>
+      <div class="text-espresso text-[20px] leading-[1.3] mb-6">{{ 'customer.order.payment_status' | t }}: {{ order.financial_status_label }}</div>
       {%- if order.billing_address -%}
         <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-espresso not-italic">
           {{ order.billing_address.address1 }}<br>
@@ -94,7 +94,7 @@
     {%- comment -%} ---------- Card 3: Shipping Address ---------- {%- endcomment -%}
     <div class="{{ card }} p-5 md:!p-8">
       <h2 class="font-kurdis-condensed font-extrabold text-espresso text-[18px] leading-none mb-3">{{ 'customer.order.shipping_address' | t }}</h2>
-      <div class="body text-espresso mb-6">{{ 'customer.order.fulfillment_status' | t }}: {{ order.fulfillment_status_label }}</div>
+      <div class="text-espresso text-[20px] leading-[1.3] mb-6">{{ 'customer.order.fulfillment_status' | t }}: {{ order.fulfillment_status_label }}</div>
       {%- if order.shipping_address -%}
         <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-espresso not-italic">
           {{ order.shipping_address.address1 }}<br>
