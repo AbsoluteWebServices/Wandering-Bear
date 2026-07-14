@@ -11,9 +11,9 @@
 {% elsif path == "/frontend/entrypoints/main.css" or path == "main.css" %}
   {{ 'wb-main.CSz3VzTS.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% elsif path == "/frontend/entrypoints/main.js" or path == "main.js" %}
-  <script src="{{ 'wb-main.BC2DUhIc.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
+  <script src="{{ 'wb-main.LO1mUsNr.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
   <link rel="modulepreload" href="{{ 'wb-mousewheel.DJio2Yj6.js' | asset_url | split: '?' | first }}" crossorigin="anonymous">
   <link rel="modulepreload" href="{{ 'wb-navigation.ktSlh0pB.js' | asset_url | split: '?' | first }}" crossorigin="anonymous">
   <link rel="modulepreload" href="{{ 'wb-swiper-core.DTKMqQyk.js' | asset_url | split: '?' | first }}" crossorigin="anonymous">
-  {{ 'wb-main.BKpfTwtA.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
+  {{ 'wb-main.CVkkT_Na.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% endif %}

@@ -114,6 +114,12 @@
     background: rgba(67, 26, 3, 0.10);
     animation: wb-pulse 1.1s ease-in-out infinite;
 }
+/* Row-1 cards (autoship + compact credit) — tighter 5px bottom padding so the buttons sit
+   close to the card edge (overrides the p-5/md:p-6 bottom). Top/sides keep the card padding. */
+.wb-row1-card {
+    padding-bottom: 5px;
+}
+
 /* Pin the autoship Manage/Reactivate button to the bottom of the card so it aligns with the
    credit card's Redeem button when the two stretch to equal height. In CSS (not the Tailwind
    flex/mt-auto utilities) so it applies regardless of what the JIT compiled for this snippet. */
