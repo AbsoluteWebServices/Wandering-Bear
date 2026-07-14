@@ -111,8 +111,11 @@
       </div>
       <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
     </div>
-    {%- comment -%} Redeem → on-page modal; 335px on desktop (matches the Elite button), full-width when stacked. {%- endcomment -%}
-    {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shrink-0 shadow-button !w-full md:!w-[335px] !h-[40px] !text-[15px]' -%}
+    {%- comment -%} Redeem → on-page modal. Button class is ALWAYS the standard one (never touch it);
+      the 335px desktop width lives on this wrapper, not the button. {%- endcomment -%}
+    <div class="shrink-0 w-full md:!w-[335px]">
+      {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
+    </div>
   </div>
 </div>
 
