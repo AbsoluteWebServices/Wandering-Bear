@@ -139,12 +139,13 @@ function setExpiryLine(expiry: string | null): void {
   });
 }
 
-/** Collapse a duplicated worker title ("A—A" → "A"). The worker builds titles as
- *  `headline—<part>`; for some products (e.g. the 96oz bundle) both halves are identical.
- *  Only collapses EXACT-equal halves, so legit "headline—variant" titles are untouched. */
+/** Clean a worker title: drop the selling-plan / pricing suffix the worker appends after an
+ *  em-dash (U+2014), e.g. "Cold Brew On Tap (96 oz) - Mocha—2 Box Discount Price" → the flavour.
+ *  Product names use a hyphen "-" or en-dash "–", so the em-dash reliably marks the suffix.
+ *  This also collapses the duplicated "A—A" bundle title (first part === the name). */
 function dedupeTitle(t: string): string {
-  const parts = t.split('—');
-  return parts.length === 2 && parts[0].trim() === parts[1].trim() ? parts[0].trim() : t;
+  const head = t.split('—')[0].trim();
+  return head || t;
 }
 
 /** Set textContent on every matching hook, skipping empty values. */
