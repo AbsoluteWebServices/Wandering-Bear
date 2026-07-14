@@ -1,110 +1,108 @@
 {%- doc -%}
   Individual order detail (classic accounts). Rendered by templates/customers/order.liquid.
-  Figma: Account_Dashboard_IndividualOrder (+ _Mobile). The Figma card *contents* are
-  screenshots, so content follows the native `order` object + dashboard style tokens
+  Figma: Account_Dashboard_IndividualOrder (+ _Mobile). Layout = title + back/tracking row,
+  then a foam card with an items TABLE (Product / SKU / Price / Quantity / Total) + order
+  summary, then Billing Address and Shipping Address foam cards. Dashboard style tokens
   (foam cards #FEF8F3 r10, espresso text, Kurdis). Container matches the dashboard.
 {%- enddoc -%}
 {%- liquid
   assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
   assign fulfillment = order.fulfillments.first
+  assign tracking_number = fulfillment.tracking_number
+  assign tracking_url = fulfillment.tracking_url
 -%}
 
 <section class="w-full" style="background-color: var(--color-brand-beige);">
   <div class="account-container py-8 md:!py-12">
 
-    {%- comment -%} ---------- Back link ---------- {%- endcomment -%}
-    <a href="{{ routes.account_url }}" class="inline-flex items-center !gap-2 font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-espresso hover-underline mb-5">
-      <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      {{ 'customer.order.back_to_account' | t }}
-    </a>
+    {%- comment -%} ---------- Title ---------- {%- endcomment -%}
+    <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[25px] md:!text-[32px] leading-none mb-4">{{ 'customer.order.title' | t: name: order.name }}</h1>
 
-    {%- comment -%} ---------- Header: order name + meta ---------- {%- endcomment -%}
-    <div class="flex flex-col smd:!flex-row smd:!items-end smd:!justify-between !gap-2 mb-6">
-      <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[25px] md:!text-[32px] leading-none">{{ 'customer.order.title' | t: name: order.name }}</h1>
-      <p class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">
-        {{ order.created_at | date: '%B %-d, %Y' }}
-        <span class="mx-1 text-espresso/40">·</span>{{ order.financial_status_label }}
-        <span class="mx-1 text-espresso/40">·</span>{{ order.fulfillment_status_label }}
-      </p>
+    {%- comment -%} ---------- Back link + Tracking Number ---------- {%- endcomment -%}
+    <div class="flex items-center justify-between !gap-3 mb-6">
+      <a href="{{ routes.account_url }}" class="inline-flex items-center !gap-2 font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-espresso hover-underline">
+        <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {{ 'customer.order.back_to_account' | t }}
+      </a>
+      {%- if tracking_number -%}
+        <a href="{{ tracking_url | default: '#' }}"{% if tracking_url %} target="_blank" rel="noopener"{% endif %} class="font-gothic_condensed font-extrabold text-[16px] leading-none text-right underline text-espresso">{{ 'customer.order.tracking_number' | t }}: {{ tracking_number }}</a>
+      {%- endif -%}
     </div>
 
-    {%- comment -%} ---------- Card 1: items + summary ---------- {%- endcomment -%}
-    <div class="{{ card }} p-5 md:!p-6 mb-4">
-      <ul class="flex flex-col divide-y divide-espresso/10">
-        {%- for line_item in order.line_items -%}
-          <li class="flex items-start !gap-4 py-4 first:pt-0">
-            <div class="shrink-0 w-[64px] h-[64px] rounded-[8px] overflow-hidden bg-(--color-brand-light_cream)">
-              {%- if line_item.image -%}
-                {{ line_item.image | image_url: width: 128 | image_tag: loading: 'lazy', class: 'w-full h-full object-cover', alt: line_item.title }}
-              {%- endif -%}
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="body font-bold text-espresso">{{ line_item.product.title | default: line_item.title }}</div>
-              {%- unless line_item.variant.title contains 'Default' -%}
-                <div class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso/70 mt-1">{{ line_item.variant.title }}</div>
-              {%- endunless -%}
-              {%- if line_item.selling_plan_allocation -%}
-                <div class="inline-flex items-center h-[18px] px-[8px] mt-2 rounded-[9px] font-kurdis-semi-condensed font-bold text-[10px] leading-none text-espresso bg-sky-blue">{{ line_item.selling_plan_allocation.selling_plan.name }}</div>
-              {%- endif -%}
-              <div class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso/70 mt-2">{{ 'customer.order.qty' | t: count: line_item.quantity }}</div>
-            </div>
-            <div class="shrink-0 text-right body font-bold text-espresso whitespace-nowrap">{{ line_item.final_line_price | money }}</div>
-          </li>
-        {%- endfor -%}
-      </ul>
+    {%- comment -%} ---------- Card 1: order meta + items table + summary ---------- {%- endcomment -%}
+    <div class="{{ card }} p-5 md:!p-8 mb-6">
+      <div class="body font-bold text-espresso">{{ 'customer.order.title' | t: name: order.name }}</div>
+      <div class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso/70 mt-2 mb-6">{{ 'customer.order.placed_on' | t: date: order.created_at | date: '%B %d, %Y' }}</div>
 
-      {%- comment -%} Totals {%- endcomment -%}
-      <dl class="flex flex-col !gap-2 pt-4 mt-4 border-t border-espresso/15 body text-espresso">
-        <div class="flex items-center justify-between"><dt>{{ 'customer.order.subtotal' | t }}</dt><dd class="font-bold">{{ order.line_items_subtotal_price | money }}</dd></div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-left">
+          <thead>
+            <tr class="font-kurdis-semi-condensed font-bold text-[12px] uppercase text-espresso align-bottom">
+              <th class="font-bold pb-3 pr-4">{{ 'customer.order.col_product' | t }}</th>
+              <th class="font-bold pb-3 px-4 whitespace-nowrap">{{ 'customer.order.col_sku' | t }}</th>
+              <th class="font-bold pb-3 px-4 text-right whitespace-nowrap">{{ 'customer.order.col_price' | t }}</th>
+              <th class="font-bold pb-3 px-4 text-right whitespace-nowrap">{{ 'customer.order.col_quantity' | t }}</th>
+              <th class="font-bold pb-3 pl-4 text-right whitespace-nowrap">{{ 'customer.order.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for line_item in order.line_items -%}
+              <tr class="border-t border-espresso body text-espresso align-top">
+                <td class="py-4 pr-4 font-bold uppercase">{{ line_item.title }}</td>
+                <td class="py-4 px-4 whitespace-nowrap">{{ line_item.sku }}</td>
+                <td class="py-4 px-4 text-right whitespace-nowrap">{{ line_item.price | money }}</td>
+                <td class="py-4 px-4 text-right whitespace-nowrap">{{ line_item.quantity }}</td>
+                <td class="py-4 pl-4 text-right whitespace-nowrap">{{ line_item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+
+      {%- comment -%} Order summary (right-aligned) {%- endcomment -%}
+      <div class="border-t border-espresso pt-5 flex flex-col items-end !gap-2 body text-espresso">
+        <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.subtotal' | t }}</span><span>{{ order.line_items_subtotal_price | money }}</span></div>
         {%- for discount in order.cart_level_discount_applications -%}
-          <div class="flex items-center justify-between text-dark-gold"><dt>{{ 'customer.order.discount' | t }} ({{ discount.title }})</dt><dd class="font-bold">-{{ discount.total_allocated_amount | money }}</dd></div>
+          <div class="flex w-full max-w-[360px] justify-between text-dark-gold"><span>{{ 'customer.order.discount' | t }} ({{ discount.title }})</span><span>-{{ discount.total_allocated_amount | money }}</span></div>
         {%- endfor -%}
-        <div class="flex items-center justify-between"><dt>{{ 'customer.order.shipping' | t }}</dt><dd class="font-bold">{{ order.shipping_price | money }}</dd></div>
+        {%- for method in order.shipping_methods -%}
+          <div class="flex w-full max-w-[360px] justify-between"><span>{{ method.title }}</span><span>{{ method.price | money }}</span></div>
+        {%- else -%}
+          <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.shipping' | t }}</span><span>{{ order.shipping_price | money }}</span></div>
+        {%- endfor -%}
         {%- for tax_line in order.tax_lines -%}
-          <div class="flex items-center justify-between"><dt>{{ 'customer.order.tax' | t }} ({{ tax_line.title }})</dt><dd class="font-bold">{{ tax_line.price | money }}</dd></div>
+          <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.tax' | t }} ({{ tax_line.title }})</span><span>{{ tax_line.price | money }}</span></div>
         {%- endfor -%}
-        <div class="flex items-center justify-between pt-2 mt-1 border-t border-espresso/15 text-[18px]"><dt class="font-bold">{{ 'customer.order.total' | t }}</dt><dd class="font-kurdis-condensed font-extrabold text-dark-gold">{{ order.total_price | money }}</dd></div>
-      </dl>
+        <div class="flex w-full max-w-[360px] justify-between font-bold"><span>{{ 'customer.order.total' | t }}</span><span>{{ order.total_price | money }}</span></div>
+      </div>
     </div>
 
-    {%- comment -%} ---------- Cards 2 + 3: delivery + payment ---------- {%- endcomment -%}
-    <div class="flex flex-col md:!flex-row !gap-4">
+    {%- comment -%} ---------- Card 2: Billing Address ---------- {%- endcomment -%}
+    <div class="{{ card }} p-5 md:!p-8 mb-6">
+      <h2 class="font-kurdis-condensed font-extrabold text-espresso text-[18px] leading-none mb-3">{{ 'customer.order.billing_address' | t }}</h2>
+      <div class="body text-espresso mb-6">{{ 'customer.order.payment_status' | t }}: {{ order.financial_status_label }}</div>
+      {%- if order.billing_address -%}
+        <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-espresso not-italic">
+          {{ order.billing_address.address1 }}<br>
+          {%- if order.billing_address.address2 != blank %}{{ order.billing_address.address2 }}<br>{% endif -%}
+          {{ order.billing_address.city }},<br>
+          {{ order.billing_address.zip }} {{ order.billing_address.country }}
+        </address>
+      {%- endif -%}
+    </div>
 
-      {%- comment -%} Delivery: shipping address + tracking {%- endcomment -%}
-      <div class="flex-1 {{ card }} p-5 md:!p-6">
-        <div class="tag text-espresso uppercase mb-3">{{ 'customer.order.delivery' | t }}</div>
-        {%- if order.shipping_address -%}
-          <address class="body text-espresso not-italic leading-[1.5]">
-            {{ order.shipping_address.name }}<br>
-            {{ order.shipping_address.street }}<br>
-            {{ order.shipping_address.city }}, {{ order.shipping_address.province_code }} {{ order.shipping_address.zip }}<br>
-            {{ order.shipping_address.country }}
-          </address>
-        {%- endif -%}
-        {%- if fulfillment.tracking_number -%}
-          <div class="mt-4">
-            {%- if fulfillment.tracking_url -%}
-              {%- render 'wb-button', style: 'secondary-gold', label: 'customer.order.track' | t, link: fulfillment.tracking_url, class: '!h-[40px] !text-[15px]' -%}
-            {%- else -%}
-              <div class="font-kurdis-semi-condensed font-bold text-[12px] text-espresso">{{ 'customer.order.tracking' | t }}: {{ fulfillment.tracking_number }}</div>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      </div>
-
-      {%- comment -%} Payment: billing address + status {%- endcomment -%}
-      <div class="flex-1 {{ card }} p-5 md:!p-6">
-        <div class="tag text-espresso uppercase mb-3">{{ 'customer.order.payment' | t }}</div>
-        <div class="body font-bold text-espresso mb-2">{{ order.financial_status_label }}</div>
-        {%- if order.billing_address -%}
-          <address class="body text-espresso not-italic leading-[1.5]">
-            {{ order.billing_address.name }}<br>
-            {{ order.billing_address.street }}<br>
-            {{ order.billing_address.city }}, {{ order.billing_address.province_code }} {{ order.billing_address.zip }}<br>
-            {{ order.billing_address.country }}
-          </address>
-        {%- endif -%}
-      </div>
+    {%- comment -%} ---------- Card 3: Shipping Address ---------- {%- endcomment -%}
+    <div class="{{ card }} p-5 md:!p-8">
+      <h2 class="font-kurdis-condensed font-extrabold text-espresso text-[18px] leading-none mb-3">{{ 'customer.order.shipping_address' | t }}</h2>
+      <div class="body text-espresso mb-6">{{ 'customer.order.fulfillment_status' | t }}: {{ order.fulfillment_status_label }}</div>
+      {%- if order.shipping_address -%}
+        <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-espresso not-italic">
+          {{ order.shipping_address.address1 }}<br>
+          {%- if order.shipping_address.address2 != blank %}{{ order.shipping_address.address2 }}<br>{% endif -%}
+          {{ order.shipping_address.city }},<br>
+          {{ order.shipping_address.zip }} {{ order.shipping_address.country }}
+        </address>
+      {%- endif -%}
     </div>
 
   </div>

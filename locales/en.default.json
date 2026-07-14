@@ -139,6 +139,16 @@
       "delivery": "Delivery",
       "track": "Track Order",
       "tracking": "Tracking",
+      "tracking_number": "Tracking Number",
+      "placed_on": "Placed on {{ date }}",
+      "col_product": "Product",
+      "col_sku": "SKU",
+      "col_price": "Price",
+      "col_quantity": "Quantity",
+      "billing_address": "Billing Address",
+      "shipping_address": "Shipping Address",
+      "payment_status": "Payment Status",
+      "fulfillment_status": "Fulfillment Status",
       "payment": "Payment"
     },
     "credits": {
