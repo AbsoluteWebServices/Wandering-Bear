@@ -138,7 +138,7 @@
                 <div class="wb-flex flex-col gap-4">
                     {% for tier_item in tier_items %}
                         <div class="wb-grid md:!grid-cols-2 pb-4 pt-3 rounded-[3px] shadow-button md:pt-4" style="background: {{ tier_item.settings.background_color }}">
-                            <div class="wb-flex flex-col items-center md:!items-start px-6.5 pb-3 md:!pb-0 col-start-1 w-full">
+                            <div class="wb-flex flex-col items-center md:!items-start px-6.5 pb-3 md:!pb-0 col-start-1 w-full md:gap-1">
                                 <span class="h1 text-[25px]/none! font-extrabold!">{{ tier_item.settings.title }}</span>
 
                                 {% if tier_item.settings.title contains 'Elite' %}
@@ -147,7 +147,7 @@
                                     </svg>
                                 {% endif %}
 
-                                <span class="body text-center md:!text-left">{{ tier_item.settings.subtitle }}</span>
+                                <span class="body text-center font-normal! md:!text-left">{{ tier_item.settings.subtitle }}</span>
                             </div>
                             <div class="block md:!hidden w-full bg-gold h-[1px] mb-2.5 md:mb-4"></div>
 

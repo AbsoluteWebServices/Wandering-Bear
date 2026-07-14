@@ -256,7 +256,16 @@
 
   .variant-option label:has(input:checked) {
     background-color: #F9F3ED;
-    border-color: var(--color-espresso);
+    border-color: transparent;
+  }
+
+  .variant-option label:has(input:checked)::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 1px solid var(--color-espresso);
+    pointer-events: none;
+    z-index: 1;
   }
 
   .variant-option label:not(:first-of-type):not(:last-of-type):not(:has(input:checked)) {
@@ -270,6 +279,16 @@
   }
 
   .variant-option label:last-of-type {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .variant-option label:first-of-type:has(input:checked)::before {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .variant-option label:last-of-type:has(input:checked)::before {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
   }
