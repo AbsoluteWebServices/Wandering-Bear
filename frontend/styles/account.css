@@ -108,7 +108,7 @@
    comes from the row's mobile gap (!gap-2.5), 10px below from padding-top. */
 @media (max-width: 1023px) {
     .tier-divider {
-        border-top: 1px solid #f0edea;
+        border-top: 1px dashed #f0edea;
         padding-top: 16px;
     }
 }

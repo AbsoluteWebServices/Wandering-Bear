@@ -104,7 +104,17 @@
   <div class="relative {{ card }} px-6 py-7 md:!px-6 mb-6 md:!min-h-[120px] flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
     {%- comment -%} View Credit History pinned to the top-right in every state (short $0 or tall). {%- endcomment -%}
     <a href="/community/membership?customerId={{ customer.id }}" class="absolute top-5 right-6 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
-    <div class="flex-1 pt-6 md:!pt-0">
+    {%- comment -%} MOBILE: centered amount — matches the with-subscription (compact) card so both
+      states look identical on mobile. Hidden on desktop. {%- endcomment -%}
+    <div class="relative min-h-[110px] md:!hidden">
+      <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+      <div class="h-full flex flex-col items-center justify-center text-center translate-y-[45px]">
+        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</span>
+        <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+      </div>
+    </div>
+    {%- comment -%} DESKTOP: label + amount inline on the left. Hidden on mobile. {%- endcomment -%}
+    <div class="hidden md:!block flex-1">
       <div class="flex items-end !gap-3">
         <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
