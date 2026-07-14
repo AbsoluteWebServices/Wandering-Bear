@@ -375,7 +375,9 @@
             "title_type": "image",
             "title": "",
             "title_alt": "",
-            "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png",
+            "diagram_image": "shopify://shop_images/image-86_b99e01df-fde6-4e99-a11e-9a8743fa98d9.png",
+            "text_background_color": "",
+            "text_background_opacity": 100,
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "BEAN QUALITY",
             "description_1": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
@@ -396,7 +398,9 @@
             "title_type": "image",
             "title": "",
             "title_alt": "",
-            "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png",
+            "diagram_image": "shopify://shop_images/image-83_ee473a04-8e91-4208-ae38-916d669f70ca.png",
+            "text_background_color": "",
+            "text_background_opacity": 100,
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "SUPER PREMIUM COFFEE",
             "description_1": "Made with our signature cold brew from organic, specialty-grade beans",
@@ -458,7 +462,7 @@
         "title": "",
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589.svg",
-        "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png"
+        "large_image": "shopify://shop_images/02182022_Chelsea-Klye_WANDERING-BEAR_Billboard-Side-Straight-Black-Pour_072-HERO_R1_1_1.jpg"
       }
     },
     "aw_guarantee_banner_GxEGrE": {
@@ -555,7 +559,7 @@
           "settings": {
             "title": "Elite Member",
             "subtitle": "Pay $25 or spend $250 annually to join",
-            "description": "<p><strong>What's Included:</strong></p><ul><li>All Free & VIP Member perks plus...</li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
+            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free & VIP Member perks plus...</strong></li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
             "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
             "button_label": "Add ELITE · $25",
             "button_action": "elite_add_to_cart",
