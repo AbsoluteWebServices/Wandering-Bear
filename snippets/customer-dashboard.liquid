@@ -171,9 +171,9 @@
       <div class="relative flex-1 min-h-[120px] mb-4">
         <a href="/community/membership?customerId={{ customer.id }}" class="absolute right-0 top-0 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
         <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
-        <div class="h-full flex flex-col items-center justify-center text-center translate-y-[10px]">
+        <div class="h-full flex flex-col items-center justify-center text-center translate-y-[5px]">
           <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</div>
-          <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[23px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+          <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
         </div>
       </div>
       {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
