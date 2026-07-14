@@ -2,15 +2,21 @@
   Membership Credit History page (classic accounts). Figma: Account_Dashboard_IndividualOrder
   frame 1:1208 ("Membership Credit History"). Rendered by templates/page.credit-history.liquid.
 
-  Credit balance = native (same as header widget: inveterate.credits_earned). Expiry +
+  Credit balance = native redeemable balance (inveterate.balance) — what the member can redeem now,
+  which the expiry refers to (the header widget still shows lifetime credits_earned). Expiry +
   transaction history = worker GET /apps/wb/credits (hydrated by account.ts). Reuses the
   [data-wb-account] hydration root + account.ts entrypoint.
 {%- enddoc -%}
 {%- liquid
   assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
-  assign credits_earned = customer.metafields.inveterate.credits_earned | default: 0
-  assign credits_formatted = credits_earned | money_without_trailing_zeros
+  # Redeemable store credits (what the member can redeem now); pairs with the expiry. Same
+  # number_decimal unit as credits_earned → same filter, no ×100. (Header keeps credits_earned.)
+  assign credit_balance = customer.metafields.inveterate.balance | default: 0
+  assign credits_formatted = credit_balance | money_without_trailing_zeros
   assign credits_expiry = ''
+  # No-expiry fallback for the small line: lifetime credits earned (credits_earned).
+  assign credits_earned_formatted = customer.metafields.inveterate.credits_earned | default: 0 | money_without_trailing_zeros
+  assign no_expiry_text = 'customer.dashboard.total_earned' | t: amount: credits_earned_formatted
   assign t_redeem = 'customer.dashboard.redeem_credits' | t
   # Redeem → Inveterate member portal (the redeem modal lives in the portal runtime, which
   # only loads at /community/membership — it can't be triggered from a custom page).
@@ -40,7 +46,7 @@
           <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
           <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
         </div>
-        <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+        <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line data-wb-no-expiry="{{ no_expiry_text }}">{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
       </div>
       {%- comment -%} Redeem → on-page redemption modal (generate Inveterate code, apply to cart);
         falls back to the /community/membership portal link when JS is off. {%- endcomment -%}

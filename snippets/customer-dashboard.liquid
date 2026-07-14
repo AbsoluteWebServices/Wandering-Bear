@@ -50,6 +50,12 @@
   assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
   assign membership_url = routes.root_url | append: '/pages/membership'
 
+  # Small credit line: shows "Expires <date>" (worker) or, when there's no expiry, the lifetime
+  # credits earned (Inveterate credits_earned) — "how many credits in total". The big number is
+  # the redeemable balance (inveterate.balance, set in the section).
+  assign credits_earned_formatted = customer.metafields.inveterate.credits_earned | default: 0 | money_without_trailing_zeros
+  assign no_expiry_text = 'customer.dashboard.total_earned' | t: amount: credits_earned_formatted
+
   # Stay AI customer portal for the "Manage Upcoming Orders" / "+N more" links. Defaults to the
   # App Proxy path /apps/retextion (auto-detects the logged-in member) so the link always works
   # even before the merchant fills settings.manage_autoship_url; a set value overrides it.
@@ -103,7 +109,7 @@
         <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
       </div>
-      <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+      <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line data-wb-no-expiry="{{ no_expiry_text }}">{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
     </div>
     {%- comment -%} Redeem → on-page redemption modal (generate Inveterate code, apply to cart);
       falls back to the /community/membership portal link when JS is off. {%- endcomment -%}
@@ -161,10 +167,10 @@
     <div class="wb-row1-card flex-1 {{ card }} p-5 md:p-6 flex flex-col justify-between">
       <div class="relative mb-4">
         <a href="/pages/credit-history" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
-        <span class="absolute left-0 top-1/2 -translate-y-1/2 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+        <span class="absolute left-0 top-1/2 -translate-y-1/2 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <div class="text-center pt-4">
           <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</div>
-          <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-2 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+          <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-2 text-dark-gold" data-wb-expiry-line data-wb-no-expiry="{{ no_expiry_text }}">{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
         </div>
       </div>
       {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
@@ -189,10 +195,10 @@
         </div>
       </div>
       <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3">{{ display_tier }}</div>
-      <div class="body font-bold text-espresso mb-2">{{ 'customer.dashboard.whats_included' | t }}</div>
-      <ul class="flex flex-col {% if is_elite %}smd:!flex-row smd:!flex-wrap{% endif %} !gap-x-6 !gap-y-2">
+      <div class="body font-bold text-espresso mt-[15px] mb-[15px]">{{ 'customer.dashboard.whats_included' | t }}</div>
+      <ul class="flex flex-col {% if is_elite %}smd:!flex-row smd:!flex-wrap{% endif %} !gap-x-6 !gap-y-2.5">
         {%- for benefit in benefits -%}
-          <li class="flex items-center !gap-2 body text-espresso {% if is_elite %}smd:!w-[calc(50%-12px)]{% endif %}">{{ crown }}<span>{{ benefit }}</span></li>
+          <li class="wb-benefit-item flex items-center font-kurdis-semi-condensed text-espresso {% if is_elite %}smd:!w-[calc(50%-12px)]{% endif %}">{{ crown }}<span>{{ benefit }}</span></li>
         {%- endfor -%}
       </ul>
     </div>
@@ -208,13 +214,13 @@
         <div class="w-full h-[10px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
           <div class="h-full rounded-full" style="width: {{ progress_percent }}%; background-color: var(--color-brand-gold);" data-wb-progress-bar></div>
         </div>
-        <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso" data-wb-progress-text>{{ progress_text }}</p>
+        <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso text-center" data-wb-progress-text>{{ progress_text }}</p>
 
         <div class="membership-upsell">
           <p class="body font-bold text-espresso mb-1">{{ 'customer.dashboard.upgrade_today' | t }} <span class="font-parslay text-gold">{{ 'customer.dashboard.why_wait' | t }}</span></p>
           <p class="font-kurdis-semi-condensed font-semibold text-[12px] leading-[1.2] text-center mb-3 text-bear-black">{{ 'customer.dashboard.elite_upsell_desc' | t }}</p>
           {%- comment -%} Upgrade to Elite = add the $25 Elite product to cart (settings.elite_product), reusing the shared elite add-to-cart snippet. {%- endcomment -%}
-          {%- render 'elite-atc-button', label: t_upgrade, style: 'secondary-gold', class: 'shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
+          {%- render 'elite-atc-button', label: t_upgrade, style: 'secondary-gold', class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
         </div>
       </div>
     {%- endunless -%}
@@ -223,16 +229,18 @@
 
 {%- comment -%} ---------- Order history ---------- {%- endcomment -%}
 <div class="{{ card }} p-5 md:!p-6 mb-8">
-  <div class="flex items-center justify-between mb-4 !gap-3">
+  <div class="flex items-center justify-between mt-2.5 mb-4 !gap-3">
     <div>
-      <div class="tag text-espresso uppercase">{{ 'customer.dashboard.order_history' | t }}</div>
-      <div class="body font-bold text-espresso">{{ 'customer.dashboard.all_orders' | t }}</div>
+      {%- comment -%} Figma: "Order History" = Kurdis SemiCondensed Bold 10px / 100%. {%- endcomment -%}
+      <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none uppercase text-espresso">{{ 'customer.dashboard.order_history' | t }}</div>
+      {%- comment -%} Figma: "All Orders" = Tablet Gothic Condensed Extrabold 16px / 100%. {%- endcomment -%}
+      <div class="font-gothic_condensed font-extrabold text-[16px] leading-none uppercase text-espresso mt-2">{{ 'customer.dashboard.all_orders' | t }}</div>
     </div>
     {%- comment -%} Timeframe filter (Figma). TODO: wire to order filtering (JS/worker). {%- endcomment -%}
     <div class="flex items-center !gap-2 shrink-0">
-      <span class="font-kurdis-semi-condensed font-bold text-[10px] text-espresso whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
+      <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-espresso whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
       <div class="flex items-center border border-espresso/25 rounded-[6px] h-[34px] px-3">
-        <select class="bg-transparent font-kurdis-semi-condensed font-bold text-[10px] text-espresso focus:outline-none cursor-pointer">
+        <select class="bg-transparent font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-espresso focus:outline-none cursor-pointer">
           <option>Last 3 Months</option>
           <option>Last 6 Months</option>
           <option>Last Year</option>
@@ -245,7 +253,7 @@
   {%- if customer.orders.size > 0 -%}
     {%- paginate customer.orders by 10 -%}
       <div class="overflow-x-auto">
-        <table class="w-full border border-espresso/20 border-collapse">
+        <table class="w-full border-collapse wb-orders-table">
           <thead>
             <tr class="text-left tag text-espresso uppercase">
               <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_order' | t }}</th>

@@ -79,6 +79,7 @@
       "your_credit": "Your Credit:",
       "expires": "Expires {{ date }}",
       "expires_label": "Expires",
+      "total_earned": "Total earned: {{ amount }}",
       "load_error": "We couldn't load your latest account data. Please refresh to try again.",
       "view_credit_history": "View Credit History",
       "redeem_credits": "Redeem Credits",

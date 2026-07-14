@@ -117,6 +117,28 @@ function formatExpiry(iso: string | null): string | null {
   return m ? `${m[2]}/${m[3]}/${m[1]}` : null;
 }
 
+/** Fill the credit-expiry line. With a date → "Expires <date>". Without one → the
+ *  data-wb-no-expiry fallback (e.g. "Available to redeem") so the line isn't left blank —
+ *  an empty gap under the balance reads as broken. Hides the line only if no fallback is set. */
+function setExpiryLine(expiry: string | null): void {
+  if (!root) return;
+  root.querySelectorAll<HTMLElement>('[data-wb-expiry-line]').forEach((el) => {
+    if (expiry) {
+      const dateEl = el.querySelector<HTMLElement>('[data-wb-credit-expiry]');
+      if (dateEl) dateEl.textContent = expiry;
+      el.style.display = '';
+      return;
+    }
+    const fallback = el.getAttribute('data-wb-no-expiry');
+    if (fallback) {
+      el.textContent = fallback;
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+
 /** Collapse a duplicated worker title ("A—A" → "A"). The worker builds titles as
  *  `headline—<part>`; for some products (e.g. the 96oz bundle) both halves are identical.
  *  Only collapses EXACT-equal halves, so legit "headline—variant" titles are untouched. */
@@ -138,13 +160,7 @@ function renderMembership(m: Membership | null): void {
 
   // Credit BALANCE is native SSR (Inveterate `balance` metafield) — not hydrated here.
   // Only the expiry comes from the worker (there is no native credit-expiry metafield).
-  const expiry = formatExpiry(m.credits.expires_at);
-  setText(root, 'credit-expiry', expiry);
-  // No expiry (null → e.g. zero credits): hide the whole "Expires …" line instead of
-  // leaving the SSR fallback date showing.
-  root.querySelectorAll<HTMLElement>('[data-wb-expiry-line]').forEach((el) => {
-    el.style.display = expiry ? '' : 'none';
-  });
+  setExpiryLine(formatExpiry(m.credits.expires_at));
 
   // Progress column. progress === null ⇒ top tier (ELITE) — SSR already hides the column.
   if (m.progress) {
@@ -238,11 +254,7 @@ function formatDate(iso: string): string {
 function renderCredits(d: Credits): void {
   if (!root) return;
 
-  const expiry = formatExpiry(d.expires_at);
-  setText(root, 'credit-expiry', expiry);
-  root.querySelectorAll<HTMLElement>('[data-wb-expiry-line]').forEach((el) => {
-    el.style.display = expiry ? '' : 'none';
-  });
+  setExpiryLine(formatExpiry(d.expires_at));
 
   const tbody = root.querySelector<HTMLElement>('[data-wb-credit-rows]');
   if (!tbody) return;

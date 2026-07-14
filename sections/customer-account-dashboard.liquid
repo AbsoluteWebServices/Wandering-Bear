@@ -13,10 +13,11 @@
   assign membership_tier = membership_tier | strip
   assign real_tier = membership_tier | default: 'FREE'
 
-  # "YOUR CREDIT" mirrors the header widget (snippets/membership-widget.liquid) 1:1 so the
-  # header and the dashboard ALWAYS show the same value: credits_earned | money_without_trailing_zeros.
-  assign credits_earned = customer.metafields.inveterate.credits_earned | default: 0
-  assign credits_formatted = credits_earned | money_without_trailing_zeros
+  # "YOUR CREDIT" = redeemable store credits (inveterate.balance) — what the member can redeem NOW,
+  # which the credit-expiry (worker) refers to. Same number_decimal unit as credits_earned, so it
+  # formats identically (money_without_trailing_zeros; do NOT ×100). The header keeps credits_earned.
+  assign credit_balance = customer.metafields.inveterate.balance | default: 0
+  assign credits_formatted = credit_balance | money_without_trailing_zeros
 
   # TODO worker (/apps/wb/subscriptions): real autoship state (none|active|cancelled).
   # Mock: members have an active autoship, FREE has none.
