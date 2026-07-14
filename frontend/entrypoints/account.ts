@@ -317,8 +317,51 @@ function renderCredits(d: Credits): void {
   });
 }
 
+/** Dev-only state override for QA: `/account?wb_qa=1&wb_autoship=cancelled&wb_active_count=2&…`
+ *  builds a synthetic summary so subscription / progress / expiry can be flipped live on the real
+ *  dashboard without touching Stay AI / Inveterate. Tier + credit balance stay SSR-native (from the
+ *  Shopify tag + metafield) — use the /pages QA preview to vary those. Returns null when not in QA. */
+function qaOverride(): Summary | null {
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('wb_qa') !== '1') return null;
+  const autoship = p.get('wb_autoship') || 'none'; // none | active | cancelled
+  const active = autoship === 'active';
+  const count = active ? Math.max(1, parseInt(p.get('wb_active_count') || '1', 10) || 1) : 0;
+  const items = (p.get('wb_items') || '').split('|').filter(Boolean)
+    .map((title) => ({ title, quantity: 1, variant_id: '', image_url: null }));
+  const extra = parseInt(p.get('wb_more') || '0', 10) || 0;
+  const subscriptions = autoship === 'active' || autoship === 'cancelled'
+    ? [{
+        id: 'qa', status: active ? 'ACTIVE' : 'CANCELLED', next_order_date: p.get('wb_next_date') || null,
+        bundle_title: p.get('wb_bundle') || 'QA Autoship', frequency: { interval: 'month', interval_count: 1, label: '' },
+        line_items: items, items_total: items.length + extra,
+        price: { amount: 0, formatted: '', currency: 'USD' }, manage_url: '', can_edit: false, can_cancel: false,
+      }]
+    : [];
+  const nextTier = p.get('wb_progress_tier');
+  return {
+    membership: {
+      tier: p.get('wb_tier') || '',
+      credits: { balance: 0, balance_formatted: '', currency: 'USD', expires_at: p.get('wb_expiry') || null },
+      progress: nextTier
+        ? { next_tier: nextTier, percent: parseInt(p.get('wb_progress_percent') || '0', 10) || 0,
+            amount_to_next: 0, amount_to_next_formatted: '', message: p.get('wb_progress_text') || '' }
+        : null,
+      benefits: [],
+    },
+    subscriptions: { active_count: count, portal_url: '', subscriptions },
+  };
+}
+
 async function hydrate(): Promise<void> {
   if (!root) return;
+  const qa = qaOverride();
+  if (qa) {
+    renderMembership(qa.membership);
+    renderSubscriptions(qa.subscriptions);
+    root.removeAttribute('data-wb-loading');
+    return;
+  }
   const isCreditHistory = root.querySelector('[data-wb-credit-history]') != null;
   try {
     if (isCreditHistory) {

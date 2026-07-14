@@ -80,6 +80,7 @@
       "expires": "Expires {{ date }}",
       "expires_label": "Expires",
       "total_earned": "Total earned: {{ amount }}",
+      "elite_in_cart": "Added to cart ✓",
       "load_error": "We couldn't load your latest account data. Please refresh to try again.",
       "view_credit_history": "View Credit History",
       "redeem_credits": "Redeem Credits",

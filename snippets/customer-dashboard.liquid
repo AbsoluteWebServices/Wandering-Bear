@@ -25,18 +25,19 @@
   assign credits_formatted = credits_formatted | default: '$0'
   assign fname = first_name | default: customer.first_name
 
-  # ---- Worker-hydrated fields start EMPTY — NO preset/mock data. account.ts fills them from the
-  # worker; a skeleton shimmer shows while [data-wb-loading]. (Tier, credit balance + benefits are
-  # SSR-native and stay.) ----
-  assign credits_expiry = ''
-  assign autoship_count = ''
-  assign autoship_bundle = ''
-  assign autoship_next_date = ''
-  assign autoship_more = 0
-  assign autoship_items = '' | split: '|'
-  assign next_tier_label = ''
-  assign progress_percent = 0
-  assign progress_text = ''
+  # ---- Worker-hydrated fields — EMPTY in the real render (account.ts fills them from the worker;
+  # a skeleton shimmer shows while [data-wb-loading]). The QA preview page passes mock values so a
+  # full state renders statically (no worker/JS) — hence `| default` instead of a bare empty. ----
+  assign preview = preview | default: false
+  assign credits_expiry = credits_expiry | default: ''
+  assign autoship_count = autoship_count | default: ''
+  assign autoship_bundle = autoship_bundle | default: ''
+  assign autoship_next_date = autoship_next_date | default: ''
+  assign autoship_more = autoship_more | default: 0
+  assign autoship_items = autoship_items | default: '' | split: '|'
+  assign next_tier_label = next_tier_label | default: ''
+  assign progress_percent = progress_percent | default: 0
+  assign progress_text = progress_text | default: ''
 
   if display_tier == 'FREE'
     assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service' | split: '|'
@@ -53,7 +54,8 @@
   # Small credit line: shows "Expires <date>" (worker) or, when there's no expiry, the lifetime
   # credits earned (Inveterate credits_earned) — "how many credits in total". The big number is
   # the redeemable balance (inveterate.balance, set in the section).
-  assign credits_earned_formatted = customer.metafields.inveterate.credits_earned | default: 0 | money_without_trailing_zeros
+  assign ce_native = customer.metafields.inveterate.credits_earned | default: 0 | money_without_trailing_zeros
+  assign credits_earned_formatted = credits_earned_formatted | default: ce_native
   assign no_expiry_text = 'customer.dashboard.total_earned' | t: amount: credits_earned_formatted
 
   # Stay AI customer portal for the "Manage Upcoming Orders" / "+N more" links. Defaults to the
@@ -83,7 +85,7 @@
 {%- endcapture -%}
 
 {%- comment -%} ---------- Welcome + Log Out ---------- {%- endcomment -%}
-<div class="flex flex-col smd:!flex-row smd:!items-start smd:!justify-between mb-6 !gap-1">
+<div class="flex flex-col items-center text-center smd:!flex-row smd:!items-start smd:!text-left smd:!justify-between mb-6 !gap-1">
   {%- comment -%} Membership tag sits above the last letter of the name, tilted (Figma). Spec: Kurdis Condensed ExtraBold 12px uppercase centered. {%- endcomment -%}
   <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[28px] md:!text-[36px] leading-none">
     {{ 'customer.account.welcome' | t: first_name: fname }}<span class="relative inline-block -top-4 md:!-top-5 -ml-1 rotate-[-8deg] bg-gold text-cream font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
@@ -103,7 +105,7 @@
 {%- comment -%} Variant B — no autoship: wide credit block {%- endcomment -%}
 <div data-wb-row-nocard{% unless guess_none %} data-wb-hide{% endunless %}>
   <div class="relative {{ card }} px-6 py-7 md:!px-6 mb-6 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
-    <a href="/pages/credit-history" class="absolute top-5 right-6 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+    <a href="/community/membership?customerId={{ customer.id }}" class="absolute top-5 right-6 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
     <div class="flex-1 pt-5 md:!pt-0">
       <div class="flex items-end !gap-3">
         <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
@@ -127,10 +129,11 @@
         <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black"
               data-wb-autoship-title
               data-wb-title-next="{{ 'customer.dashboard.next_autoship' | t }}"
-              data-wb-title-prev="{{ 'customer.dashboard.previous_autoship' | t }}">{{ 'customer.dashboard.next_autoship' | t }}</span>
+              data-wb-title-prev="{{ 'customer.dashboard.previous_autoship' | t }}">{%- if is_cancelled -%}{{ 'customer.dashboard.previous_autoship' | t }}{%- else -%}{{ 'customer.dashboard.next_autoship' | t }}{%- endif -%}</span>
         {%- comment -%} Active-count badge (default) + Cancelled badge; account.ts shows one via
-          data-wb-autoship-state (cancelled = worker has no active but a cancelled subscription). {%- endcomment -%}
-        <span class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}"></span>
+          data-wb-autoship-state. Count is empty in the real render (account.ts fills it) and
+          pre-filled when the QA preview passes autoship_count. {%- endcomment -%}
+        <span class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}">{%- if autoship_count != blank -%}{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}{%- endif -%}</span>
         <span class="wb-autoship-cancelled" data-wb-autoship-cancelled>{{ 'customer.dashboard.cancelled' | t }}</span>
       </div>
       <div class="wb-autoship-head flex items-baseline justify-between !gap-2">
@@ -164,7 +167,7 @@
     {%- comment -%} Compact credit card {%- endcomment -%}
     <div class="wb-row1-card flex-1 {{ card }} p-5 md:p-6 flex flex-col justify-between">
       <div class="relative mb-4">
-        <a href="/pages/credit-history" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+        <a href="/community/membership?customerId={{ customer.id }}" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
         <span class="absolute left-0 top-1/2 -translate-y-1/2 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <div class="text-center pt-4">
           <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</div>
@@ -178,7 +181,7 @@
 
 {%- comment -%} ---------- Row 2: Membership tier (+ Progress unless Elite) ---------- {%- endcomment -%}
 <div class="{{ card }} p-5 md:!p-6 mb-4">
-  <div class="flex flex-col {% unless is_elite %}md:!flex-row{% endunless %} !gap-6">
+  <div class="flex flex-col {% unless is_elite %}md:!flex-row{% endunless %} !gap-2.5 md:!gap-6">
 
     {%- comment -%} Tier column {%- endcomment -%}
     <div class="md:!flex-1 {% unless is_elite %}md:!pr-6{% endunless %}">
@@ -186,7 +189,7 @@
         <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
         <div class="flex flex-col items-end !gap-1">
           {%- if is_elite -%}
-            <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+            <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
             <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
           {%- endif -%}
           <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
@@ -206,7 +209,7 @@
       <div class="flex flex-col md:!flex-1 tier-divider">
         <div class="flex items-start justify-between mb-3">
           <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
-          <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+          <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
         </div>
         <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
         <div class="w-full h-[10px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
@@ -326,7 +329,7 @@
 {%- comment -%} ---------- Contact CTA ---------- {%- endcomment -%}
 <div class="relative">
   <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="120" height="120"
-       class="absolute top-0 left-0 z-20 w-[76px] md:w-[118px] h-auto -translate-x-[20%] -translate-y-[20%] rotate-[-12deg]">
+       class="absolute top-0 z-20 w-[76px] md:w-[118px] h-auto left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-0 md:left-0 md:-translate-x-[20%] md:-translate-y-[20%] md:rotate-[-12deg]">
   <div class="relative flex flex-col items-center justify-center overflow-hidden rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] text-center px-6 py-6 smd:py-4 smd:aspect-[746/144] bg-cover bg-top bg-no-repeat bg-(--color-brand-light_cream)"
        style="background-image: url({{ 'account-contact-clouds.png' | asset_url }});">
     <h2 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[24px] md:text-[28px] mb-2">{{ 'customer.dashboard.contact_title' | t }}</h2>

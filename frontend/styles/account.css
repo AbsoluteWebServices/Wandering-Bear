@@ -103,6 +103,16 @@
     }
 }
 
+/* Mobile: the tier + progress columns stack, so the vertical divider is replaced by a horizontal
+   1px #F0EDEA rule above the progress column (same colour as the autoship row lines). 10px above
+   comes from the row's mobile gap (!gap-2.5), 10px below from padding-top. */
+@media (max-width: 1023px) {
+    .tier-divider {
+        border-top: 1px solid #f0edea;
+        padding-top: 10px;
+    }
+}
+
 /* ---- Worker-driven visibility toggle (account.ts) ------------------------ */
 /* Row 1 renders both variants (autoship card / wide credit); account.ts hides one
    with data-wb-hide based on the worker's active_count. Unlayered → beats utilities. */
