@@ -273,8 +273,18 @@
       ],
       "name": "AW Product Value Props",
       "settings": {
-        "background_image": "shopify://shop_images/bg-image-blue-tile.png",
         "color_scheme": "",
+        "background_type": "image",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_image": "shopify://shop_images/bg-image-blue-tile.png",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "padding-block-start": 72,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 40,
+        "padding-block-end-mobile": 0,
         "line_color": "#8fb4d9",
         "arc_strength": 16,
         "crown_icon": "shopify://shop_images/Crown_56282b3e-67e8-4242-99b0-ad6531be14e5.svg",
@@ -307,6 +317,16 @@
       ],
       "name": "How To Prepare",
       "settings": {
+        "background_type": "transparent",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "padding-block-start": 64,
+        "padding-block-end": 30,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 20,
         "title": "How To Mix",
         "image": "shopify://shop_images/how-to-image.png",
         "icon": "shopify://shop_images/32oz_bear.svg"
@@ -344,8 +364,18 @@
       ],
       "name": "AW Ways to Enjoy",
       "settings": {
-        "title": "Other Ways to Enjoy",
-        "background_image": "shopify://shop_images/checker-bg_fc2a97ef-a5b5-49da-a1ec-fd8cf5fc7d08.png"
+        "background_type": "transparent",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_image": "shopify://shop_images/checker-bg_fc2a97ef-a5b5-49da-a1ec-fd8cf5fc7d08.png",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "padding-block-start": 0,
+        "padding-block-end": 22,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 43,
+        "title": "Other Ways to Enjoy"
       }
     },
     "aw_guarantee_banner_HAr7Rz": {
@@ -353,6 +383,16 @@
       "name": "AW Guarantee Banner",
       "settings": {
         "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
+        "background_type": "color",
+        "background_solid": "#431A03",
+        "background_gradient": "",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0,
         "image": "shopify://shop_images/coffee.png",
         "badge": "shopify://shop_images/FRESH.svg",
         "subtitle": "LIKE YOU MADE IT YOURSELF, BUT BETTER",
@@ -458,10 +498,23 @@
       "name": "AW Member Comparison",
       "settings": {
         "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
+        "background_type": "image",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
         "background_image": "shopify://shop_images/Group_1327226595.jpg",
-        "background_color": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
+        "background_image_overflow": false,
+        "background_type_mobile": "gradient",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
+        "background_image_overflow_mobile": false,
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0,
         "title_type": "image",
         "title": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_MORE_WITH_EVERY_SIP....svg",
         "button_label": "Learn More",
@@ -469,14 +522,30 @@
         "bullet_icon": "shopify://shop_images/Crown-1.svg"
       }
     },
-    "aw_frequently_asked_questions_33izYs": {
+    "aw_frequently_asked_questions_33izYW": {
       "type": "aw-frequently-asked-questions",
+      "custom_css": [],
       "name": "AW FAQs",
       "settings": {
         "color_scheme": "",
-        "background": "",
+        "background_type": "transparent",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "linear-gradient(184deg, rgba(242, 230, 220, 1) 3%, rgba(191, 215, 233, 1) 99%)",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0,
         "title_type": "image",
         "title": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226590.svg",
         "faqs_metaobject": "96-oz-cold-brew-straight-black",
@@ -484,7 +553,7 @@
         "button_link": ""
       }
     },
-    "products_slider_eeqjMk": {
+    "products_slider_eeqjMT": {
       "type": "products-slider",
       "blocks": {
         "heading_9RQfry": {
@@ -585,16 +654,22 @@
         "cart_product_slider_EU3AT8",
         "cart_product_slider_yPtdRp"
       ],
+      "custom_css": [],
       "name": "AW Products Slider",
       "settings": {
         "color_scheme": "",
-        "background": "",
-        "section_image": "shopify://shop_images/more-to-explore-banner.png",
-        "section_image_mobile": "shopify://shop_images/more-to-explore-banner-mobile.png",
-        "section_image_fit": "full-width",
-        "section_image_vertical_align": "center",
-        "section_image_vertical_align_tablet": "bottom",
-        "section_image_vertical_align_mobile": "bottom",
+        "background_type": "image",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_image": "shopify://shop_images/more-to-explore-banner.png",
+        "background_image_fit": "natural",
+        "background_image_overflow": true,
+        "background_type_mobile": "image",
+        "background_solid_mobile": "#bfd7e9",
+        "background_gradient_mobile": "linear-gradient(180deg, rgba(191, 215, 233, 1) 4%, rgba(119, 181, 217, 1) 83%)",
+        "background_image_mobile": "shopify://shop_images/more-to-explore-banner-mobile.png",
+        "background_image_fit_mobile": "natural",
+        "background_image_overflow_mobile": true,
         "section_width": "page-width",
         "layout_type": "slider",
         "slides_per_view_mobile": "2.25",
@@ -629,7 +704,7 @@
     "aw_guarantee_banner_HAr7Rz",
     "okendo_reviews_widget_PUYwdr",
     "aw_member_comparison_EAjQ8e",
-    "aw_frequently_asked_questions_33izYs",
-    "products_slider_eeqjMk"
+    "aw_frequently_asked_questions_33izYW",
+    "products_slider_eeqjMT"
   ]
 }

@@ -1,56 +1,6 @@
 {% liquid
   assign section_settings = section.settings
   assign color_scheme = section_settings.color_scheme
-  assign background = section_settings.background
-  assign section_image = section_settings.section_image
-  assign section_image_mobile = section_settings.section_image_mobile
-  assign section_image_fit = section_settings.section_image_fit | default: 'cover'
-  assign section_image_vertical_align = section_settings.section_image_vertical_align | default: 'center'
-  assign section_image_vertical_align_tablet = section_settings.section_image_vertical_align_tablet
-  assign section_image_vertical_align_mobile = section_settings.section_image_vertical_align_mobile
-  if section_image_vertical_align_tablet == blank
-    assign section_image_vertical_align_tablet = section_image_vertical_align
-  endif
-  if section_image_vertical_align_mobile == blank
-    assign section_image_vertical_align_mobile = section_image_vertical_align
-  endif
-
-  case section_image_vertical_align
-    when 'top'
-      assign banner_align_desktop = 'flex-start'
-    when 'bottom'
-      assign banner_align_desktop = 'flex-end'
-    else
-      assign banner_align_desktop = 'center'
-  endcase
-
-  case section_image_vertical_align_mobile
-    when 'top'
-      assign banner_align_mobile = 'flex-start'
-    when 'bottom'
-      assign banner_align_mobile = 'flex-end'
-    else
-      assign banner_align_mobile = 'center'
-  endcase
-
-  case section_image_vertical_align_tablet
-    when 'top'
-      assign banner_align_tablet = 'flex-start'
-    when 'bottom'
-      assign banner_align_tablet = 'flex-end'
-    else
-      assign banner_align_tablet = 'center'
-  endcase
-
-  assign section_image_is_banner = false
-  if section_image_fit == 'full-width'
-    assign section_image_class = 'w-full h-auto !max-w-none'
-    assign section_image_is_banner = true
-  elsif section_image_fit == 'contain'
-    assign section_image_class = 'w-full h-full !max-w-none object-contain'
-  else
-    assign section_image_class = 'w-full h-full !max-w-none object-cover'
-  endif
   assign layout_type = section_settings.layout_type
   assign show_navigation = section_settings.show_navigation
   assign section_width = section_settings.section_width
@@ -76,38 +26,14 @@
 %}
 
 <div
-  class="section-background color-{{ color_scheme }}{% if section_image != blank %} products-slider__section-background{% endif %}{% if section_image_is_banner %} products-slider__section-background--banner{% endif %}"
-  {% if section_image != blank %}
-    style="
-      {% if section_image_is_banner %}
-        --products-slider-banner-align-desktop: {{ banner_align_desktop }};
-        --products-slider-banner-align-tablet: {{ banner_align_tablet }};
-        --products-slider-banner-align-mobile: {{ banner_align_mobile }};
-      {% endif %}
-      {% if background != blank %}background: {{ background }};{% elsif color_scheme.settings.background != blank %}background-color: {{ color_scheme.settings.background }};{% endif %}
-    "
-  {% endif %}
+  class="section-background wb-section-bg color-{{ color_scheme }}"
+  style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.settings.background %}"
 >
-  {% if section_image != blank %}
-    {% render 'picture',
-      source: section_image,
-      mobile_source: section_image_mobile,
-      class: section_image_class,
-      alt: '',
-      width: 1920,
-      height: 1080,
-      loading: 'lazy'
-    %}
-  {% endif %}
+  {% render 'section-background', settings: section.settings, part: 'media' %}
 </div>
 <div
-  class="section section--{{ section_width }} color-{{ color_scheme }} products-slider products-slider--{{ layout_type }} spacing-style relative{% unless section_image_is_banner %} overflow-hidden{% endunless %}"
-  style="
-    {% render 'spacing-style', settings: section.settings %}
-    {% if section_image == blank %}
-      {% if background != blank %}background: {{ background }};{% elsif color_scheme.settings.background != blank %}background-color: {{ color_scheme.settings.background }};{% endif %}
-    {% endif %}
-  "
+  class="section section--{{ section_width }} color-{{ color_scheme }} products-slider products-slider--{{ layout_type }} spacing-style relative"
+  style="{% render 'spacing-style', settings: section.settings %}"
   {{ section.shopify_attributes }}
 >
   {% if has_content_blocks %}
@@ -210,108 +136,150 @@
       "default": "scheme-1"
     },
     {
-      "type": "color_background",
-      "id": "background",
-      "label": "Background Color"
-    },
-    {
       "type": "header",
-      "content": "Image"
-    },
-    {
-      "type": "image_picker",
-      "id": "section_image",
-      "label": "Section image",
-      "info": "Full-width background image for the section."
-    },
-    {
-      "type": "image_picker",
-      "id": "section_image_mobile",
-      "label": "Section image (mobile)",
-      "info": "Optional. Falls back to section image if empty."
+      "content": "Background"
     },
     {
       "type": "select",
-      "id": "section_image_fit",
-      "label": "Image fit",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "transparent",
+          "label": "Transparent"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
       "options": [
         {
           "value": "cover",
-          "label": "Cover"
+          "label": "Cover (may crop)"
         },
         {
-          "value": "contain",
-          "label": "Contain"
-        },
-        {
-          "value": "full-width",
-          "label": "Full width (no crop)"
+          "value": "natural",
+          "label": "Natural (no crop)"
         }
       ],
-      "default": "cover"
+      "default": "natural",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
     },
     {
       "type": "select",
-      "id": "section_image_vertical_align",
-      "label": "Image vertical align desktop (full width no crop)",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
       "options": [
         {
-          "value": "top",
-          "label": "Top"
+          "value": "same",
+          "label": "Same as desktop"
         },
         {
-          "value": "center",
-          "label": "Center"
+          "value": "transparent",
+          "label": "Transparent"
         },
         {
-          "value": "bottom",
-          "label": "Bottom"
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
         }
       ],
-      "default": "center",
-      "visible_if": "{{ section.settings.section_image_fit == 'full-width' }}"
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
     },
     {
       "type": "select",
-      "id": "section_image_vertical_align_tablet",
-      "label": "Image vertical align tablet (full width no crop)",
+      "id": "background_image_fit_mobile",
+      "label": "Background image fit mobile",
       "options": [
         {
-          "value": "top",
-          "label": "Top"
+          "value": "cover",
+          "label": "Cover (may crop)"
         },
         {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "bottom",
-          "label": "Bottom"
+          "value": "natural",
+          "label": "Natural (no crop)"
         }
       ],
-      "default": "center",
-      "visible_if": "{{ section.settings.section_image_fit == 'full-width' }}"
+      "default": "natural",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
     },
     {
-      "type": "select",
-      "id": "section_image_vertical_align_mobile",
-      "label": "Image vertical align mobile (full width no crop)",
-      "options": [
-        {
-          "value": "top",
-          "label": "Top"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "bottom",
-          "label": "Bottom"
-        }
-      ],
-      "default": "center",
-      "visible_if": "{{ section.settings.section_image_fit == 'full-width' }}"
+      "type": "checkbox",
+      "id": "background_image_overflow_mobile",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
     },
     {
       "type": "select",
@@ -354,13 +322,34 @@
       "id": "slides_per_view_mobile",
       "label": "Slides per view (mobile)",
       "options": [
-        { "value": "1", "label": "1" },
-        { "value": "1.25", "label": "1.25" },
-        { "value": "1.5", "label": "1.5" },
-        { "value": "1.75", "label": "1.75" },
-        { "value": "2", "label": "2" },
-        { "value": "2.25", "label": "2.25" },
-        { "value": "2.5", "label": "2.5" }
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "1.25",
+          "label": "1.25"
+        },
+        {
+          "value": "1.5",
+          "label": "1.5"
+        },
+        {
+          "value": "1.75",
+          "label": "1.75"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "2.25",
+          "label": "2.25"
+        },
+        {
+          "value": "2.5",
+          "label": "2.5"
+        }
       ],
       "default": "1.5",
       "visible_if": "{{ section.settings.layout_type == 'slider' }}"
@@ -370,9 +359,18 @@
       "id": "slides_per_view_tablet",
       "label": "Slides per view (tablet)",
       "options": [
-        { "value": "2", "label": "2" },
-        { "value": "3", "label": "3" },
-        { "value": "4", "label": "4" }
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
       ],
       "default": "3",
       "visible_if": "{{ section.settings.layout_type == 'slider' }}"
@@ -382,10 +380,22 @@
       "id": "slides_per_view_desktop",
       "label": "Slides per view (desktop)",
       "options": [
-        { "value": "2", "label": "2" },
-        { "value": "3", "label": "3" },
-        { "value": "4", "label": "4" },
-        { "value": "5", "label": "5" }
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
       ],
       "default": "4",
       "visible_if": "{{ section.settings.layout_type == 'slider' }}"
@@ -462,8 +472,14 @@
       "id": "columns_mobile",
       "label": "Columns (mobile)",
       "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
       ],
       "default": "2",
       "visible_if": "{{ section.settings.layout_type == 'grid' }}"

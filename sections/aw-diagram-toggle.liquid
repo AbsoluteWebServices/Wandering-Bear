@@ -15,8 +15,10 @@
 
 <div
     x-data="diagramToggle(0)"
-    class="aw-diagram-toggle {% if template.suffix == '32oz' %} mt-3{% endif %}{% if template.suffix == 'single-serve' %} mt-12.5 md:mt-14{% endif %}"
+    class="aw-diagram-toggle relative spacing-style wb-section-bg{% if template.suffix == '32oz' %} mt-3{% endif %}{% if template.suffix == 'single-serve' %} mt-12.5 md:mt-14{% endif %}"
+    style="{% render 'section-background', settings: section.settings, part: 'style' %} {% render 'spacing-style', settings: section.settings %}"
 >
+    {% render 'section-background', settings: section.settings, part: 'media' %}
     <div
         class="wb-flex relative user-select-none touch-pan-y select-none flex-col mx-auto relative z-[3] items-center justify-center"
     >
@@ -65,8 +67,6 @@
             {% liquid
                 assign block_settings = block.settings
                 assign color_scheme = block_settings.color_scheme
-                assign background_color = color_scheme.background
-                assign background_image = block_settings.background_image
                 assign text_color = color_scheme.text
                 assign title_type = block_settings.title_type
                 assign title = block_settings.title
@@ -203,22 +203,9 @@
 
             <div
                 class="wb-flex flex-col relative {% if title_image != blank and title_type == 'image' or title != blank and title_type == 'text' %}gap-4{% endif %}"
-                style="background-color: {{ background_color }}"
             >
-                {% liquid
-                    assign background_image_class = 'w-full !h-full object-cover object-top !max-w-none absolute inset-0'
-
-                    if template.suffix != '32oz'
-                        assign background_image_class = background_image_class | append: ' lg:!-mt-[77px]'
-                    endif
-                %}
-
-                {% if background_image != blank %}
-                    {% render 'picture', source: background_image, class: background_image_class, alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
-                {% endif %}
-
                 {% if title_image != blank and title_type == 'image' %}
-                    <div class="wb-flex flex-col mx-auto relative z-1">
+                    <div class="wb-flex flex-col mx-auto relative z-[1]">
                         <div class="{% if template.suffix == '32oz' %}max-w-[600px]{% else %}max-w-[442px]{% endif %} w-full mx-auto lg:!mb-5">
                             {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                         </div>
@@ -226,7 +213,7 @@
                 {% endif %}
 
                 {% if title != blank and title_type == 'text' %}
-                    <div class="wb-flex flex-col mx-auto relative z-1">
+                    <div class="wb-flex flex-col mx-auto relative z-[1]">
                         <span class="h1 mb-8 title-text leading-[1.2]" style="color: {{ text_color }}; {{ block_title_styles }}">{{ title }}</span>
                     </div>
                 {% endif %}
@@ -379,254 +366,438 @@
 {% endstylesheet %}
 
 {% schema %}
+{
+  "name": "AW Diagram Toggle",
+  "settings": [
     {
-        "name": "AW Diagram Toggle",
-        "settings": [
-            {
-                "type": "image_picker",
-                "id": "background_image",
-                "label": "Background Image"
-            },
-            {
-                "type": "select",
-                "id": "title_type",
-                "label": "Title Type",
-                "options": [
-                    {
-                        "value": "text",
-                        "label": "Text"
-                    },
-                    {
-                        "value": "image",
-                        "label": "Image"
-                    }
-                ],
-                "default": "text"
-            },
-            {
-                "type": "text",
-                "id": "title",
-                "label": "Title",
-                "visible_if": "{{ section.settings.title_type == 'text' }}"
-            },
-            {
-                "type": "range",
-                "id": "font_size",
-                "label": "Font Size",
-                "min": 16,
-                "max": 100,
-                "step": 1,
-                "unit": "px",
-                "default": 24,
-                "visible_if": "{{ section.settings.title_type == 'text' }}"
-            },
-            {
-                "type": "range",
-                "id": "font_size_mobile",
-                "label": "Font Size Mobile",
-                "min": 16,
-                "max": 100,
-                "step": 1,
-                "unit": "px",
-                "default": 24,
-                "visible_if": "{{ section.settings.title_type == 'text' }}"
-            },
-            {
-                "type": "text",
-                "id": "title_alt",
-                "label": "Title Alt",
-                "visible_if": "{{ section.settings.title_type == 'image' }}"
-            },
-            {
-                "type": "image_picker",
-                "id": "title_image",
-                "label": "Title Image",
-                "visible_if": "{{ section.settings.title_type == 'image' }}"
-            },
-            {
-                "type": "image_picker",
-                "id": "title_image_mobile",
-                "label": "Title Image Mobile",
-                "visible_if": "{{ section.settings.title_type == 'image' }}"
-            }
-        ],
-        "blocks": [
-            {
-                "type": "view",
-                "name": "View",
-                "settings": [
-                    {
-                        "type": "text",
-                        "id": "toggle_title",
-                        "label": "Toggle Title"
-                    },
-                    {
-                        "type": "color_scheme",
-                        "id": "color_scheme",
-                        "label": "Color Scheme",
-                        "default": "scheme-1"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "background_image",
-                        "label": "Background Image"
-                    },
-                    {
-                        "type": "select",
-                        "id": "title_type",
-                        "label": "Title Type",
-                        "options": [
-                            {
-                                "value": "text",
-                                "label": "Text"
-                            },
-                            {
-                                "value": "image",
-                                "label": "Image"
-                            }
-                        ],
-                        "default": "text"
-                    },
-                    {
-                        "type": "text",
-                        "id": "title",
-                        "label": "Title",
-                        "visible_if": "{{ block.settings.title_type == 'text' }}"
-                    },
-                    {
-                        "type": "range",
-                        "id": "font_size",
-                        "label": "Font Size",
-                        "min": 16,
-                        "max": 100,
-                        "step": 1,
-                        "unit": "px",
-                        "default": 24,
-                        "visible_if": "{{ block.settings.title_type == 'text' }}"
-                    },
-                    {
-                        "type": "range",
-                        "id": "font_size_mobile",
-                        "label": "Font Size Mobile",
-                        "min": 16,
-                        "max": 100,
-                        "step": 1,
-                        "unit": "px",
-                        "default": 24,
-                        "visible_if": "{{ block.settings.title_type == 'text' }}"
-                    },
-                    {
-                        "type": "text",
-                        "id": "title_alt",
-                        "label": "Title Alt",
-                        "visible_if": "{{ block.settings.title_type == 'image' }}"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "title_image",
-                        "label": "Title Image",
-                        "visible_if": "{{ block.settings.title_type == 'image' }}"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "title_image_mobile",
-                        "label": "Title Image Mobile",
-                        "visible_if": "{{ block.settings.title_type == 'image' }}"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "diagram_image",
-                        "label": "Diagram Image"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "diagram_image_mobile",
-                        "label": "Diagram Image Mobile"
-                    },
-                    {
-                        "type": "color",
-                        "id": "text_background_color",
-                        "label": "Text Background Color",
-                        "info": "Optional background behind all callout text on mobile"
-                    },
-                    {
-                        "type": "range",
-                        "id": "text_background_opacity",
-                        "label": "Text background opacity",
-                        "min": 0,
-                        "max": 100,
-                        "step": 5,
-                        "unit": "%",
-                        "default": 100,
-                        "visible_if": "{{ block.settings.text_background_color != blank }}"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "icon_1",
-                        "label": "Icon 1"
-                    },
-                    {
-                        "type": "text",
-                        "id": "title_1",
-                        "label": "Title 1"
-                    },
-                    {
-                        "type": "text",
-                        "id": "description_1",
-                        "label": "Description 1"
-                    },
-                    {
-                        "type": "number",
-                        "id": "order_mobile_1",
-                        "label": "Order Mobile 1"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "icon_2",
-                        "label": "Icon 2"
-                    },
-                    {
-                        "type": "text",
-                        "id": "title_2",
-                        "label": "Title 2"
-                    },
-                    {
-                        "type": "text",
-                        "id": "description_2",
-                        "label": "Description 2"
-                    },
-                    {
-                        "type": "number",
-                        "id": "order_mobile_2",
-                        "label": "Order Mobile 2"
-                    },
-                    {
-                        "type": "image_picker",
-                        "id": "icon_3",
-                        "label": "Icon 3"
-                    },
-                    {
-                        "type": "text",
-                        "id": "title_3",
-                        "label": "Title 3"
-                    },
-                    {
-                        "type": "text",
-                        "id": "description_3",
-                        "label": "Description 3"
-                    },
-                    {
-                        "type": "number",
-                        "id": "order_mobile_3",
-                        "label": "Order Mobile 3"
-                    }
-                ]
-            }
-        ],
-        "presets": [
-            {
-                "name": "AW Diagram Toggle"
-            }
-        ]
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "transparent",
+          "label": "Transparent"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (may crop)"
+        },
+        {
+          "value": "natural",
+          "label": "Natural (no crop)"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        {
+          "value": "same",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "transparent",
+          "label": "Transparent"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit_mobile",
+      "label": "Background image fit mobile",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (may crop)"
+        },
+        {
+          "value": "natural",
+          "label": "Natural (no crop)"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow_mobile",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "title_type",
+      "label": "Title Type",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font Size Mobile",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "text",
+      "id": "title_alt",
+      "label": "Title Alt",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image",
+      "label": "Title Image",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image_mobile",
+      "label": "Title Image Mobile",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
     }
+  ],
+  "blocks": [
+    {
+      "type": "view",
+      "name": "View",
+      "settings": [
+        {
+          "type": "text",
+          "id": "toggle_title",
+          "label": "Toggle Title"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "Color Scheme",
+          "default": "scheme-1"
+        },
+        {
+          "type": "select",
+          "id": "title_type",
+          "label": "Title Type",
+          "options": [
+            {
+              "value": "text",
+              "label": "Text"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ],
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "visible_if": "{{ block.settings.title_type == 'text' }}"
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "label": "Font Size",
+          "min": 16,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 24,
+          "visible_if": "{{ block.settings.title_type == 'text' }}"
+        },
+        {
+          "type": "range",
+          "id": "font_size_mobile",
+          "label": "Font Size Mobile",
+          "min": 16,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 24,
+          "visible_if": "{{ block.settings.title_type == 'text' }}"
+        },
+        {
+          "type": "text",
+          "id": "title_alt",
+          "label": "Title Alt",
+          "visible_if": "{{ block.settings.title_type == 'image' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "title_image",
+          "label": "Title Image",
+          "visible_if": "{{ block.settings.title_type == 'image' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "title_image_mobile",
+          "label": "Title Image Mobile",
+          "visible_if": "{{ block.settings.title_type == 'image' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "diagram_image",
+          "label": "Diagram Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "diagram_image_mobile",
+          "label": "Diagram Image Mobile"
+        },
+        {
+          "type": "color",
+          "id": "text_background_color",
+          "label": "Text Background Color",
+          "info": "Optional background behind all callout text on mobile"
+        },
+        {
+          "type": "range",
+          "id": "text_background_opacity",
+          "label": "Text background opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 100,
+          "visible_if": "{{ block.settings.text_background_color != blank }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_1",
+          "label": "Icon 1"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Title 1"
+        },
+        {
+          "type": "text",
+          "id": "description_1",
+          "label": "Description 1"
+        },
+        {
+          "type": "number",
+          "id": "order_mobile_1",
+          "label": "Order Mobile 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_2",
+          "label": "Icon 2"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Title 2"
+        },
+        {
+          "type": "text",
+          "id": "description_2",
+          "label": "Description 2"
+        },
+        {
+          "type": "number",
+          "id": "order_mobile_2",
+          "label": "Order Mobile 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_3",
+          "label": "Icon 3"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "Title 3"
+        },
+        {
+          "type": "text",
+          "id": "description_3",
+          "label": "Description 3"
+        },
+        {
+          "type": "number",
+          "id": "order_mobile_3",
+          "label": "Order Mobile 3"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Diagram Toggle"
+    }
+  ]
+}
 {% endschema %}

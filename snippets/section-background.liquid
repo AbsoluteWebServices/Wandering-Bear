@@ -1,0 +1,247 @@
+{%- doc -%}
+  Shared PDP section background with separate desktop / mobile types.
+
+  Types: transparent | color | gradient | image
+  Mobile also supports: same (inherit desktop)
+
+  Image fit:
+  - cover: fill section box (may crop)
+  - natural: full width, intrinsic height (no crop). Pair with overflow checkbox to allow bleed outside the section.
+
+  @param {object} settings - Section settings
+  @param {string} part - "style" | "media"
+  @param {string} [fallback_color] - Used when type is color and no solid set
+  @param {string} [image_class] - Classes for background pictures
+  @param {string} [image_fit] - Optional override for desktop fit: "cover" | "natural"
+{%- enddoc -%}
+
+{% liquid
+  assign bg_type = settings.background_type | default: 'transparent'
+  assign bg_type_mobile = settings.background_type_mobile | default: 'same'
+
+  assign bg_solid = settings.background_solid
+  assign bg_gradient = settings.background_gradient
+  assign bg_image = settings.background_image
+
+  assign bg_solid_mobile = settings.background_solid_mobile
+  assign bg_gradient_mobile = settings.background_gradient_mobile
+  assign bg_image_mobile = settings.background_image_mobile
+  assign bg_image_tablet = settings.background_image_tablet
+
+  # Legacy fields
+  if bg_gradient == blank and settings.background != blank
+    assign bg_gradient = settings.background
+  endif
+  if bg_gradient == blank and settings.background_color != blank
+    if settings.background_color contains 'gradient'
+      assign bg_gradient = settings.background_color
+    elsif bg_solid == blank
+      assign bg_solid = settings.background_color
+    endif
+  endif
+  if bg_image == blank and settings.section_image != blank
+    assign bg_image = settings.section_image
+  endif
+  if bg_image_mobile == blank and settings.section_image_mobile != blank
+    assign bg_image_mobile = settings.section_image_mobile
+  endif
+
+  # Legacy auto-detect when type blank/empty string
+  if bg_type == blank
+    if bg_image != blank
+      assign bg_type = 'image'
+    elsif bg_gradient != blank and bg_gradient contains 'gradient'
+      assign bg_type = 'gradient'
+    elsif bg_solid != blank or bg_gradient != blank
+      assign bg_type = 'color'
+      if bg_solid == blank
+        assign bg_solid = bg_gradient
+      endif
+    else
+      assign bg_type = 'transparent'
+    endif
+  endif
+
+  if bg_type_mobile == blank
+    assign bg_type_mobile = 'same'
+  endif
+
+  if bg_type_mobile == 'same'
+    assign resolved_mobile_type = bg_type
+    assign resolved_mobile_solid = bg_solid
+    assign resolved_mobile_gradient = bg_gradient
+    assign resolved_mobile_image = bg_image
+    if bg_image_mobile != blank and bg_type == 'image'
+      assign resolved_mobile_image = bg_image_mobile
+    endif
+  else
+    assign resolved_mobile_type = bg_type_mobile
+    assign resolved_mobile_solid = bg_solid_mobile
+    assign resolved_mobile_gradient = bg_gradient_mobile
+    assign resolved_mobile_image = bg_image_mobile
+  endif
+
+  assign fit_desktop = settings.background_image_fit | default: 'cover'
+  if image_fit != blank
+    assign fit_desktop = image_fit
+  endif
+
+  assign fit_mobile = fit_desktop
+  if bg_type_mobile != 'same' and settings.background_image_fit_mobile != blank
+    assign fit_mobile = settings.background_image_fit_mobile
+  endif
+
+  assign image_class_cover = 'w-full !h-full object-cover !max-w-none absolute inset-0'
+  assign image_class_natural = 'w-full h-auto !max-w-none block'
+
+  if image_class != blank
+    assign image_class_desktop = image_class
+    assign image_class_mobile = image_class
+  else
+    if fit_desktop == 'natural'
+      assign image_class_desktop = image_class_natural
+    else
+      assign image_class_desktop = image_class_cover
+    endif
+    if fit_mobile == 'natural'
+      assign image_class_mobile = image_class_natural
+    else
+      assign image_class_mobile = image_class_cover
+    endif
+  endif
+
+  assign desktop_bg_value = 'transparent'
+  if bg_type == 'gradient' and bg_gradient != blank
+    assign desktop_bg_value = bg_gradient
+  elsif bg_type == 'color'
+    if bg_solid != blank
+      assign desktop_bg_value = bg_solid
+    elsif fallback_color != blank
+      assign desktop_bg_value = fallback_color
+    elsif bg_gradient != blank
+      assign desktop_bg_value = bg_gradient
+    endif
+  elsif bg_type == 'image' and fallback_color != blank
+    assign desktop_bg_value = fallback_color
+  elsif bg_type == 'transparent'
+    assign desktop_bg_value = 'transparent'
+  endif
+
+  assign mobile_bg_value = 'transparent'
+  if resolved_mobile_type == 'gradient' and resolved_mobile_gradient != blank
+    assign mobile_bg_value = resolved_mobile_gradient
+  elsif resolved_mobile_type == 'color'
+    if resolved_mobile_solid != blank
+      assign mobile_bg_value = resolved_mobile_solid
+    elsif fallback_color != blank
+      assign mobile_bg_value = fallback_color
+    elsif resolved_mobile_gradient != blank
+      assign mobile_bg_value = resolved_mobile_gradient
+    endif
+  elsif resolved_mobile_type == 'image' and fallback_color != blank
+    assign mobile_bg_value = fallback_color
+  elsif resolved_mobile_type == 'transparent'
+    assign mobile_bg_value = 'transparent'
+  endif
+
+  assign show_desktop_image = false
+  if bg_type == 'image' and bg_image != blank
+    assign show_desktop_image = true
+  endif
+
+  assign show_mobile_image = false
+  if resolved_mobile_type == 'image' and resolved_mobile_image != blank
+    assign show_mobile_image = true
+  endif
+
+  assign clip_desktop = true
+  if bg_type == 'image' and settings.background_image_overflow
+    assign clip_desktop = false
+  endif
+
+  assign clip_mobile = true
+  if bg_type_mobile == 'same'
+    assign clip_mobile = clip_desktop
+  elsif resolved_mobile_type == 'image' and settings.background_image_overflow_mobile
+    assign clip_mobile = false
+  endif
+
+  assign media_overflow_class = 'overflow-hidden'
+  if clip_mobile == false and clip_desktop == false
+    assign media_overflow_class = 'overflow-visible'
+  elsif clip_mobile == false and clip_desktop
+    assign media_overflow_class = 'overflow-visible md:overflow-hidden'
+  elsif clip_mobile and clip_desktop == false
+    assign media_overflow_class = 'overflow-hidden md:overflow-visible'
+  endif
+%}
+
+{% if part == 'style' %}
+  --section-bg-desktop: {{ desktop_bg_value }};
+  --section-bg-mobile: {{ mobile_bg_value }};
+{% elsif part == 'media' %}
+  {% if show_desktop_image or show_mobile_image %}
+    <div class="absolute inset-0 z-0 {{ media_overflow_class }} pointer-events-none" aria-hidden="true">
+      {% if show_desktop_image %}
+        {% if fit_desktop == 'natural' %}
+          <div class="wb-section-bg__image wb-section-bg__image--desktop absolute inset-0 hidden md:flex flex-col justify-center">
+            <div class="w-full shrink-0">
+              {% render 'picture',
+                source: bg_image,
+                tablet_source: bg_image_tablet,
+                mobile_source: bg_image,
+                class: image_class_desktop,
+                alt: bg_image.alt,
+                width: 1920,
+                height: 1080,
+                loading: 'lazy'
+              %}
+            </div>
+          </div>
+        {% else %}
+          <div class="wb-section-bg__image wb-section-bg__image--desktop absolute inset-0 hidden md:block">
+            {% render 'picture',
+              source: bg_image,
+              tablet_source: bg_image_tablet,
+              mobile_source: bg_image,
+              class: image_class_desktop,
+              alt: bg_image.alt,
+              width: 1920,
+              height: 1080,
+              loading: 'lazy'
+            %}
+          </div>
+        {% endif %}
+      {% endif %}
+      {% if show_mobile_image %}
+        {% if fit_mobile == 'natural' %}
+          <div class="wb-section-bg__image wb-section-bg__image--mobile absolute inset-0 md:hidden flex flex-col justify-center">
+            <div class="w-full shrink-0">
+              {% render 'picture',
+                source: resolved_mobile_image,
+                mobile_source: resolved_mobile_image,
+                class: image_class_mobile,
+                alt: resolved_mobile_image.alt,
+                width: 1200,
+                height: 1200,
+                loading: 'lazy'
+              %}
+            </div>
+          </div>
+        {% else %}
+          <div class="wb-section-bg__image wb-section-bg__image--mobile absolute inset-0 md:hidden">
+            {% render 'picture',
+              source: resolved_mobile_image,
+              mobile_source: resolved_mobile_image,
+              class: image_class_mobile,
+              alt: resolved_mobile_image.alt,
+              width: 1200,
+              height: 1200,
+              loading: 'lazy'
+            %}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endif %}
+{% endif %}

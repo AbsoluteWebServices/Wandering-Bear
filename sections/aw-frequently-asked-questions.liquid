@@ -1,14 +1,12 @@
 {% liquid
     assign section_settings = section.settings
     assign color_scheme = section_settings.color_scheme
-    assign background_color = section_settings.background
     assign text_color = color_scheme.text
     assign title_type = section_settings.title_type
     assign title = section_settings.title
     assign title_alt = section_settings.title_alt
     assign title_image = section_settings.title_image
     assign title_image_mobile = section_settings.title_image_mobile
-    assign background_image = section_settings.background_image
     assign faqs_metaobject = section_settings.faqs_metaobject
     assign button_label = section_settings.button_label
     assign button_link = section_settings.button_link
@@ -20,8 +18,9 @@
 {% endcapture %}
 
 
-<div class="wb-flex justify-center relative" style="background: {{ background_color }};">
-    <div class="max-w-[1096px] w-full mx-auto wb-flex flex-col px-4 py-9">
+<div class="wb-flex justify-center relative overflow-hidden spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
+    {% render 'section-background', settings: section.settings, part: 'media' %}
+    <div class="max-w-[1096px] w-full mx-auto wb-flex flex-col px-4 py-9 relative z-[1]">
     <div class="wb-flex flex-col gap-4 max-w-[640px] w-full mx-auto">
         <div class="wb-flex flex-col justify-center items-start mx-auto w-full">
             {% if title_type == 'image' %}
@@ -73,103 +72,292 @@
 {% endstylesheet %}
 
 {% schema %}
+{
+  "name": "AW FAQs",
+  "settings": [
     {
-        "name": "AW FAQs",
-        "settings": [
-            {
-                "type": "color_scheme",
-                "id": "color_scheme",
-                "label": "Color Scheme",
-                "default": "scheme-1"
-            },
-            {
-                "type": "color_background",
-                "id": "background",
-                "label": "Background Color"
-            },
-            {
-                "type": "select",
-                "id": "title_type",
-                "label": "Title Type",
-                "options": [
-                    {
-                        "value": "text",
-                        "label": "Text"
-                    },
-                    {
-                        "value": "image",
-                        "label": "Image"
-                    }
-                ],
-                "default": "text"
-            },
-            {
-                "type": "text",
-                "id": "title",
-                "label": "Title",
-                "visible_if": "{{ section.settings.title_type == 'text' }}"
-            },
-            {
-                "type": "range",
-                "id": "font_size",
-                "label": "Font Size",
-                "min": 16,
-                "max": 100,
-                "step": 1,
-                "unit": "px",
-                "default": 24,
-                "visible_if": "{{ section.settings.title_type == 'text' }}"
-            },
-            {
-                "type": "range",
-                "id": "font_size_mobile",
-                "label": "Font Size Mobile",
-                "min": 16,
-                "max": 100,
-                "step": 1,
-                "unit": "px",
-                "default": 24,
-                "visible_if": "{{ section.settings.title_type == 'text' }}"
-            },
-            {
-                "type": "text",
-                "id": "title_alt",
-                "label": "Title Alt",
-                "visible_if": "{{ section.settings.title_type == 'image' }}"
-            },
-            {
-                "type": "image_picker",
-                "id": "title_image",
-                "label": "Title Image",
-                "visible_if": "{{ section.settings.title_type == 'image' }}"
-            },
-            {
-                "type": "image_picker",
-                "id": "title_image_mobile",
-                "label": "Title Image Mobile",
-                "visible_if": "{{ section.settings.title_type == 'image' }}"
-            },
-            {
-                "type": "metaobject",
-                "id": "faqs_metaobject",
-                "label": "FAQs Metaobject",
-                "metaobject_type": "faq_groups"
-            },
-            {
-                "type": "text",
-                "id": "button_label",
-                "label": "Button Label"
-            },
-            {
-                "type": "url",
-                "id": "button_link",
-                "label": "Button Link"
-            }
-        ],
-        "presets": [
-            {
-                "name": "AW FAQs"
-            }
-        ]
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        {
+          "value": "transparent",
+          "label": "Transparent"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (may crop)"
+        },
+        {
+          "value": "natural",
+          "label": "Natural (no crop)"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        {
+          "value": "same",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "transparent",
+          "label": "Transparent"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit_mobile",
+      "label": "Background image fit mobile",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (may crop)"
+        },
+        {
+          "value": "natural",
+          "label": "Natural (no crop)"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow_mobile",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "title_type",
+      "label": "Title Type",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font Size Mobile",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "text",
+      "id": "title_alt",
+      "label": "Title Alt",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image",
+      "label": "Title Image",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image_mobile",
+      "label": "Title Image Mobile",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "metaobject",
+      "id": "faqs_metaobject",
+      "label": "FAQs Metaobject",
+      "metaobject_type": "faq_groups"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
     }
+  ],
+  "presets": [
+    {
+      "name": "AW FAQs"
+    }
+  ]
+}
 {% endschema %}

@@ -1,7 +1,6 @@
 {% liquid
     assign section_settings = section.settings
     assign title = section_settings.title
-    assign background_image = section_settings.background_image
 
     for block in section.blocks
         if block.type == 'recipe' and forloop.first
@@ -111,15 +110,11 @@
     {% endfor %}
 {% endcapture %}
 
-<div x-data="waysToEnjoy('{{ active_title }}')" class="relative mt-8 lg:!mt-0">
-    {% if background_image != blank %}
-        <div class="hidden lg:!block absolute inset-0 w-full h-full z-[0]">
-            {{ background_image | image_url: width: 1000 | image_tag }}
-        </div>
-    {% endif %}
+<div x-data="waysToEnjoy('{{ active_title }}')" class="relative overflow-hidden spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style' %} {% render 'spacing-style', settings: section.settings %}">
+    {% render 'section-background', settings: section.settings, part: 'media' %}
 
     <div class="wb-flex justify-between w-full max-w-[966px] mx-auto relative z-[2]">
-        <div class="wb-flex flex-col-reverse items-center lg:flex-row justify-between w-full mb-5.5">
+        <div class="wb-flex flex-col-reverse items-center lg:flex-row justify-between w-full">
             <div>
                 {{ recipe_image }}
             </div>
@@ -137,41 +132,232 @@
 
 
 {% schema %}
+{
+  "name": "AW Ways to Enjoy",
+  "settings": [
     {
-      "name": "AW Ways to Enjoy",
-      "settings": [
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
         {
-            "type": "text",
-            "id": "title",
-            "label": "Title"
+          "value": "transparent",
+          "label": "Transparent"
         },
         {
-            "type": "image_picker",
-            "id": "background_image",
-            "label": "Background Image"
-        }
-      ],
-      "blocks": [
+          "value": "color",
+          "label": "Color"
+        },
         {
-          "type": "recipe",
-          "name": "Recipe",
-          "settings": [
-            {
-              "type": "text",
-              "id": "title",
-              "label": "Title"
-            },
-            {
-               "type": "metaobject",
-               "id": "metaobject",
-               "label": "Instructions",
-               "metaobject_type": "how_to_mix"
-            }
-          ]
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
         }
       ],
-      "presets": [
-        { "name": "AW Ways to Enjoy" }
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (may crop)"
+        },
+        {
+          "value": "natural",
+          "label": "Natural (no crop)"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        {
+          "value": "same",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "transparent",
+          "label": "Transparent"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit_mobile",
+      "label": "Background image fit mobile",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (may crop)"
+        },
+        {
+          "value": "natural",
+          "label": "Natural (no crop)"
+        }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow_mobile",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "recipe",
+      "name": "Recipe",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "metaobject",
+          "id": "metaobject",
+          "label": "Instructions",
+          "metaobject_type": "how_to_mix"
+        }
       ]
     }
-    {% endschema %}
+  ],
+  "presets": [
+    {
+      "name": "AW Ways to Enjoy"
+    }
+  ]
+}
+{% endschema %}
