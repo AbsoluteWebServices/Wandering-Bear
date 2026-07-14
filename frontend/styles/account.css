@@ -133,6 +133,9 @@
     background-color: #bfd7e9;
     border-radius: 10px;
 }
+[data-wb-autoship-count]:hover {
+    text-decoration: underline;
+}
 
 /* Autoship rows — 1px #F0EDEA divider + spacing (Figma "Line 13"). Applies to the head
    row (bundle title + next shipment) and every line item incl. the last, so each row is
