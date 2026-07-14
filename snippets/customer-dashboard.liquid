@@ -186,7 +186,12 @@
     {%- comment -%} Tier column {%- endcomment -%}
     <div class="md:!flex-1 {% unless is_elite %}md:!pr-6{% endunless %}">
       <div class="flex items-start justify-between mb-1">
-        <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
+        {%- comment -%} Left column: label + tier stacked. {%- endcomment -%}
+        <div>
+          <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
+          <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mt-2">{{ display_tier }}</div>
+        </div>
+        {%- comment -%} Right column: membership action links. {%- endcomment -%}
         <div class="flex flex-col items-end !gap-2.5">
           {%- if is_elite -%}
             <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
@@ -195,7 +200,6 @@
           <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
         </div>
       </div>
-      <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3">{{ display_tier }}</div>
       <div class="body font-bold text-espresso mt-[15px] mb-[15px]">{{ 'customer.dashboard.whats_included' | t }}</div>
       <ul class="flex flex-col {% if is_elite %}smd:!flex-row smd:!flex-wrap{% endif %} !gap-x-6 !gap-y-2.5">
         {%- for benefit in benefits -%}
