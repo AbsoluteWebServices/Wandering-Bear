@@ -98,7 +98,7 @@
 <div class="flex flex-col {% if template.suffix == '32oz' %} gap-3.5 md:gap-4.5 mb-1 md:mb-6{% else %} gap-2.5 mb-6{% endif %}">
     <div class="flex flex-col">
     <span class="font-bold font-gothic_condensed text-bear-black block uppercase mb-1.5">Choose Quantity</span>
-        <div class="wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px]">
+        <div class="bundle-32-option-grid wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px]">
             {% for i in (1..bundle_products_count) %}
               {%- case i -%}
                 {%- when 1 -%}
@@ -120,7 +120,7 @@
                  class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  x-model="bundleQty"
                  type="radio" name="bundle-qty" id="bundle-qty-{{ i }}" value="{{ qty }}" {% if forloop.first %}checked{% endif %}>
-                <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-qty-{{ i }}">
+                <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-qty-{{ i }}">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">{{ qty }} Cartons</span>
                   <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
                   <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save {{ savings }}</span>
@@ -131,14 +131,14 @@
     </div>
     <div class="flex flex-col">
     <span class="font-bold font-gothic_condensed text-bear-black block uppercase mb-1.5">Choose Flavors</span>
-        <div class="wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px] overflow-hidden">
+        <div class="bundle-32-option-grid wb-grid grid-cols-2 w-full h-[74px] border border-[#CFBDB1] rounded-[5px]">
             <fieldset class="flex flex-col h-full w-full justify-center items-center">
                 <input
                  @change="changeFlavorType('mix')"
                  x-model="flavorType"
                  class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  type="radio" name="bundle-flavor" id="bundle-flavor-mix" value="mix">
-                <label class="rounded-tl-[5px] rounded-bl-[5px] peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-flavor-mix">
+                <label class="rounded-tl-[5px] rounded-bl-[5px] peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-flavor-mix">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase">Mix & Match</span>
                   <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold transition-colors duration-300">Pick up to <span x-text="bundleQty">3</span> flavors</span>
                 </label>
@@ -149,7 +149,7 @@
                  x-model="flavorType"
                  class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden peer"
                  type="radio" name="bundle-flavor" id="bundle-flavor-single" value="single" checked>
-                <label class="rounded-tr-[5px] rounded-br-[5px] peer-checked:bg-[#F9F3ED] peer-checked:border peer-checked:border-espresso h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-flavor-single">
+                <label class="rounded-tr-[5px] rounded-br-[5px] peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-flavor-single">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">Single Flavor</span>
                   <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save an additional 5%</span>
 
@@ -299,6 +299,25 @@
 </script>
 
 {% stylesheet %}
+  .bundle-32-option-grid .peer:checked + label::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border: 1px solid var(--color-espresso);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .bundle-32-option-grid fieldset:first-of-type .peer:checked + label::before {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  .bundle-32-option-grid fieldset:last-of-type .peer:checked + label::before {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
   /* Variant picker container styles - unique to main variant picker */
   .variant-picker {
     width: 100%;

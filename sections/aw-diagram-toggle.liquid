@@ -176,7 +176,7 @@
                                 assign mobile_margin_role = 'last'
                             endif
                         %}
-                        <div class="diagram-item wb-flex flex-row {% unless forloop.last %} lg:!flex-col {% endunless %} gap-4 {{ class }}"
+                        <div class="diagram-item wb-flex flex-row {% unless forloop.last %} md:!flex-col {% endunless %} gap-4 {{ class }}"
                         style="--diagram-order-mobile: {{ mobile_order }};"
                         data-callout
                         data-mobile-margin="{{ mobile_margin_role }}"
@@ -196,8 +196,16 @@
                 class="wb-flex flex-col relative {% if title_image != blank and title_type == 'image' or title != blank and title_type == 'text' %}gap-4{% endif %}"
                 style="background-color: {{ background_color }}"
             >
+                {% liquid
+                    assign background_image_class = 'w-full !h-full object-cover object-top !max-w-none absolute inset-0'
+
+                    if template.suffix != '32oz'
+                        assign background_image_class = background_image_class | append: ' lg:!-mt-[77px]'
+                    endif
+                %}
+
                 {% if background_image != blank %}
-                    {% render 'picture', source: background_image, class: 'w-full !h-full object-cover object-top !max-w-none absolute inset-0 lg:!-mt-[77px]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+                    {% render 'picture', source: background_image, class: background_image_class, alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
                 {% endif %}
 
                 {% if title_image != blank and title_type == 'image' %}
@@ -262,8 +270,10 @@
                     {% else %}
                       {{ diagram_icons }}
                     {% endif %}
+
+                    
                     {% if diagram_image != blank %}
-                        <div class="mx-auto h-auto">
+                        <div class="mx-auto h-auto{% if template.suffix == '32oz' %} mt-3 lg:mt-4{% endif %}">
                             {% render 'diagram-image',
                               image: diagram_image,
                               image_mobile: diagram_image_mobile,

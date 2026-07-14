@@ -104,7 +104,7 @@
     </div>
     <span class="text-espresso/20 font-bold inline-block ml-0.75 mr-1.5">|</span>
     {%- if block_settings.show_number or block_settings.stars_style == 'single' -%}
-      <p class="rating-count {{ block_settings.type_preset }}">
+      <p class="rating-count capitalize {{ block_settings.type_preset }}">
         {%- if block_settings.stars_style == 'single' -%}
           <span aria-hidden="true">{{- rating | round: 1 }}</span>
         {%- endif -%}
@@ -180,7 +180,7 @@
   }
 
   .filled-star + .filled-star {
-    margin-left: -0.063rem;
+    margin-left: -0.125rem;
   }
 
   @media (min-width: 1024px) {
