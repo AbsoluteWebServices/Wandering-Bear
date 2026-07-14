@@ -102,8 +102,8 @@
 
 {%- comment -%} Variant B — no autoship: wide credit block {%- endcomment -%}
 <div data-wb-row-nocard{% unless guess_none %} data-wb-hide{% endunless %}>
-  <div class="relative {{ card }} px-6 py-7 md:!px-10 mb-4 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
-    <a href="/pages/credit-history" class="absolute top-5 right-6 md:!right-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+  <div class="relative {{ card }} px-6 py-7 md:!px-6 mb-6 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
+    <a href="/pages/credit-history" class="absolute top-5 right-6 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
     <div class="flex-1 pt-5 md:!pt-0">
       <div class="flex items-end !gap-3">
         <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
@@ -122,22 +122,20 @@
   <div class="flex flex-col md:!flex-row !gap-4 mb-4">
 
     {%- comment -%} Autoship card — active or cancelled. Filled by account.ts from Stay AI (worker). {%- endcomment -%}
-    <div class="wb-row1-card flex-1 {{ card }} p-5 md:p-6 flex flex-col" data-wb-autoship>
+    <div class="wb-row1-card flex-1 {{ card }} p-5 md:p-6 flex flex-col" data-wb-autoship{% if is_cancelled %} data-wb-autoship-state="cancelled"{% endif %}>
       <div class="flex items-center justify-between mb-3">
-        <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black">
-          {%- if is_cancelled -%}{{ 'customer.dashboard.previous_autoship' | t }}{%- else -%}{{ 'customer.dashboard.next_autoship' | t }}{%- endif -%}
-        </span>
-        {%- if is_cancelled -%}
-          <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-foam bg-[#BD2121]">{{ 'customer.dashboard.cancelled' | t }}</span>
-        {%- else -%}
-          <span class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}"></span>
-        {%- endif -%}
+        <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black"
+              data-wb-autoship-title
+              data-wb-title-next="{{ 'customer.dashboard.next_autoship' | t }}"
+              data-wb-title-prev="{{ 'customer.dashboard.previous_autoship' | t }}">{{ 'customer.dashboard.next_autoship' | t }}</span>
+        {%- comment -%} Active-count badge (default) + Cancelled badge; account.ts shows one via
+          data-wb-autoship-state (cancelled = worker has no active but a cancelled subscription). {%- endcomment -%}
+        <span class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}"></span>
+        <span class="wb-autoship-cancelled" data-wb-autoship-cancelled>{{ 'customer.dashboard.cancelled' | t }}</span>
       </div>
       <div class="wb-autoship-head flex items-baseline justify-between !gap-2">
         <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black" data-wb-autoship-bundle>{{ autoship_bundle }}</span>
-        {%- unless is_cancelled -%}
-          <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none whitespace-nowrap text-bear-black">{{ 'customer.dashboard.next_shipment_label' | t }} <span data-wb-autoship-date>{{ autoship_next_date }}</span></span>
-        {%- endunless -%}
+        <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none whitespace-nowrap text-bear-black" data-wb-autoship-date-line>{{ 'customer.dashboard.next_shipment_label' | t }} <span data-wb-autoship-date>{{ autoship_next_date }}</span></span>
       </div>
       <ul class="flex flex-col mb-2" data-wb-autoship-items data-wb-more-template="{{ 'customer.dashboard.more_count' | t: count: '__N__' }}">
         {%- for item in autoship_items -%}

@@ -178,6 +178,39 @@
     text-decoration: underline;
 }
 
+/* Cancelled-subscription state: account.ts sets data-wb-autoship-state="cancelled" when the
+   worker reports no active subscription but a cancelled one. Swaps the count badge for a
+   "Cancelled" pill and hides the next-shipment line. Figma badge: 81x20, radius 10px,
+   bg #BD2121, foam text, Kurdis SemiCondensed Bold 12px centered. */
+/* Badge visual lives on the element itself so it's fully styled whenever shown — NOT tied to the
+   parent state selector (which was why the red fill didn't paint). Hidden by default; the cancelled
+   state flips it to inline-flex and hides the count/next-shipment. */
+[data-wb-autoship-cancelled] {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 81px;
+    height: 20px;
+    padding-inline: 10px;
+    border-radius: 10px;
+    background: #BD2121;
+    color: var(--color-foam, #fff);
+    font-family: var(--font-kurdis-semi-condensed);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-count],
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-date-line] {
+    display: none;
+}
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-cancelled] {
+    display: inline-flex;
+}
+
 /* Autoship rows — 1px #F0EDEA divider + spacing (Figma "Line 13"). Applies to the head
    row (bundle title + next shipment) and every line item incl. the last, so each row is
    underlined. Targets the [data-wb-autoship-items] hook → works for SSR and the rows

@@ -184,24 +184,38 @@ function fillTemplate(el: HTMLElement | null, templateAttr: string, n: number): 
 function renderSubscriptions(subs: Subscriptions | null): void {
   if (!root || !subs) return;
 
-  const first = subs.subscriptions[0];
-  const hasAutoship = subs.active_count > 0 && first != null;
+  const subsList = subs.subscriptions ?? [];
+  const first = subsList[0];
+  const hasActive = subs.active_count > 0;
+  // Show the autoship card for an active autoship OR a cancelled-only one (worker returns no
+  // active but still has a cancelled subscription); the wide credit block only when there's none.
+  const isCancelled = !hasActive && first != null;
+  const showCard = (hasActive || isCancelled) && first != null;
 
-  // Row 1 layout follows the worker's autoship state, independent of tier: show the autoship
-  // card + compact credit when there's an active autoship, else the wide credit block.
-  root.querySelector('[data-wb-row-autoship]')?.toggleAttribute('data-wb-hide', !hasAutoship);
-  root.querySelector('[data-wb-row-nocard]')?.toggleAttribute('data-wb-hide', hasAutoship);
-  if (!hasAutoship || !first) return;
+  root.querySelector('[data-wb-row-autoship]')?.toggleAttribute('data-wb-hide', !showCard);
+  root.querySelector('[data-wb-row-nocard]')?.toggleAttribute('data-wb-hide', showCard);
+  if (!showCard || !first) return;
 
   const card = root.querySelector<HTMLElement>('[data-wb-autoship]');
   if (!card) return;
-  card.setAttribute('data-wb-autoship-state', 'active');
-  setText(card, 'autoship-bundle', dedupeTitle(first.bundle_title));
-  setText(card, 'autoship-date', first.next_order_date ?? undefined);
+  // State drives (via CSS) the badge (count vs "Cancelled") and the next-shipment line.
+  card.setAttribute('data-wb-autoship-state', isCancelled ? 'cancelled' : 'active');
 
-  // Active-count badge — localized "{n} Active Autoships".
-  const countEl = card.querySelector<HTMLElement>('[data-wb-autoship-count]');
-  if (countEl) countEl.textContent = fillTemplate(countEl, 'data-wb-count-template', subs.active_count);
+  // Header: "next" (active) vs "previous" (cancelled) autoship order.
+  const title = card.querySelector<HTMLElement>('[data-wb-autoship-title]');
+  if (title) {
+    const t = title.getAttribute(isCancelled ? 'data-wb-title-prev' : 'data-wb-title-next');
+    if (t) title.textContent = t;
+  }
+
+  setText(card, 'autoship-bundle', dedupeTitle(first.bundle_title));
+  if (!isCancelled) setText(card, 'autoship-date', first.next_order_date ?? undefined);
+
+  // Active-count badge — localized "{n} Active Autoships" (active only; CSS hides it when cancelled).
+  if (!isCancelled) {
+    const countEl = card.querySelector<HTMLElement>('[data-wb-autoship-count]');
+    if (countEl) countEl.textContent = fillTemplate(countEl, 'data-wb-count-template', subs.active_count);
+  }
 
   // Line-item list (show up to 2, "+N more" links to the portal).
   const list = card.querySelector<HTMLElement>('[data-wb-autoship-items]');
