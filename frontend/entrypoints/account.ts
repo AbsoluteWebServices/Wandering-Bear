@@ -243,7 +243,13 @@ function renderSubscriptions(subs: Subscriptions | null): void {
     if (countEl) countEl.textContent = fillTemplate(countEl, 'data-wb-count-template', subs.active_count);
   }
 
-  // Line-item list (flavours only; show up to 2, "+N more" links to the portal).
+  // "+N more" and the Manage control target the SAME Stay AI portal. Capture the manage anchor's
+  // SSR href (settings.manage_autoship_url, default /apps/retextion) as the shared fallback so
+  // "+N more" never dead-ends on '#' when the worker's portal_url is empty.
+  const manageLink = card.querySelector<HTMLAnchorElement>('[data-wb-autoship-manage] a');
+  const manageHref = manageLink?.getAttribute('href') || '#';
+
+  // Line-item list (flavours only; show up to 2, "+N more" → same target as Manage Upcoming Orders).
   const list = card.querySelector<HTMLElement>('[data-wb-autoship-items]');
   if (list && flavourItems.length) {
     const shown = flavourItems.slice(0, 2);
@@ -259,7 +265,7 @@ function renderSubscriptions(subs: Subscriptions | null): void {
       row.appendChild(itemTitle);
       if (i === shown.length - 1 && more > 0) {
         const link = document.createElement('a');
-        link.href = subs.portal_url || portalUrl || first.manage_url || '#';
+        link.href = subs.portal_url || portalUrl || manageHref;
         link.className = 'hover-underline shrink-0 whitespace-nowrap text-[#955325]';
         link.textContent = moreLabel;
         row.appendChild(link);
@@ -271,8 +277,7 @@ function renderSubscriptions(subs: Subscriptions | null): void {
   // MANAGE control → per-customer Stay AI portal from the worker's portal_url (Stay AI
   // generate-portal-link token). Overrides the SSR base href (settings.manage_autoship_url,
   // which auto-detects the logged-in member); falls back to it when portal_url is empty.
-  const manage = card.querySelector<HTMLAnchorElement>('[data-wb-autoship-manage] a');
-  if (manage && subs.portal_url) manage.href = subs.portal_url;
+  if (manageLink && subs.portal_url) manageLink.href = subs.portal_url;
 }
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
