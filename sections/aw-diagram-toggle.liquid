@@ -25,7 +25,7 @@
     >
         {% if title_type == 'image' %}
             {% if title_image != blank %}
-                <div class="{% if template.suffix == '32oz' %}max-w-[600px]{% else %}max-w-[442px]{% endif %} w-full mx-auto {% if template.suffix == '32oz' %}lg:mb-0.5!{% else %}lg:mb-5!{% endif %}">
+                <div class="{% if template.suffix == '32oz' or template.suffix == 'single-serve' %}max-w-[600px] lg:mb-0.5!{% else %}max-w-[442px] lg:mb-5!{% endif %} w-full mx-auto">
                     {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                 </div>
             {% endif %}
@@ -49,14 +49,14 @@
             ></div>
 
             {% for block in section.blocks %}
-            <button
-                class="relative z-[2] cursor-pointer py-3 px-5 rounded-[25px] uppercase font-gothic_condensed font-extrabold text-espresso text-[15px] leading-[120%] min-w-[140px]"
-                data-toggle-button
-                @pointerdown.stop
-                @click.stop="setState({{ forloop.index0 }})"
-            >
-                {{ block.settings.toggle_title }}
-            </button>
+              <button
+                  class="relative z-[2] cursor-pointer py-3 px-5 rounded-[25px] uppercase font-gothic_condensed font-extrabold text-espresso text-base/[120%] min-w-[140px]"
+                  data-toggle-button
+                  @pointerdown.stop
+                  @click.stop="setState({{ forloop.index0 }})"
+              >
+                  {{ block.settings.toggle_title }}
+              </button>
             {% endfor %}
         </div>
     </div>
@@ -133,38 +133,38 @@
                     {% case forloop.index %}
                         {% when 1 %}
                             {% liquid 
-                                assign class_width = ' lg:!w-[215px]'
+                                assign class_width = ' md:!w-[215px]'
 
                                 if template.suffix == '32oz'
-                                    assign class_width = ' lg:!w-[228px]'
+                                    assign class_width = ' md:!w-[228px]'
                                 elsif template.suffix == 'single-serve'
-                                    assign class_width = ' lg:!w-[256px]'
+                                    assign class_width = ' md:!w-[256px]'
                                 endif
 
-                                assign class = 'md:!mb-0 md:!mt-0 order-2 md:absolute md:left-[75%] md:top-[5%] lg:top-[9%] lg:left-[78%] xl:top-[1%] xl:left-[71%]' | append: class_width
+                                assign class = 'md:!mb-0 md:!mt-0 order-2 md:absolute md:left-[75%] md:top-0 lg:top-[9%] lg:left-[78%] xl:top-[12%] xl:left-[71%]' | append: class_width
                                 assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto'
                             %}
                         {% when 2 %}
                             {% liquid 
-                                assign class_width = ' lg:!w-[215px]'
+                                assign class_width = ' md:!w-[215px]'
 
                                 if template.suffix == '32oz'
-                                    assign class_width = ' lg:!w-[223px]'
+                                    assign class_width = ' md:!w-[223px]'
                                 endif
 
-                                assign class = 'order-3 md:!mb-0 md:!mt-0 md:absolute md:right-[82%] md:top-[38%] lg:right-[78%] lg:top-[30%] xl:right-[67%] xl:top-[27%]' | append: class_width
+                                assign class = 'order-3 md:!mb-0 md:!mt-0 md:absolute md:right-[73%] md:top-[33%] lg:right-[79%] lg:top-[30%] xl:right-[67%] xl:top-[35%]' | append: class_width
                                 assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-12!'
                             %}
                         {% when 3 %}
                             {% liquid 
-                                assign class_width = ' lg:!w-[287px]'
+                                assign class_width = ' md:!w-[287px]'
 
                                 if template.suffix == '32oz'
-                                    assign class_width = ' lg:!w-[236px]'
+                                    assign class_width = ' md:!w-[236px]'
                                 endif
 
-                                assign class = 'md:!mb-0 md:!mt-0 order-4 md:absolute md:left-[75%] md:top-[58%] lg:top-[55%] lg:left-[75%] xl:left-[69%]' | append: class_width
-                                assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-3!'
+                                assign class = 'md:!mb-0 md:!mt-0 order-4 md:absolute md:left-[75%] md:top-[54%] lg:top-[55%] lg:left-[75%] xl:top-[60%] xl:left-[69%]' | append: class_width
+                                assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-4!' | append: icon_class_width
                             %}
                     {% endcase %}
 
@@ -728,7 +728,8 @@
         {
           "type": "image_picker",
           "id": "diagram_image_mobile",
-          "label": "Diagram Image Mobile"
+          "label": "Diagram Image Mobile / Tablet",
+          "info": "Used up to 1279px wide. Desktop image from 1280px."
         },
         {
           "type": "color",

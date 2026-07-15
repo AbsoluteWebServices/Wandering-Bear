@@ -181,7 +181,7 @@
   --section-bg-mobile: {{ mobile_bg_value }};
 {% elsif part == 'media' %}
   {% if show_desktop_image or show_mobile_image %}
-    <div class="absolute inset-0 z-0 {{ media_overflow_class }} pointer-events-none" aria-hidden="true">
+    <div class="wb-section-bg absolute inset-0 z-0 {{ media_overflow_class }} pointer-events-none" aria-hidden="true">
       {% if show_desktop_image %}
         {% if fit_desktop == 'natural' %}
           <div class="wb-section-bg__image wb-section-bg__image--desktop absolute inset-0 hidden md:flex flex-col justify-center">

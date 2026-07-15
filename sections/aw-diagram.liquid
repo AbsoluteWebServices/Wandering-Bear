@@ -54,13 +54,13 @@
             {% assign diagram_item_count = diagram_item_count | plus: 1 %}
             {% case diagram_item_count %}
                 {% when 1 %}
-                    {% assign class = 'md:!mb-0 md:!mt-0 order-2 md:!w-[215px] md:absolute md:left-[75%] md:top-[5%] lg:top-[-2%] lg:left-[78%] xl:top-[-3%] xl:left-[71%]' %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-2 md:!w-[215px] md:absolute md:left-[75%] md:top-[5%] lg:top-[-2%] lg:left-[78%] xl:top-[12%] xl:left-[71%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto' %}
                 {% when 2 %}
-                    {% assign class = 'order-3 md:!mb-0 md:!mt-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%] lg:right-[79%] lg:top-[24%] xl:right-[67%] xl:top-[27%]' %}
+                    {% assign class = 'order-3 md:!mb-0 md:!mt-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%] lg:right-[79%] lg:top-[24%] xl:right-[67%] xl:top-[35%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-12!'  %}
                 {% when 3 %}
-                    {% assign class = 'md:!mb-0 md:!mt-0 order-4 md:!w-[287px] md:absolute md:left-[75%] md:top-[58%] lg:top-[51%] lg:left-[75%] xl:left-[69%]' %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-4 md:!w-[287px] md:absolute md:left-[75%] md:top-[58%] lg:top-[51%] lg:left-[75%] xl:top-[60%] xl:left-[69%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-3!' %}
                 {% else %}
                     {% assign class = 'md:hidden' %}

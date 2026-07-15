@@ -23,7 +23,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
-            "gap_tablet": 0,
+            "gap_tablet": 14,
             "gap_mobile": 12,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
@@ -372,6 +372,7 @@
             "color_scheme": "scheme-1",
             "title_type": "image",
             "title": "",
+            "title_color": "",
             "font_size": 24,
             "font_size_mobile": 24,
             "title_alt": "",
@@ -382,12 +383,15 @@
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "BEAN QUALITY",
             "description_1": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
+            "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226584.svg",
             "title_2": "MORE COFFEE",
             "description_2": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine.",
+            "order_mobile_2": 1,
             "icon_3": "shopify://shop_images/Group_1327226583.svg",
             "title_3": "COLD BREW PROCESS",
-            "description_3": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
+            "description_3": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic",
+            "order_mobile_3": 3
           }
         },
         "view_Rg9MXG": {
@@ -397,6 +401,7 @@
             "color_scheme": "scheme-1",
             "title_type": "image",
             "title": "",
+            "title_color": "",
             "font_size": 24,
             "font_size_mobile": 24,
             "title_alt": "",
@@ -407,12 +412,15 @@
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "SUPER PREMIUM COFFEE",
             "description_1": "Made with our signature cold brew from organic, specialty-grade beans",
+            "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226584.svg",
             "title_2": "SUBTLY SWEET,NO COMPROMISE",
             "description_2": "Only 100 calories and just 5 grams of real sugar",
+            "order_mobile_2": 3,
             "icon_3": "shopify://shop_images/Group_1327226583.svg",
             "title_3": "CREAMY & PROTEIN RICH",
-            "description_3": "Ultra-filtered skim milk protein for creaminess with nutrition cred"
+            "description_3": "Ultra-filtered skim milk protein for creaminess with nutrition cred",
+            "order_mobile_3": 1
           }
         }
       },
@@ -420,29 +428,34 @@
         "view_NH6mb9",
         "view_Rg9MXG"
       ],
+      "custom_css": [
+        "@media screen and (min-width: 1024px) {.aw-diagram-toggle .wb-section-bg__image--desktop {top: -100px; }}"
+      ],
       "name": "AW Diagram Toggle",
       "settings": {
         "background_type": "image",
         "background_solid": "#f2e6dc",
         "background_gradient": "",
         "background_image": "shopify://shop_images/sky.png",
-        "background_image_fit": "cover",
-        "background_image_overflow": false,
-        "background_type_mobile": "same",
+        "background_image_fit": "natural",
+        "background_image_overflow": true,
+        "background_type_mobile": "image",
         "background_solid_mobile": "#f2e6dc",
         "background_gradient_mobile": "",
+        "background_image_mobile": "shopify://shop_images/sky.png",
         "background_image_fit_mobile": "cover",
-        "background_image_overflow_mobile": false,
-        "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
+        "background_image_overflow_mobile": true,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
-        "title_image": "shopify://shop_images/Group_1327226583_1b0350b7-4cb6-4e80-96d8-5ee41ee70d40.svg"
+        "title_image": "shopify://shop_images/Group_1327226583_1b0350b7-4cb6-4e80-96d8-5ee41ee70d40.svg",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "aw_image_text_icons_6YkxCz": {
@@ -476,7 +489,7 @@
         "icon_item_bgBnVE"
       ],
       "custom_css": [
-        "@media screen and (min-width: 768px) {{margin-top: -60px; }}"
+        "@media screen and (min-width: 1024px) {{margin-top: -60px; }}"
       ],
       "name": "AW Image + Text Icons",
       "settings": {
@@ -491,17 +504,18 @@
         "background_gradient_mobile": "",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "padding-block-start": 54,
-        "padding-block-end": 64,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 54,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589.svg",
-        "large_image": "shopify://shop_images/image_140_1.png"
+        "large_image": "shopify://shop_images/image_140_1.png",
+        "padding-block-start": 54,
+        "padding-block-end": 64,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 54
       }
     },
     "aw_guarantee_banner_GxEGrE": {
@@ -639,19 +653,20 @@
         "background_gradient_mobile": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_MORE_WITH_EVERY_SIP....svg",
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
-        "bullet_icon": "shopify://shop_images/Crown-1.svg"
+        "bullet_icon": "shopify://shop_images/Crown-1.svg",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "aw_frequently_asked_questions_33izYW": {
@@ -670,19 +685,20 @@
         "background_gradient_mobile": "linear-gradient(184deg, rgba(242, 230, 220, 1) 3%, rgba(191, 215, 233, 1) 99%)",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226590.svg",
         "faqs_metaobject": "96-oz-cold-brew-straight-black",
         "button_label": "",
-        "button_link": ""
+        "button_link": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "products_slider_eeqjMT": {

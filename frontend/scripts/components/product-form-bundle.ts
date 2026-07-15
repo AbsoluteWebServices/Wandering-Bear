@@ -87,16 +87,14 @@ export default (Alpine: AlpineType) => {
         },
 
         get currentSavingsAmount() {
-            if (this.purchaseOption !== 'autoship') {
-                return 0;
-            }
-
             return this.assignedBundleProducts.reduce((acc: number, product: any) => {
               const originalPrice = Number(product.originalPrice || 0);
-              const sellingPlanPrice = Number(product.sellingPlanPrice || 0);
               const quantity = Number(product.quantity || 0);
+              const discountedPrice = this.purchaseOption === 'autoship'
+                ? Number(product.sellingPlanPrice || 0)
+                : Number(product.otpPrice || 0);
 
-              return acc + (originalPrice - sellingPlanPrice) * quantity;
+              return acc + Math.max(0, originalPrice - discountedPrice) * quantity;
             }, 0);
         },
 
