@@ -1,18 +1,26 @@
-
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "heading": {
       "type": "aw-page-heading",
-      "blocks": {},
-      "block_order": [],
       "settings": {
+        "color_scheme": "",
         "title": "FIND US IN STORES",
-        "text_color": "#431A03",
+        "text_color": "#431a03",
         "style_class": "display-lg",
         "font_size": 60,
         "font_size_mobile": 45,
         "background_type": "color",
-        "background_solid": "#F2E6DC",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
         "padding-block-start": 60,
         "padding-block-end": 0,
         "padding-block-start-mobile": 29,
@@ -76,27 +84,59 @@
         "logo_TyE9A9"
       ],
       "settings": {
+        "button_text": "",
+        "button_url": "",
         "grayscale": true,
         "padding_top": 58,
         "padding_bottom": 56,
         "padding_top_mobile": 32,
         "padding_bottom_mobile": 40,
         "background_type": "color",
-        "background_solid": "#F2E6DC",
-        "background_type_mobile": "same"
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "",
+        "background_gradient_mobile": ""
       }
     },
     "locator": {
       "type": "aw-store-locator",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "storelocators_storelocators_map_embed_rYYRf7": {
+          "type": "shopify://apps/storelocators/blocks/storelocators-map-embed/de38b80e-c3be-4ef7-a9f6-0fd9db0e6f3e",
+          "settings": {
+            "selected_retailers": [],
+            "selected_products": [],
+            "buyNowLinks": false,
+            "color": "#000000",
+            "borderRadius": 0,
+            "maxDesktopHeight": 1000,
+            "borderWidth": 1,
+            "borderColor": "#000000",
+            "textColor": "#000000",
+            "textColorSecondary": "#AAAAAA",
+            "contrastColor": "#FFFFFF",
+            "paddingTop": 28,
+            "paddingBottom": 28,
+            "paddingLeft": 28,
+            "paddingRight": 28,
+            "customCSS": ""
+          }
+        }
+      },
+      "block_order": [
+        "storelocators_storelocators_map_embed_rYYRf7"
+      ],
       "settings": {
+        "color_scheme": "",
+        "custom_code": "",
         "container_id": "wb-store-locator",
         "max_width": 1074,
         "height": 760,
         "height_mobile": 600,
         "background_type": "color",
-        "background_solid": "#F2E6DC",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
         "padding-block-start": 0,
         "padding-block-end": 0,
         "padding-block-start-mobile": 0,
@@ -105,21 +145,21 @@
     },
     "contact": {
       "type": "aw-contact-cta",
-      "blocks": {},
-      "block_order": [],
       "settings": {
+        "color_scheme": "",
         "show_mark": true,
-        "mark_circle_color": "#431A03",
-        "mark_color": "#E6CDB7",
+        "mark_circle_color": "#431a03",
+        "mark_color": "#e6cdb7",
         "title": "INTERESTED IN SELLING\\bWANDERING BEAR COLD BREW?",
-        "text_color": "#431A03",
+        "text_color": "#431a03",
         "font_size": 25,
         "font_size_mobile": 25,
         "button_label": "CONTACT US",
         "button_link": "/pages/contact-form",
         "button_style": "secondary-gold",
         "background_type": "color",
-        "background_solid": "#F2E6DC",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
         "padding-block-start": 34,
         "padding-block-end": 73,
         "padding-block-start-mobile": 34,
@@ -134,4 +174,3 @@
     "contact"
   ]
 }
-
