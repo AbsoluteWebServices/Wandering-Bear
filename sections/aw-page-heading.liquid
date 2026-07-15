@@ -24,13 +24,17 @@
 >
   {% render 'section-background', settings: s, part: 'media' %}
 
+  {% comment %}
+    \b is a mobile-only break: Figma wraps the title after "FIND US" at 45px on mobile and keeps
+    it on one line at 60px on desktop. smd is min-width:750, which would already switch at 750
+    itself, so the desktop single line starts at 751.
+  {% endcomment %}
   {% if s.title != blank %}
-    {% comment %} Use \b to force a line break — Figma wraps the mobile title after "FIND US". {% endcomment %}
     <h1
       class="wb-page-heading__title {{ s.style_class | default: 'display-lg' }} relative z-[1] text-center uppercase leading-[1.05] px-6"
       style="color: {{ text_color }};"
     >
-      {{ s.title | replace: '\b', '<br>' }}
+      {{ s.title | replace: '\b', '<br class="min-[751px]:!hidden">' }}
     </h1>
   {% endif %}
 </div>

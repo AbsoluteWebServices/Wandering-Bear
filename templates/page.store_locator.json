@@ -1,19 +1,10 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "heading": {
       "type": "aw-page-heading",
       "settings": {
         "color_scheme": "",
-        "title": "FIND US IN STORES",
+        "title": "FIND US \\bIN STORES",
         "text_color": "#431a03",
         "style_class": "display-lg",
         "font_size": 60,
@@ -23,7 +14,7 @@
         "background_gradient": "",
         "padding-block-start": 60,
         "padding-block-end": 0,
-        "padding-block-start-mobile": 29,
+        "padding-block-start-mobile": 60,
         "padding-block-end-mobile": 0
       }
     },
@@ -36,7 +27,7 @@
             "image": "shopify://shop_images/logo-5.png",
             "hide_on_mobile": false,
             "max_width": "144",
-            "max_width_mobile": "92"
+            "max_width_mobile": "102"
           }
         },
         "logo_gAdXrx": {
@@ -45,7 +36,7 @@
             "image": "shopify://shop_images/logo-1_8f883ae7-a2f9-4863-aca9-7299e7d72b76.png",
             "hide_on_mobile": false,
             "max_width": "87",
-            "max_width_mobile": "57"
+            "max_width_mobile": "63"
           }
         },
         "logo_PG9Uzh": {
@@ -54,7 +45,7 @@
             "image": "shopify://shop_images/logo-4_f89ffb5e-c07a-4ddb-8490-0ee0b4cce935.png",
             "hide_on_mobile": false,
             "max_width": "156",
-            "max_width_mobile": "87"
+            "max_width_mobile": "96"
           }
         },
         "logo_KHHzVL": {
@@ -63,7 +54,7 @@
             "image": "shopify://shop_images/logo-3_95ab9dd9-43e9-4d30-a53d-dcdec39ee189.png",
             "hide_on_mobile": false,
             "max_width": "150",
-            "max_width_mobile": "96"
+            "max_width_mobile": "106"
           }
         },
         "logo_TyE9A9": {
@@ -72,7 +63,7 @@
             "image": "shopify://shop_images/logo-2_4485c334-ff30-4f71-8c4d-271a081171ff.png",
             "hide_on_mobile": false,
             "max_width": "172",
-            "max_width_mobile": "102"
+            "max_width_mobile": "106"
           }
         }
       },
@@ -96,7 +87,8 @@
         "background_gradient": "",
         "background_type_mobile": "same",
         "background_solid_mobile": "",
-        "background_gradient_mobile": ""
+        "background_gradient_mobile": "",
+        "mobile_per_row": "3"
       }
     },
     "locator": {
