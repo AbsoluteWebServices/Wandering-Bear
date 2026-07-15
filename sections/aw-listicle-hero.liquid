@@ -1,0 +1,357 @@
+{% comment %}
+  Listicle hero — image left, copy right over a Cream→Gold gradient.
+  Figma: WB x AW Landing Pages, Listicle_Desktop 1:17 (hero 1280×529, image 585×526).
+
+  Desktop: image takes 585/1280 of the row, copy is vertically centred in the rest.
+  Mobile: image on top, copy below (Figma 1:133).
+
+  Subtitle size is overridden locally: the global .h3 jumps to 22px under 768px, but the
+  design keeps the hero subtitle at 18px on mobile. .h3 is used in 39 files — not safe to
+  change globally, so the size is driven by a CSS variable here.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign color_scheme = s.color_scheme
+  assign text_color = s.text_color | default: '#431A03'
+  assign buttons = section.blocks | where: 'type', 'button'
+%}
+
+{% capture type_styles %}
+  --font-size: {{ s.font_size | default: 45 }}px;
+  --font-size-mobile: {{ s.font_size_mobile | default: 35 }}px;
+  --sub-font-size: {{ s.subtitle_font_size | default: 18 }}px;
+  --sub-font-size-mobile: {{ s.subtitle_font_size_mobile | default: 18 }}px;
+{% endcapture %}
+
+<div
+  class="wb-listicle-hero relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: color_scheme.settings.background %} {% render 'spacing-style', settings: s %} {{ type_styles }}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  <div class="relative z-[1] grid smd:!grid-cols-[minmax(0,585fr)_minmax(0,695fr)] w-full">
+    <div class="wb-listicle-hero__media">
+      {% if s.image != blank %}
+        {% render 'picture',
+          source: s.image,
+          tablet_source: s.image_tablet,
+          mobile_source: s.image_mobile,
+          class: 'w-full h-full object-cover !max-w-none',
+          alt: s.image.alt,
+          width: 1170,
+          height: 1052,
+          preload: 'eager',
+          loading: 'eager'
+        %}
+      {% endif %}
+    </div>
+
+    <div class="wb-flex flex-col justify-center px-6 py-10 smd:!pl-[109px] smd:!pr-10 smd:!py-14">
+      <div class="w-full max-w-[440px]">
+        {% if s.title != blank %}
+          <h1 class="wb-listicle-hero__title display-md leading-[1.05] uppercase" style="color: {{ text_color }};">
+            {{ s.title | replace: '\b', '<br>' }}
+          </h1>
+        {% endif %}
+
+        {% if s.subtitle != blank %}
+          <p class="wb-listicle-hero__sub h3 leading-[1.3] mt-3" style="color: {{ text_color }};">
+            {{ s.subtitle | replace: '\b', '<br>' }}
+          </p>
+        {% endif %}
+
+        {% if buttons.size > 0 %}
+          <div class="wb-flex flex-col sm:!flex-row !gap-4 mt-6 relative -left-1">
+            {% for button in buttons %}
+              {% render 'wb-button',
+                style: button.settings.style | default: 'secondary-gold',
+                label: button.settings.label,
+                link: button.settings.link
+              %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .wb-listicle-hero__media {
+    aspect-ratio: 585 / 526;
+  }
+
+  @media screen and (max-width: 749px) {
+    .wb-listicle-hero__media {
+      aspect-ratio: 375 / 300;
+    }
+  }
+
+  .wb-listicle-hero__title {
+    font-size: var(--font-size) !important;
+  }
+
+  .wb-listicle-hero__sub {
+    font-size: var(--sub-font-size) !important;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .wb-listicle-hero__title {
+      font-size: var(--font-size-mobile) !important;
+    }
+
+    .wb-listicle-hero__sub {
+      font-size: var(--sub-font-size-mobile) !important;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW Listicle Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_tablet",
+      "label": "Image tablet"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image mobile"
+    },
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "Use \\b to force a line break.",
+      "default": "COLD BREW > HOT TAKES"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#431A03"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Title size mobile",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "label": "Subtitle size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size_mobile",
+      "label": "Subtitle size mobile",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, #F2E6DC 0%, #AF7404 100%)",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "SHOP NOW"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "primary", "label": "Primary" },
+            { "value": "secondary-gold", "label": "Secondary gold" },
+            { "value": "secondary-cream", "label": "Secondary cream" }
+          ],
+          "default": "secondary-gold"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Listicle Hero",
+      "blocks": [{ "type": "button" }]
+    }
+  ]
+}
+{% endschema %}

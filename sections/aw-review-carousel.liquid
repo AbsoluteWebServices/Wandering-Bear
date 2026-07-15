@@ -1,0 +1,351 @@
+{% comment %}
+  Review carousel — speech-bubble cards over a dark gradient.
+  Figma: WB x AW Landing Pages, Listicle_Desktop 1:17 (band 1280×297), mobile 1:133.
+
+  Desktop shows 3 cards, mobile 1. Arrows and dots come from the design (4 dots vs 3 visible
+  cards — there are more reviews than fit), driven by frontend/scripts/components/reviewCarousel.ts.
+
+  Title uses .h1 with a local size override: the global .h1 goes to 28px under 768px, but the
+  design keeps this at 25px on mobile, and .h1 is used in 34 files.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign color_scheme = s.color_scheme
+  assign card_bg = s.card_background | default: '#E6CDB7'
+  assign card_text = s.card_text_color | default: '#431A03'
+%}
+
+{% capture type_styles %}
+  --font-size: {{ s.font_size | default: 25 }}px;
+  --font-size-mobile: {{ s.font_size_mobile | default: 25 }}px;
+  --card-bg: {{ card_bg }};
+{% endcapture %}
+
+<div
+  class="wb-reviews relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: color_scheme.settings.background %} {% render 'spacing-style', settings: s %} {{ type_styles }}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  <div
+    class="relative z-[1] w-full"
+    x-data="reviewCarousel"
+    data-slides-mobile="1"
+    data-slides-tablet="2"
+    data-slides-desktop="3"
+    data-space-mobile="12"
+    data-space-desktop="16"
+  >
+    {% if s.title != blank %}
+      <h2 class="wb-reviews__title h1 text-center px-6 mb-6" style="color: {{ s.title_color | default: '#F4ECE5' }};">
+        {{ s.title }}
+      </h2>
+    {% endif %}
+
+    <div class="relative max-w-[1092px] mx-auto px-6 smd:!px-16">
+      <div class="review-carousel__swiper swiper !overflow-visible smd:!overflow-hidden">
+        <div class="swiper-wrapper items-stretch">
+          {% for block in section.blocks %}
+            <div class="swiper-slide !h-auto" {{ block.shopify_attributes }}>
+              <div class="wb-reviews__bubble relative rounded-[10px] px-5 py-4 text-center h-full wb-flex items-center justify-center shadow-[4px_4px_4px_rgba(0,0,0,0.25)]">
+                <p class="body" style="color: {{ card_text }};">{{ block.settings.quote }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if s.show_navigation %}
+        <button
+          type="button"
+          class="review-carousel__prev absolute left-0 top-1/2 -translate-y-1/2 z-[2] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80"
+          style="background-color: {{ card_bg }};"
+          aria-label="{{ 'general.slider.previous' | t | default: 'Previous' }}"
+        >
+          <svg class="w-[9px] h-[15px]" viewBox="0 0 9 15" fill="none" aria-hidden="true">
+            <path d="M8 1L1.5 7.5L8 14" stroke="{{ card_text }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="review-carousel__next absolute right-0 top-1/2 -translate-y-1/2 z-[2] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80"
+          style="background-color: {{ card_bg }};"
+          aria-label="{{ 'general.slider.next' | t | default: 'Next' }}"
+        >
+          <svg class="w-[9px] h-[15px]" viewBox="0 0 9 15" fill="none" aria-hidden="true">
+            <path d="M1 1L7.5 7.5L1 14" stroke="{{ card_text }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+
+    {% if s.show_dots %}
+      <div class="review-carousel__dots wb-flex items-center justify-center !gap-2 mt-6"></div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .wb-reviews__title {
+    font-size: var(--font-size) !important;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .wb-reviews__title {
+      font-size: var(--font-size-mobile) !important;
+    }
+  }
+
+  .wb-reviews__bubble {
+    background-color: var(--card-bg);
+    min-height: 132px;
+  }
+
+  /* Speech-bubble tail (Figma: pointer under the card). */
+  .wb-reviews__bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -9px;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 12px solid var(--card-bg);
+  }
+
+  .review-carousel__dots .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background-color: var(--card-bg);
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+
+  .review-carousel__dots .swiper-pagination-bullet-active {
+    opacity: 1;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW Review Carousel",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Over 16,000 5 Star Reviews"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#F4ECE5"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Title size mobile",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#E6CDB7"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#431A03"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#431A03",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, #391704 0%, #955325 100%)",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Review Carousel",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}
