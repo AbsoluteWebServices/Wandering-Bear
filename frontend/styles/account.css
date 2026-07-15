@@ -16,14 +16,9 @@
    max-w-[1092px]); stays fluid below that. */
 .account-container {
     width: 100%;
-    max-width: 774px;
+    max-width: 1092px;
     margin-inline: auto;
     padding-inline: 1rem;
-}
-@media (max-width: 749px) {
-    .account-container {
-        max-width: 350px;
-    }
 }
 /* Form column: login / register / reset / activate input width (Figma 352px). */
 .account-form {
