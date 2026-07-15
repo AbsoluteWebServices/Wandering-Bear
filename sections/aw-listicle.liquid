@@ -1,0 +1,383 @@
+{% comment %}
+  Listicle rows — numbered image + text, image side alternates.
+  Figma: WB x AW Landing Pages, Listicle_Desktop 1:17 / mobile 1:133.
+
+  Desktop: image and text split the row 50/50 (640px each at 1280), row 493px tall.
+  Text is centred inside its half in the design, so both sides use the same centred block.
+  Mobile: stacks — image on top, text below.
+
+  The page splits this section in two (rows 1-3, logo wall, rows 4-5), so numbering and
+  alternation come from `starting_number` rather than the loop index: odd number = image left.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign color_scheme = s.color_scheme
+  assign text_color = s.text_color | default: '#431A03'
+  assign start = s.starting_number | default: 1
+%}
+
+{% capture title_styles %}
+  --font-size: {{ s.font_size | default: 45 }}px;
+  --font-size-mobile: {{ s.font_size_mobile | default: 45 }}px;
+{% endcapture %}
+
+<div
+  class="wb-listicle wb-flex flex-col relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: color_scheme.settings.background %} {% render 'spacing-style', settings: s %} {{ title_styles }}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  {% for block in section.blocks %}
+    {% liquid
+      assign number = start | plus: forloop.index0
+      assign side = block.settings.image_side
+      if side == blank or side == 'auto'
+        assign remainder = number | modulo: 2
+        if remainder == 1
+          assign side = 'left'
+        else
+          assign side = 'right'
+        endif
+      endif
+    %}
+
+    <div class="wb-listicle__row relative z-[1] grid smd:!grid-cols-2 w-full" {{ block.shopify_attributes }}>
+      {% comment %} Image — order flips on desktop only; on mobile it is always first. {% endcomment %}
+      <div class="wb-listicle__media order-1 {% if side == 'right' %}smd:!order-2{% else %}smd:!order-1{% endif %}">
+        {% if block.settings.image != blank %}
+          {% render 'picture',
+            source: block.settings.image,
+            tablet_source: block.settings.image_tablet,
+            mobile_source: block.settings.image_mobile,
+            class: 'w-full h-full object-cover !max-w-none',
+            alt: block.settings.image.alt,
+            width: 1280,
+            height: 986,
+            loading: 'lazy'
+          %}
+        {% endif %}
+      </div>
+
+      <div class="wb-listicle__text order-2 {% if side == 'right' %}smd:!order-1{% else %}smd:!order-2{% endif %} wb-flex items-center justify-center px-6 py-10 smd:!px-10 smd:!py-14">
+        <div class="w-full max-w-[390px]">
+          {% if s.show_numbers %}
+            <span class="wb-listicle__num display-md wb-listicle__title-size block leading-[1.05]" style="color: {{ text_color }};">{{ number }}.</span>
+          {% endif %}
+
+          {% if block.settings.title != blank %}
+            <h2 class="wb-listicle__title display-md wb-listicle__title-size leading-[1.05] uppercase mt-1" style="color: {{ text_color }};">
+              {{ block.settings.title | replace: '\b', '<br>' }}
+            </h2>
+          {% endif %}
+
+          {% if block.settings.body != blank %}
+            <div class="wb-listicle__body body font-bold mt-5" style="color: {{ text_color }};">
+              {{ block.settings.body }}
+            </div>
+          {% endif %}
+
+          {% if block.settings.button_label != blank %}
+            <div class="mt-7 relative -left-1">
+              {% render 'wb-button',
+                style: block.settings.button_style | default: 'secondary-gold',
+                label: block.settings.button_label,
+                link: block.settings.button_link
+              %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% stylesheet %}
+  /* Row keeps the Figma 1280×493 proportion per half; height follows the image. */
+  .wb-listicle__media {
+    aspect-ratio: 640 / 493;
+  }
+
+  @media screen and (max-width: 749px) {
+    .wb-listicle__media {
+      aspect-ratio: 375 / 300;
+    }
+  }
+
+  .wb-listicle__title-size {
+    font-size: var(--font-size) !important;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .wb-listicle__title-size {
+      font-size: var(--font-size-mobile) !important;
+    }
+  }
+
+  /* Body copy is rich text — paragraphs are separated, links stay underlined. */
+  .wb-listicle__body p + p {
+    margin-top: 1rem;
+  }
+
+  .wb-listicle__body a {
+    text-decoration: underline;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW Listicle",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Numbering"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show numbers",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "starting_number",
+      "label": "Starting number",
+      "info": "Numbering and image side continue across sections. Odd number = image on the left.",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Type"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#431A03"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Title size mobile",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Listicle Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Use \\b to force a line break."
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body"
+        },
+        {
+          "type": "select",
+          "id": "image_side",
+          "label": "Image side",
+          "options": [
+            { "value": "auto", "label": "Auto (alternate by number)" },
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "auto"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_tablet",
+          "label": "Image tablet"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image mobile"
+        },
+        {
+          "type": "header",
+          "content": "Button (optional)"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "options": [
+            { "value": "primary", "label": "Primary" },
+            { "value": "secondary-gold", "label": "Secondary gold" },
+            { "value": "secondary-cream", "label": "Secondary cream" }
+          ],
+          "default": "secondary-gold"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Listicle",
+      "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }]
+    }
+  ]
+}
+{% endschema %}

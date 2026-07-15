@@ -82,6 +82,7 @@ const init = async () => {
     const { default: WaysToEnjoy } = await import("~/scripts/components/ways-to-enjoy")
     const { default: ProductValueProps } = await import("~/scripts/components/productValueProps")
     const { default: ProductsSlider } = await import("~/scripts/components/productsSlider")
+    const { default: ReviewCarousel } = await import("~/scripts/components/reviewCarousel")
     const { default: OverlayScrollbar } = await import("~/scripts/components/overlayScrollbar")
     const { default: Cart } = await import("~/scripts/components/cart")
 
@@ -105,6 +106,7 @@ const init = async () => {
     Alpine.plugin(WaysToEnjoy)
     Alpine.plugin(ProductValueProps)
     Alpine.plugin(ProductsSlider)
+    Alpine.plugin(ReviewCarousel)
     Alpine.plugin(OverlayScrollbar)
     Alpine.plugin(Cart)
 
