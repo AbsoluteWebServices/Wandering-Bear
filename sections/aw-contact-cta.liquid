@@ -1,0 +1,258 @@
+{% comment %}
+  Centred call-to-action: bear mark, heading, button.
+  Figma: WB x AW Ancillary Pages, Find Us In Stores 123:5 (mark y=1179, heading y=1246,
+  button y=1312) and mobile 123:55.
+
+  The mark is an inline SVG from the Figma vector — see snippets/bear-circle.liquid — so there
+  is nothing to upload and it stays sharp at any size.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign color_scheme = s.color_scheme
+  assign text_color = s.text_color | default: '#431A03'
+%}
+
+{% capture type_styles %}
+  --font-size: {{ s.font_size | default: 25 }}px;
+  --font-size-mobile: {{ s.font_size_mobile | default: 25 }}px;
+{% endcapture %}
+
+<div
+  class="wb-contact-cta relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: color_scheme.settings.background %} {% render 'spacing-style', settings: s %} {{ type_styles }}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  <div class="relative z-[1] wb-flex flex-col items-center text-center px-6 mx-auto max-w-[560px]">
+    {% if s.show_mark %}
+      {% render 'bear-circle',
+        class: 'w-[53px] h-[53px] shrink-0',
+        circle_color: s.mark_circle_color,
+        mark_color: s.mark_color
+      %}
+    {% endif %}
+
+    {% if s.title != blank %}
+      {% comment %} Use \b to break the line — Figma wraps after "SELLING". {% endcomment %}
+      <h2 class="wb-contact-cta__title h1 leading-[1.3] uppercase mt-4" style="color: {{ text_color }};">
+        {{ s.title | replace: '\b', '<br>' }}
+      </h2>
+    {% endif %}
+
+    {% if s.button_label != blank %}
+      <div class="mt-6 wb-flex justify-center w-full">
+        {% render 'wb-button',
+          style: s.button_style | default: 'secondary-gold',
+          label: s.button_label,
+          link: s.button_link
+        %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .wb-contact-cta__title {
+    font-size: var(--font-size) !important;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .wb-contact-cta__title {
+      font-size: var(--font-size-mobile) !important;
+    }
+  }
+
+  /* Mobile: button fills the column. .btn is hard-coded to 205px site-wide, so the override is
+     scoped to this section and to mobile only. */
+  @media screen and (max-width: 749px) {
+    .wb-contact-cta .btn {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW Contact CTA",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mark",
+      "label": "Show bear mark",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "mark_circle_color",
+      "label": "Mark circle color",
+      "default": "#431A03"
+    },
+    {
+      "type": "color",
+      "id": "mark_color",
+      "label": "Mark ring and bear color",
+      "default": "#E6CDB7"
+    },
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "Use \\b to force a line break.",
+      "default": "INTERESTED IN SELLING\\bWANDERING BEAR COLD BREW?"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#431A03"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Title size mobile",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "CONTACT US"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary-gold", "label": "Secondary gold" },
+        { "value": "secondary-cream", "label": "Secondary cream" }
+      ],
+      "default": "secondary-gold"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 73
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Contact CTA"
+    }
+  ]
+}
+{% endschema %}

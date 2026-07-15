@@ -1,63 +1,137 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
+
 {
   "sections": {
-    "main": {
-      "type": "main-page",
+    "heading": {
+      "type": "aw-page-heading",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "title": "FIND US IN STORES",
+        "text_color": "#431A03",
+        "style_class": "display-lg",
+        "font_size": 60,
+        "font_size_mobile": 45,
+        "background_type": "color",
+        "background_solid": "#F2E6DC",
+        "padding-block-start": 60,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 29,
+        "padding-block-end-mobile": 0
+      }
+    },
+    "logo_wall": {
+      "type": "aw-logo-wall",
       "blocks": {
-        "heading": {
-          "type": "text",
-          "name": "Title",
+        "logo_bqbeBN": {
+          "type": "logo",
           "settings": {
-            "text": "<h1>{{ closest.page.title }}</h1>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-primary--family)",
-            "font_size": "",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "image": "shopify://shop_images/logo-5.png",
+            "hide_on_mobile": false,
+            "max_width": "144",
+            "max_width_mobile": "92"
+          }
         },
-        "page-content": {
-          "type": "page-content",
-          "settings": {},
-          "blocks": {}
+        "logo_gAdXrx": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-1_8f883ae7-a2f9-4863-aca9-7299e7d72b76.png",
+            "hide_on_mobile": false,
+            "max_width": "87",
+            "max_width_mobile": "57"
+          }
+        },
+        "logo_PG9Uzh": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-4_f89ffb5e-c07a-4ddb-8490-0ee0b4cce935.png",
+            "hide_on_mobile": false,
+            "max_width": "156",
+            "max_width_mobile": "87"
+          }
+        },
+        "logo_KHHzVL": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-3_95ab9dd9-43e9-4d30-a53d-dcdec39ee189.png",
+            "hide_on_mobile": false,
+            "max_width": "150",
+            "max_width_mobile": "96"
+          }
+        },
+        "logo_TyE9A9": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-2_4485c334-ff30-4f71-8c4d-271a081171ff.png",
+            "hide_on_mobile": false,
+            "max_width": "172",
+            "max_width_mobile": "102"
+          }
         }
       },
       "block_order": [
-        "heading",
-        "page-content"
+        "logo_bqbeBN",
+        "logo_gAdXrx",
+        "logo_PG9Uzh",
+        "logo_KHHzVL",
+        "logo_TyE9A9"
       ],
       "settings": {
-        "content_direction": "column",
-        "gap": 32,
-        "color_scheme": "",
-        "padding-block-start": 40,
-        "padding-block-end": 80
+        "grayscale": true,
+        "padding_top": 58,
+        "padding_bottom": 56,
+        "padding_top_mobile": 32,
+        "padding_bottom_mobile": 40,
+        "background_type": "color",
+        "background_solid": "#F2E6DC",
+        "background_type_mobile": "same"
+      }
+    },
+    "locator": {
+      "type": "aw-store-locator",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "container_id": "wb-store-locator",
+        "max_width": 1074,
+        "height": 760,
+        "height_mobile": 600,
+        "background_type": "color",
+        "background_solid": "#F2E6DC",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
+      }
+    },
+    "contact": {
+      "type": "aw-contact-cta",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "show_mark": true,
+        "mark_circle_color": "#431A03",
+        "mark_color": "#E6CDB7",
+        "title": "INTERESTED IN SELLING\\bWANDERING BEAR COLD BREW?",
+        "text_color": "#431A03",
+        "font_size": 25,
+        "font_size_mobile": 25,
+        "button_label": "CONTACT US",
+        "button_link": "/pages/contact-form",
+        "button_style": "secondary-gold",
+        "background_type": "color",
+        "background_solid": "#F2E6DC",
+        "padding-block-start": 34,
+        "padding-block-end": 73,
+        "padding-block-start-mobile": 34,
+        "padding-block-end-mobile": 60
       }
     }
   },
   "order": [
-    "main"
+    "heading",
+    "logo_wall",
+    "locator",
+    "contact"
   ]
 }
+
