@@ -229,8 +229,8 @@
           <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
           <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
         </div>
-        <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
-        <div class="w-full h-[10px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
+        <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mt-2 mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
+        <div class="w-full h-[14px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
           <div class="h-full rounded-full" style="width: {{ progress_percent }}%; background-color: var(--color-brand-gold);" data-wb-progress-bar></div>
         </div>
         <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso text-center"><span data-wb-progress-text>{{ progress_text }}</span> or <a href="{{ membership_url }}" class="hover-underline">sign up for autoship</a></p>
