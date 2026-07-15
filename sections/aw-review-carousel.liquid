@@ -35,21 +35,27 @@
     data-slides-mobile="1"
     data-slides-tablet="2"
     data-slides-desktop="3"
-    data-space-mobile="12"
-    data-space-desktop="16"
+    data-space-mobile="0"
+    data-space-desktop="0"
   >
     {% if s.title != blank %}
-      <h2 class="wb-reviews__title h1 text-center px-6 mb-6" style="color: {{ s.title_color | default: '#F4ECE5' }};">
+      {% comment %} Extra breathing room above the title on mobile only; desktop keeps the Figma spacing. {% endcomment %}
+      <h2 class="wb-reviews__title h1 text-center px-6 pt-12 smd:!pt-0 mb-6" style="color: {{ s.title_color | default: '#F4ECE5' }};">
         {{ s.title }}
       </h2>
     {% endif %}
 
     <div class="relative max-w-[1092px] mx-auto px-6 smd:!px-16">
-      <div class="review-carousel__swiper swiper !overflow-visible smd:!overflow-hidden">
+      {% comment %}
+        Clip at every width: exactly 3 cards on desktop, 1 on mobile, with no neighbour
+        peeking in. Tails and the rotated corners live in the track's vertical padding, so
+        hiding overflow costs nothing.
+      {% endcomment %}
+      <div class="review-carousel__swiper swiper !overflow-hidden">
         <div class="swiper-wrapper items-stretch">
           {% for block in section.blocks %}
-            <div class="swiper-slide !h-auto" {{ block.shopify_attributes }}>
-              <div class="wb-reviews__bubble relative rounded-[10px] px-5 py-4 text-center h-full wb-flex items-center justify-center shadow-[4px_4px_4px_rgba(0,0,0,0.25)]">
+            <div class="swiper-slide wb-reviews__slide !h-auto" {{ block.shopify_attributes }}>
+              <div class="wb-reviews__bubble relative rounded-[10px] px-5 py-4 text-center h-full wb-flex items-center justify-center">
                 <p class="body" style="color: {{ card_text }};">{{ block.settings.quote }}</p>
               </div>
             </div>
@@ -101,20 +107,128 @@
   .wb-reviews__bubble {
     background-color: var(--card-bg);
     min-height: 132px;
+    /* Figma DROP_SHADOW: x -2, y 4, blur 4, #000 25%. The offset points left on purpose —
+       cards overlap left-to-right with the right one on top, so the shadow has to fall onto
+       the card underneath or the two merge into one shape.
+       drop-shadow (not box-shadow) so it traces the tail too. */
+    filter: drop-shadow(-2px 4px 4px rgba(0, 0, 0, 0.25));
   }
 
-  /* Speech-bubble tail (Figma: pointer under the card). */
+  /* Tail sits in a bottom corner and overhangs the card — not centred.
+     Figma draws each bubble by hand: tails alternate right/left/right and every card is
+     tilted a degree or two and nudged on Y. Cycle of 3 so the pattern repeats as the
+     carousel advances rather than being pinned to specific review text. */
+  /* Size taken from the bubble's own vector path in Figma (node 1:97): the tail spans
+     x 1.45→23.10 and drops from y≈107 to y=118.8 — a 22×12 wedge, wide and flat.
+     Figma's is hand-drawn and scalene (legs 17.9 / 13.8, tip off-centre); this is the same
+     footprint drawn isosceles. */
   .wb-reviews__bubble::after {
     content: '';
     position: absolute;
-    bottom: -11px;
-    left: 50%;
+    bottom: -15px;
     width: 0;
     height: 0;
-    margin-left: -9px;
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    border-top: 12px solid var(--card-bg);
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 15px solid var(--card-bg);
+  }
+
+  /* Figma sits the tail hard in the corner — its outer vertex clears the card edge by ~3px.
+     The corner the tail meets is square: a radius there would leave a notch between the
+     rounded edge and the triangle. */
+  .wb-reviews__slide:nth-child(3n + 1) .wb-reviews__bubble::after,
+  .wb-reviews__slide:nth-child(3n + 3) .wb-reviews__bubble::after {
+    right: 0;
+  }
+
+  .wb-reviews__slide:nth-child(3n + 1) .wb-reviews__bubble,
+  .wb-reviews__slide:nth-child(3n + 3) .wb-reviews__bubble {
+    border-bottom-right-radius: 0;
+  }
+
+  .wb-reviews__slide:nth-child(3n + 2) .wb-reviews__bubble::after {
+    left: 0;
+  }
+
+  .wb-reviews__slide:nth-child(3n + 2) .wb-reviews__bubble {
+    border-bottom-left-radius: 0;
+  }
+
+  /* Cards overlap by ~17-19px in Figma; later slides paint over earlier ones.
+     The overlap lives inside the slide, not in spaceBetween: a negative gap makes every
+     following slide start before the previous one ends, so slide 4 always leaked ~18px into
+     the window no matter how wide the track was. With slides tiling exactly, slide 4 lands
+     fully outside and gets clipped, while the bubble still bleeds left over its neighbour. */
+  .wb-reviews__slide {
+    position: relative;
+  }
+
+  /* Alpine (and Swiper with it) is imported lazily on first interaction — see main.js. Until it
+     runs, .swiper-slide is 100% wide and the row reads as one giant card, then snaps to three.
+     Pre-sizing the slides makes the pre-init paint match the initialised layout, so there is
+     nothing to snap. Swiper overwrites these with inline widths once it boots. */
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    .wb-reviews__slide {
+      width: 50%;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    .wb-reviews__slide {
+      width: 33.3333%;
+    }
+  }
+
+  /* Overlap only where three cards share the row. Below 1024 the track shows 2 or 1 card, and
+     a bleeding neighbour would just poke into the frame with nothing to overlap.
+     Cycle of 3 matches the tails and tilts, and keeps card 4 flush with the track edge. */
+  @media screen and (min-width: 1024px) {
+    .wb-reviews__slide:nth-child(3n + 2) .wb-reviews__bubble,
+    .wb-reviews__slide:nth-child(3n + 3) .wb-reviews__bubble {
+      width: calc(100% + 18px);
+      margin-left: -18px;
+    }
+
+    /* Last card of the triplet stops short of the slide edge. Without the gap its tilted right
+       corner and slide 4's tilted left corner overlap, and no clip line can hide one without
+       cutting the other. Figma's cards vary in width anyway (252 / 266 / 253). */
+    .wb-reviews__slide:nth-child(3n + 3) .wb-reviews__bubble {
+      width: calc(100% + 10px);
+      margin-right: 8px;
+    }
+  }
+
+  .wb-reviews__slide:nth-child(3n + 2) {
+    z-index: 2;
+  }
+
+  .wb-reviews__slide:nth-child(3n + 3) {
+    z-index: 3;
+  }
+
+  /* Figma rotations: -2.8° / +2.3° / +3.3°, Y offsets 701 / 711 / 697. */
+  .wb-reviews__slide:nth-child(3n + 1) .wb-reviews__bubble {
+    transform: rotate(-2.8deg) translateY(4px);
+  }
+
+  .wb-reviews__slide:nth-child(3n + 2) .wb-reviews__bubble {
+    transform: rotate(2.3deg) translateY(14px);
+  }
+
+  .wb-reviews__slide:nth-child(3n + 3) .wb-reviews__bubble {
+    transform: rotate(3.3deg);
+  }
+
+  /* The tilt pushes each card's corners ~3px past its slide, and the tails overhang below.
+     Padding gives that overhang room inside the clip — without it the track sliced the first
+     card's left edge and the last card's right edge, and a straight cut across a tilted edge
+     reads as a kink rather than a crop.
+     The right inset then hides slide 4, landing in the gap opened by the margin-right below. */
+  .review-carousel__swiper {
+    padding-top: 18px;
+    padding-bottom: 30px;
+    padding-left: 10px;
+    clip-path: inset(-40px 4px -40px -40px);
   }
 
   .review-carousel__dots .swiper-pagination-bullet {

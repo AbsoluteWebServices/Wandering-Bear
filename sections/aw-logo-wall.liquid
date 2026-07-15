@@ -3,10 +3,21 @@
     assign button_url = section.settings.button_url
 %}
 
-{% comment %} Background defaults to transparent so existing placements (homepage) are unchanged. {% endcomment %}
-<div class="relative overflow-hidden wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style' %}">
+{%- comment -%}
+  Background, padding and grayscale all default to the section's previous hard-coded behaviour
+  (transparent, 50/6 desktop, 20/6 mobile, full colour) so the existing homepage placement is
+  unchanged. The listicle overrides them per-section.
+{%- endcomment -%}
+{% capture wall_styles %}
+    --logo-pt: {{ section.settings.padding_top | default: 50 }}px;
+    --logo-pb: {{ section.settings.padding_bottom | default: 6 }}px;
+    --logo-pt-mobile: {{ section.settings.padding_top_mobile | default: 20 }}px;
+    --logo-pb-mobile: {{ section.settings.padding_bottom_mobile | default: 6 }}px;
+{% endcapture %}
+
+<div class="relative overflow-hidden wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style' %} {{ wall_styles }}">
     {% render 'section-background', settings: section.settings, part: 'media' %}
-    <div class="container relative z-[1] pt-5 md:!pt-[50px] pb-1.5 max-w-[1132px] flex flex-col mx-auto !gap-[30px]">
+    <div class="container aw-logo-wall__inner relative z-[1] max-w-[1132px] flex flex-col mx-auto !gap-[30px]{% if section.settings.grayscale %} aw-logo-wall--grayscale{% endif %}">
         <div class="max-w-[380px] sm:max-w-[450px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full gap-7 smd:!gap-0">
             {% for block in section.blocks %}          
                 <div class="
@@ -34,6 +45,25 @@
     </div>
 </div>
 
+{% stylesheet %}
+    .aw-logo-wall__inner {
+        padding-top: var(--logo-pt-mobile);
+        padding-bottom: var(--logo-pb-mobile);
+    }
+
+    @media screen and (min-width: 1024px) {
+        .aw-logo-wall__inner {
+            padding-top: var(--logo-pt);
+            padding-bottom: var(--logo-pb);
+        }
+    }
+
+    /* Figma renders the press logos monochrome; the homepage keeps them in brand colour. */
+    .aw-logo-wall--grayscale img {
+        filter: grayscale(1);
+    }
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "AW Logo Wall",
@@ -47,6 +77,57 @@
       "type": "url",
       "id": "button_url",
       "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "grayscale",
+      "label": "Grayscale logos",
+      "info": "Figma shows the press logos monochrome on the listicle. Off keeps brand colour.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 6
     },
     {
       "type": "header",

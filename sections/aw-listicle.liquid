@@ -60,7 +60,8 @@
         {% endif %}
       </div>
 
-      <div class="wb-listicle__text order-2 {% if side == 'right' %}smd:!order-1{% else %}smd:!order-2{% endif %} wb-flex items-center justify-center px-6 py-10 smd:!px-10 smd:!py-14">
+      {% comment %} Mobile side padding is 52px (Figma 1:133 puts the copy at x≈52); desktop keeps 40. {% endcomment %}
+      <div class="wb-listicle__text order-2 {% if side == 'right' %}smd:!order-1{% else %}smd:!order-2{% endif %} wb-flex items-center justify-center px-[52px] py-10 smd:!px-10 smd:!py-14">
         <div class="w-full max-w-[390px]">
           {% if s.show_numbers %}
             <span class="wb-listicle__num display-md wb-listicle__title-size block leading-[1.05]" style="color: {{ text_color }};">{{ number }}.</span>
@@ -78,8 +79,9 @@
             </div>
           {% endif %}
 
+          {% comment %} Button centres on mobile only; desktop keeps its left alignment and nudge. {% endcomment %}
           {% if block.settings.button_label != blank %}
-            <div class="mt-7 relative -left-1">
+            <div class="mt-7 wb-flex justify-center smd:!justify-start smd:relative smd:-left-1">
               {% render 'wb-button',
                 style: block.settings.button_style | default: 'secondary-gold',
                 label: block.settings.button_label,
@@ -97,6 +99,22 @@
   /* Row keeps the Figma 1280×493 proportion per half; height follows the image. */
   .wb-listicle__media {
     aspect-ratio: 640 / 493;
+  }
+
+  /* The picture snippet wraps the img in a <picture>, which is inline with auto height —
+     so h-full on the img resolves against nothing and the image keeps its own ratio,
+     leaving a strip of section background. Rows touch in the design, so fill the cell. */
+  .wb-listicle__media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wb-listicle__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   @media screen and (max-width: 749px) {
@@ -120,8 +138,17 @@
     margin-top: 1rem;
   }
 
-  .wb-listicle__body a {
+  .wb-listicle__body a,
+  .wb-listicle__body u {
     text-decoration: underline;
+  }
+
+  /* Mobile: button fills its column. .btn is hard-coded to 205px and is used site-wide, so the
+     override is scoped to this section and to mobile only. */
+  @media screen and (max-width: 749px) {
+    .wb-listicle__text .btn {
+      width: 100%;
+    }
   }
 {% endstylesheet %}
 

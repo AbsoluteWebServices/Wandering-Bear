@@ -49,21 +49,27 @@
     </div>
 
     <div class="wb-flex flex-col justify-center px-6 py-10 smd:!pl-[109px] smd:!pr-10 smd:!py-14">
-      <div class="w-full max-w-[440px]">
+      {% comment %} Figma: title 538×54 — one line at 45px. Subtitle wraps at 429px. {% endcomment %}
+      <div class="w-full max-w-[540px]">
+        {% comment %}
+          \b is a mobile-only break here: the title is one line at 45px on desktop (Figma 538×54)
+          and wraps after the ">" at 35px on mobile.
+        {% endcomment %}
         {% if s.title != blank %}
-          <h1 class="wb-listicle-hero__title display-md leading-[1.05] uppercase" style="color: {{ text_color }};">
-            {{ s.title | replace: '\b', '<br>' }}
+          <h1 class="wb-listicle-hero__title display-md leading-[1.05] uppercase text-balance text-center smd:!text-left" style="color: {{ text_color }};">
+            {{ s.title | replace: '\b', '<br class="smd:!hidden">' }}
           </h1>
         {% endif %}
 
         {% if s.subtitle != blank %}
-          <p class="wb-listicle-hero__sub h3 leading-[1.3] mt-3" style="color: {{ text_color }};">
+          <p class="wb-listicle-hero__sub h3 leading-[1.3] mt-3 max-w-[430px]" style="color: {{ text_color }};">
             {{ s.subtitle | replace: '\b', '<br>' }}
           </p>
         {% endif %}
 
+        {% comment %} Button centres on mobile only; desktop keeps its left alignment and nudge. {% endcomment %}
         {% if buttons.size > 0 %}
-          <div class="wb-flex flex-col sm:!flex-row !gap-4 mt-6 relative -left-1">
+          <div class="wb-flex flex-col sm:!flex-row !gap-4 mt-6 justify-center items-center smd:!justify-start smd:!items-start smd:relative smd:-left-1">
             {% for button in buttons %}
               {% render 'wb-button',
                 style: button.settings.style | default: 'secondary-gold',
@@ -81,6 +87,21 @@
 {% stylesheet %}
   .wb-listicle-hero__media {
     aspect-ratio: 585 / 526;
+  }
+
+  /* <picture> is inline with auto height, so h-full on the img resolves against nothing.
+     Make the wrapper fill the cell or the image keeps its own ratio and leaves a gap. */
+  .wb-listicle-hero__media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wb-listicle-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   @media screen and (max-width: 749px) {
@@ -104,6 +125,14 @@
 
     .wb-listicle-hero__sub {
       font-size: var(--sub-font-size-mobile) !important;
+    }
+  }
+
+  /* Mobile: button fills its column. .btn is hard-coded to 205px and is used site-wide, so the
+     override is scoped to this section and to mobile only. */
+  @media screen and (max-width: 749px) {
+    .wb-listicle-hero .btn {
+      width: 100%;
     }
   }
 {% endstylesheet %}
