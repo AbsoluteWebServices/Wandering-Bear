@@ -5,27 +5,27 @@
 {% render 'aw-modal', modal: metaobjects.custom_modal.membership, title: section.settings.modal_title, blocks: blocks %}
 
 {% schema %}
- {
-    "name": "AW Membership Modal",
-    "blocks": [
-        {
-            "type": "@theme"
-        },
-        {
-            "type": "@app"
-        }
-    ],
-    "settings": [
-        {
-            "type": "text",
-            "id": "modal_title",
-            "label": "Modal Title"
-        }
-    ],
-    "presets": [
-        {
-            "name": "AW Membership Modal"
-        }
-    ]
- }  
+    {
+        "name": "AW Membership Modal",
+        "blocks": [
+            {
+                "type": "@theme"
+            },
+            {
+                "type": "@app"
+            }
+        ],
+        "settings": [
+            {
+                "type": "text",
+                "id": "modal_title",
+                "label": "Modal Title"
+            }
+        ],
+        "presets": [
+            {
+                "name": "AW Membership Modal"
+            }
+        ]
+    }  
 {% endschema %} 

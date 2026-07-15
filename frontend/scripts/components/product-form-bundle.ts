@@ -87,16 +87,14 @@ export default (Alpine: AlpineType) => {
         },
 
         get currentSavingsAmount() {
-            if (this.purchaseOption !== 'autoship') {
-                return 0;
-            }
-
             return this.assignedBundleProducts.reduce((acc: number, product: any) => {
               const originalPrice = Number(product.originalPrice || 0);
-              const sellingPlanPrice = Number(product.sellingPlanPrice || 0);
               const quantity = Number(product.quantity || 0);
+              const discountedPrice = this.purchaseOption === 'autoship'
+                ? Number(product.sellingPlanPrice || 0)
+                : Number(product.otpPrice || 0);
 
-              return acc + (originalPrice - sellingPlanPrice) * quantity;
+              return acc + Math.max(0, originalPrice - discountedPrice) * quantity;
             }, 0);
         },
 
@@ -396,13 +394,38 @@ export default (Alpine: AlpineType) => {
 
 
         },
-        
+
         selectProduct(productId, productHandle) {
-            this._updateUrl(productHandle);
-            this.selectedProduct = this.bundleProducts[productId];
-            this._setProgressBarPrices();
+            const scrollY = window.scrollY
+
+            this._updateUrl(productHandle)
+            this.selectedProduct = this.bundleProducts[productId]
+            this._setProgressBarPrices()
+
             this.$nextTick(() => {
-              window.dispatchEvent(new CustomEvent('product-changed', { detail: { product: this.selectedProduct }, bubbles: true, composed: true }));
+              const flavorScroll =
+                document.querySelector(
+                  '.flavor-container [data-overlayscrollbars-viewport]'
+                ) || document.querySelector('.flavor-container')
+
+              if (flavorScroll instanceof HTMLElement) {
+                flavorScroll.scrollTop = 0
+              }
+
+              window.scrollTo(0, scrollY)
+
+              window.dispatchEvent(
+                new CustomEvent('product-changed', {
+                  detail: { product: this.selectedProduct },
+                  bubbles: true,
+                  composed: true,
+                })
+              )
+
+              requestAnimationFrame(() => {
+                window.scrollTo(0, scrollY)
+                requestAnimationFrame(() => window.scrollTo(0, scrollY))
+              })
             })
         },
 

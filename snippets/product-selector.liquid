@@ -35,14 +35,20 @@
       {{ child_product.featured_image | image_url: width: 300 | image_tag: class: 'w-full h-full object-cover opacity-50' }}
     {% endif %}
   </div>
-  <div class="wb-flex items-center w-full h-auto min-w-0 self-stretch py-2 pl-3 pr-2 gap-0.5">
+  <div class="wb-flex items-center w-full h-auto min-w-0 self-stretch py-2 pl-3 pr-2 gap-1 smd:gap-2.5">
     <div class="wb-flex flex-col !gap-2 lg:!gap-0.5 w-full">
       <div class="wb-flex items-center gap-1 w-full flex-wrap">
         <span class="text-lg/none! lg:text-base/none! font-extrabold! uppercase text-bear-black font-gothic_condensed">{{
           title }}
         </span>
 
-        {% if product_badge != blank %}
+        {% if is_oos %}
+          <div class="flex items-center justify-center rounded-full py-0.75 px-1 h-fit bg-espresso">
+            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap mt-0.5 text-cream">
+              {{ oos_badge_text }}
+            </span>
+          </div>
+        {% elsif product_badge != blank %}
           <div class="flex items-center justify-center rounded-full py-0.75 px-1 h-fit"
             style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
             <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap mt-0.5">{{
@@ -50,13 +56,16 @@
             </span>
           </div>
         {% elsif member_only %}
-          <span
-            class="flex items-center justify-center gap-0.5 text-[10px]/none font-kurdis uppercase font-bold text-cream whitespace-nowrap py-0.75 px-1 rounded-full relative"
-            style="background-color: var(--color-brand-gold); color: var(--color-cream)"
-          >
+          {% capture member_badge_label %}
             <span class="inline-flex gap-0.5 mt-0.5">VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only</span>
-            {% render 'tooltip', content: settings.member_tooltip, class: 'relative', badge: true %}
-          </span>
+          {% endcapture %}
+          {% render 'tooltip',
+            content: settings.member_tooltip,
+            badge: true,
+            label: member_badge_label,
+            class: 'flex items-center justify-center gap-0.5 text-[10px]/none font-kurdis uppercase font-bold text-cream whitespace-nowrap py-0.75 px-1 rounded-full relative',
+            style: 'background-color: var(--color-brand-gold); color: var(--color-cream)'
+          %}
         {% endif %}
       </div>
       <span class="text-xs/[120%] font-kurdis-semi-condensed font-semibold text-bear-black md:mt-0.75 md:text-[10px]/[120%]">{{ flavor_description }}</span>
@@ -84,15 +93,18 @@
         <div class="wb-flex justify-end items-center">
           <button
             @click.prevent.stop="$dispatch('modal-open', { modal: 'restock-notify', flavor: '{{ child_product.handle }}', variant: '{{ child_product.selected_or_first_available_variant.id }}' })"
-            class="group h-8! w-20! flex flex-nowrap justify-center items-center relative text-espresso whitespace-nowrap cursor-pointer [&_svg]:stroke-espresso hover:[&_svg]:fill-gold hover:[&_svg]:stroke-gold hover:[&_span]:text-white"
+            class="group h-10.5! smd:h-8! w-20! flex flex-nowrap justify-center px-2 items-center relative text-espresso cursor-pointer [&_svg]:stroke-espresso hover:[&_svg]:fill-gold hover:[&_svg]:stroke-gold hover:[&_span]:text-white smd:px-0 smd:whitespace-nowrap"
           >
-            <span class="relative text-[12px]/none z-1 mt-0.5 font-kurdis-condensed uppercase font-extrabold whitespace-nowrap transition-colors">
+            <span class="relative text-sm/none md:text-[12px]/none z-1 mt-0.5 font-kurdis-condensed uppercase font-extrabold md:whitespace-nowrap transition-colors">
               {{ oos_button_text }}
             </span>
             <div class="absolute top-0 left-0 w-full h-8">
-              <svg xmlns="http://www.w3.org/2000/svg" width="80" height="32" viewBox="0 0 80 32" fill="none">
+              <svg class="hidden smd:block" xmlns="http://www.w3.org/2000/svg" width="80" height="32" viewBox="0 0 80 32" fill="none">
                 <path
                   d="M44.7991 0.507812C54.427 0.542555 64.057 0.694928 73.6819 0.990234C74.3826 1.01147 75.3069 1.00363 76.1614 1.2168C77.0414 1.43641 77.9023 1.90113 78.4573 2.89062C79.2562 4.31347 79.5002 5.74875 79.5002 9.05859C79.5002 13.8208 79.2605 17.6203 79.3616 22.3369C79.3884 23.5841 79.4532 25.1131 79.2795 26.5586C79.1061 28.002 78.6867 29.4499 77.6799 30.498C77.052 31.152 76.2523 31.2641 75.5852 31.2832L74.9739 31.2881C52.2506 31.5852 29.5264 31.4834 6.81177 31.4834C5.11469 31.4834 3.85663 31.3393 2.90552 30.7705C1.92779 30.1857 1.36504 29.2104 0.898682 27.8008H0.897705C0.491122 26.5695 0.494836 25.1611 0.501221 23.9062L0.537354 16.8896C0.54932 14.5511 0.562173 12.2121 0.574463 9.87305C0.584722 7.92464 0.604172 5.78643 1.25024 3.95312H1.25122C1.55923 3.08082 1.97789 2.43888 2.49048 1.97949C3.00398 1.5193 3.58437 1.26616 4.17603 1.12988C4.76124 0.995145 5.36447 0.973083 5.92896 0.977539C6.51931 0.982204 7.02156 1.0132 7.52856 0.998047C10.2609 0.915054 12.9934 0.843984 15.7268 0.782227C25.4172 0.564135 35.1085 0.471142 44.7991 0.507812Z" />
+              </svg>
+              <svg class="smd:hidden" xmlns="http://www.w3.org/2000/svg" width="81" height="42" viewBox="0 0 81 42" fill="none">
+                <path d="M45.3605 0.510742C55.1132 0.557067 64.8683 0.760487 74.6183 1.1543C75.3198 1.18227 76.276 1.17115 77.1583 1.46094C78.0839 1.765 78.9326 2.39491 79.4679 3.65137C80.2521 5.48996 80.5001 7.3426 80.5001 11.7441C80.5001 18.0646 80.2572 23.1713 80.3595 29.4561C80.3868 31.1289 80.452 33.1417 80.2784 35.0439C80.1057 36.9364 79.6916 38.8069 78.7023 40.1631C77.8594 41.3191 76.6681 41.2051 75.924 41.2168C52.9081 41.613 29.8907 41.4775 6.88586 41.4775C5.15694 41.4775 3.85709 41.283 2.88098 40.5146C1.90765 39.7483 1.35583 38.4894 0.8927 36.6465C0.493395 35.0545 0.494599 33.2247 0.501099 31.543C0.513546 28.4244 0.526088 25.3064 0.538208 22.1885C0.550328 19.0704 0.56287 15.9518 0.575317 12.833C0.585743 10.2261 0.607364 7.42423 1.24817 5.03027C1.5505 3.90304 1.96071 3.07562 2.46594 2.47949C2.97692 1.87663 3.56698 1.53226 4.18567 1.34473C4.79341 1.16052 5.41737 1.13171 5.99329 1.1377C6.60254 1.14403 7.09662 1.18416 7.60754 1.16406C10.3754 1.05339 13.1434 0.958332 15.9122 0.875977C25.7281 0.585151 35.5444 0.461843 45.3605 0.510742Z" stroke="#431A03"/>
               </svg>
             </div>
           </button>
@@ -105,7 +117,7 @@
             :disabled="disabled" :class="{ 'opacity-50 pointer-events-none': disabled }"
           >
             <span
-              class="relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold mt-0.5"
+              class="relative text-sm md:text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold mt-0.5"
             >
               + Add{% if template.suffix == 'single-serve' %} Case{% endif %}
             </span>

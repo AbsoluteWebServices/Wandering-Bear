@@ -92,6 +92,14 @@ input[name="purchase_option"]:checked + label {
 .flavor-container {
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overflow-anchor: none;
+}
+
+.product-information__media,
+.product-information__grid,
+[data-product-grid-content] {
+    overflow-anchor: none;
 }
 
 .flavor-container .os-scrollbar {
@@ -124,6 +132,33 @@ input[name="purchase_option"]:checked + label {
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
+    overflow-anchor: none;
+}
+
+/* OverlayScrollbars only for ≥1280px — force native scroll below that. */
+@media screen and (max-width: 1279px) {
+    .flavor-container {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .flavor-container .os-scrollbar,
+    .flavor-container [data-overlayscrollbars-padding] {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+    /* If OS host markup is still present, make the viewport scroll natively. */
+    .flavor-container[data-overlayscrollbars],
+    .flavor-container [data-overlayscrollbars-viewport] {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
 @media screen and (max-width: 1023px) {
@@ -139,10 +174,6 @@ input[name="purchase_option"]:checked + label {
     .subscription-value-props ul {
         gap: 4px;
         padding-inline: 6px;
-    }
-
-    .flavor-container .os-scrollbar {
-        --os-size: 5px;
     }
 }
 

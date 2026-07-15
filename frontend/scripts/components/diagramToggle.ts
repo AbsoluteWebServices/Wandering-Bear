@@ -106,6 +106,8 @@ export default (Alpine: AlpineType) => {
         active.classList.remove(
           'absolute',
           'inset-0',
+          'top-0',
+          'left-0',
           'w-full',
           'opacity-0',
           'opacity-100',
@@ -148,13 +150,19 @@ export default (Alpine: AlpineType) => {
         content.style.transition = `height ${VIEW_TRANSITION_MS}ms ${VIEW_TRANSITION_EASING}`
         content.style.overflow = 'hidden'
 
-        next.className = `absolute inset-0 w-full opacity-0 ${VIEW_TRANSITION_CLASSES.join(' ')}`
-
         previousChildren.forEach((child) => {
           if (child instanceof HTMLElement) {
-            child.classList.add(...VIEW_TRANSITION_CLASSES)
+            child.classList.add(
+              'absolute',
+              'top-0',
+              'left-0',
+              'w-full',
+              ...VIEW_TRANSITION_CLASSES
+            )
           }
         })
+
+        next.className = `absolute top-0 left-0 w-full opacity-0 ${VIEW_TRANSITION_CLASSES.join(' ')}`
 
         content.appendChild(next)
         Alpine.initTree(next)
@@ -165,7 +173,7 @@ export default (Alpine: AlpineType) => {
         await this.waitForImages(next)
         if (!this.isActiveSwap(swapId)) return
 
-        const nextHeight = next.offsetHeight
+        const nextHeight = Math.max(next.scrollHeight, next.offsetHeight)
 
         this.$nextTick(() => {
           if (this.isActiveSwap(swapId)) {
@@ -212,7 +220,8 @@ export default (Alpine: AlpineType) => {
 
             next.classList.remove(
               'absolute',
-              'inset-0',
+              'top-0',
+              'left-0',
               'w-full',
               'opacity-100',
               ...VIEW_TRANSITION_CLASSES
@@ -224,6 +233,12 @@ export default (Alpine: AlpineType) => {
 
             this.pendingState = null
             this.isSwapping = false
+
+            this.$nextTick(() => {
+              if (this.isActiveSwap(swapId)) {
+                this.draw(next)
+              }
+            })
 
             resolve()
           }, VIEW_TRANSITION_MS + 50)

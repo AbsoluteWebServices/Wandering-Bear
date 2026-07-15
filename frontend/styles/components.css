@@ -145,3 +145,13 @@
         margin-bottom: 1.125rem;
     }
 }
+
+.wb-section-bg {
+    background: var(--section-bg-mobile, transparent);
+}
+
+@media screen and (min-width: 1024px) {
+    .wb-section-bg {
+        background: var(--section-bg-desktop, transparent);
+    }
+}

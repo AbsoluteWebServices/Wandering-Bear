@@ -23,7 +23,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
-            "gap_tablet": 0,
+            "gap_tablet": 14,
             "gap_mobile": 12,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
@@ -370,7 +370,6 @@
           "settings": {
             "toggle_title": "COLD BREW",
             "color_scheme": "scheme-1",
-            "background_image": "shopify://shop_images/sky.png",
             "title_type": "image",
             "title": "",
             "title_alt": "",
@@ -381,12 +380,15 @@
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "BEAN QUALITY",
             "description_1": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
+            "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226584.svg",
             "title_2": "MORE COFFEE",
             "description_2": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine.",
+            "order_mobile_2": 1,
             "icon_3": "shopify://shop_images/Group_1327226583.svg",
             "title_3": "COLD BREW PROCESS",
-            "description_3": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
+            "description_3": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic",
+            "order_mobile_3": 3
           }
         },
         "view_Rg9MXG": {
@@ -394,23 +396,25 @@
           "settings": {
             "toggle_title": "LATTE",
             "color_scheme": "scheme-1",
-            "background_image": "shopify://shop_images/sky.png",
             "title_type": "image",
             "title": "",
             "title_alt": "",
             "diagram_image": "shopify://shop_images/Group_1327226582_fd7ab366-5442-4f98-887d-1f87145b9c0c.png",
             "diagram_image_mobile": "shopify://shop_images/Group_1327226582_5b7db1b4-7656-4e22-980f-65bf57dab0c6.png",
-            "text_background_color": "#F2E6DC",
+            "text_background_color": "#f2e6dc",
             "text_background_opacity": 80,
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "SUPER PREMIUM COFFEE",
             "description_1": "Made with our signature cold brew from organic, specialty-grade beans",
+            "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226584.svg",
             "title_2": "SUBTLY SWEET,NO COMPROMISE",
             "description_2": "Only 100 calories and just 5 grams of real sugar",
+            "order_mobile_2": 3,
             "icon_3": "shopify://shop_images/Group_1327226583.svg",
             "title_3": "CREAMY & PROTEIN RICH",
-            "description_3": "Ultra-filtered skim milk protein for creaminess with nutrition cred"
+            "description_3": "Ultra-filtered skim milk protein for creaminess with nutrition cred",
+            "order_mobile_3": 1
           }
         }
       },
@@ -418,8 +422,12 @@
         "view_NH6mb9",
         "view_Rg9MXG"
       ],
+      "custom_css": [
+        "@media screen and (min-width: 1024px) {.aw-diagram-toggle .wb-section-bg__image--desktop {top: -100px; }}"
+      ],
       "name": "AW Diagram Toggle",
       "settings": {
+        "background_image": "shopify://shop_images/sky.png",
         "title_type": "image",
         "title": "",
         "title_alt": "",
@@ -455,6 +463,9 @@
         "icon_item_AfiWGk",
         "icon_item_w3HbfU",
         "icon_item_bgBnVE"
+      ],
+      "custom_css": [
+        "@media screen and (min-width: 1024px) {{margin-top: -60px; }}"
       ],
       "name": "AW Image + Text Icons",
       "settings": {
@@ -577,7 +588,6 @@
       "settings": {
         "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
         "background_image": "shopify://shop_images/Group_1327226595.jpg",
-        "background_color": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
         "title_type": "image",
         "title": "",
         "title_alt": "",
@@ -587,22 +597,39 @@
         "bullet_icon": "shopify://shop_images/Crown-1.svg"
       }
     },
-    "aw_frequently_asked_questions_33izYR": {
+    "aw_frequently_asked_questions_33izYW": {
       "type": "aw-frequently-asked-questions",
+      "custom_css": [],
       "name": "AW FAQs",
       "settings": {
         "color_scheme": "",
-        "background": "",
+        "background_type": "transparent",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "linear-gradient(184deg, rgba(242, 230, 220, 1) 3%, rgba(191, 215, 233, 1) 99%)",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
         "title_type": "image",
         "title": "",
+        "title_color": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226590.svg",
         "faqs_metaobject": "96-oz-cold-brew-straight-black",
         "button_label": "",
-        "button_link": ""
+        "button_link": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
-    "products_slider_eeqjMO": {
+    "products_slider_eeqjMT": {
       "type": "products-slider",
       "blocks": {
         "heading_9RQfry": {
@@ -703,16 +730,10 @@
         "cart_product_slider_EU3AT8",
         "cart_product_slider_yPtdRp"
       ],
+      "custom_css": [],
       "name": "AW Products Slider",
       "settings": {
         "color_scheme": "",
-        "background": "",
-        "section_image": "shopify://shop_images/more-to-explore-banner.png",
-        "section_image_mobile": "shopify://shop_images/more-to-explore-banner-mobile.png",
-        "section_image_fit": "full-width",
-        "section_image_vertical_align": "center",
-        "section_image_vertical_align_tablet": "bottom",
-        "section_image_vertical_align_mobile": "bottom",
         "section_width": "page-width",
         "layout_type": "slider",
         "slides_per_view_mobile": "2.25",
@@ -747,7 +768,7 @@
     "aw_guarantee_banner_GxEGrE",
     "okendo_reviews_widget_PUYwdd",
     "aw_member_comparison_EAjQ8s",
-    "aw_frequently_asked_questions_33izYR",
-    "products_slider_eeqjMO"
+    "aw_frequently_asked_questions_33izYW",
+    "products_slider_eeqjMT"
   ]
 }

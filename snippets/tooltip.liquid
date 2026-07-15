@@ -1,17 +1,28 @@
+{%- comment -%}
+  @param content {string} Tooltip body
+  @param class {string} [optional] Classes on root
+  @param style {string} [optional] Inline styles on root
+  @param badge {boolean} [optional] Compact trigger (no extra padding)
+  @param label {string} [optional] HTML rendered before the info icon — when set, the whole trigger (label + icon) toggles the tooltip
+{%- endcomment -%}
 
 <div
   x-data="tooltip()"
   @click.outside="open = false"
   class="relative inline-block {{ class }}"
+  {% if style != blank %}style="{{ style }}"{% endif %}
 >
   <!-- trigger -->
   <div
     x-ref="trigger"
     @mouseenter="showTooltip()"
     @mouseleave="hideTooltip()"
-    @click="toggleTooltip()"
-    class="cursor-pointer {% unless badge %} p-2 -m-2 {% endunless %}"
+    @click.prevent.stop="toggleTooltip()"
+    class="cursor-pointer {% if label != blank %}flex items-center justify-center gap-0.5{% elsif badge %}{% else %}p-2 -m-2{% endif %}"
   >
+    {% if label != blank %}
+      {{ label }}
+    {% endif %}
     {% render 'icons', icon: 'info', class: 'min-w-3' %}
   </div>
 
