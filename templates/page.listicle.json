@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -12,18 +21,29 @@
           }
         }
       },
-      "block_order": ["cta"],
+      "block_order": [
+        "cta"
+      ],
       "settings": {
+        "color_scheme": "",
+        "image": "shopify://shop_images/hero.png",
         "title": "COLD BREW > HOT TAKES",
         "subtitle": "Temperatures don't dictate taste. Coffee indulgence without the sugar, crash, or compromise.",
-        "text_color": "#431A03",
+        "text_color": "#431a03",
         "font_size": 45,
         "font_size_mobile": 35,
         "subtitle_font_size": 18,
         "subtitle_font_size_mobile": 18,
         "background_type": "gradient",
-        "background_gradient": "linear-gradient(180deg, #F2E6DC 0%, #AF7404 100%)",
-        "background_type_mobile": "same"
+        "background_solid": "#f2e6dc",
+        "background_gradient": "linear-gradient(180deg, rgba(242, 230, 220, 1), rgba(175, 116, 4, 1) 100%)",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "",
+        "background_gradient_mobile": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "reviews": {
@@ -54,19 +74,28 @@
           }
         }
       },
-      "block_order": ["r1", "r2", "r3", "r4"],
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
       "settings": {
+        "color_scheme": "",
         "title": "Over 16,000 5 Star Reviews",
-        "title_color": "#F4ECE5",
+        "title_color": "#f4ece5",
         "font_size": 25,
         "font_size_mobile": 25,
-        "card_background": "#E6CDB7",
-        "card_text_color": "#431A03",
+        "card_background": "#e6cdb7",
+        "card_text_color": "#431a03",
         "show_navigation": true,
         "show_dots": true,
         "background_type": "gradient",
-        "background_gradient": "linear-gradient(180deg, #391704 0%, #955325 100%)",
+        "background_solid": "#431a03",
+        "background_gradient": "linear-gradient(180deg, rgba(57, 23, 4, 1), rgba(149, 83, 37, 1) 100%)",
         "background_type_mobile": "same",
+        "background_solid_mobile": "",
+        "background_gradient_mobile": "",
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-block-start-mobile": 32,
@@ -81,7 +110,11 @@
           "settings": {
             "title": "DRINK COFFEE,\\bNOT CALORIES",
             "body": "<p>All flavor, no sugar rush. We use just organic coffee and filtered water, so you get rich, bold taste without the empty calories.</p><p>Strong enough for long days. Smooth enough for easy mornings.</p>",
-            "image_side": "auto"
+            "image_side": "auto",
+            "image": "shopify://shop_images/item-1-drink-coffee.png",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "secondary-gold"
           }
         },
         "i2": {
@@ -89,7 +122,11 @@
           "settings": {
             "title": "TASTY FLAVORS,\\bZERO GUILT",
             "body": "<p>From Straight Black to fan-favorite flavors, every sip tastes indulgent - but it's still 100% coffee.</p><p>Tastes decadent, feels energizing, and behaves better than your dessert latte.</p>",
-            "image_side": "auto"
+            "image_side": "auto",
+            "image": "shopify://shop_images/item-2-tasty-flavors.png",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "secondary-gold"
           }
         },
         "i3": {
@@ -97,30 +134,103 @@
           "settings": {
             "title": "LIVE LONGER\\bAND HEALTHIER",
             "body": "<p>According to a study of over 170,000 people, those who drank 1.5-3.5 cups of coffee per day were up to 30% less likely to die than those who didn't.</p><p>So feel good about that morning coffee...and better about your second morning coffee...and fantastic about your afternoon coffee. You're going to live forever.</p>",
-            "image_side": "auto"
+            "image_side": "auto",
+            "image": "shopify://shop_images/item-3-live-longer.png",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "secondary-gold"
           }
         }
       },
-      "block_order": ["i1", "i2", "i3"],
+      "block_order": [
+        "i1",
+        "i2",
+        "i3"
+      ],
       "settings": {
+        "color_scheme": "",
         "show_numbers": true,
         "starting_number": 1,
-        "text_color": "#431A03",
+        "text_color": "#431a03",
         "font_size": 45,
         "font_size_mobile": 45,
         "background_type": "color",
-        "background_solid": "#F2E6DC",
-        "background_type_mobile": "same"
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "logo_wall": {
       "type": "aw-logo-wall",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "logo_bqbeBN": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-5.png",
+            "hide_on_mobile": false,
+            "max_width": "165",
+            "max_width_mobile": "128"
+          }
+        },
+        "logo_gAdXrx": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-1_8f883ae7-a2f9-4863-aca9-7299e7d72b76.png",
+            "hide_on_mobile": false,
+            "max_width": "101",
+            "max_width_mobile": "80"
+          }
+        },
+        "logo_PG9Uzh": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-4_f89ffb5e-c07a-4ddb-8490-0ee0b4cce935.png",
+            "hide_on_mobile": false,
+            "max_width": "179",
+            "max_width_mobile": "122"
+          }
+        },
+        "logo_KHHzVL": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-3_95ab9dd9-43e9-4d30-a53d-dcdec39ee189.png",
+            "hide_on_mobile": false,
+            "max_width": "173",
+            "max_width_mobile": ""
+          }
+        },
+        "logo_TyE9A9": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-2_4485c334-ff30-4f71-8c4d-271a081171ff.png",
+            "hide_on_mobile": false,
+            "max_width": "198",
+            "max_width_mobile": "124"
+          }
+        }
+      },
+      "block_order": [
+        "logo_bqbeBN",
+        "logo_gAdXrx",
+        "logo_PG9Uzh",
+        "logo_KHHzVL",
+        "logo_TyE9A9"
+      ],
       "settings": {
+        "button_text": "",
+        "button_url": "",
         "background_type": "color",
-        "background_solid": "#BFD7E9",
-        "background_type_mobile": "same"
+        "background_solid": "#bfd7e9",
+        "background_gradient": "",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "",
+        "background_gradient_mobile": ""
       }
     },
     "listicle_2": {
@@ -131,7 +241,11 @@
           "settings": {
             "title": "STAYS FRESH\\b& POURS EASY",
             "body": "<p>Our boxed cold brew stays fresh in the fridge for up to 30 days after opening.</p><p>Just pop the tap, pour over ice, and sip away - no blender, no mess, no drama.</p>",
-            "image_side": "auto"
+            "image_side": "auto",
+            "image": "shopify://shop_images/item-4-stays-fresh.png",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "secondary-gold"
           }
         },
         "i5": {
@@ -140,24 +254,42 @@
             "title": "100% HAPPINESS\\bGUARANTEED",
             "body": "<p>If you don't love it, we'll make it right. No Scrooges required.</p><p>Strong coffee, smooth service, and good vibes all around.</p>",
             "image_side": "auto",
+            "image": "shopify://shop_images/item-5-happiness.png",
             "button_label": "SHOP NOW",
             "button_link": "/collections/all",
             "button_style": "secondary-gold"
           }
         }
       },
-      "block_order": ["i4", "i5"],
+      "block_order": [
+        "i4",
+        "i5"
+      ],
       "settings": {
+        "color_scheme": "",
         "show_numbers": true,
         "starting_number": 4,
-        "text_color": "#431A03",
+        "text_color": "#431a03",
         "font_size": 45,
         "font_size_mobile": 45,
         "background_type": "color",
-        "background_solid": "#F2E6DC",
-        "background_type_mobile": "same"
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     }
   },
-  "order": ["hero", "reviews", "listicle_1", "logo_wall", "listicle_2"]
+  "order": [
+    "hero",
+    "reviews",
+    "listicle_1",
+    "logo_wall",
+    "listicle_2"
+  ]
 }
