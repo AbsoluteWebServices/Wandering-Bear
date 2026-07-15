@@ -17,10 +17,10 @@
 
 <div class="relative overflow-hidden wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style' %} {{ wall_styles }}">
     {% render 'section-background', settings: section.settings, part: 'media' %}
-    <div class="container aw-logo-wall__inner relative z-[1] max-w-[1132px] flex flex-col mx-auto !gap-[30px]{% if section.settings.grayscale %} aw-logo-wall--grayscale{% endif %}">
-        <div class="max-w-[380px] sm:max-w-[450px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full gap-7 smd:!gap-0">
+    <div class="container aw-logo-wall__inner relative z-[1] max-w-[1132px] flex flex-col mx-auto !gap-[30px]{% if section.settings.grayscale %} aw-logo-wall--grayscale{% endif %}{% if section.settings.mobile_per_row == '3' %} aw-logo-wall--mobile-3{% endif %}">
+        <div class="aw-logo-wall__row max-w-[380px] sm:max-w-[450px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full gap-7 smd:!gap-0">
             {% for block in section.blocks %}          
-                <div class="
+                <div class="aw-logo-wall__cell
                 {% if block.settings.hide_on_mobile %} hidden md:flex {% endif %} w-[128px] sm:w-[200px] h-[58px] md:!h-[72px] flex items-center justify-center">
                     {% assign class = 'object-contain !max-h-full !w-auto !h-auto  logo-' | append: block.id %}
                     {{ block.settings.image | image_url: width: 400 | image_tag: class: class, alt: block.settings.image.alt }}
@@ -58,6 +58,24 @@
         }
     }
 
+    /* Three per row below 480px. The default cell is 128px and the gap 28px, so three would
+       need 440px and wrap to 2+2+1. Narrowing the gap and sizing the cell off the row lets the
+       logos sit three-up AND grow. Opt-in, because the homepage and listicle want the 2-up default. */
+    @media screen and (max-width: 479px) {
+        .aw-logo-wall--mobile-3 .aw-logo-wall__row {
+            gap: 12px;
+            /* The row runs edge to edge at 375, so without this the outer logos touch the
+               screen. Figma insets them (row spans 33…344). */
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .aw-logo-wall--mobile-3 .aw-logo-wall__cell {
+            width: calc((100% - 24px) / 3);
+        }
+    }
+
+
     /* Figma renders the press logos monochrome; the homepage keeps them in brand colour. */
     .aw-logo-wall--grayscale img {
         filter: grayscale(1);
@@ -84,6 +102,17 @@
       "label": "Grayscale logos",
       "info": "Figma shows the press logos monochrome on the listicle. Off keeps brand colour.",
       "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_per_row",
+      "label": "Logos per row on mobile",
+      "info": "Under 480px. Three-up needs a tighter gap, so the logos also get a little more room.",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "2"
     },
     {
       "type": "header",

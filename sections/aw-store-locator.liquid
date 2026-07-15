@@ -38,7 +38,7 @@
   <div class="relative z-[1]">
     <div
       id="{{ s.container_id | default: 'wb-store-locator' }}"
-      class="wb-store-locator__frame mx-auto w-full px-0.5 smd:!px-6"
+      class="wb-store-locator__frame mx-auto w-full"
     >
       {% if has_blocks %}
         {% content_for 'blocks' %}
@@ -58,6 +58,13 @@
   /* The widget is a third party's markup — make sure it actually fills the frame. */
   .wb-store-locator__frame > * {
     width: 100%;
+  }
+
+  /* The Store Locators app pads its own root by 28px, which eats into the frame. The app has
+     paddingTop/Bottom/Left/Right settings for this — zeroing them in the theme editor is the
+     tidy fix; this override just makes the frame the single source of width either way. */
+  .wb-store-locator__frame #storelocators_root {
+    padding: 0 !important;
   }
 
   .wb-store-locator__frame iframe {
