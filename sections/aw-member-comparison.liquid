@@ -113,7 +113,7 @@
                         {% endif %}
                     {% elsif title_type == 'text' %}
                         {% if title != blank %}
-                            <span class="h1 md:mb-8 title-text leading-[1.2]" style="color: {{ title_color }}; {{ title_styles }}">{{ title }}</span>
+                            <span class="h1 md:mb-8 title-text text-center leading-[1.2]" style="color: {{ title_color }}; {{ title_styles }}">{{ title | replace: '\n', '<br/>' }}</span>
                         {% endif %}
                     {% endif %}
                 </div>
@@ -360,6 +360,7 @@
       "type": "text",
       "id": "title",
       "label": "Title",
+      "info": "Use \\n to add a line break.",
       "visible_if": "{{ section.settings.title_type == 'text' }}"
     },
     {

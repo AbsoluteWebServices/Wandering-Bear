@@ -465,7 +465,7 @@
         "icon_item_bgBnVE"
       ],
       "custom_css": [
-        "@media screen and (min-width: 1024px) {{margin-top: -60px; }}"
+        "@media screen and (min-width: 1024px) {{margin-top: -74px; }}"
       ],
       "name": "AW Image + Text Icons",
       "settings": {

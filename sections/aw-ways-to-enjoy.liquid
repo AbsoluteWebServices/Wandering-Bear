@@ -16,6 +16,43 @@
     [data-step-title].active {
         background: var(--color-beige);
     }
+
+    .recipe-media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .recipe-media .video-wrapper {
+        .icon-play,
+        .icon-pause {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover {
+            .icon-play,
+            .icon-pause {
+                opacity: 1;
+            }
+        }
+    }
+
+    .recipe-media .icon-play,
+    .recipe-media .icon-pause {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        z-index: 2;
+        pointer-events: none;
+
+        svg {
+            height: 80px !important;
+            width: 80px !important;
+        }
+    }
 {% endstyle %}
 
 {% capture menu %}
@@ -29,8 +66,8 @@
                 %}
 
                 <div class="wb-flex min-w-[104px] grow bg-foam border-2 border-espresso rounded-[30px] p-1.25 md:mb-5 lg:p-1.5 lg:flex-1 lg:basis-0">
-                    <div @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} w-full flex justify-center items-center px-1 sm:px-1.25 py-3 rounded-[30px] cursor-pointer font-gothic_condensed font-bold text-base uppercase leading-[22px] tracking-[1%] text-center"
-                    :class="{ 'active': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
+                    <div @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} w-full flex justify-center items-center px-1 sm:px-1.25 py-3 rounded-[30px] cursor-pointer font-gothic_condensed font-bold text-base uppercase leading-[22px] tracking-[1%] text-center transition-all duration-300 hover:bg-cream"
+                    :class="{ 'active pointer-events-none': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
                         <span>{{ title }}</span>
                     </div>
                 </div>
@@ -98,12 +135,58 @@
             {% liquid 
                 assign metaobject = block.settings.metaobject
                 assign title_handleize = block.settings.title | handleize
-                assign image = metaobject.image
+                assign media = metaobject.image.value
+                assign is_video = false
+                if media.sources != blank
+                    assign is_video = true
+                endif
             %}
 
-            <div class="wb-flex justify-center mt-5" x-cloak x-show="activeTitle === '{{ title_handleize }}'" x-cloak>
-                <div class="px-4.5 w-full mx-auto smd:px-0 smd:mx-0 smd:max-w-[339px]">
-                    {{ image | image_url: width: 1000 | image_tag }}
+            <div class="wb-flex justify-center mt-5" x-cloak x-show="activeTitle === '{{ title_handleize }}'">
+                <div class="recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]">
+                    {% if is_video %}
+                        <div x-data="VideoPlayer()" class="recipe-video relative overflow-hidden rounded-[10px] max-h-[488px] shadow-[0_4px_4px_0_rgba(0,0,0,0.25)]">
+                            <div @click="toggleSound()" class="absolute bottom-5 left-5 z-5 cursor-pointer">
+                                <span class="visually-hidden">Toggle Sound</span>
+                                <div class="flex items-center justify-center h-6 w-6 rounded-full bg-[rgba(249,222,88,0.7)] text-white">
+                                    <div class="w-6 h-6 flex items-center justify-center">
+                                        <span x-show="videoMuted" x-cloak class="block">
+                                            {% render 'icons', icon: 'mute' class: 'w-5 h-auto mt-1 -ml-0.5' %}
+                                        </span>
+                                        <span x-show="!videoMuted" x-cloak class="block">
+                                            {% render 'icons', icon: 'unmute' class: 'w-5 h-auto mt-1' %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div @click="togglePlay()" class="video-wrapper h-full max-h-[488px] w-full relative wb-flex justify-center items-center group">
+                                <span class="icon-play hidden">
+                                    {{- 'icon-play.svg' | inline_asset_content -}}
+                                </span>
+                                <span class="icon-pause">
+                                    {{- 'icon-pause.svg' | inline_asset_content -}}
+                                </span>
+                                {% for source in media.sources %}
+                                    {% if source.mime_type == 'video/mp4' %}
+                                        <video
+                                            class="h-full w-full object-cover cursor-pointer"
+                                            autoplay
+                                            muted
+                                            loop
+                                            playsinline
+                                            webkit-playsinline
+                                            preload="auto"
+                                        >
+                                            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                                        </video>
+                                        {% break %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {{ media | image_url: width: 1000 | image_tag: class: 'w-full h-full object-cover rounded-[5px]' }}
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
@@ -115,11 +198,11 @@
 
     <div class="wb-flex justify-between w-full max-w-[966px] mx-auto relative z-[2]">
         <div class="wb-flex flex-col-reverse items-center lg:flex-row justify-between w-full">
-            <div>
+            <div class="w-full lg:w-auto">
                 {{ recipe_image }}
             </div>
             <div class="wb-flex flex-col  justify-center items-center px-3.5 md:px-6">
-                <h2 class="text-[35px]/none font-extrabold text-center uppercase font-gothic_condensed md:text-[55px] leading-[61px] tracking-[1%]">{{ section.settings.title }}</h2>
+                <h2 class="text-[35px]/none font-extrabold font-(family-name:--font-kurdis-condensed) md:font-(family-name:--font-gothic_condensed) text-center uppercase md:text-[55px] leading-[61px] tracking-[1%] lg:mb-3">{{ section.settings.title | replace: '\n', '<br/>' }}</h2>
                 {{ recipe_text }}
                 {{ menu }}
                 <div class="hidden lg:!block">
@@ -129,7 +212,6 @@
         </div>
     </div>
 </div>
-
 
 {% schema %}
 {
@@ -284,7 +366,8 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Title"
+      "label": "Title",
+      "info": "Use \\n to add a line break."
     },
     {
       "type": "header",

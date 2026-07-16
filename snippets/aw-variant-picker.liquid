@@ -232,10 +232,11 @@
           {% endif %}
           "price": {{ price | json }},
           {% if compare_at_price and quantified %}
-            "compare_at_price": {{ compare_at_price | divided_by: quantified_units | json }}
+            "compare_at_price": {{ compare_at_price | divided_by: quantified_units | json }},
           {% elsif compare_at_price %}
-            "compare_at_price": {{ compare_at_price | json }}
+            "compare_at_price": {{ compare_at_price | json }},
           {% endif %}
+          "featured_media_position": {{ variant.featured_media.position | default: 1 | json }}
           {% if one_month_allocation != blank %}
             ,
             "selling_plan_id": {{ one_month_allocation.selling_plan.id | json }},

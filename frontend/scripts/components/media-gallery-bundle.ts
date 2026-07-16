@@ -191,6 +191,17 @@ export default (Alpine: typeof AlpineType) => {
 
         window.addEventListener('product-changed', onProductChanged)
 
+        window.addEventListener('gallery-slide-to', ((event: CustomEvent) => {
+          const position = event.detail?.position
+          if (position != null && this.swiper) {
+
+            const slideIndex = position - 1
+            if (slideIndex >= 0) {
+              this.swiper.slideToLoop(slideIndex)
+            }
+          }
+        }) as EventListener)
+
         this._initSwiper()
         this._bindResizeObserver()
         await this.settleGalleryHeight(true)

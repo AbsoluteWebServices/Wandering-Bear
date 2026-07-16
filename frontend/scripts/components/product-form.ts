@@ -19,6 +19,7 @@ export default (Alpine: AlpineType) => {
         purchaseOption: 'autoship',
         sellingPlanId: sellingPlanId,
         modal: null,
+        basePrice: 0, // compare_at_price or price of first variant (for volume discount calculation)
 
         get addToCartText() {
             return this.selectedVariant?.available ? 'Add to bag' : 'Sold Out';
@@ -38,18 +39,28 @@ export default (Alpine: AlpineType) => {
               original: this._formatPrice(unitPrice * quantity),
               autoship: this._formatPrice(unitAutoshipPrice * quantity),
               oneTime: this._formatPrice(unitPrice * quantity),
+              base: this._formatPrice(this.basePrice * quantity), // first variant's price for OTP discount display
             }
           },
 
         get currentSavingsAmount() {
             const variant = this.selectedVariant;
-
-            if (this.purchaseOption !== 'autoship' || variant?.selling_plan_price == null) {
-                return 0;
-            }
+            if (!variant) return 0;
 
             const quantity = this._getCartQuantity(variant);
-            return (variant.price - variant.selling_plan_price) * quantity;
+
+            if (this.purchaseOption === 'autoship') {
+                if (variant.selling_plan_price == null) return 0;
+                // Autoship: savings = basePrice - selling_plan_price (full discount: volume + subscription)
+                return (this.basePrice - variant.selling_plan_price) * quantity;
+            }
+
+            // OTP: savings = basePrice - current variant price (volume discount only)
+            if (this.basePrice > variant.price) {
+                return (this.basePrice - variant.price) * quantity;
+            }
+
+            return 0;
         },
 
         get currentSavingsAmountFormatted() {
@@ -148,6 +159,13 @@ export default (Alpine: AlpineType) => {
         init() {
             this.productObject = JSON.parse(this.$refs.productObject.textContent);
 
+            // Get first variant's compare_at_price or price as base for volume discount calculation
+            const variants = Object.values(this.productObject) as any[];
+            if (variants.length > 0) {
+                const firstVariant = variants[0];
+                this.basePrice = firstVariant.compare_at_price || firstVariant.price || 0;
+            }
+
             Object.values(this.productObject).forEach((variant: any) => {
                 variant.currentPrice = variant.price;
                 variant.currentPriceFormatted = this._formatPrice(variant.price);
@@ -168,6 +186,13 @@ export default (Alpine: AlpineType) => {
             window.addEventListener('variant-changed', () => {
                 this._syncSelectedVariant();
                 this.updatePrices();
+
+                const mediaPosition = this.selectedVariant?.featured_media_position;
+                if (mediaPosition) {
+                    window.dispatchEvent(new CustomEvent('gallery-slide-to', {
+                        detail: { position: mediaPosition }
+                    }));
+                }
             });
 
             window.addEventListener('pageshow', (event: PageTransitionEvent) => {

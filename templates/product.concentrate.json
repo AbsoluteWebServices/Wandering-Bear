@@ -23,7 +23,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
-            "gap_tablet": 0,
+            "gap_tablet": 14,
             "gap_mobile": 14,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
@@ -35,7 +35,7 @@
             "border_width": 1,
             "border_opacity": 100,
             "border_radius": 0,
-            "padding-block-start": 24,
+            "padding-block-start": 4,
             "padding-block-end": 24,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
@@ -114,8 +114,8 @@
                   "type": "product-title-bundle",
                   "name": "Product Title Bundle",
                   "settings": {
-                    "product_title": "Cold Brew Box",
-                    "product_title_small": "1 Gallon"
+                    "product_title": "CONCENTRATE",
+                    "product_title_small": "32 oz"
                   },
                   "blocks": {}
                 },
@@ -274,13 +274,23 @@
       "name": "AW Product Value Props",
       "settings": {
         "background_image": "shopify://shop_images/bg-image-blue-tile.png",
-        "color_scheme": "",
-        "line_color": "#8fb4d9",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
+        "line_color": "#75BDF4",
         "arc_strength": 16,
         "crown_icon": "shopify://shop_images/Crown_56282b3e-67e8-4242-99b0-ad6531be14e5.svg",
         "title": "3:1 COLD BREW CONCENTRATE",
         "subtitle": "A powered-up version of the Wandering Bear you love. Made with organic, specialty-grade Arabica beans, this cold brew concentrate is versatile and easy to customize, perfect for smoothies, lattes, or cocktails.",
-        "product_image": "shopify://shop_images/image_82_bbaa03e3-15ec-4c02-a286-963e6918d06b.png"
+        "product_image": "shopify://shop_images/image_82_bbaa03e3-15ec-4c02-a286-963e6918d06b.png",
+        "padding-block-start": 72,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 40,
+        "padding-block-end-mobile": 0
       }
     },
     "aw_how_to_bfhKzP": {
@@ -307,9 +317,23 @@
       ],
       "name": "How To Prepare",
       "settings": {
+        "background_type": "transparent",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
         "title": "How To Mix",
         "image": "shopify://shop_images/how-to-image.png",
-        "icon": "shopify://shop_images/32oz_bear.svg"
+        "icon": "shopify://shop_images/32oz_bear.svg",
+        "padding-block-start": 64,
+        "padding-block-end": 30,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 20
       }
     },
     "aw_ways_to_enjoy_tp6jab": {
@@ -473,13 +497,27 @@
       "settings": {
         "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
         "background_image": "shopify://shop_images/Group_1327226595.jpg",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "gradient",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
         "title_type": "image",
         "title": "",
+        "title_color": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_MORE_WITH_EVERY_SIP....svg",
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
-        "bullet_icon": "shopify://shop_images/Crown-1.svg"
+        "bullet_icon": "shopify://shop_images/Crown-1.svg",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "aw_frequently_asked_questions_33izYW": {
@@ -500,6 +538,7 @@
         "background_image_overflow_mobile": false,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",

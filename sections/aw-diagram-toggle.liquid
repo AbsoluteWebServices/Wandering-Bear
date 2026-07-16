@@ -31,7 +31,9 @@
             {% endif %}
         {% elsif title_type == 'text' %}
             {% if title != blank %}
-                <span class="h1 mb-8 title-text leading-[1.2]"{% if title_color != blank %} style="color: {{ title_color }}; {{ title_styles }}"{% else %} style="{{ title_styles }}"{% endif %}>{{ title }}</span>
+                <span class="h1 mb-8 title-text text-center leading-[1.2]"{% if title_color != blank %} style="color: {{ title_color }}; {{ title_styles }}"{% else %} style="{{ title_styles }}"{% endif %}>
+                  {{ title | replace: '\n', '<br/>' }}
+                </span>
             {% endif %}
         {% endif %}
 
@@ -216,7 +218,7 @@
 
                 {% if title != blank and title_type == 'text' %}
                     <div class="wb-flex flex-col mx-auto relative z-[1]">
-                        <span class="h1 mb-8 title-text leading-[1.2]" style="color: {{ title_color }}; {{ block_title_styles }}">{{ title }}</span>
+                        <span class="h1 mb-8 title-text text-center leading-[1.2]" style="color: {{ title_color }}; {{ block_title_styles }}">{{ title | replace: '\n', '<br/>' }}</span>
                     </div>
                 {% endif %}
 
@@ -537,6 +539,7 @@
       "type": "text",
       "id": "title",
       "label": "Title",
+      "info": "Use \\n to add a line break.",
       "visible_if": "{{ section.settings.title_type == 'text' }}"
     },
     {
@@ -671,6 +674,7 @@
           "type": "text",
           "id": "title",
           "label": "Title",
+          "info": "Use \\n to add a line break.",
           "visible_if": "{{ block.settings.title_type == 'text' }}"
         },
         {
@@ -723,12 +727,12 @@
         {
           "type": "image_picker",
           "id": "diagram_image",
-          "label": "Diagram Image"
+          "label": "Product image"
         },
         {
           "type": "image_picker",
           "id": "diagram_image_mobile",
-          "label": "Diagram Image Mobile / Tablet",
+          "label": "Product image Mobile / Tablet",
           "info": "Used up to 1279px wide. Desktop image from 1280px."
         },
         {

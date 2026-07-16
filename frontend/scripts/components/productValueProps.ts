@@ -55,6 +55,12 @@ export default (Alpine: AlpineType) => {
       const bcy = b.top + b.height / 2 - s.top
       const gap = 10
 
+      // Collect icons by side to identify middle ones
+      const leftIcons = Array.from(root.querySelectorAll<HTMLElement>('[data-icon][data-side="left"]'))
+      const rightIcons = Array.from(root.querySelectorAll<HTMLElement>('[data-icon][data-side="right"]'))
+      const middleLeftIndex = Math.floor(leftIcons.length / 2)
+      const middleRightIndex = Math.floor(rightIcons.length / 2)
+
       let d = ''
       root.querySelectorAll<HTMLElement>('[data-icon]').forEach((icon) => {
         const r = icon.getBoundingClientRect()
@@ -71,15 +77,36 @@ export default (Alpine: AlpineType) => {
           ex = b.right - s.left + gap
         }
 
-        // Endpoint aims straight at the bottle's centre → radial fan.
-        const t = (ex - sx) / (bcx - sx)
-        const ey = sy + (bcy - sy) * t
         const dx = ex - sx
+        
+        // Check if this is a middle icon
+        const isMiddleLeft = side === 'left' && leftIcons.indexOf(icon) === middleLeftIndex
+        const isMiddleRight = side === 'right' && rightIcons.indexOf(icon) === middleRightIndex
+        const isMiddle = isMiddleLeft || isMiddleRight
 
-        // Midpoint of the chord, bowed toward bottle centre
+        let ey: number
+        if (isMiddle) {
+          // Middle icons: endpoints on same horizontal line
+          ey = sy
+        } else {
+          // Other icons: endpoint aims at bottle's centre → radial fan
+          const t = dx / (bcx - sx)
+          ey = sy + (bcy - sy) * t
+        }
+
+        // Midpoint of the chord
         const mx = (sx + ex) / 2
         const my = (sy + ey) / 2
-        const bow = (bcy - my) * 0.15   // tune this for arc depth
+        
+        // Bow direction: middle icons have subtle wave, others bow toward bottle
+        let bow: number
+        if (isMiddleRight) {
+          bow = -8  // slight curve up
+        } else if (isMiddleLeft) {
+          bow = 8   // slight curve down
+        } else {
+          bow = (bcy - my) * 0.15  // normal: toward bottle centre
+        }
 
         // Quadratic control point
         const qx = mx

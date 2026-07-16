@@ -13,14 +13,13 @@
         endif
     endfor
 %}
-{% style %}
-    [data-step-title].active {
-        background: var(--color-beige);
-    }
-{% endstyle %}
 
 {% capture menu %}
-    <div class="wb-flex gap-0.5 bg-foam border-2 border-espresso rounded-[30px] p-1.5 w-fit mb-9">
+    <div class="relative wb-flex gap-0.5 bg-foam border-2 border-espresso rounded-[30px] p-1.5 w-fit mb-9" x-ref="toggle">
+        <div
+            class="absolute top-1.5 bottom-1.5 z-1 rounded-[25px] bg-[#E6CDB7] transition-all duration-300 ease-out"
+            :style="indicatorStyle"
+        ></div>
         {% for block in section.blocks %}
             {% if block.type == 'how-to-mix' %}
                 {% liquid 
@@ -30,11 +29,14 @@
                 %}
 
                 <div
-                    @click="setActive('{{ title_handleize }}')" data-step-title class="{% if forloop.first %} active {% endif %} px-4 py-3 rounded-[25px] cursor-pointer font-gothic_condensed font-bold text-base leading-[22px] tracking-[1%] text-center uppercase min-w-[140px]"
-                    :class="{ 'active': activeTitle === '{{ title_handleize }}' }" data-title="{{ title_handleize }}">
+                    @click="setActive('{{ title_handleize }}')"
+                    data-step-title
+                    class="relative z-2 px-4 py-3 rounded-[25px] cursor-pointer font-gothic_condensed font-bold text-base leading-[22px] tracking-[1%] text-center uppercase min-w-[140px] transition-colors duration-300"
+                    :class="{ 'pointer-events-none': activeTitle === '{{ title_handleize }}' }"
+                    data-title="{{ title_handleize }}"
+                >
                     <span>{{ title }}</span>
                 </div>
-                
             {% endif %}
         {% endfor %}
     </div>
@@ -44,9 +46,9 @@
     {% render 'section-background', settings: section.settings, part: 'media' %}
     <div class="w-full max-w-[1099px] mx-auto relative z-[1]">
     <div class="wb-flex flex-col-reverse items-center lg:flex-row justify-between">
-        <div class="wb-flex flex-col gap-4 mt-6 px-6 w-full max-w-[440px] md:px-0">
+        <div class="wb-flex flex-col gap-4 mt-6 px-6 w-full max-w-[440px] md:px-0 xl:mt-0 xl:pb-10">
             <div class="wb-flex items-center justify-center gap-4">
-                <h2 class="text-[35px]/none font-extrabold text-center uppercase font-gothic_condensed md:text-[45px]/none leading-[61px] tracking-[1%] whitespace-nowrap">{{ section.settings.title }}</h2>
+                <h2 class="text-[35px]/none font-extrabold font-(family-name:--font-kurdis-condensed) text-center uppercase md:text-[45px]/none leading-[61px] tracking-[1%] whitespace-nowrap">{{ section.settings.title | replace: '\n', '<br/>' }}</h2>
                 {{ icon | image_url: width: 60 | image_tag: class: '!h-11 !w-fit' }}
             </div>
             <div class="wb-flex flex-col items-center">
@@ -89,7 +91,6 @@
     </div>
     </div>
 </div>
-
 
 {% schema %}
 {
@@ -244,7 +245,8 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Title"
+      "label": "Title",
+      "info": "Use \\n to add a line break."
     },
     {
       "type": "image_picker",
