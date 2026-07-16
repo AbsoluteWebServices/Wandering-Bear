@@ -227,44 +227,56 @@ class CartProductsComponent extends HTMLElement {
     }
   
     /**
-     * Changes the selling plan on the parent bundle line.
+     * Changes the selling plan on a bundle (every line) or a single cart line.
+     *
+     * Targets a bundle when the button carries `data-bundle-id`, otherwise the
+     * one line named by `data-key`. Both the frequency dropdown options and the
+     * "Upgrade to Autoship" button route through here — an upgrade is just a
+     * change to the monthly plan.
      *
      * @param {HTMLButtonElement} button
      */
     async #changeFrequency(button) {
       const bundleId = button.dataset.bundleId;
+      const lineKey = button.dataset.key;
 
-      // The parent's selected plan ('' → One Time Purchase).
+      // The clicked plan ('' → One Time Purchase).
       const parentPlanId =
         button.dataset.sellingPlanId || null;
 
       const isSubscription = Boolean(parentPlanId);
 
-      // Per-line "1 Month" plan ids, rendered on the selector. Each line must
-      // use its OWN plan; applying the parent's plan to a child variant is
-      // rejected by the cart ("Cannot apply selling plan to variant").
+      // Per-variant "1 Month" plan ids. Each line must use its OWN plan;
+      // applying the parent's plan to a child variant is rejected by the cart
+      // ("Cannot apply selling plan to variant"). The upgrade button carries the
+      // map itself since it sits outside the dropdown's selector element.
       const selector = button.closest('[data-frequency-selector]');
       const planMap = this.#parseJSON(
-        selector instanceof HTMLElement ? selector.dataset.subscriptionPlans : null,
+        button.dataset.subscriptionPlans ||
+        (selector instanceof HTMLElement ? selector.dataset.subscriptionPlans : null),
         {}
       );
 
-      if (!bundleId || this.#busy) return;
+      if ((!bundleId && !lineKey) || this.#busy) return;
 
       this.#setBusy(true);
 
       try {
         const cart = await this.#getCart();
 
-        const bundleLines = cart.items.filter(
-          (item) =>
-            String(item.properties?._bundle_id) ===
-            String(bundleId)
-        );
+        const targetLines = bundleId
+          ? cart.items.filter(
+              (item) =>
+                String(item.properties?._bundle_id) ===
+                String(bundleId)
+            )
+          : cart.items.filter((item) => item.key === lineKey);
 
-        if (!bundleLines.length) {
+        if (!targetLines.length) {
           throw new Error(
-            `Could not find any lines for bundle ${bundleId}.`
+            bundleId
+              ? `Could not find any lines for bundle ${bundleId}.`
+              : `Could not find cart line ${lineKey}.`
           );
         }
 
@@ -273,23 +285,42 @@ class CartProductsComponent extends HTMLElement {
         // producing a half-subscription bundle. All dropdown options are "1
         // Month" plans, so for a subscription each line uses its OWN mapped
         // monthly plan (a child can't accept the parent's plan); one-time drops
-        // every plan (null). Fall back to the clicked plan if a line is absent
-        // from the map.
+        // every plan (null).
+        //
+        // Requests are serial on purpose: /cart/change.js rewrites whole-cart
+        // state, so concurrent calls clobber each other. Lines already on the
+        // target plan are skipped, which is what keeps big bundles quick.
         let updatedCart;
-        for (const line of bundleLines) {
+        let firstError = null;
+
+        for (const line of targetLines) {
+          const mappedPlan = planMap[line.variant_id];
           const linePlan = isSubscription
-            ? planMap[line.key] || parentPlanId || null
+            ? mappedPlan || parentPlanId || null
             : null;
 
-          updatedCart = await this.#changeLine({
-            id: line.key,
-            quantity: line.quantity,
-            selling_plan: linePlan,
-          });
+          const currentPlan =
+            line.selling_plan_allocation?.selling_plan?.id ?? null;
+
+          if (String(currentPlan ?? '') === String(linePlan ?? '')) continue;
+
+          try {
+            updatedCart = await this.#changeLine({
+              id: line.key,
+              quantity: line.quantity,
+              selling_plan: linePlan,
+            });
+          } catch (error) {
+            // Keep going: bailing here would strand the bundle half-converted,
+            // with no way back except another click at the same broken state.
+            firstError ??= error;
+          }
         }
 
         this.#closeFrequencyDropdowns();
-        this.#dispatchCartChange(updatedCart);
+        this.#dispatchCartChange(updatedCart ?? (await this.#getCart()));
+
+        if (firstError) throw firstError;
       } catch (error) {
         this.#handleError(error);
       } finally {
@@ -444,7 +475,6 @@ class CartProductsComponent extends HTMLElement {
      * @returns {Promise<object>}
      */
     async #changeLine(change) {
-      console.log('change', change);
       const response = await fetch(
         `${window.Shopify.routes.root}cart/change.js`,
         {

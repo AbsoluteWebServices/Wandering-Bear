@@ -12,7 +12,29 @@
 
 {% liquid
   assign block_settings = block.settings
+  assign is_member = false
+  assign member_tier = ''
+
+  for tag in customer.tags
+    case tag
+      when 'inveterate-tier#72ccf378'
+        assign member_tier = 'VIP'
+      when 'inveterate-tier#dc38b982'
+        assign member_tier = 'Elite'
+      when 'inveterate-tier#99a431e2'
+        assign member_tier = 'Elite'
+    endcase
+  endfor
+  
+  for item in cart.items
+    if item.title contains 'Membership'
+      assign is_member = true
+      assign member_tier = 'Elite'
+      break
+    endif
+  endfor
 %}
+
 
 <script
   src="{{ 'component-cart-items.js' | asset_url }}"
@@ -151,17 +173,44 @@
                     {% assign bundle_line_price = item.price | times: item.quantity %}
                     {% assign original_line_price = compare_at_price | times: item.quantity %}
                     {% assign total_bundle_price = total_bundle_price | plus: bundle_line_price %}
-                    {% assign total_original_price = total_original_price | plus: item.product.variants[0].price | times: item.quantity %}
+                    {%- comment -%}
+                      item.variant, not product.variants[0]: a bundle child has one
+                      variant per size tier, so variants[0] is the smallest tier's
+                      price and allocations no matter which one is in the cart.
+                    {%- endcomment -%}
 
-                    {% for selling_plan in item.product.variants[0].selling_plan_allocations %}
+                    {% liquid
+                        assign quantified = false
+                        for tag in item.product.tags
+                          if tag contains 'custom-quantity-rule'
+                            assign quantified = true
+                            break
+                          endif
+                        endfor
+
+                        assign price = item.final_line_price
+                        if quantified
+                          assign original_price = item.product.variants[0].price | times: item.quantity
+                        elsif item.compare_at_price > item.final_line_price
+                          assign original_price = item.compare_at_price
+                        else
+                          assign original_price = item.original_line_price
+                        endif
+                        assign unit_price = item.unit_price | money
+
+                        assign variant_line_price = item.variant.price | times: item.quantity
+                        assign total_original_price = total_original_price | plus: original_price
+    
+                    %}
+
+                    {% for selling_plan in item.variant.selling_plan_allocations %}
                       {% if selling_plan.selling_plan.name contains '1 month' or selling_plan.selling_plan.name contains '1 Month' %}
-                        {% assign bundle_total_autoship_savings = bundle_total_autoship_savings | plus: item.product.variants[0].price | times: item.quantity | minus: selling_plan.per_delivery_price | times: item.quantity %}
+                        {% assign autoship_line_price = selling_plan.per_delivery_price | times: item.quantity %}
+                        {% assign line_autoship_savings = variant_line_price | minus: autoship_line_price %}
+                        {% assign bundle_total_autoship_savings = bundle_total_autoship_savings | plus: line_autoship_savings %}
                         {% break %}
                       {% endif %}
                     {% endfor %}
-
-                    {% assign bundle_total_autoship_savings_percentage = bundle_total_autoship_savings | divided_by: total_original_price | times: 100 %}
-                    {% assign bundle_total_autoship_savings_percentage = bundle_total_autoship_savings_percentage | round: 2 %}
 
                     {% assign child_title = item.properties._flavor %}
                     {% if child_title == blank %}
@@ -179,11 +228,19 @@
                             {{ child_title }}
                           </div>
                           <div class="flex items-center gap-1 font-bold text-xs">
+                            {% if item.product.variants[0].price > item.price %}
+                              <div>
+                                <s>{{ item.product.variants[0].price | money }}</s>
+                              </div>
+                            {% endif %}
                             <div>
-                              <s>{{ item.product.variants[0].price | money }}</s>
-                            </div>
-                            <div>
-                              <span class="text-kraft">{{ item.price | money }} x {{ item.quantity }}</span>
+                              <span class="
+                              {% if item.product.variants[0].price > item.price %}
+                              text-kraft
+                              {% else %}
+                              text-bear-black
+                              {% endif %}
+                              ">{{ item.price | money }} x {{ item.quantity }}</span>
                             </div>
                           </div>
                         </div>
@@ -193,7 +250,12 @@
                   {% endif %}
                 {% endfor %}
 
-                {%  liquid 
+                {% assign bundle_total_autoship_savings_percentage = 0 %}
+                {% if total_original_price > 0 %}
+                  {% assign bundle_total_autoship_savings_percentage = bundle_total_autoship_savings | times: 100.0 | divided_by: total_original_price | round: 0 | append: '%' %}
+                {% endif %}
+
+                {%  liquid
                     assign selector_value = ''
                     assign has_selling_plan = false
                     if parent_item.properties._bundle_id == bundle_id
@@ -209,34 +271,46 @@
                  {% comment %} Frequency Dropdown {% endcomment %}
 
                  {%- comment -%}
-                   Map of each bundle line key → its own "1 Month" selling plan id.
+                   Map of each bundle variant id → its own "1 Month" selling plan id.
                    Changing frequency must apply each line's OWN plan; applying the
                    parent's plan to child variants is rejected ("Cannot apply selling
                    plan to variant").
+
+                   Keyed by variant id, NOT line key: a line's key encodes its selling
+                   plan, so every plan change rekeys the line and would strand a
+                   key-based map on ids the cart no longer has. Variant ids survive.
                  {%- endcomment -%}
                  {%- capture bundle_subscription_plans -%}
                  {
                  {%- assign sub_first = true -%}
+                 {%- assign seen_variants = ',' -%}
                  {%- for line in cart.items -%}
                    {%- if line.properties._bundle_id == bundle_id -%}
-                     {%- assign line_month_plan = '' -%}
-                     {%- for spg in line.product.selling_plan_groups -%}
-                       {%- for sp in spg.selling_plans -%}
-                         {%- if sp.name contains '1 Month' or sp.name contains '1 month' -%}
-                           {%- assign line_month_plan = sp.id -%}
+                     {%- assign variant_token = line.variant_id | prepend: ',' | append: ',' -%}
+                     {%- unless seen_variants contains variant_token -%}
+                       {%- assign seen_variants = seen_variants | append: line.variant_id | append: ',' -%}
+                       {%- comment -%}
+                         Read the plan off THIS variant's allocations, not the
+                         product's selling_plan_groups. A bundle child product has
+                         one variant per size tier, each with its own monthly plan;
+                         the product's groups list them all, so taking the first
+                         one hands most variants a plan they cannot accept and the
+                         cart rejects the line.
+                       {%- endcomment -%}
+                       {%- assign line_month_plan = '' -%}
+                       {%- for allocation in line.variant.selling_plan_allocations -%}
+                         {%- if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month' -%}
+                           {%- assign line_month_plan = allocation.selling_plan.id -%}
                            {%- break -%}
                          {%- endif -%}
                        {%- endfor -%}
-                       {%- if line_month_plan != '' -%}{%- break -%}{%- endif -%}
-                     {%- endfor -%}
-                     {%- unless sub_first -%},{%- endunless -%}{{ line.key | json }}:{{ line_month_plan | json }}
-                     {%- assign sub_first = false -%}
+                       {%- unless sub_first -%},{%- endunless -%}"{{ line.variant_id }}":{{ line_month_plan | json }}
+                       {%- assign sub_first = false -%}
+                     {%- endunless -%}
                    {%- endif -%}
                  {%- endfor -%}
                  }
                  {%- endcapture -%}
-
-                 {{ bundle_total_autoship_savings }}
 
                  {% if has_selling_plan %}
                   <div
@@ -279,11 +353,15 @@
                           {%- assign current_plan_id = parent_item.selling_plan_allocation.selling_plan.id -%}
 
                           {%- comment -%} Capture each option so the currently-selected one can be rendered first. {%- endcomment -%}
+                          {%- comment -%}
+                            Options come from the parent variant's own allocations.
+                            product.selling_plan_groups spans every variant, so its
+                            ids are frequently ones this variant cannot accept.
+                          {%- endcomment -%}
                           {%- capture subscription_options -%}
-                            {% for selling_plan_group in parent_item.product.selling_plan_groups %}
-                              {% for selling_plan in selling_plan_group.selling_plans %}
+                            {% for allocation in parent_item.variant.selling_plan_allocations %}
+                              {% assign selling_plan = allocation.selling_plan %}
                                 {% assign selling_plan_name = selling_plan.name | downcase %}
-                                {% assign variant_title = parent_item.product.title | split: ' – ' | last | downcase %}
                                 {% if selling_plan_name contains '1 month' %}
                                   {% assign selling_plan_label = selling_plan.name
                                     | split: ' - '
@@ -312,7 +390,6 @@
                                     <span class="absolute bottom-0 left-0 w-full h-px bg-[#E0D2C6]"></span>
                                   </button>
                                 {% endif %}
-                              {% endfor %}
                             {% endfor %}
                           {%- endcapture -%}
 
@@ -342,12 +419,36 @@
                       </div>
                     </div>
                   {% else %}
-                    <div class="py-3.5 px-4">
-                      <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold" 
-                      data-upgrade-to-autoship>
-                        Upgrade to Autoship and Save {{ bundle_total_autoship_savings_percentage }}%
-                      </button>
-                    </div>
+                    {%- comment -%}
+                      The parent's own "1 Month" plan. Upgrading is just a
+                      change-frequency to that plan, so it reuses that handler;
+                      the plan map rides on the button because there is no
+                      [data-frequency-selector] wrapper in this branch.
+                    {%- endcomment -%}
+                    {%- assign bundle_parent_month_plan = '' -%}
+                    {%- for allocation in parent_item.variant.selling_plan_allocations -%}
+                      {%- if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month' -%}
+                        {%- assign bundle_parent_month_plan = allocation.selling_plan.id -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+
+                    {% if bundle_parent_month_plan != '' %}
+                      <div class="py-3.5 px-4">
+                        <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                        data-upgrade-to-autoship
+                        data-action="change-frequency"
+                        data-bundle-id="{{ bundle_id | escape }}"
+                        data-selling-plan-id="{{ bundle_parent_month_plan }}"
+                        data-subscription-plans="{{ bundle_subscription_plans | strip | escape }}">
+                          Upgrade to Autoship and Save 
+                          
+                          {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
+                            {{ bundle_total_autoship_savings_percentage }}
+                          {% endunless %}
+                        </button>
+                      </div>
+                    {% endif %}
                   {% endif %}
 
                   <div class="flex items-center justify-between relative p-4">
@@ -371,7 +472,9 @@
                     </button>
                   {% comment %} Total bundle price {% endcomment %}
                   <div class="flex items-center gap-1">
-                    <span class="text-sm line-through text-[#1B1B1B80] font-bold">{{ total_original_price | money }}</span>
+                    {% if total_original_price > total_bundle_price %}
+                      <span class="text-sm line-through text-[#1B1B1B80] font-bold">{{ total_original_price | money }}</span>
+                    {% endif %}
                     <span class="text-sm font-bold text-bear-black">{{ total_bundle_price | money }}</span>
                   </div>
                 </div>
@@ -456,6 +559,50 @@
                 endif
                 assign unit_price = item.unit_price | money
               %}
+
+              {%- comment -%}
+                Per-line subscription state. These used to read the bundle loop's
+                leftovers (has_selling_plan / selector_value / parent_item /
+                bundle_id), so every non-bundle row inherited the last bundle's
+                state and targeted that bundle's lines.
+              {%- endcomment -%}
+              {%- liquid
+                assign item_has_selling_plan = false
+                assign item_selector_value = 'One Time Purchase'
+                assign item_current_plan_id = ''
+
+                if item.selling_plan_allocation != null
+                  assign item_has_selling_plan = true
+                  assign item_selector_value = item.selling_plan_allocation.selling_plan.name | split: ' - ' | first
+                  assign item_current_plan_id = item.selling_plan_allocation.selling_plan.id
+                endif
+
+                comment
+                  Per-variant allocations, not product.selling_plan_groups: the
+                  groups span every variant, so the first monthly plan there is
+                  often one this variant cannot accept.
+                endcomment
+                assign item_month_plan = ''
+                for allocation in item.variant.selling_plan_allocations
+                  if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month'
+                    assign item_month_plan = allocation.selling_plan.id
+                    break
+                  endif
+                endfor
+
+                assign item_autoship_savings_percentage = 0
+                for allocation in item.variant.selling_plan_allocations
+                  if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month'
+                    assign item_full_price = item.variant.price | times: item.quantity
+                    assign item_autoship_price = allocation.per_delivery_price | times: item.quantity
+                    if item_full_price > 0
+                      assign item_savings = item_full_price | minus: item_autoship_price
+                      assign item_autoship_savings_percentage = item_savings | times: 100.0 | divided_by: item_full_price | round: 0 | append: '%'
+                    endif
+                    break
+                  endif
+                endfor
+              -%}
 
               <tr
                 role="row"
@@ -551,7 +698,7 @@
                      closest *-component ancestor, which here is cart-products-component
                      (not a Horizon Component), so it silently no-ops. {% endcomment %}
                   <button
-                  class="button cart-items__remove"
+                  class="button cart-items__remove !text-kraft hover:!text-gold transition-all duration-300"
                   type="button"
                   aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
                   data-action="remove-line"
@@ -569,10 +716,17 @@
                                   
                  {% comment %} Frequency Dropdown {% endcomment %}
 
+                 {%- comment -%}
+                   Subscribed lines always get the selector (so they can drop back
+                   to one-time, whatever plan they are on). Unsubscribed lines get
+                   the upgrade button, but only when a monthly plan exists to
+                   upgrade to.
+                 {%- endcomment -%}
                  {% unless item.title contains 'Membership' %}
+                 {% if item_has_selling_plan %}
                  <div
                  data-frequency-selector
-                 data-bundle-id="{{ bundle_id | escape }}"
+                 data-key="{{ item.key }}"
                  class="flex justify-center w-full bg-[#F9F3ED]"
                >
                  <div class="relative w-full px-4 py-3">
@@ -582,11 +736,11 @@
                      type="button"
                      data-action="toggle-frequency"
                      aria-expanded="false"
-                     aria-controls="bundle-frequency-{{ bundle_id | handleize }}"
+                     aria-controls="line-frequency-{{ item.key | handleize }}"
                      class="relative cursor-pointer text-left flex items-center whitespace-nowrap font-kurdis-semi-condensed text-espresso font-bold justify-between gap-2 py-2 rounded-[2px] w-full border border-[#E0D2C6] px-4"
                    >
                      <span data-frequency class="flex items-center gap-2">
-                       {% if has_selling_plan %}
+                       {% if item_has_selling_plan %}
                          {% render 'icons',
                            icon: 'recurring',
                            class: 'text-sm inline-flex'
@@ -594,7 +748,7 @@
                        {% endif %}
 
                        <span data-frequency-label>
-                         {{ selector_value }}
+                         {{ item_selector_value }}
                        </span>
                      </span>
 
@@ -602,17 +756,21 @@
                    </button>
 
                    <div
-                     id="bundle-frequency-{{ bundle_id | handleize }}"
+                     id="line-frequency-{{ item.key | handleize }}"
                      data-frequency-dropdown
                      class="absolute top-0 left-0 min-w-48 rounded-[2px] shadow-button z-10 origin-top-left bg-[#F9F3ED] outline-none border border-[#E0D2C6] w-full"
                      hidden
                    >
-                     {%- assign current_plan_id = parent_item.selling_plan_allocation.selling_plan.id -%}
+                     {%- assign current_plan_id = item_current_plan_id -%}
 
                      {%- comment -%} Capture each option so the currently-selected one can be rendered first. {%- endcomment -%}
+                     {%- comment -%}
+                       This variant's own allocations, not the product's groups —
+                       see the bundle selector above for why.
+                     {%- endcomment -%}
                      {%- capture subscription_options -%}
-                       {% for selling_plan_group in item.product.selling_plan_groups %}
-                         {% for selling_plan in selling_plan_group.selling_plans %}
+                       {% for allocation in item.variant.selling_plan_allocations %}
+                         {% assign selling_plan = allocation.selling_plan %}
                            {% if selling_plan.name contains '1 Month'
                              or selling_plan.name contains '1 month'
                            %}
@@ -624,10 +782,10 @@
                              <button
                                type="button"
                                data-action="change-frequency"
-                               data-bundle-id="{{ bundle_id | escape }}"
+                               data-key="{{ item.key }}"
                                data-selling-plan-id="{{ selling_plan.id }}"
                                data-selling-plan-name="{{ selling_plan_label | escape }}"
-                               {% if has_selling_plan and selling_plan.id == current_plan_id %}aria-current="true"{% endif %}
+                               {% if item_has_selling_plan and selling_plan.id == current_plan_id %}aria-current="true"{% endif %}
                                class="relative cursor-pointer font-kurdis-semi-condensed text-espresso font-bold px-4 py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 gap-2 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                              >
                                {% render 'icons',
@@ -640,7 +798,6 @@
                                <span class="absolute bottom-0 left-0 w-full h-px bg-[#E0D2C6]"></span>
                              </button>
                            {% endif %}
-                         {% endfor %}
                        {% endfor %}
                      {%- endcapture -%}
 
@@ -648,10 +805,10 @@
                        <button
                          type="button"
                          data-action="change-frequency"
-                         data-bundle-id="{{ bundle_id | escape }}"
+                         data-key="{{ item.key }}"
                          data-selling-plan-id=""
                          data-selling-plan-name="One Time Purchase"
-                         {% unless has_selling_plan %}aria-current="true"{% endunless %}
+                         {% unless item_has_selling_plan %}aria-current="true"{% endunless %}
                          class="relative cursor-pointer pl-6 pr-4 font-kurdis-semi-condensed text-espresso font-bold py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                        >
                          One Time Purchase
@@ -659,7 +816,7 @@
                      {%- endcapture -%}
 
                      {%- comment -%} Selected frequency first. {%- endcomment -%}
-                     {% if has_selling_plan %}
+                     {% if item_has_selling_plan %}
                        {{ subscription_options }}
                        {{ one_time_option }}
                      {% else %}
@@ -669,6 +826,24 @@
                    </div>
                  </div>
                </div>
+               {% elsif item_month_plan != '' %}
+                 {%- comment -%}
+                   Same upgrade affordance as a bundle, targeting this one line.
+                 {%- endcomment -%}
+                 <div class="px-4 py-3 relative">
+                   <div class="absolute top-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
+                   <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                     data-upgrade-to-autoship
+                     data-action="change-frequency"
+                     data-key="{{ item.key }}"
+                     data-selling-plan-id="{{ item_month_plan }}">
+                     Upgrade to Autoship and Save
+                     {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
+                      {{ item_autoship_savings_percentage }}
+                     {% endunless %}
+                   </button>
+                 </div>
+               {% endif %}
                {% endunless %}
 
                 </td>

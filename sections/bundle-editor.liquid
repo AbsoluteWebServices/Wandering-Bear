@@ -42,10 +42,76 @@
   endif
 
   assign bundle_products = group.bundle_products.value
+  assign bundle_products_count = bundle_products.size
   assign tier_count = bundle_products.size
   assign singular = group.singular_label.value | default: group.singular_label | default: 'item'
+  assign plural = group.plural_label.value | default: group.plural_label | default: 'items'
+  assign singular_label = singular
+  assign plural_label = plural
   assign headline = group.headline.value | default: group.headline
+  assign headline_size = group.headline_size.value | default: group.headline_size | default: 'lg'
   assign group_name = group.display_name | handleize
+  assign selling_plan_keywords = group.selling_plan_keywords.value
+  assign discount_type = group.discount_type.value | default: group.discount_type | default: 'percentage'
+  assign col_width = 70
+  assign multi_unit_product = false
+  assign multi_unit_quantity = 0
+  assign multi_unit_product_unit = ''
+
+  if group.multi_unit_product_quantity != blank and group.multi_unit_product_quantity > 1
+    assign multi_unit_product = true
+    assign multi_unit_quantity = group.multi_unit_product_quantity
+    assign multi_unit_product_unit = group.multi_unit_product_unit
+    assign col_width = 121
+  endif
+
+  if collection.products.first.selected_or_first_available_variant.compare_at_price > collection.products.first.selected_or_first_available_variant.price
+    assign compare_at_price = collection.products.first.selected_or_first_available_variant.compare_at_price
+  else
+    assign compare_at_price = collection.products.first.selected_or_first_available_variant.price
+  endif
+
+   ## Prices ##
+   assign tier_one_unit_price_otp = collection.products.first.variants[0].price
+   assign tier_two_unit_price_otp = collection.products.first.variants[1].price
+   assign tier_three_unit_price_otp = collection.products.first.variants[2].price
+
+   for selling_plan in collection.products.first.selling_plan_groups
+    for selling_plan_allocation in selling_plan.selling_plan_allocations
+      if selling_plan_allocation.selling_plan.name contains '1 Month'
+        assign tier_one_unit_price_autoship = selling_plan_allocation.selling_plan.price
+      endif
+    endfor
+   endfor
+
+   for variant in collection.products.first.variants
+    assign variant_title = variant.title | downcase | split: ' discount' | first
+    assign variant_title = variant_title | split: ' ' | first
+  
+    for allocation in variant.selling_plan_allocations
+      assign plan = allocation.selling_plan
+      assign plan_name = plan.name | downcase
+  
+      if plan_name contains '1 month' and plan_name contains variant_title
+     
+        unless plan_name contains 'bundle'
+          assign adjustment = plan.price_adjustments[0]
+          assign discount_amount = adjustment.value
+          assign autoship_price = variant.price | minus: discount_amount
+  
+          case variant_title
+            when '1'
+              assign tier_one_unit_price_autoship = autoship_price
+            when '2'
+              assign tier_two_unit_price_autoship = autoship_price
+            when '3'
+              assign tier_three_unit_price_autoship = autoship_price
+          endcase
+        endunless
+      endif
+    endfor
+  endfor
+
 -%}
 
 {%- capture tiers_json -%}
@@ -63,6 +129,16 @@
 {%- endfor -%}
 ]
 {%- endcapture -%}
+
+{% capture col_width_styles %}
+  --col-width: {{ col_width }}px;
+{% endcapture %}
+
+{% style %}
+  .col-width {
+    width: var(--col-width);
+  }
+{% endstyle %}
 
 <div
   data-bundle-editor-root
@@ -90,16 +166,44 @@
     <div>
       {% comment %} Progress / tier indicator {% endcomment %}
       {% if tier_count > 0 and collection.handle != '32oz-bundle' %}
-        <div class="wb-flex gap-1 flex-col w-full bg-white/50 p-4.5 rounded-[5px] font-kurdis relative button-shadow uppercase mb-2.5 text-bear-black mt-4.5">
+        <div class="mt-5.5 mb-4 relative">
+        {% render 'progress-indicator', 
+          multi_unit_product: multi_unit_product,
+          multi_unit_quantity: multi_unit_quantity,
+          multi_unit_product_unit: multi_unit_product_unit,
+          tier_one_unit_price_autoship: tier_one_unit_price_autoship,
+          tier_two_unit_price_autoship: tier_two_unit_price_autoship,
+          tier_three_unit_price_autoship: tier_three_unit_price_autoship,
+          tier_one_unit_price_otp: tier_one_unit_price_otp,
+          tier_two_unit_price_otp: tier_two_unit_price_otp,
+          tier_three_unit_price_otp: tier_three_unit_price_otp,
+          discount_type: discount_type,
+          compare_at_price: compare_at_price,
+          bundle_products: bundle_products,
+          product_object: group,
+          bundle_products_count: bundle_products_count,
+          singular_label: singular_label,
+          plural_label: plural_label,
+          col_width: col_width,
+          col_width_styles: col_width_styles,
+          cart_editor: true,
+          collection: collection
+        %}
+        </div>
+          {% comment %} <div class="wb-flex gap-1 flex-col w-full bg-white/50 p-4.5 rounded-[5px] font-kurdis relative button-shadow uppercase mb-2.5 text-bear-black mt-4.5">
           <div class="flex items-center justify-between">
             {% for tier_product in bundle_products %}
-              <div class="col-width flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold {% cycle 'items-start', 'items-center', 'items-end' %}">
-                <span>{{ forloop.index }} {{ singular }}</span>
+              {% assign label = singular %}
+              {% if forloop.index > 1 %}
+                {% assign label = plural %}
+              {% endif %}
+              <div class="max-w-[70px] w-full text-center flex flex-col items-center justify-center font-gothic_condensed uppercase font-bold {% cycle 'items-start', 'items-center', 'items-end' %}">
+                <span class="text-center w-full">{{ forloop.index }} {{ label }}</span>
               </div>
             {% endfor %}
           </div>
 
-          <div class="wb-flex items-center justify-between relative w-full">
+          <div class="flex items-center justify-between relative w-[calc(100%-46px)] mx-auto">
             {% for tier_product in bundle_products %}
               <div class="wb-flex items-center justify-between relative w-full {% cycle 'justify-start', 'justify-center', 'justify-end' %}">
                 <div data-tier="{{ forloop.index }}" class="col-width flex items-center justify-center">
@@ -130,6 +234,7 @@
           <div class="flex items-center justify-between text-[12px]">
             {% for tier_product in bundle_products %}
               {%- assign ea_variant = collection.products.first.variants[forloop.index0] -%}
+              {%- assign first_variant = collection.products.first.variants.first -%}
 
               {% comment %} Selling Plan Price {% endcomment %}
 
@@ -140,21 +245,27 @@
                 {% endif %}
               {% endfor %}
 
-              <div class="w-1/3 wb-flex gap-1 flex-col items-center justify-center {% cycle 'ea': 'items-start', 'items-center', 'items-end' %}">
-                <div data-otp class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
-                  <span>{{ ea_variant.price | money }}/ea</span>
+              <div class="max-w-[70px] w-full wb-flex gap-1 flex-col items-center text-center justify-center {% cycle 'ea': 'items-start', 'items-center', 'items-end' %}">
+                <div class="text-bear-black w-full font-semibold font-kurdis-semi-condensed leading-[120%] normal-case flex flex-col items-center whitespace-nowrap h-full">
+                  <span data-otp class="text-center">{{ ea_variant.price | money }}/ea</span>
+                  <span data-selling-plan class="text-center">{{ selling_plan_price | money }}/ea</span>
+
+                  {% comment %} Flat rate off {% endcomment %}
+                  {% assign flat_rate_off = first_variant.price | minus: ea_variant.price %}
+                  {% assign flat_rate_off_selling_plan = first_variant.price | minus: selling_plan_price %}
+                  {% if flat_rate_off > 0 %}
+                    <span data-otp data-flat-rate-off class="text-kraft text-center">{{ flat_rate_off | money_without_trailing_zeros }} off</span>
+                  {% endif %}
+                  {% if flat_rate_off_selling_plan > 0 %}
+                    <span data-selling-plan data-flat-rate-off class="text-kraft text-center">{{ flat_rate_off_selling_plan | money_without_trailing_zeros }} off</span>
+                  {% endif %}
                 </div>
               </div>
 
-              <div data-selling-plan class="w-1/3 wb-flex gap-1 flex-col items-center justify-center {% cycle 'ea': 'items-start', 'items-center', 'items-end' %}">
-                <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
-                  <span>{{ selling_plan_price | money }}/ea</span>
-                </div>
-              </div>
 
             {% endfor %}
           </div>
-        </div>
+        </div> {% endcomment %}
       {% endif %}
 
       {% comment %} 32oz Multi-Serve Variety Indicator — populated client-side by
@@ -220,16 +331,19 @@
                     <span class="font-kurdis-semi-condensed text-[10px] text-espresso font-bold uppercase">{{ product.metafields.product.product_badge.value.badge_text }}</span>
                   {% endif %}
                   <h3 class="font-gothic_condensed leading-[1.2] uppercase font-bold text-bear-black text-lg">{{ product.title | split: '- ' | last }}</h3>
-                  <span class="font-kurdis-semi-condensed text-xs text-kraft font-bold lowercase">
-                    <span data-bundle-price>{{ product.variants.first.price | money }}</span> per {{ singular }}
-                  </span>
+
+                  {% unless group.display_name == 'Single Serve' %}
+                    <span class="font-kurdis-semi-condensed text-xs text-kraft font-bold lowercase">
+                      <span data-bundle-price>{{ product.variants.first.price | money }}</span> per {{ singular }}
+                    </span>
+                  {% endunless %}
                 </div>
 
                 {% comment %} Add button (quantity 0 / unselected) {% endcomment %}
               
                 {% if member_only %}
                   <button
-                    on:click="dispatch('open-modal', { modal: 'member-only-modal' })"
+                    on:click="bundle-editor-component/openMembershipModal"
                     type="button"
                     class="group relative flex items-center justify-center cursor-pointer shadow-button w-20 min-w-20"
                   >
@@ -248,8 +362,8 @@
                     class="group relative flex items-center justify-center cursor-pointer shadow-button w-20 min-w-20"
                     on:click="bundle-editor-component/increment"
                   >
-                    <span class="absolute whitespace-nowrap text-cream uppercase font-kurdis-condensed text-sm font-bold">+ Add</span>
-                    <svg class="text-kraft group-hover:!text-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40" fill="none">
+                    <span class="absolute whitespace-nowrap text-cream uppercase font-kurdis-condensed text-sm font-bold">+ Add {% if group.display_name == 'Single Serve' %} {{ singular }} {% endif %}</span>
+                    <svg class="{% if group.display_name == 'Single Serve' %}text-espresso{% else %}text-kraft{% endif %} group-hover:!text-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40" fill="none">
                       <path d="M0.740482 4.15938C0.111533 6.47951 0.0863218 9.21376 0.0757066 11.8348C0.0504956 18.0724 0.0266114 24.3075 0.00140038 30.5451C-0.0052341 32.2401 -0.00390717 34.0047 0.38222 35.5249C1.31237 39.18 2.48668 39.9773 5.96049 39.9773C29.2608 39.9773 52.5624 40.1137 75.8641 39.7175C76.6907 39.7047 77.5983 39.787 78.2764 38.8687C80.1141 36.3814 79.9138 31.8363 79.858 28.4641C79.7545 22.1854 80 17.0255 80 10.7442C80 6.3509 79.7466 4.58636 78.9955 2.84755C78.0335 0.61745 76.0299 0.712621 74.5292 0.653461C64.6624 0.259913 54.7903 0.0567088 44.9195 0.0104091C34.985 -0.0384628 25.0506 0.0850031 15.1161 0.375662C12.3137 0.457973 9.5126 0.553144 6.71152 0.663749C4.59644 0.74606 1.91346 -0.159357 0.740482 4.15938Z" fill="currentColor"/>
                     </svg>
                   </button>

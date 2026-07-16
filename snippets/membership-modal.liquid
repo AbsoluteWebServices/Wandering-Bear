@@ -42,11 +42,13 @@
 <div class="mb-9 wb-flex flex-col items-center justify-center bg-[#FAF2ED] p-4 rounded-[10px] border-espresso border-2">
     <span class="mb-2 text-gold text-[17px] font-kurdis-semi-condensed font-bold text-center">{{ item.elite_block_title }}</span>
     <div class="text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-pretty">{{ item.elite_block_description | metafield_tag }}</div>
-    {% if item.learn_more_button != blank %}
-        <div @click.stop.prevent="addToCart({{ elite_product.selected_or_first_available_variant.id }}, 1, {{ elite_selling_plan }})">
-        {% render 'wb-button', style: 'secondary-gold', class: 'z-[3] !w-[119px] !h-[25px] !text-[12px] mt-5 tracking-wide', width: 98, height: 25, label: item.elite_button_text, link: '' %}
-        </div>
-    {% endif %}
+    {% render 'elite-atc-button',
+      label: item.elite_button_text,
+      style: 'secondary-gold',
+      class: 'z-[3] !w-[119px] !h-[25px] !text-[12px] mt-5 tracking-wide',
+      width: 98,
+      height: 25
+    %}
 </div>
 {% if item.learn_more_button != blank %}
     {% render 'wb-button', style: 'primary', class: 'z-[3] !w-[280px] !h-[47px] !text-[20px]', width: 98, height: 25, label: item.learn_more_button.value.text, link: item.learn_more_button.value.url %}

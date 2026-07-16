@@ -198,14 +198,15 @@ export default (Alpine: AlpineType) => {
         },
 
         _setProgressBarPrices() {
-          const tierEls = document.querySelectorAll('[data-tier]')
+          const tierEls = document.querySelectorAll('[data-pdp] [data-tier]')
 
           tierEls.forEach((el, index) => {
             const priceEl = el.querySelector('[data-tier-price]')
             const savingsEl = el.querySelector('[data-tier-savings]')
-            const multiUnitQuantity = this.selectedProduct?.variants[index].multi_unit_quantity;
-            const discountType = this.selectedProduct?.variants[index].discount_type;
-            const compareAtPrice = this.selectedProduct?.variants[0].price
+            const selectedVariant = this.selectedProduct?.variants[index] || null;
+            const multiUnitQuantity = selectedVariant?.multi_unit_quantity || null;
+            const discountType = selectedVariant?.discount_type || null;
+            const compareAtPrice = this.selectedProduct?.variants[0]?.price || null;
 
             let autoshipPrice = 0;
             let otpPrice = 0;
@@ -213,18 +214,18 @@ export default (Alpine: AlpineType) => {
             let otpSavings = 0;
 
             if (multiUnitQuantity) {
-              autoshipPrice = this.selectedProduct?.variants[index].selling_plan_price / multiUnitQuantity;
-              otpPrice = this.selectedProduct?.variants[index].price / multiUnitQuantity;
+              autoshipPrice = selectedVariant?.selling_plan_price / multiUnitQuantity;
+              otpPrice = selectedVariant?.price / multiUnitQuantity;
             } else {
-              autoshipPrice = this.selectedProduct?.variants[index].selling_plan_price;
-              otpPrice = this.selectedProduct?.variants[index].price;
+              autoshipPrice = selectedVariant?.selling_plan_price;
+              otpPrice = selectedVariant?.price;
             }
 
             const price = this.purchaseOption === 'autoship' ? autoshipPrice : otpPrice;
 
             if (discountType === 'Percentage') {
-              autoshipSavings = 100 - (this.selectedProduct?.variants[index].selling_plan_price / compareAtPrice) * 100;
-              otpSavings = 100 - (this.selectedProduct?.variants[index].price / compareAtPrice) * 100;
+              autoshipSavings = 100 - (selectedVariant?.selling_plan_price / compareAtPrice) * 100;
+              otpSavings = 100 - (selectedVariant?.price / compareAtPrice) * 100;
             } else {
               autoshipSavings = compareAtPrice - autoshipPrice;
               otpSavings = compareAtPrice - otpPrice;

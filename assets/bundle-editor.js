@@ -205,21 +205,12 @@ class BundleEditorComponent extends Component {
     const sellingPlanElements = this.querySelectorAll('[data-selling-plan]');
     const otpElements = this.querySelectorAll('[data-otp]');
 
-    if (hasSellingPlan) {
-      sellingPlanElements.forEach(element => {
-        element.style.display = 'flex';
-      });
-      otpElements.forEach(element => {
-        element.style.display = 'none';
-      });
-    } else {
-      sellingPlanElements.forEach(element => {
-        element.style.display = 'none';
-      });
-      otpElements.forEach(element => {
-        element.style.display = 'flex';
-      });
-    }
+    sellingPlanElements.forEach(element => {
+      element?.classList?.toggle('hidden', !hasSellingPlan);
+    });
+    otpElements.forEach(element => {
+      element?.classList?.toggle('hidden', hasSellingPlan);
+    });
 
     const total = this.#totalQuantity;
     const variantIndex = this.#tierIndex(total);
@@ -264,13 +255,34 @@ class BundleEditorComponent extends Component {
     }
 
     const tierCount = this.#state.tierCount || this.#state.tiers.length;
-    const progress = tierCount ? Math.min(100, (total / tierCount) * 100) : 0;
+    let progress = 0;
+
+    if (tierCount === 3) {
+      switch (total) {
+        case 0:
+          progress = 0;
+          break;
+        case 1:
+          progress = 0;
+          break;
+        case 2:
+          progress = 50;
+          break;
+        case 3:
+          progress = 100;
+          break;
+      }
+    } else {
+      progress = tierCount ? Math.min(100, (total / tierCount) * 100) : 0;
+    }
+
     const bar = this.querySelector('[data-bundle-progress]');
     if (bar instanceof HTMLElement) bar.style.width = `${progress}%`;
 
     for (const dot of this.querySelectorAll('[data-tier-dot]')) {
       const tier = Number(/** @type {HTMLElement} */ (dot).dataset.tierDot);
       const inner = dot.querySelector('[data-tier-dot-inner]');
+      const outer = dot.querySelector('[data-dot-outer]');
       const active = total >= tier;
 
       dot.classList.toggle('!outline-gold', active);
@@ -294,12 +306,10 @@ class BundleEditorComponent extends Component {
     /** Set the content height to 100% of the viewport height minus the header and footer heights */
     const header = this.querySelector('[data-bundle-editor-header]');
     const footer = this.querySelector('[data-bundle-editor-footer]');
-    console.log(header, footer);
     if (header && footer) {
       const headerHeight = header.offsetHeight;
       const footerHeight = footer.offsetHeight;
       const content = this.querySelector('[data-bundle-editor-content]');
-      console.log(content);
       content.style.height = `calc(100vh - ${headerHeight + footerHeight}px)`;
     }
 
@@ -476,6 +486,22 @@ class BundleEditorComponent extends Component {
   /** Closes the editor and returns to the cart. Bound declaratively via `on:click`. */
   backToCart() {
     this.removeAttribute('data-open');
+  }
+
+  /**
+   * Opens the membership modal from a member-only flavor's "Locked" button.
+   * Bound declaratively via `on:click`.
+   *
+   * The modal (`snippets/aw-modal.liquid`) listens on the window for
+   * `modal-open` and only opens when `detail.modal` matches its own metaobject
+   * handle, so the event must be dispatched on window — not on the button.
+   */
+  openMembershipModal() {
+    window.dispatchEvent(
+      new CustomEvent('modal-open', {
+        detail: { modal: 'membership' },
+      })
+    );
   }
 
   /**
