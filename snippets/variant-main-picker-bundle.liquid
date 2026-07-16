@@ -91,91 +91,29 @@
   }
 {% endstyle %}
 
-<div class="flex flex-col gap-2.5">
+<div data-pdp class="flex flex-col gap-2.5">
     <span class="text-xl font-gothic_condensed uppercase text-gold md:text-base">Build Your Bundle</span>
 
-    <div class="wb-flex gap-0.5 flex-col w-full bg-white/50 pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase {% if template.suffix == '96oz' or template.suffix == 'single-serve' %} px-1.25{% else %} px-4.5{% endif %}">
-      <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
-        {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%] mt-px', svg_class: 'text-gold'%}
-      </div>
-      <div class="flex items-center justify-between">
-        {% for i in (1..bundle_products_count) %}
-            {% assign tier = i %}
-            {% if forloop.last %}
-              {% assign tier = i | append: '+' %}
-            {% endif %}
-            {% if i == 1 %}
-              {% assign tier_label = singular_label %}
-            {% else %}
-              {% assign tier_label = plural_label %}
-            {% endif %}
-            <div class="col-width flex flex-col items-center justify-center font-gothic_condensed text-[20px]/none uppercase font-extrabold text-bear-black md:text-base/none" style="{{ col_width_styles }}">
-                <span>{{ tier }} {{ tier_label }}</span>
-            </div>
-        {% endfor %}
-      </div>
-      <div>
-        <div class="flex items-center justify-between relative">
-          {% for i in (1..bundle_products_count) %}
-              <div class="col-width flex items-center justify-center" style="{{ col_width_styles }}">
-                <div class="flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC]"
-                :class="bundleSize >= {{ i }} ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
-                >
-                  <div class="flex items-center justify-center h-3.5 w-3.5 bg-[#CFBDB1] rounded-full bg-transparent"
-                  :class="bundleSize >= {{ i }} ? '!bg-gold' : 'bg-transparent'"
-                  ></div>
-                 </div>
-              </div>
-              <div class="absolute {% if col_width == 121 %} left-[50px] right-[50px] md:right-[66px] md:left-[66px] {% else %} right-6.5 left-6.5 {% endif %} rounded-full mx-auto">
-                <div class="relative h-[2px] bg-[#CFBDB1]">
-                  <div class="absolute top-0 left-0 h-full max-w-full bg-gold transition-all duration-300"
-                  :style="progressBarWidth"
-                  ></div>
-                </div>
-              </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="flex items-center justify-between text-[12px] mt-1 w-full">
-        {% for i in (1..bundle_products_count) %}
-          <div data-tier="{{ i }}" class="col-width wb-flex gap-0.75 flex-col items-center justify-center" style="{{ col_width_styles }}">
-            <div class="text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap h-full">
-              {%- case i -%}
-                {%- when 1 -%}
-                  {%- assign autoship_price = tier_one_unit_price_autoship -%}
-                {%- when 2 -%}
-                  {%- assign autoship_price = tier_two_unit_price_autoship -%}
-                {%- when 3 -%}
-                  {%- assign autoship_price = tier_three_unit_price_autoship -%}
-               {%- endcase -%}
-               {% if multi_unit_product %}
-                {% assign calculated_qty = multi_unit_quantity | times: i %}
-                {%- assign autoship_price_qty = autoship_price | divided_by: multi_unit_quantity -%}
-                <span>{{ calculated_qty }} {{ multi_unit_product_unit }}</span>
-                <span>·</span>
-              {% else %}
-                {% assign autoship_price_qty = autoship_price %}
-              {% endif %}
-              {% if discount_type == 'Percentage' %}
-                {% assign difference = compare_at_price | minus: autoship_price %}
-                {% assign savings = difference | times: 100.0 | divided_by: compare_at_price | round | append: '%' %}
-              {% else %}
-                {% assign savings = compare_at_price | minus: autoship_price_qty | money_without_trailing_zeros %}
-              {% endif %}
-               <span data-tier-price>
-                 {{- autoship_price_qty | money -}}
-                </span>
-                <span>/ea</span>
-              </div>
-              <div class="text-kraft font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap">
-              <span data-tier-savings>
-                {{- savings }} off
-              </span>
-              </div>
-            </div>
-        {% endfor %}
-    </div>
-  </div>
+    {% render 'progress-indicator', 
+      multi_unit_product: multi_unit_product,
+      multi_unit_quantity: multi_unit_quantity,
+      multi_unit_product_unit: multi_unit_product_unit,
+      tier_one_unit_price_autoship: tier_one_unit_price_autoship,
+      tier_two_unit_price_autoship: tier_two_unit_price_autoship,
+      tier_three_unit_price_autoship: tier_three_unit_price_autoship,
+      tier_one_unit_price_otp: tier_one_unit_price_otp,
+      tier_two_unit_price_otp: tier_two_unit_price_otp,
+      tier_three_unit_price_otp: tier_three_unit_price_otp,
+      discount_type: discount_type,
+      compare_at_price: compare_at_price,
+      bundle_products: bundle_products,
+      product_object: product_object,
+      bundle_products_count: bundle_products_count,
+      singular_label: singular_label,
+      plural_label: plural_label,
+      col_width: col_width,
+      col_width_styles: col_width_styles
+    %}
 
   {% render 'product-selector-group', bundle_collection: bundle_collection %}
 
@@ -212,7 +150,7 @@
             "handle": "{{- child_product.handle -}}",
             "flavor_name": "{{- child_product.metafields.custom.flavor_name -}}",
             "bundle_name": "{{- child_product.metafields.custom.product_group.value.display_name | handleize -}}",
-            "collection_handle": "{{- child_product.metafields.custom.flavor_collection.value.handle -}}",
+            "collection_handle": "{{- child_product.metafields.custom.product_group.value.collection_handle.value.handle -}}",
             "variants": {
                 {% for child_variant in child_product.variants %}
                     "{{- forloop.index0 -}}": {

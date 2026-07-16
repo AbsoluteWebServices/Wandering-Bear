@@ -225,6 +225,7 @@
           "available": {{ variant.available | json }},
           "title": {{ variant.title | json }},
           "id": {{ variant.id | json }},
+          "flavor_name": "{{- product_resource.metafields.custom.flavor_name -}}",
           "quantified": {{ quantified | json }},
           {% if quantified %}
             "quantified_units": {{ quantified_units | json }},

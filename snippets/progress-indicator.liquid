@@ -1,0 +1,134 @@
+{% assign first_variant = collection.products.first.variants.first %}
+
+<div class="wb-flex gap-0.5 flex-col w-full bg-white/50 pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase {% if template.suffix == '96oz' or template.suffix == 'single-serve' %} px-1.25{% else %} px-4.5{% endif %}">
+<div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
+  {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%] mt-px', svg_class: 'text-gold'%}
+</div>
+<div class="flex items-center justify-between">
+  {% for i in (1..bundle_products_count) %}
+      {% assign tier = i %}
+      {% if forloop.last %}
+        {% assign tier = i | append: '+' %}
+      {% endif %}
+      {% if i == 1 %}
+        {% assign tier_label = singular_label %}
+      {% else %}
+        {% assign tier_label = plural_label %}
+      {% endif %}
+      <div class="col-width flex flex-col items-center justify-center font-gothic_condensed text-[20px]/none uppercase font-extrabold text-bear-black md:text-base/none" style="{{ col_width_styles }}">
+          <span>{{ tier }} {{ tier_label }}</span>
+      </div>
+  {% endfor %}
+</div>
+<div>
+  <div class="flex items-center justify-between relative">
+    {% for i in (1..bundle_products_count) %}
+        <div class="col-width flex items-center justify-center" style="{{ col_width_styles }}">
+          <div data-tier-dot="{{ forloop.index }}" class="flex items-center justify-center h-4.5 w-4.5 rounded-full mx-auto transition-all duration-300 relative z-[2] outline outline-[#CFBDB1] bg-[#F2E6DC]"
+          {% unless cart_editor %}
+          :class="bundleSize >= {{ i }} ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
+          {% endunless %}
+          >
+            <div class="flex items-center justify-center h-3.5 w-3.5 bg-[#CFBDB1] rounded-full bg-transparent"
+            {% unless cart_editor %}
+              :class="bundleSize >= {{ i }} ? '!bg-gold' : 'bg-transparent'"
+            {% endunless %}
+            >
+            {% if cart_editor %}
+                <div
+                data-tier-dot-inner
+                class="wb-flex items-center justify-center h-3.5 w-3.5 rounded-full bg-transparent"
+              ></div>            
+            {% endif %}
+            </div>
+           </div>
+        </div>
+        <div class="absolute {% if col_width == 121 %} left-[50px] right-[50px] md:right-[66px] md:left-[66px] {% else %} right-6.5 left-6.5 {% endif %} rounded-full mx-auto">
+          <div class="relative h-[2px] bg-[#CFBDB1] w-full">
+            <div 
+            data-bundle-progress
+            class="absolute z-1 top-0 left-0 h-full max-w-full !bg-gold transition-all duration-300"
+            {% if cart_editor %}
+              style="width: 0%;"
+            {% else %}
+              :style="progressBarWidth"
+            {% endif %}
+            ></div>
+          </div>
+        </div>
+    {% endfor %}
+  </div>
+</div>
+<div class="flex items-start justify-between text-[12px] mt-1 w-full">
+  {% for i in (1..bundle_products_count) %}
+    <div data-tier="{{ i }}" class="col-width wb-flex gap-0.75 flex-col items-center justify-center" style="{{ col_width_styles }}">
+      <div class="text-center w-full text-bear-black font-semibold font-kurdis-semi-condensed leading-[120%] normal-case !inline-block whitespace-nowrap h-full">
+        {%- case i -%}
+          {%- when 1 -%}
+            {%- assign autoship_price = tier_one_unit_price_autoship -%}
+            {%- assign otp_price = tier_one_unit_price_otp -%}
+          {%- when 2 -%}
+            {%- assign autoship_price = tier_two_unit_price_autoship -%}
+            {%- assign otp_price = tier_two_unit_price_otp -%}
+          {%- when 3 -%}
+            {%- assign autoship_price = tier_three_unit_price_autoship -%}
+            {%- assign otp_price = tier_three_unit_price_otp -%}
+         {%- endcase -%}
+         {% assign current_variant = collection.products.first.variants[forloop.index0] %}
+
+         {% if multi_unit_product %}
+          {% assign calculated_qty = multi_unit_quantity | times: i %}
+          {% assign price_qty = current_variant.price | divided_by: multi_unit_quantity %}
+          {%- assign autoship_price_qty = autoship_price | divided_by: multi_unit_quantity -%}
+          <span>{{ calculated_qty }} {{ multi_unit_product_unit }}</span>
+          <span>·</span>
+        {% else %}
+          {% assign price_qty = current_variant.price %}
+          {% assign autoship_price_qty = autoship_price %}
+        {% endif %}
+        {% if discount_type == 'Percentage' %}
+          {% assign difference = compare_at_price | minus: autoship_price %}
+          {% assign savings_raw = difference | times: 100.0 | divided_by: compare_at_price | round %}
+          {% assign savings = savings_raw | append: '%' %}
+          {% assign difference_otp = compare_at_price | minus: otp_price %}
+          {% assign savings_otp_raw = difference_otp | times: 100.0 | divided_by: compare_at_price | round %}
+          {% assign savings_otp = savings_otp_raw | append: '%' %}
+        {% else %}
+          {% assign savings_otp_raw = compare_at_price | minus: otp_price %}
+          {% assign savings_raw = compare_at_price | minus: autoship_price_qty %}
+          {% assign savings = savings_raw | money_without_trailing_zeros %}
+          {% assign savings_otp = savings_otp_raw | money_without_trailing_zeros %}
+        {% endif %}
+
+        {% if cart_editor %}
+            <span data-tier-price>
+                <span class="hidden" data-otp>{{- price_qty | money_without_trailing_zeros -}}/ea</span>
+                <span class="hidden" data-selling-plan>{{- autoship_price_qty | money_without_trailing_zeros -}}/ea</span>
+            </span>
+        {% else %}
+         <span data-selling-plan data-tier-price>
+           {{- autoship_price_qty | money_without_trailing_zeros -}}
+        </span>
+        <span>/ea</span>
+        {% endif %}
+        </div>
+        <div class="text-kraft font-semibold font-kurdis-semi-condensed leading-[120%] normal-case inline-block whitespace-nowrap">
+        {% if cart_editor %}
+            <span data-tier-savings>
+            {% if savings_otp_raw > 0 %}
+               <span data-otp>{{- savings_otp }} off</span>
+            {% endif %}
+            {% if savings_raw > 0 %}
+               <span data-selling-plan>{{- savings }} off</span>
+            {% endif %}
+            </span>
+        {% else %}
+            <span data-tier-savings>
+            {{- savings }} off
+            </span>
+        {% endif %}
+        </div>
+      </div>
+  {% endfor %}
+</div>
+</div>

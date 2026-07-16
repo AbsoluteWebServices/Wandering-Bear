@@ -12,13 +12,29 @@
 
 {% liquid
   assign block_settings = block.settings
+  assign is_member = false
+  assign member_tier = ''
+
+  for tag in customer.tags
+    case tag
+      when 'inveterate-tier#72ccf378'
+        assign member_tier = 'VIP'
+      when 'inveterate-tier#dc38b982'
+        assign member_tier = 'Elite'
+      when 'inveterate-tier#99a431e2'
+        assign member_tier = 'Elite'
+    endcase
+  endfor
+  
+  for item in cart.items
+    if item.title contains 'Membership'
+      assign is_member = true
+      assign member_tier = 'Elite'
+      break
+    endif
+  endfor
 %}
 
-{% style %}
-  [data-frequency-dropdown].open {
-    display: block;
-  }
-{% endstyle %}
 
 <script
   src="{{ 'component-cart-items.js' | asset_url }}"
@@ -35,8 +51,22 @@
   type="module"
   fetchpriority="low"
 ></script>
+<script
+  src="{{ 'cart-products.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
 
-<div
+{% style %}
+
+  button[data-frequency-button][aria-expanded="true"] {
+    svg.chevron-down   {
+      transform: rotate(180deg);
+    }
+  }
+{% endstyle %}
+
+<cart-products-component
   {{ block.shopify_attributes }}
   class="cart-items__wrapper"
   {% if settings.product_title_case == 'uppercase' %}
@@ -76,6 +106,382 @@
         class="cart-items flex flex-col !gap-3 spacing-style{% if block_settings.dividers %} cart-items--dividers{% endif %}"
         style="{%  render 'spacing-style', settings: block_settings %} --cart-items-gap:{{ block_settings.gap | append: "px" }};"
       >
+          {% comment %} Bundle items: rendered as cards OUTSIDE the table.
+             Divs/buttons are invalid children of <tbody>; the browser
+             foster-parents them out of the table, which corrupts the drawer
+             when `cart-items-component` morphs the section on cart updates and
+             breaks the edit/remove buttons. Keep bundle cards as siblings of
+             the table inside `.cart-items`. {% endcomment %}
+
+            {% assign bundle_parent_ids = '' %}
+
+            {% for item in cart.items %}
+              {% if item.properties._bundle_id != blank and item.properties._bundle_parent == 'true' %}
+                {% assign bundle_parent_ids = bundle_parent_ids
+                  | append: item.properties._bundle_id
+                  | append: '||'
+                %}
+              {% endif %}
+            {% endfor %}
+
+            {% assign bundle_parent_ids = bundle_parent_ids | split: '||' | compact %}
+
+            {% comment %} Render bundles {% endcomment %}
+            {% for bundle_id in bundle_parent_ids %}
+              {% assign parent_item = blank %}
+
+              {% for item in cart.items %}
+                {% if item.properties._bundle_id == bundle_id and item.properties._bundle_parent == 'true' %}
+                  {% assign parent_item = item %}
+                  {% assign bundle_id = item.properties._bundle_id %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+
+              <div class="bg-[#F9F3ED] font-kurdis-semi-condensed rounded-[5px] overflow-hidden">
+                {% if parent_item != blank %}
+                  {% assign collection_handle = parent_item.properties._collection_handle %}
+                  {% assign product_object = parent_item.product.metafields.custom.product_group.value %}
+                  {% assign product_title = product_object.headline | append: ' · ' | append: product_object.size %}
+                  <div class="flex font-gothic_condensed text-bear-black font-bold uppercase text-lg justify-between items-center relative p-4">
+                    {% if product_title != blank %}
+                      {{ product_title }}
+                    {% else %}
+                      {{ parent_item.product.title }}
+                    {% endif %}
+                    <button
+                      type="button"
+                      class="cursor-pointer text-kraft hover:!text-gold transition-all duration-300"
+                      data-action="remove-bundle"
+                      data-bundle-id="{{ bundle_id | escape }}"
+                      aria-label="Remove {{ product_title | default: parent_item.product.title | escape }}"
+                    >
+                      {% render 'icons', icon: 'delete', class: 'text-sm' %}
+                    </button>
+                    <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                  </div>
+                {% endif %}
+
+                {% assign total_bundle_price = 0 %}
+                {% assign total_original_price = 0 %}
+                {% assign bundle_total_autoship_savings = 0 %}
+                {% for item in cart.items %}
+                  
+                  {% if item.properties._bundle_id == bundle_id %}
+                    {% unless item.properties._bundle_parent == 'true' %}
+                    {% assign compare_at_price = item.compare_at_price | default: item.original_price %}
+                    {% assign bundle_line_price = item.price | times: item.quantity %}
+                    {% assign original_line_price = compare_at_price | times: item.quantity %}
+                    {% assign total_bundle_price = total_bundle_price | plus: bundle_line_price %}
+                    {%- comment -%}
+                      item.variant, not product.variants[0]: a bundle child has one
+                      variant per size tier, so variants[0] is the smallest tier's
+                      price and allocations no matter which one is in the cart.
+                    {%- endcomment -%}
+
+                    {% liquid
+                        assign quantified = false
+                        for tag in item.product.tags
+                          if tag contains 'custom-quantity-rule'
+                            assign quantified = true
+                            break
+                          endif
+                        endfor
+
+                        assign price = item.final_line_price
+                        if quantified
+                          assign original_price = item.product.variants[0].price | times: item.quantity
+                        elsif item.compare_at_price > item.final_line_price
+                          assign original_price = item.compare_at_price
+                        else
+                          assign original_price = item.original_line_price
+                        endif
+                        assign unit_price = item.unit_price | money
+
+                        assign variant_line_price = item.variant.price | times: item.quantity
+                        assign total_original_price = total_original_price | plus: original_price
+    
+                    %}
+
+                    {% for selling_plan in item.variant.selling_plan_allocations %}
+                      {% if selling_plan.selling_plan.name contains '1 month' or selling_plan.selling_plan.name contains '1 Month' %}
+                        {% assign autoship_line_price = selling_plan.per_delivery_price | times: item.quantity %}
+                        {% assign line_autoship_savings = variant_line_price | minus: autoship_line_price %}
+                        {% assign bundle_total_autoship_savings = bundle_total_autoship_savings | plus: line_autoship_savings %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% assign child_title = item.properties._flavor %}
+                    {% if child_title == blank %}
+                      {% assign child_title = item.product.title | split: '- ' | last %}
+                    {% endif %}
+                      <div data-key="{{ item.key }}" 
+                      data-bundle-id="{{ bundle_id }}" 
+                      data-bundle-image="{{ item.product.metafields.custom.bundle_image | image_url: width: 200 }}"
+                      class="relative flex p-4 gap-2">
+                        <a href="{{ item.url | append: '?' | append: item.product.metafields.custom.product_group.value.template_suffix }}" class="w-12">
+                          {{ item.image | image_url: width: 100 | image_tag }}
+                        </a>
+                        <div class="flex flex-col">
+                          <div class="font-bold text-bear-black text-sm">
+                            {{ child_title }}
+                          </div>
+                          <div class="flex items-center gap-1 font-bold text-xs">
+                            {% if item.product.variants[0].price > item.price %}
+                              <div>
+                                <s>{{ item.product.variants[0].price | money }}</s>
+                              </div>
+                            {% endif %}
+                            <div>
+                              <span class="
+                              {% if item.product.variants[0].price > item.price %}
+                              text-kraft
+                              {% else %}
+                              text-bear-black
+                              {% endif %}
+                              ">{{ item.price | money }} x {{ item.quantity }}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                      </div>
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+
+                {% assign bundle_total_autoship_savings_percentage = 0 %}
+                {% if total_original_price > 0 %}
+                  {% assign bundle_total_autoship_savings_percentage = bundle_total_autoship_savings | times: 100.0 | divided_by: total_original_price | round: 0 | append: '%' %}
+                {% endif %}
+
+                {%  liquid
+                    assign selector_value = ''
+                    assign has_selling_plan = false
+                    if parent_item.properties._bundle_id == bundle_id
+                        if parent_item.selling_plan_allocation != null
+                          assign has_selling_plan = true
+                          assign selector_value = parent_item.selling_plan_allocation.selling_plan.name | split: ' - ' | first
+                        else
+                          assign selector_value = 'One Time Purchase'
+                        endif
+                    endif
+                %}
+                
+                 {% comment %} Frequency Dropdown {% endcomment %}
+
+                 {%- comment -%}
+                   Map of each bundle variant id → its own "1 Month" selling plan id.
+                   Changing frequency must apply each line's OWN plan; applying the
+                   parent's plan to child variants is rejected ("Cannot apply selling
+                   plan to variant").
+
+                   Keyed by variant id, NOT line key: a line's key encodes its selling
+                   plan, so every plan change rekeys the line and would strand a
+                   key-based map on ids the cart no longer has. Variant ids survive.
+                 {%- endcomment -%}
+                 {%- capture bundle_subscription_plans -%}
+                 {
+                 {%- assign sub_first = true -%}
+                 {%- assign seen_variants = ',' -%}
+                 {%- for line in cart.items -%}
+                   {%- if line.properties._bundle_id == bundle_id -%}
+                     {%- assign variant_token = line.variant_id | prepend: ',' | append: ',' -%}
+                     {%- unless seen_variants contains variant_token -%}
+                       {%- assign seen_variants = seen_variants | append: line.variant_id | append: ',' -%}
+                       {%- comment -%}
+                         Read the plan off THIS variant's allocations, not the
+                         product's selling_plan_groups. A bundle child product has
+                         one variant per size tier, each with its own monthly plan;
+                         the product's groups list them all, so taking the first
+                         one hands most variants a plan they cannot accept and the
+                         cart rejects the line.
+                       {%- endcomment -%}
+                       {%- assign line_month_plan = '' -%}
+                       {%- for allocation in line.variant.selling_plan_allocations -%}
+                         {%- if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month' -%}
+                           {%- assign line_month_plan = allocation.selling_plan.id -%}
+                           {%- break -%}
+                         {%- endif -%}
+                       {%- endfor -%}
+                       {%- unless sub_first -%},{%- endunless -%}"{{ line.variant_id }}":{{ line_month_plan | json }}
+                       {%- assign sub_first = false -%}
+                     {%- endunless -%}
+                   {%- endif -%}
+                 {%- endfor -%}
+                 }
+                 {%- endcapture -%}
+
+                 {% if has_selling_plan %}
+                  <div
+                      data-frequency-selector
+                      data-bundle-id="{{ bundle_id | escape }}"
+                      data-subscription-plans="{{ bundle_subscription_plans | strip | escape }}"
+                      class="flex justify-center w-full bg-[#F9F3ED] py-3.5 px-4"
+                    >
+                      <div class="relative w-full">
+                        <button
+                          data-frequency-button
+                          type="button"
+                          data-action="toggle-frequency"
+                          aria-expanded="false"
+                          aria-controls="bundle-frequency-{{ bundle_id | handleize }}"
+                          class="relative cursor-pointer text-left flex items-center whitespace-nowrap font-kurdis-semi-condensed text-espresso font-bold justify-between gap-2 py-2 rounded-[2px] w-full border border-[#E0D2C6] px-4"
+                        >
+                          <span data-frequency class="flex items-center gap-2">
+                            {% if has_selling_plan %}
+                              {% render 'icons',
+                                icon: 'recurring',
+                                class: 'text-sm inline-flex'
+                              %}
+                            {% endif %}
+
+                            <span data-frequency-label>
+                              {{ selector_value }}
+                            </span>
+                          </span>
+
+                          {% render 'icons', icon: 'chevron-down', class: 'chevron-down text-sm relative z-[12] transition-transform duration-300'%}
+                        </button>
+
+                        <div
+                          id="bundle-frequency-{{ bundle_id | handleize }}"
+                          data-frequency-dropdown
+                          class="absolute top-0 left-0 min-w-48 rounded-[2px] shadow-button z-10 origin-top-left bg-[#F9F3ED] outline-none border border-[#E0D2C6] w-full"
+                          hidden
+                        >
+                          {%- assign current_plan_id = parent_item.selling_plan_allocation.selling_plan.id -%}
+
+                          {%- comment -%} Capture each option so the currently-selected one can be rendered first. {%- endcomment -%}
+                          {%- comment -%}
+                            Options come from the parent variant's own allocations.
+                            product.selling_plan_groups spans every variant, so its
+                            ids are frequently ones this variant cannot accept.
+                          {%- endcomment -%}
+                          {%- capture subscription_options -%}
+                            {% for allocation in parent_item.variant.selling_plan_allocations %}
+                              {% assign selling_plan = allocation.selling_plan %}
+                                {% assign selling_plan_name = selling_plan.name | downcase %}
+                                {% if selling_plan_name contains '1 month' %}
+                                  {% assign selling_plan_label = selling_plan.name
+                                    | split: ' - '
+                                    | first
+                                  %}
+
+                                  <button
+                                    type="button"
+                                    data-action="change-frequency"
+                                    data-bundle-id="{{ bundle_id | escape }}"
+                                    data-selling-plan-id="{{ selling_plan.id }}"
+                                    data-selling-plan-name="{{ selling_plan_label | escape }}"
+                                    {% if has_selling_plan and selling_plan.id == current_plan_id %}aria-current="true"{% endif %}
+                                    class="relative cursor-pointer font-kurdis-semi-condensed text-espresso font-bold px-4 py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 gap-2 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                  >
+                                    {% render 'icons',
+                                      icon: 'recurring',
+                                      class: 'text-sm inline-flex'
+                                    %}
+
+                                    {{ selling_plan_label }}
+
+                                    {% comment %} {{ selling_plan.name }} {% endcomment %}
+
+
+                                    <span class="absolute bottom-0 left-0 w-full h-px bg-[#E0D2C6]"></span>
+                                  </button>
+                                {% endif %}
+                            {% endfor %}
+                          {%- endcapture -%}
+
+                          {%- capture one_time_option -%}
+                            <button
+                              type="button"
+                              data-action="change-frequency"
+                              data-bundle-id="{{ bundle_id | escape }}"
+                              data-selling-plan-id=""
+                              data-selling-plan-name="One Time Purchase"
+                              {% unless has_selling_plan %}aria-current="true"{% endunless %}
+                              class="relative cursor-pointer pl-6 pr-4 font-kurdis-semi-condensed text-espresso font-bold py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              One Time Purchase
+                            </button>
+                          {%- endcapture -%}
+
+                          {%- comment -%} Selected frequency first. {%- endcomment -%}
+                          {% if has_selling_plan %}
+                            {{ subscription_options }}
+                            {{ one_time_option }}
+                          {% else %}
+                            {{ one_time_option }}
+                            {{ subscription_options }}
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% else %}
+                    {%- comment -%}
+                      The parent's own "1 Month" plan. Upgrading is just a
+                      change-frequency to that plan, so it reuses that handler;
+                      the plan map rides on the button because there is no
+                      [data-frequency-selector] wrapper in this branch.
+                    {%- endcomment -%}
+                    {%- assign bundle_parent_month_plan = '' -%}
+                    {%- for allocation in parent_item.variant.selling_plan_allocations -%}
+                      {%- if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month' -%}
+                        {%- assign bundle_parent_month_plan = allocation.selling_plan.id -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+
+                    {% if bundle_parent_month_plan != '' %}
+                      <div class="py-3.5 px-4">
+                        <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                        data-upgrade-to-autoship
+                        data-action="change-frequency"
+                        data-bundle-id="{{ bundle_id | escape }}"
+                        data-selling-plan-id="{{ bundle_parent_month_plan }}"
+                        data-subscription-plans="{{ bundle_subscription_plans | strip | escape }}">
+                          Upgrade to Autoship and Save 
+                          
+                          {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
+                            {{ bundle_total_autoship_savings_percentage }}
+                          {% endunless %}
+                        </button>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+
+                  <div class="flex items-center justify-between relative p-4">
+                    <div class="absolute top-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1 cursor-pointer text-kraft underline text-sm font-kurdis-semi-condensed font-bold hover:!text-gold transition-all duration-300"
+                      data-bundle-edit-trigger
+                      {% if parent_item.properties._bundle_type == '32oz' %}
+                        data-bundle-type="{{ parent_item.properties._bundle_type }}"
+                        data-bundle-size="{{ parent_item.properties._bundle_size }}"
+                        data-flavor-type="{{ parent_item.properties._flavor_type }}"
+                      {% endif %}
+                      data-bundle-id="{{ bundle_id | escape }}"
+                      data-selling-plan="{{ parent_item.selling_plan_allocation.selling_plan.id }}"
+                      data-collection-handle="{{ collection_handle | escape }}"
+                      data-bundle-name="{{ parent_item.properties._bundle_name | handleize }}"
+                    >
+                      {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %}
+                      Add/Modify Flavors
+                    </button>
+                  {% comment %} Total bundle price {% endcomment %}
+                  <div class="flex items-center gap-1">
+                    {% if total_original_price > total_bundle_price %}
+                      <span class="text-sm line-through text-[#1B1B1B80] font-bold">{{ total_original_price | money }}</span>
+                    {% endif %}
+                    <span class="text-sm font-bold text-bear-black">{{ total_bundle_price | money }}</span>
+                  </div>
+                </div>
+                <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+                </div>
+            {% endfor %}
+
         <table
           class="cart-items__table"
           role="table"
@@ -129,202 +535,87 @@
 
           <tbody role="rowgroup">
 
-          {% comment %} Bundle items: {% endcomment %}
-
-            {% assign bundle_parent_ids = '' %}
-
-            {% for item in cart.items %}
-              {% if item.properties._bundle_id != blank and item.properties._bundle_parent == 'true' %}
-                {% assign bundle_parent_ids = bundle_parent_ids
-                  | append: item.properties._bundle_id
-                  | append: '||'
-                %}
-              {% endif %}
-            {% endfor %}
-
-            {% assign bundle_parent_ids = bundle_parent_ids | split: '||' | compact %}
-
-            {% comment %} Render bundles {% endcomment %}
-            {% for bundle_id in bundle_parent_ids %}
-              {% assign parent_item = blank %}
-
-              {% for item in cart.items %}
-                {% if item.properties._bundle_id == bundle_id and item.properties._bundle_parent == 'true' %}
-                  {% assign parent_item = item %}
-                  {% assign bundle_id = item.properties._bundle_id %}
-                  {% break %}
-                {% endif %}
-              {% endfor %}
-
-              <div class="bg-[#F9F3ED] font-kurdis-semi-condensed rounded-[5px] overflow-hidden">
-                {% if parent_item != blank %}
-                  {% assign collection_handle = parent_item.properties._collection_handle %}
-                  {% assign product_object = parent_item.product.metafields.custom.product_group.value %}
-                  {% assign product_title = product_object.headline | append: ' · ' | append: product_object.size %}
-                  <div class="flex font-gothic_condensed text-bear-black font-bold uppercase text-lg justify-between items-center relative p-4">
-                    {% if product_title != blank %}
-                      {{ product_title }}
-                    {% else %}
-                      {{ parent_item.product.title }}
-                    {% endif %}
-                    <button type="button" class="cursor-pointer" 
-                    data-key="{{ parent_item.key }}" 
-                    data-bundle-id="{{ bundle_id }}" @click="removeBundle('{{ bundle_id }}')">
-                      {% render 'icons', icon: 'delete', class: 'text-sm' %} 
-                    </button>
-                    <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
-                  </div>
-                {% endif %}
-
-                {% assign total_bundle_price = 0 %}
-                {% for item in cart.items %}
-
-                  {% if item.properties._bundle_id == bundle_id %}
-                    {% unless item.properties._bundle_parent == 'true' %}
-                    {% assign compare_at_price = item.product.variants.first.compare_at_price | money %}
-                    {% assign total_bundle_price = total_bundle_price | plus: item.price | times: item.quantity %}
-
-                      <div data-key="{{ item.key }}" 
-                      data-bundle-id="{{ bundle_id }}" 
-                      class="relative flex p-4 gap-2">
-                        <div class="w-12">
-                          {{ item.image | image_url: width: 100 | image_tag }}
-                        </div>
-                        <div class="flex flex-col">
-                          <div class="font-bold text-bear-black text-sm">
-                            {{ item.properties._flavor }}
-                          </div>
-                          <div class="flex items-center gap-1 font-bold text-xs">
-                            <div>
-                              <s>{{ compare_at_price }}</s>
-                            </div>
-                            <div>
-                              <span class="text-kraft">{{ item.price | money }} x {{ item.quantity }}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
-                      </div>
-                    {% endunless %}
-                  {% endif %}
-                {% endfor %}
-
-                {%  liquid 
-                    assign selector_value = ''
-                    assign has_selling_plan = false
-                    if parent_item.properties._bundle_id == bundle_id
-                        if parent_item.selling_plan_allocation != null
-                          assign has_selling_plan = true
-                          assign selector_value = parent_item.selling_plan_allocation.selling_plan.name | split: ' - ' | first
-                        else
-                          assign selector_value = 'One Time Purchase'
-                        endif
-                    endif
-                %}
-                
-                 {% comment %} Frequency Dropdown {% endcomment %}
-
-                 <div data-selector-container class="flex justify-center w-full bg-[#F9F3ED] py-3.5 px-4">
-                    <div
-                        x-data="{
-                            open: false,
-                            toggle() {
-                                if (this.open) {
-                                    return this.close()
-                                }
-
-                                this.$refs.button.focus()
-
-                                this.open = true
-                            },
-                            close(focusAfter) {
-                                if (! this.open) return
-
-                                this.open = false
-
-                                focusAfter && focusAfter.focus()
-                            }
-                        }"
-                        x-on:keydown.escape.prevent.stop="close($refs.button)"
-                        x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
-                        x-id="['dropdown-button']"
-                        class="relative w-full"
-                    >
-                        <!-- Button -->
-                        <button
-                            x-ref="button"
-                            x-on:click="toggle()"
-                            :aria-expanded="open"
-                            :aria-controls="$id('dropdown-button')"
-                            type="button"
-                            class="relative cursor-pointer text-left flex items-center whitespace-nowrap font-kurdis-semi-condensed text-espresso font-bold justify-between gap-2 py-2 rounded-[2px] w-full border border-[#E0D2C6] px-4"
-                        >
-                        <span data-frequency>
-                        {% if has_selling_plan %}
-                            {% render 'icons', icon: 'recurring', class: 'text-sm inline-flex' %} 
-                          {% endif %}
-                            {{ selector_value }}
-                        </span>
-                            <!-- Heroicon: micro chevron-down -->
-                            {% render 'icons', icon: 'chevron-down', class: 'text-sm' %}
-                        </button>
-
-                        <!-- Panel -->
-                        <div
-                            data-frequency-dropdown
-                            id="frequency-dropdown"
-                            x-ref="panel"
-                            x-show="open"
-                            x-transition.origin.top.left
-                            x-on:click.outside="close($refs.button)"
-                            :id="$id('dropdown-button')"
-                            x-cloak
-                            class="absolute top-0 left-0 min-w-48 rounded-[2px] shadow-button z-10 origin-top-left bg-[#F9F3ED] outline-none border border-[#E0D2C6] w-full"
-                        >
-                        {% for selling_plan_group in parent_item.product.selling_plan_groups %}
-                            {% for selling_plan in selling_plan_group.selling_plans %}
-                              {% if selling_plan.name contains '1 Month' or selling_plan.name contains '1 month' %}
-                                <a href="#{{ selling_plan.id }}" class="relative font-kurdis-semi-condensed text-espresso font-bold px-4 lg:py-2 py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 gap-2 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                                      {% render 'icons', icon: 'recurring', class: 'text-sm inline-flex' %} 
-                                      {{ selling_plan.name | split: ' - ' | first }}
-                                      <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#E0D2C6]"></div>
-                                </a>
-                              {% endif %}
-                            {% endfor %}
-                          {% endfor %}
-                          <a href="#one-time-purchase" class="relative pl-6 pr-4 py-4 font-kurdis-semi-condensed text-espresso font-bold py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                              One Time Purchase
-                          </a>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center justify-between relative p-4">
-                  <div @click="modifyBundle('{{ collection_handle }}', '{{ parent_item.properties._bundle_name | handleize }}', '{{ parent_item.properties._bundle_id }}')" class="inline-flex items-center gap-1 cursor-pointer text-kraft">
-                    {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %} 
-                    <button type="button" class="underline text-sm cursor-pointer">Add/Modify Flavors</button>
-                  </div>
-                  {% comment %} Total bundle price {% endcomment %}
-                  <span class="text-sm">{{ total_bundle_price | money }}</span>
-                </div>
-                <div class="absolute bottom-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
-                </div>
-            {% endfor %}
-
             {% comment %} Non-bundle items: {% endcomment %}
-              
+
             {% for item in cart.items %}
               {% unless item.properties._bundle_id != blank %}
+              {% liquid
+                 assign quantified = false
+                 
+                 for tag in item.product.tags
+                  if tag == 'custom-quantity-rule'
+                    assign quantified = true
+                    break
+                  endif
+                 endfor
+
+                assign price = item.final_line_price
+                if quantified
+                  assign original_price = item.product.variants[0].price | times: item.quantity
+                elsif item.compare_at_price > item.final_line_price
+                  assign original_price = item.compare_at_price
+                else
+                  assign original_price = item.original_line_price
+                endif
+                assign unit_price = item.unit_price | money
+              %}
+
+              {%- comment -%}
+                Per-line subscription state. These used to read the bundle loop's
+                leftovers (has_selling_plan / selector_value / parent_item /
+                bundle_id), so every non-bundle row inherited the last bundle's
+                state and targeted that bundle's lines.
+              {%- endcomment -%}
+              {%- liquid
+                assign item_has_selling_plan = false
+                assign item_selector_value = 'One Time Purchase'
+                assign item_current_plan_id = ''
+
+                if item.selling_plan_allocation != null
+                  assign item_has_selling_plan = true
+                  assign item_selector_value = item.selling_plan_allocation.selling_plan.name | split: ' - ' | first
+                  assign item_current_plan_id = item.selling_plan_allocation.selling_plan.id
+                endif
+
+                comment
+                  Per-variant allocations, not product.selling_plan_groups: the
+                  groups span every variant, so the first monthly plan there is
+                  often one this variant cannot accept.
+                endcomment
+                assign item_month_plan = ''
+                for allocation in item.variant.selling_plan_allocations
+                  if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month'
+                    assign item_month_plan = allocation.selling_plan.id
+                    break
+                  endif
+                endfor
+
+                assign item_autoship_savings_percentage = 0
+                for allocation in item.variant.selling_plan_allocations
+                  if allocation.selling_plan.name contains '1 Month' or allocation.selling_plan.name contains '1 month'
+                    assign item_full_price = item.variant.price | times: item.quantity
+                    assign item_autoship_price = allocation.per_delivery_price | times: item.quantity
+                    if item_full_price > 0
+                      assign item_savings = item_full_price | minus: item_autoship_price
+                      assign item_autoship_savings_percentage = item_savings | times: 100.0 | divided_by: item_full_price | round: 0 | append: '%'
+                    endif
+                    break
+                  endif
+                endfor
+              -%}
 
               <tr
                 role="row"
-                class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}"
+                class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}
+                bg-[#F9F3ED] font-kurdis-semi-condensed rounded-[5px] overflow-hidden"
                 ref="cartItemRows[]"
                 data-parent-key="{{ item.parent_relationship.parent.key }}"
                 data-key="{{ item.key }}"
               >
+              <td role="cell" headers="productInformation" class="flex w-full col-span-full">
+              </td>
                 <td
-                  class="cart-items__media"
+                  class="cart-items__media !py-3 !pl-4"
                   role="cell"
                   headers="productImage"
                 >
@@ -349,7 +640,7 @@
                       style="--ratio:{{ ratio }};"
                     >
                       {%- liquid
-                        echo item.image | image_url: width: 250 | image_tag: class: 'cart-items__media-image border-style', style: border_override
+                        echo item.image | image_url: width: 250 | image_tag: class: 'cart-items__media-image border-style object-conain', style: border_override
                       -%}
                     </a>
                   {%- endif %}
@@ -359,11 +650,11 @@
                   role="cell"
                   headers="productInformation"
                 >
-                  <div class="cart-items__product-info">
+                  <div class="cart-items__product-info !pt-3">
                     <p>
                       <a
                         href="{{ item.url }}"
-                        class="cart-items__title"
+                        class="font-kurdis-semi-condensed text-bear-black font-bold uppercase text-lg"
                         {% if item.parent_relationship.parent != null %}
                           aria-label="{{ 'accessibility.nested_product' | t: product_title: item.product.title, parent_title: item.parent_relationship.parent.title | escape }}"
                         {% endif %}
@@ -371,6 +662,10 @@
                         {{- item.product.title -}}
                       </a>
                     </p>
+                    <div class="font-kurdis-semi-condensed text-espresso font-bold text-sm">
+                      {{ item.price | money }} x {{ item.quantity }}
+                    </div>
+                    
                     {% if item.product.vendor and block_settings.vendor %}
                       <p>
                         {{ item.product.vendor }}
@@ -391,181 +686,173 @@
                     {%- endif -%}
                   </div>
 
-                  <div class="cart-items__variants-wrapper">
-                    {%- if item.product.has_only_default_variant == false
-                      or item.properties.size != 0
-                      or item.selling_plan_allocation != null
-                    -%}
-                      {%- if item.product.has_only_default_variant == false and item.item_components.size == 0 -%}
-                        <dl class="cart-items__variants">
-                          {%- for option in item.options_with_values -%}
-                            <div class="cart-items__variant">
-                              <dt class="visually-hidden">{{ option.name }}:</dt>
-                              <dd>
-                                {{- option.value -}}
-                                {%- if forloop.last != true %},&nbsp;{% endif -%}
-                              </dd>
-                            </div>
-                          {%- endfor -%}
-                        </dl>
-                      {%- endif -%}
-
-                      {%- liquid
-                        assign has_visible_properties = false
-                        for property in item.properties
-                          assign property_first_char = property.first | slice: 0
-                          if property.last != blank and property_first_char != '_'
-                            assign has_visible_properties = true
-                            break
-                          endif
-                        endfor
-                      -%}
-                      {%- if has_visible_properties -%}
-                        <dl class="cart-items__properties">
-                          {%- for property in item.properties -%}
-                            {%- assign property_first_char = property.first | slice: 0 -%}
-                            {%- if property.last != blank and property_first_char != '_' -%}
-                              <div class="cart-items__property">
-                                <dt>{{ property.first }}:</dt>
-                                <dd>
-                                  {%- if property.last contains '/uploads/' -%}
-                                    <a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
-                                  {%- else -%}
-                                    {{ property.last }}
-                                  {%- endif -%}
-                                </dd>
-                              </div>
-                            {%- endif -%}
-                          {%- endfor -%}
-                        </dl>
-                      {%- endif -%}
-
-                      {%- if item.selling_plan_allocation -%}
-                        <p>{{ item.selling_plan_allocation.selling_plan.name }}</p>
-                      {%- endif -%}
-
-                      {%- if item.line_level_discount_allocations.size > 0 -%}
-                        <ul
-                          class="list-unstyled"
-                          role="list"
-                        >
-                          {%- for discount in item.line_level_discount_allocations -%}
-                            <li>{{ discount.discount_application.title | escape }}</li>
-                          {%- endfor -%}
-                        </ul>
-                      {%- endif -%}
-                    {%- endif -%}
-                  </div>
-
-                  <div class="cart-items__unit-price-wrapper">
-                    <div>
-                      {% if item.original_price != item.final_price %}
-                        <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                        <span>{{ item.final_price | money }}</span>
-                        <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                        <s class="compare-at-price">
-                          {% if item.variant.compare_at_price > item.original_price %}
-                            {{ item.variant.compare_at_price | money }}
-                          {% else %}
-                            {{ item.original_price | money }}
-                          {% endif %}
-                        </s>
-                      {% else %}
-                        {% if item.variant.compare_at_price > item.original_price %}
-                          <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                        {% else %}
-                          <span class="visually-hidden">{{ 'content.price' | t }}</span>
-                        {% endif %}
-
-                        <span>{{ item.original_price | money }}</span>
-
-                        {% if item.variant.compare_at_price > item.original_price %}
-                          <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                          <s class="compare-at-price">{{ item.variant.compare_at_price | money }}</s>
-                        {% endif %}
-                      {% endif %}
-                    </div>
-                  </div>
+                
                 </td>
-                <td
-                  class="cart-items__quantity"
-                  role="cell"
-                  headers="quantity"
-                >
-                  {% # Here I want to pass some arguments to the quantity block so it knows which value should the input be set to. Though quantity block could be a snippet instead %}
-                  {% assign can_update_quantity = item.instructions.can_update_quantity
-                    | default: true, allow_false: true
-                  %}
-                  <div class="cart-items__quantity-controls">
-                    {% render 'volume-pricing-info',
-                      variant: item.variant,
-                      unique_id: item.index,
-                      quantity: item.quantity
-                    %}
-
-                    {% render 'quantity-selector',
-                      product: item.product,
-                      variant: item.variant,
-                      in_cart_quantity: item.quantity,
-                      line_index: item.index,
-                      class: 'cart-primary-typography',
-                      can_update_quantity: can_update_quantity
-                    %}
-
-                    <button
-                      class="button cart-items__remove"
-                      type="button"
-                      aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
-                      on:click="/onLineItemRemove/{{ item.index | plus: 1 }}"
-                      {% assign can_remove = item.instructions.can_remove | default: true, allow_false: true %}
-                      {% if can_remove == false %}
-                        hidden
-                      {% endif %}
-                    >
-                      {{- 'icon-delete.svg' | inline_asset_content -}}
-                      <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
-                    </button>
-                  </div>
-                </td>
-                <td
-                  class="cart-items__error hidden"
-                  role="cell"
-                  ref="cartItemErrorContainer-{{ item.index | plus: 1 }}"
-                  headers="quantity"
-                >
-                  <div
-                    class="cart-item__error"
-                    role="alert"
-                  >
-                    <span class="svg-wrapper">
-                      {{- 'icon-error.svg' | inline_asset_content -}}
-                    </span>
-                    <small
-                      class="cart-item__error-text cart-primary-typography"
-                      ref="cartItemError-{{ item.index | plus: 1 }}"
-                    ></small>
-                  </div>
-                </td>
-                {%- liquid
-                  if settings.currency_code_enabled_cart_items
-                    assign price = item.final_line_price | money_with_currency
-                    assign unit_price = item.unit_price | money_with_currency
-                  else
-                    assign price = item.final_line_price | money
-                    assign unit_price = item.unit_price | money
-                  endif
-                -%}
                 <td
                   class="cart-items__price cart-secondary-typography"
                   role="cell"
                   headers="productTotal"
                 >
-                  <text-component value="{{ price | strip_html }}">{{ price }}</text-component>
-                  {%- if item.unit_price_measurement -%}
-                    <div class="cart-items__price-unit cart-secondary-typography">
-                      {% render 'unit-price', price: unit_price, measurement: item.unit_price_measurement %}
-                    </div>
-                  {%- endif -%}
+                  {% comment %} Handled by cart-products.js (data-action), not the theme's
+                     `on:click="/onLineItemRemove"` binding: that binding resolves to the
+                     closest *-component ancestor, which here is cart-products-component
+                     (not a Horizon Component), so it silently no-ops. {% endcomment %}
+                  <button
+                  class="button cart-items__remove !text-kraft hover:!text-gold transition-all duration-300"
+                  type="button"
+                  aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
+                  data-action="remove-line"
+                  data-key="{{ item.key }}"
+                  {% assign can_remove = item.instructions.can_remove | default: true, allow_false: true %}
+                  {% if can_remove == false %}
+                    hidden
+                  {% endif %}
+                >
+                  {% render 'icons', icon: 'delete', class: 'text-sm inline-flex' %}
+                  <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
+                </button>
+                </td>
+                <td class="w-full col-span-full">
+                                  
+                 {% comment %} Frequency Dropdown {% endcomment %}
+
+                 {%- comment -%}
+                   Subscribed lines always get the selector (so they can drop back
+                   to one-time, whatever plan they are on). Unsubscribed lines get
+                   the upgrade button, but only when a monthly plan exists to
+                   upgrade to.
+                 {%- endcomment -%}
+                 {% unless item.title contains 'Membership' %}
+                 {% if item_has_selling_plan %}
+                 <div
+                 data-frequency-selector
+                 data-key="{{ item.key }}"
+                 class="flex justify-center w-full bg-[#F9F3ED]"
+               >
+                 <div class="relative w-full px-4 py-3">
+                  <div class="absolute top-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
+                   <button
+                     data-frequency-button
+                     type="button"
+                     data-action="toggle-frequency"
+                     aria-expanded="false"
+                     aria-controls="line-frequency-{{ item.key | handleize }}"
+                     class="relative cursor-pointer text-left flex items-center whitespace-nowrap font-kurdis-semi-condensed text-espresso font-bold justify-between gap-2 py-2 rounded-[2px] w-full border border-[#E0D2C6] px-4"
+                   >
+                     <span data-frequency class="flex items-center gap-2">
+                       {% if item_has_selling_plan %}
+                         {% render 'icons',
+                           icon: 'recurring',
+                           class: 'text-sm inline-flex'
+                         %}
+                       {% endif %}
+
+                       <span data-frequency-label>
+                         {{ item_selector_value }}
+                       </span>
+                     </span>
+
+                     {% render 'icons', icon: 'chevron-down', class: 'chevron-down text-sm relative z-[12] transition-transform duration-300' %}
+                   </button>
+
+                   <div
+                     id="line-frequency-{{ item.key | handleize }}"
+                     data-frequency-dropdown
+                     class="absolute top-0 left-0 min-w-48 rounded-[2px] shadow-button z-10 origin-top-left bg-[#F9F3ED] outline-none border border-[#E0D2C6] w-full"
+                     hidden
+                   >
+                     {%- assign current_plan_id = item_current_plan_id -%}
+
+                     {%- comment -%} Capture each option so the currently-selected one can be rendered first. {%- endcomment -%}
+                     {%- comment -%}
+                       This variant's own allocations, not the product's groups —
+                       see the bundle selector above for why.
+                     {%- endcomment -%}
+                     {%- capture subscription_options -%}
+                       {% for allocation in item.variant.selling_plan_allocations %}
+                         {% assign selling_plan = allocation.selling_plan %}
+                           {% if selling_plan.name contains '1 Month'
+                             or selling_plan.name contains '1 month'
+                           %}
+                             {% assign selling_plan_label = selling_plan.name
+                               | split: ' - '
+                               | first
+                             %}
+
+                             <button
+                               type="button"
+                               data-action="change-frequency"
+                               data-key="{{ item.key }}"
+                               data-selling-plan-id="{{ selling_plan.id }}"
+                               data-selling-plan-name="{{ selling_plan_label | escape }}"
+                               {% if item_has_selling_plan and selling_plan.id == current_plan_id %}aria-current="true"{% endif %}
+                               class="relative cursor-pointer font-kurdis-semi-condensed text-espresso font-bold px-4 py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 gap-2 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                             >
+                               {% render 'icons',
+                                 icon: 'recurring',
+                                 class: 'text-sm inline-flex'
+                               %}
+
+                               {{ selling_plan_label }}
+
+                               <span class="absolute bottom-0 left-0 w-full h-px bg-[#E0D2C6]"></span>
+                             </button>
+                           {% endif %}
+                       {% endfor %}
+                     {%- endcapture -%}
+
+                     {%- capture one_time_option -%}
+                       <button
+                         type="button"
+                         data-action="change-frequency"
+                         data-key="{{ item.key }}"
+                         data-selling-plan-id=""
+                         data-selling-plan-name="One Time Purchase"
+                         {% unless item_has_selling_plan %}aria-current="true"{% endunless %}
+                         class="relative cursor-pointer pl-6 pr-4 font-kurdis-semi-condensed text-espresso font-bold py-2 w-full flex items-center transition-colors text-left text-gray-800 hover:bg-gray-50 focus-visible:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                       >
+                         One Time Purchase
+                       </button>
+                     {%- endcapture -%}
+
+                     {%- comment -%} Selected frequency first. {%- endcomment -%}
+                     {% if item_has_selling_plan %}
+                       {{ subscription_options }}
+                       {{ one_time_option }}
+                     {% else %}
+                       {{ one_time_option }}
+                       {{ subscription_options }}
+                     {% endif %}
+                   </div>
+                 </div>
+               </div>
+               {% elsif item_month_plan != '' %}
+                 {%- comment -%}
+                   Same upgrade affordance as a bundle, targeting this one line.
+                 {%- endcomment -%}
+                 <div class="px-4 py-3 relative">
+                   <div class="absolute top-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
+                   <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                     data-upgrade-to-autoship
+                     data-action="change-frequency"
+                     data-key="{{ item.key }}"
+                     data-selling-plan-id="{{ item_month_plan }}">
+                     Upgrade to Autoship and Save
+                     {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
+                      {{ item_autoship_savings_percentage }}
+                     {% endunless %}
+                   </button>
+                 </div>
+               {% endif %}
+               {% endunless %}
+
+                </td>
+                <td class="w-full font-kurdis-semi-condensed col-span-full flex justify-end items-center gap-1 text-sm font-bold text-bear-black py-3 px-4 relative">
+                  <div class="absolute top-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
+                  {% if original_price > price %}
+                    <span class="line-through opacity-50">{{ original_price | money }}</span>
+                  {% endif %}
+                  <span>{{ price | money}}</span>
                 </td>
               </tr>
               {% endunless %}
@@ -575,7 +862,7 @@
       </div>
     </form>
   {%- endif -%}
-</div>
+</cart-products-component>
 
 {% stylesheet %}
   .cart-items {

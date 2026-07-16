@@ -1583,7 +1583,7 @@ zoom-dialog dialog {
 
 /* Animate the UI elements in only after the view transition is complete */
 .close-button {
-  position: fixed;
+  position: absolute;
   top: var(--margin-lg);
   right: var(--margin-lg);
   width: var(--minimum-touch-target);

@@ -37,6 +37,75 @@
   </cart-icon>
 {% endcapture %}
 
+ 
+{%  
+  liquid  
+  assign total_original_price = 0
+  assign total_price = 0
+  assign savings_text = 'Total savings'
+  assign is_autoship = false
+
+  assign is_member = false
+  assign member_tier = ''
+
+  for tag in customer.tags
+    case tag
+      when 'inveterate-tier#72ccf378'
+        assign member_tier = 'VIP'
+      when 'inveterate-tier#dc38b982'
+        assign member_tier = 'Elite'
+      when 'inveterate-tier#99a431e2'
+        assign member_tier = 'Elite'
+    endcase
+  endfor
+
+  for item in cart.items
+    if item.title contains 'Membership'
+      assign is_member = true
+      assign member_tier = 'Elite'
+    endif
+    assign quantified = false
+    for tag in item.product.tags
+      if tag contains 'custom-quantity-rule'
+        assign quantified = true
+      endif
+    endfor
+
+    if item.selling_plan_allocation
+      assign is_autoship = true
+    endif
+
+    ## Total Savings Calculation ##
+
+    if quantified
+      if item.compare_at_price > item.price
+        assign total_original_price = total_original_price | plus: item.compare_at_price | times: item.quantity
+        assign total_price = total_price | plus: item.price | times: item.quantity
+      else
+        assign total_original_price = total_original_price | plus: item.product.variants.first.price | times: item.quantity
+        assign total_price = total_price | plus: item.price | times: item.quantity
+      endif
+    elsif item.compare_at_price > item.price
+      assign total_original_price = total_original_price | plus: item.compare_at_price
+      assign total_price = total_price | plus: item.price
+    else 
+      assign total_original_price = total_original_price | plus: item.final_line_price
+      assign total_price = total_price | plus: item.price
+    endif
+  endfor
+
+  if is_member
+    assign savings_text = 'Total membership savings'
+  endif
+
+  assign total_savings = total_original_price | minus: total_price
+
+  unless is_autoship
+    assign total_savings = total_savings | plus: cart.total_discounts
+  endunless
+%}
+
+
 {% capture account_icon %}
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -100,6 +169,16 @@
       type="module"
       fetchpriority="low"
     ></script>
+    <script
+      src="{{ 'cart-products.js' | asset_url }}"
+      type="module"
+      fetchpriority="low"
+    ></script>
+    <script
+      src="{{ 'bundle-editor.js' | asset_url }}"
+      type="module"
+      fetchpriority="low"
+    ></script>
 
     {% capture empty_cart_drawer_content %}
       <div class="cart-drawer__header">
@@ -110,12 +189,13 @@
           aria-label="{{ 'actions.close_dialog' | t }}"
         >
           <span class="svg-wrapper">
-            {{- 'icon-close.svg' | inline_asset_content -}}
+            {% render 'icons', icon: 'close', class: 'w-4 h-4' %}
           </span>
         </button>
       </div>
 
       <div
+        data-cart-drawer-content
         class="cart-drawer__content"
         aria-label="{{ 'accessibility.cart' | t }}"
       >
@@ -155,42 +235,59 @@
       >
         {{ cart_icon }}
       </button>
-
       <dialog
-        ref="dialog"
-        class="cart-drawer__dialog dialog-modal dialog-drawer color-{{ settings.drawer_color_scheme }}{% if cart.empty? %} cart-drawer--empty {% endif %}"
-        data-testid="cart-drawer-dialog"
-        aria-labelledby="{% if cart.empty? %}cart-drawer-heading-empty{% else %}cart-drawer-heading{% endif %}"
-        scroll-lock
-        cart-summary-sticky="true"
-      >
+      ref="dialog"
+      class="cart-drawer__dialog dialog-modal dialog-drawer color-{{ settings.drawer_color_scheme }}{% if cart.empty? %} cart-drawer--empty{% endif %}"
+      data-testid="cart-drawer-dialog"
+      aria-labelledby="{% if cart.empty? %}cart-drawer-heading-empty{% else %}cart-drawer-heading{% endif %}"
+      scroll-lock
+      cart-summary-sticky="true"
+    >
       <div>
-          <span
-            ref="liveRegion"
-            class="visually-hidden"
-            role="status"
-          ></span>
-          <div 
-            class="cart-drawer__inner"
-            data-hydration-key="cart-drawer-inner"
-          >
-            <div>
-              {% capture cart_items_children %}
-                {%- if cart.empty? -%}
-                  {{ empty_cart_drawer_content }}
-                {%- else -%}
+        <span
+          ref="liveRegion"
+          class="visually-hidden"
+          role="status"
+        ></span>
+    
+        <div
+          class="cart-drawer__inner"
+          data-hydration-key="cart-drawer-inner"
+        >
+          <div>
+            {% capture cart_items_children %}
+              {%- if cart.empty? -%}
+                {{ empty_cart_drawer_content }}
+              {%- else -%}
+    
+                <div data-cart-view>
                   <div
-                    class="cart-drawer__header"
+                    class="cart-drawer__header !p-0 flex flex-col gap-0"
                     id="cart-drawer-header"
                   >
+                  {% if settings.announcement_text != blank %}
+                  <div class="w-full flex items-center justify-center gap-2 p-3"
+                  style="background-color: {{ settings.announcement_color_scheme.settings.background }};
+                  color: {{ settings.announcement_color_scheme.settings.text }};"
+                  >
+                    {% if settings.announcement_text != blank %}
+                      <span class="font-kurdis-semi-condensed text-xs font-semibold">
+                        {% if settings.announcement_icon != blank %}
+                          {{ settings.announcement_icon | image_url: width: 20 | image_tag: class: 'w-4 h-4 inline-block' }}
+                        {% endif %}
+                         {{ settings.announcement_text }}
+                      </span>
+                    {% endif %}
+                  </div>
+                  {% endif %}
+                  <div class="flex justify-between items-center p-5 w-full relative">
                     <h2
-                      class="cart-drawer__heading !font-gothic_condensed font-bold text-bear-black uppercase text-lg"
+                      class="cart-drawer__heading font-kurdis-semi-condensed font-extrabold text-espresso uppercase text-xl"
                       id="cart-drawer-heading"
                     >
-                      {{ 'content.cart_title' | t }}
-                      {% render 'cart-bubble' %}
+                      YOUR BAG
                     </h2>
-
+    
                     <button
                       ref="closeButton"
                       on:click="cart-drawer-component/close"
@@ -198,40 +295,55 @@
                       aria-label="{{ 'actions.close_dialog' | t }}"
                     >
                       <span class="svg-wrapper">
-                        {{- 'icon-close.svg' | inline_asset_content -}}
+                        {% render 'icons', icon: 'close', class: 'w-4 h-4' %}
                       </span>
                     </button>
+                    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
+                    </div>
                   </div>
-
+    
                   <scroll-hint
                     class="cart-drawer__content"
                     aria-label="{{ 'accessibility.cart' | t }}"
                     style="--header-height: 60px;"
                   >
                     <scroll-hint
-                      class="cart-drawer__items !gap-3"
+                      class="cart-drawer__items !gap-3 pt-5.5"
                     >
                       {% render 'cart-products' %}
                     </scroll-hint>
 
-                    <div
-                      class="cart-drawer__summary"
-                    >
-                      {% render 'aw-cart-summary', section_id: section.id %}
+                    <div class="cart-drawer__summary">
+                      {% render 'aw-cart-summary', section_id: section.id, total_savings: total_savings, is_member: is_member, member_tier: member_tier, is_autoship: is_autoship %}
+
+                      {% if total_savings > 0 %}
+                        <div class="flex justify-center items-start h-20 text-xs font-kurdis-semi-condensed font-bold text-gold">
+                              <span>{{ savings_text }}: {{ total_savings | money }}</span>
+                        </div>
+                      {% endif %}
                     </div>
                   </scroll-hint>
-                {%- endif -%}
-              {% endcapture %}
-              {% render 'cart-items-component', children: cart_items_children, is_drawer: true, section_id: section.id %}
-            </div>
+                </div>
+    
+              {%- endif -%}
+            {% endcapture %}
+    
+            {% render 'cart-items-component',
+              children: cart_items_children,
+              is_drawer: true,
+              section_id: section.id
+            %}
           </div>
-          <div
-          class="modify-bundle bg-[#F2E6DC] absolute top-0 right-0 bottom-0 left-0 z-1000 transition-all duration-300"
-          :class='$store.cart.state === "modifyBundle" ? "translate-x-0" : "translate-x-full"'>
-            {% render 'cart-modify-bundle', bundleItems: bundleItems %}
-          </div>
-          </div>
-      </dialog>
+        </div>
+      </div>
+
+      <bundle-editor-component
+        class="modify-bundle bg-[#F2E6DC] absolute top-0 right-0 bottom-0 left-0 z-1000"
+        data-testid="bundle-editor"
+      >
+        <div data-bundle-panel class="h-full"></div>
+      </bundle-editor-component>
+    </dialog>
      
     </cart-drawer-component>
   {% else %}
@@ -364,6 +476,15 @@
     }
   }
 
+  bundle-editor-component.modify-bundle {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+
+  bundle-editor-component.modify-bundle[data-open] {
+    transform: translateX(0);
+  }
+
   .cart-drawer__dialog {
     position: fixed;
     overflow: hidden;
@@ -453,7 +574,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--gap-xl);
+    /* gap: var(--gap-xl); */
     padding: var(--cart-drawer-summary-padding);
     margin-top: auto;
     background-color: var(--color-background);

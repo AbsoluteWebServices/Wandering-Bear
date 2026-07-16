@@ -1,10 +1,32 @@
+<style>
+  /* Undo the UA + theme dialog chrome; layout still comes from the classes. */
+  .aw-modal__panel {
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
+  }
+
+  /* Our own overlay below does the dimming; skip the native one. */
+  .aw-modal__panel::backdrop {
+    background: transparent;
+  }
+</style>
+
 <div
     x-data="modal({ handle: '{{ modal.system.handle }}' })"
     @modal-open.window="e => open(e.detail)"
     @modal-close.window="close($event.detail)"
 >
     <template x-if="isOpen">
-        <aside class="fixed inset-0 h-full w-full z-99999 wb-flex justify-center items-center ">
+        <dialog
+            class="aw-modal__panel fixed inset-0 h-full w-full z-99999 wb-flex justify-center items-center"
+            x-init="$nextTick(() => $el.isConnected && !$el.open && $el.showModal())"
+            @cancel.prevent="close()"
+        >
             <div
                 class="absolute inset-0 h-full w-full bg-black/50 z-10"
                 x-show="isShown"
@@ -39,10 +61,10 @@
                             {%- endif -%}
                         {%- endfor -%}
                 
-                    </div>            
+                    </div>
                 </div>
             </div>
-        </aside>
+        </dialog>
     </template>
 </div>
 

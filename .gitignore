@@ -16,6 +16,7 @@ snippets/vite-tag.liquid
 
 # Claude local settings (personal, per-worktree)
 .claude/settings.local.json
+.claude/*
 
 # Figma pull secret
 .figma-token

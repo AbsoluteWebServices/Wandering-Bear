@@ -108,8 +108,6 @@ export default (Alpine: AlpineType) => {
           } else {
             return this.bundleParentProducts[this._mapToBundle()];
           }
-          // const index = (this.bundleSize <= 2) ? (this.bundleSize - 1) : 2;
-          // return this.bundleParentProducts[index]
         },
         
         get assignedBundleProducts() {
@@ -143,6 +141,8 @@ export default (Alpine: AlpineType) => {
                     _flavor_name: product.flavor_name ? product.flavor_name : '',
                     _bundle_name: product.bundle_name ? product.bundle_name : '',
                     _product_badge: product.badge ? product.badge : '',
+                    _flavor_type: this.flavorType ? this.flavorType : '',
+                    _bundle_type: this.bundleType ? this.bundleType : '',
                   },
                 }
               })
@@ -198,14 +198,15 @@ export default (Alpine: AlpineType) => {
         },
 
         _setProgressBarPrices() {
-          const tierEls = document.querySelectorAll('[data-tier]')
+          const tierEls = document.querySelectorAll('[data-pdp] [data-tier]')
 
           tierEls.forEach((el, index) => {
             const priceEl = el.querySelector('[data-tier-price]')
             const savingsEl = el.querySelector('[data-tier-savings]')
-            const multiUnitQuantity = this.selectedProduct?.variants[index].multi_unit_quantity;
-            const discountType = this.selectedProduct?.variants[index].discount_type;
-            const compareAtPrice = this.selectedProduct?.variants[0].price
+            const selectedVariant = this.selectedProduct?.variants[index] || null;
+            const multiUnitQuantity = selectedVariant?.multi_unit_quantity || null;
+            const discountType = selectedVariant?.discount_type || null;
+            const compareAtPrice = this.selectedProduct?.variants[0]?.price || null;
 
             let autoshipPrice = 0;
             let otpPrice = 0;
@@ -213,18 +214,18 @@ export default (Alpine: AlpineType) => {
             let otpSavings = 0;
 
             if (multiUnitQuantity) {
-              autoshipPrice = this.selectedProduct?.variants[index].selling_plan_price / multiUnitQuantity;
-              otpPrice = this.selectedProduct?.variants[index].price / multiUnitQuantity;
+              autoshipPrice = selectedVariant?.selling_plan_price / multiUnitQuantity;
+              otpPrice = selectedVariant?.price / multiUnitQuantity;
             } else {
-              autoshipPrice = this.selectedProduct?.variants[index].selling_plan_price;
-              otpPrice = this.selectedProduct?.variants[index].price;
+              autoshipPrice = selectedVariant?.selling_plan_price;
+              otpPrice = selectedVariant?.price;
             }
 
             const price = this.purchaseOption === 'autoship' ? autoshipPrice : otpPrice;
 
             if (discountType === 'Percentage') {
-              autoshipSavings = 100 - (this.selectedProduct?.variants[index].selling_plan_price / compareAtPrice) * 100;
-              otpSavings = 100 - (this.selectedProduct?.variants[index].price / compareAtPrice) * 100;
+              autoshipSavings = 100 - (selectedVariant?.selling_plan_price / compareAtPrice) * 100;
+              otpSavings = 100 - (selectedVariant?.price / compareAtPrice) * 100;
             } else {
               autoshipSavings = compareAtPrice - autoshipPrice;
               otpSavings = compareAtPrice - otpPrice;
@@ -392,6 +393,7 @@ export default (Alpine: AlpineType) => {
               },
             }
 
+
         },
 
         selectProduct(productId, productHandle) {
@@ -490,7 +492,6 @@ export default (Alpine: AlpineType) => {
             let bundleName = ''
 
             this.assignedBundleProducts.forEach((item) => {
-                console.log('item',item);
                 collectionHandle = item.collectionHandle;
                 bundleName = item.bundleName;
 
@@ -505,8 +506,16 @@ export default (Alpine: AlpineType) => {
                     _collection_handle: collectionHandle,
                   },
                 }
+
+                if (this.bundleType === '32oz') {
+                  bundleItem.properties._flavor_type = this.flavorType;
+                  bundleItem.properties._bundle_type = this.bundleType;
+                  bundleItem.properties._bundle_size = this.bundleSize;
+                }
+
                 bundleCart.items.push(bundleItem);
             })
+
 
             let bundleParent = {
               id: this.parentProduct.variant_id,
@@ -518,6 +527,12 @@ export default (Alpine: AlpineType) => {
                 _bundle_name: bundleName,
                 _collection_handle: collectionHandle,
               },
+            }
+
+            if (this.bundleType === '32oz') {
+              bundleParent.properties._flavor_type = this.flavorType;
+              bundleParent.properties._bundle_type = this.bundleType;
+              bundleParent.properties._bundle_size = this.bundleSize;
             }
 
             bundleCart.items.unshift(bundleParent);
@@ -542,16 +557,18 @@ export default (Alpine: AlpineType) => {
               return
             }
           
-            const cart = await fetch('/cart.js').then(r => r.json())
-          
-            document.dispatchEvent(
-              new CartAddEvent(cart, 'bundle-atc', {
-                source: 'bundle-atc',
-                itemCount: cart.item_count,
-                autoOpen: true,
-              })
-            )
+            const cart = await fetch('/cart.js').then((response) => response.json())
 
+            document.dispatchEvent(
+              new CartAddEvent(
+                {},
+                'bundle-atc',
+                {
+                  resource: cart,
+                }
+              )
+            )
+                      
             this.selectedBundleProducts = {};
 
             this.loading = false;

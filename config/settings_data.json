@@ -56,6 +56,9 @@
     "button_border_radius_primary": 14,
     "secondary_button_border_width": 1,
     "button_border_radius_secondary": 14,
+    "announcement_text": "You’re getting free shipping!",
+    "announcement_icon": "shopify://shop_images/Bolt.svg",
+    "announcement_color_scheme": "scheme-4",
     "cart_type": "drawer",
     "cart_price_font": "secondary",
     "auto_open_cart_drawer": true,
@@ -413,7 +416,7 @@
         "settings": {
           "background": "#f2e6dc",
           "foreground_heading": "#af7404",
-          "foreground": "#F2E6DC",
+          "foreground": "#f2e6dc",
           "primary": "#000000cf",
           "primary_hover": "#000000",
           "border": "#0000000f",
