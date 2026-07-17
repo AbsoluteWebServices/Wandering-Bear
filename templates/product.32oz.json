@@ -208,6 +208,7 @@
         "desktop_media_position": "left",
         "equal_columns": false,
         "limit_details_width": false,
+        "disable_gallery_background": true,
         "subscription_value_props": "<ul><li>Free VIP Membership with locked flavor access</li><li>Discount on every order</li><li>Change or modify flavors</li><li>Total flexibility, cancel anytime</li></ul>",
         "gap": 20,
         "enable_sticky_add_to_cart": true,
