@@ -89,7 +89,7 @@
             <span
               class="relative z-1 text-xl text-cream font-kurdis-condensed uppercase font-extrabold whitespace-nowrap"
             >
-              <span x-show="status !== 'loading'">{{ restock_button_text }}</span>
+              <span class="inline-block md:mt-0.5" x-show="status !== 'loading'">{{ restock_button_text }}</span>
               <span x-show="status === 'loading'" x-cloak>...</span>
             </span>
             <svg
