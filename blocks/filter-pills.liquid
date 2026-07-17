@@ -58,7 +58,7 @@
     section-id="{{ section.id }}"
   >
     <nav aria-label="{{ nav_label | escape }}">
-      <ul class="filter-pills__list list-unstyled flex flex-wrap items-center justify-center gap-2 !m-0 !p-0" role="list">
+      <ul class="filter-pills__list list-unstyled flex flex-wrap items-center justify-center gap-2 !m-0 px-2 lg:!px-0" role="list">
         {% if block.settings.show_all %}
           {% render 'filter-pill',
             label: show_all_label,

@@ -52,6 +52,14 @@
   if product.id == empty or product == blank
     assign onboarding = true
   endif
+
+  assign product_data = product.metafields.custom.product_group.value
+  assign template_suffix = product_data.template_suffix
+  if template_suffix
+    assign product_url = product.url | append: '?view=' | append: template_suffix
+  else
+    assign product_url = product.url
+  endif
 %}
 
 <product-card
@@ -72,7 +80,7 @@
   <a
     id="{{ product_card_id | md5 }}"
     {% unless onboarding %}
-      href="{{ variant_to_link.url }}"
+      href="{{ product_url }}"
     {% endunless %}
     class="product-card__link"
     ref="productCardLink"

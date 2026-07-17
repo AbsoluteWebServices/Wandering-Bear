@@ -37,9 +37,9 @@
 >
   {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
 
-  <div class="w-full mt-[40px] mb-[50px] gap-2">
-      <div class="mx-auto flex flex-col gap-2">
-        <h1 class="display-lg font-gothic_condensed uppercase font-bold text-[60px] text-center leading-[1.1] !m-0">{{ section.settings.title }}</h1>
+  <div class="w-full mt-5 lg:mt-[40px] mb-8 lg:mb-[50px] gap-2">
+      <div class="mx-auto flex flex-col gap-2 items-center">
+        <h1 class="display-lg font-gothic_condensed uppercase font-bold !text-[35px] max-w-[250px] mx-auto lg:max-w-none lg:!text-[60px] text-center leading-[1.1] !m-0">{{ section.settings.title }}</h1>
         {% if section.settings.description != blank %}
           <p class="body font-kurdis-semi-condensed font-semibold text-[12px] text-center leading-[1.6] !m-0">
             {{- section.settings.description -}}
@@ -58,7 +58,7 @@
       results_size: collection.products_count
     %}
   <div
-    class="collection-wrapper !max-w-[970px] mx-auto grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
+    class="collection-wrapper !max-w-[970px] mx-auto gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
   >
     
    
@@ -147,7 +147,7 @@
                 {{- group.title | default: group.display_name -}}
               </h2>
               {% if group.description != blank %}
-                <p class="font-kurdis-semi-condensed font-semibold text-[12px] leading-[1.6] !m-0">
+                <p class="font-kurdis-semi-condensed font-semibold text-sm leading-[1.6] !m-0">
                   {{- group.description -}}
                 </p>
               {% endif %}

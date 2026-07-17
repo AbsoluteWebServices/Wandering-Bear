@@ -11,11 +11,11 @@
   <a
     href="{{ url }}"
     class="
-      filter-pills__pill inline-flex items-center gap-1.5 whitespace-nowrap rounded-[10px]
-      border-[1.5px] border-espresso px-4 py-1.5 font-kurdis-semi-condensed text-[13px]
+      filter-pills__pill inline-flex !justify-center text-center items-center gap-1.5 whitespace-nowrap rounded-[10px] min-w-[87px]
+      border-[1.5px] border-espresso px-2 lg:px-4 py-2 font-kurdis-semi-condensed text-[15px]
       font-bold leading-tight no-underline transition-all duration-300
       {% if is_current %}
-        bg-kraft text-foam
+        bg-kraft text-foam shadow-button
       {% else %}
         bg-cream text-espresso hover:border-gold hover:bg-gold hover:!text-white
       {% endif %}

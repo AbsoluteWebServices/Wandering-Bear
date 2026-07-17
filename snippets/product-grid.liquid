@@ -76,7 +76,7 @@
 <div
   id="ResultsList"
   class="
-    grid main-collection-grid
+    grid main-collection-grid lg:!px-0
     {%- if section.settings.inherit_color_scheme == false %} color-{{ section.settings.color_scheme }}{% endif %}
     {%- if section.settings.product_grid_width == 'full-width' %} collection-wrapper--full-width{% endif %}
     {%- if section.settings.full_width_on_mobile == true %} collection-wrapper--full-width-on-mobile{% endif %}
@@ -96,7 +96,7 @@
       grid-column: var(--full-width);
       --product-grid-gap-mobile: {{ section.settings.columns_gap_vertical | at_most: 12 }}px {{ section.settings.columns_gap_horizontal | at_most: 12 }}px;
       --product-grid-gap-desktop: {{ section.settings.columns_gap_vertical }}px {{ section.settings.columns_gap_horizontal }}px;
-      container-type: inline-size;
+      /* container-type: inline-size; */
       container-name: product-grid;
     "
   >
@@ -199,7 +199,7 @@
 
   .main-collection-grid {
     grid-column: var(--grid-column--mobile);
-    padding: var(--grid--margin--mobile);
+    /* padding: var(--grid--margin--mobile); */
 
     @media screen and (min-width: 750px) {
       grid-column: var(--grid-column--desktop);
