@@ -72,7 +72,7 @@
         "collection_tile_qhQ8LF": {
           "type": "collection_tile",
           "settings": {
-            "url": "shopify://collections/cold-brew-boxes",
+            "url": "shopify://collections/on-tap-cold-brew",
             "image": "shopify://shop_images/wb-col-1.png",
             "hover_image": "shopify://shop_images/Mask_group_6c054578-0a6b-4740-8788-33bb454ba56a.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
@@ -86,7 +86,7 @@
         "collection_tile_rCwyCX": {
           "type": "collection_tile",
           "settings": {
-            "url": "shopify://collections/cold-brew-cartons",
+            "url": "shopify://collections/multi-serve",
             "image": "shopify://shop_images/wb-col-2.png",
             "hover_image": "shopify://shop_images/Mask_group-1_efd91f61-d803-4a91-bbc9-5b1ba9ed80fb.png",
             "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
@@ -99,7 +99,7 @@
         "collection_tile_RwjxDn": {
           "type": "collection_tile",
           "settings": {
-            "url": "shopify://collections/test-single-serve-12-cartons-11oz",
+            "url": "shopify://collections/single-serve",
             "image": "shopify://shop_images/wb-col-3.png",
             "hover_image": "shopify://shop_images/Mask_group-2_82320e84-9058-4f03-a6c3-d62f181ad141.png",
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
@@ -331,7 +331,19 @@
       "name": "AW Logo Wall",
       "settings": {
         "button_text": "Check us out in-store",
-        "button_url": "shopify://pages/find-wandering-bear-cold-brew-in-stores"
+        "button_url": "shopify://pages/find-wandering-bear-cold-brew-in-stores",
+        "grayscale": false,
+        "mobile_per_row": "2",
+        "padding_top": 50,
+        "padding_bottom": 6,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 6,
+        "background_type": "transparent",
+        "background_solid": "#bfd7e9",
+        "background_gradient": "",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "",
+        "background_gradient_mobile": ""
       }
     },
     "aw_founders_xXwwkV": {
