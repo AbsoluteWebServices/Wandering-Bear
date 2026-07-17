@@ -8,7 +8,12 @@
   assign bundle_add_to_cart_text = section.settings.bundle_add_to_cart_text
   assign is_oos = false
 
-  unless member_only
+  assign is_member_unlocked = false
+  if member_tier == 'VIP' or member_tier == 'Elite'
+    assign is_member_unlocked = true
+  endif
+
+  unless member_only and is_member_unlocked == false
     if child_product.available == false
       assign is_oos = true
     endif
@@ -55,7 +60,7 @@
               product_badge_text }}
             </span>
           </div>
-        {% elsif member_only %}
+        {% elsif member_only and is_member_unlocked == false %}
           {% capture member_badge_label %}
             <span class="inline-flex gap-0.5 mt-0.5">VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only</span>
           {% endcapture %}
@@ -71,7 +76,7 @@
       <span class="text-xs/[120%] font-kurdis-semi-condensed font-semibold text-bear-black md:mt-0.75 md:text-[10px]/[120%]">{{ flavor_description }}</span>
     </div>
     <div class="min-w-20 w-fit shrink-0 self-stretch wb-flex items-center">
-      {% if member_only %}
+      {% if member_only and is_member_unlocked == false %}
           <div class="wb-flex justify-end items-center">
           <button
             @click.prevent.stop="$dispatch('modal-open', { modal: 'membership' })"

@@ -8,6 +8,7 @@
 
   assign product_id = product.id
   assign bundle_collection = section.settings.bundle_collection
+  assign disable_gallery_background = section.settings.disable_gallery_background
   assign first_product = bundle_collection.products.first
 
   for bundle_product in bundle_collection.products
@@ -37,7 +38,10 @@
 {% capture media_gallery %}
   <div data-media-gallery-bundle-container class="md:max-w-[580px] transition-opacity duration-300">
     <div class="max-w-full flex">
-      {% render 'media-gallery-bundle', bundle_product: selected_product %}
+      {% render 'media-gallery-bundle',
+        bundle_product: selected_product,
+        disable_gallery_background: disable_gallery_background
+      %}
     </div>
   </div>
 {% endcapture %}
@@ -524,6 +528,12 @@
       "label": "t:settings.limit_product_details_width",
       "default": false,
       "visible_if": "{{ section.settings.equal_columns }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_gallery_background",
+      "label": "t:settings.hide_gallery_background",
+      "default": false
     },
     {
       "type": "richtext",

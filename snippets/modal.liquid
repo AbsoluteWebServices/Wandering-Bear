@@ -55,12 +55,12 @@
           @touchmove.stop
         >
           <div class="{{ base_panel_class }}{% if panel_class != blank %} {{ panel_class }}{% endif %}">
-            <div
+            <button
               @click="close()"
-              class="cursor-pointer flex justify-center items-center text-bear-black shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-full w-11 h-11 absolute top-4 right-3 bg-foam hover:bg-gold hover:!text-white transition-all duration-300 z-10"
+              class="cursor-pointer flex justify-center items-center text-bear-black shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-full w-9.5 h-9.5 absolute top-4 right-3 bg-foam hover:bg-gold hover:!text-white transition-all duration-300 z-10"
             >
               {% render 'icons', icon: 'close', class: 'w-4 h-4 relative' %}
-            </div>
+            </button>
 
             <div class="{{ base_body_class }}{% if body_class != blank %} {{ body_class }}{% endif %}">
               {% if title != blank %}

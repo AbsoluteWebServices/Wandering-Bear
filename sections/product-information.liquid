@@ -7,10 +7,15 @@
 {% liquid
   assign bundle_collection = section.settings.bundle_collection
   assign hide_thumbnails_desktop = section.settings.hide_thumbnails_desktop
+  assign disable_gallery_background = section.settings.disable_gallery_background
 %}
 
 {% capture media_gallery %}
-  {% render 'media-gallery-bundle', bundle_product: product, hide_thumbnails_desktop: hide_thumbnails_desktop %}
+  {% render 'media-gallery-bundle',
+    bundle_product: product,
+    hide_thumbnails_desktop: hide_thumbnails_desktop,
+    disable_gallery_background: disable_gallery_background
+  %}
 {% endcapture %}
 
 {% capture product_details %}
@@ -457,6 +462,12 @@
       "type": "checkbox",
       "id": "hide_thumbnails_desktop",
       "label": "Hide thumbnails on Desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_gallery_background",
+      "label": "t:settings.hide_gallery_background",
       "default": false
     },
     {

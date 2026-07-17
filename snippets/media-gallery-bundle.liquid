@@ -14,6 +14,8 @@
 {% endif %}
 
 {%  liquid 
+    assign disable_gallery_background = disable_gallery_background | default: false
+
     if bundle_product.metafields.custom.new_product_photos != blank and bundle_product.metafields.custom.new_product_photos.value.size > 0
         assign product_media = bundle_product.metafields.custom.new_product_photos.value
     else 
@@ -27,7 +29,7 @@
             <div class="swiper-wrapper max-w-full max-h-full">
                 {% for media in product_media %}
                     <div
-                        class="swiper-slide rounded-[5px] overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full before:bg-kraft/15 before:rounded-[5px] before:-z-1{% if media.height > media.width or media.height < media.width %} [&_img]:object-contain!{% endif %}"
+                        class="swiper-slide rounded-[5px] overflow-hidden{% if disable_gallery_background != true %} before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full before:bg-kraft/15 before:rounded-[5px] before:-z-1{% endif %}{% if media.height > media.width or media.height < media.width %} [&_img]:object-contain!{% endif %}"
                         style="{{ slide_styles }}"
                     >
                         {{ media | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover object-center', style: 'object-position: center;', alt: media.alt }}
@@ -44,7 +46,7 @@
                         {% if media.height > media.width or media.height < media.width %} [&_img]:object-contain!{% endif %}"
                         style="{{ thumbnail_styles }}"
                     >
-                        {{ media | image_url: width: 600 | image_tag: class: 'w-full !h-full object-cover object-center', style: 'object-position: center;', alt: media.alt }}
+                        {{ media | image_url: width: 600 | image_tag: class: 'w-full !h-full object-cover object-center scale-[1.1]', style: 'object-position: center;', alt: media.alt }}
                     </div>
                 {% endfor %}
             </div>

@@ -48,19 +48,12 @@
                     @wheel.stop
                     @touchmove.stop
                 >
-
-                    <div
-                        class="flex flex-col relative w-fit"
-                    >
-
+                    <div class="flex flex-col relative w-fit">
                         {%- for item in modal.content.value -%}
                             {%- if item.system.type == 'membership' -%}
-
                               {% render 'membership-modal', item: item %}
-
                             {%- endif -%}
                         {%- endfor -%}
-                
                     </div>
                 </div>
             </div>

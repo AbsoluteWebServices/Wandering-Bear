@@ -1,6 +1,6 @@
 {% assign first_variant = collection.products.first.variants.first %}
 
-<div class="wb-flex gap-0.5 flex-col w-full bg-white/50 pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase {% if template.suffix == '96oz' or template.suffix == 'single-serve' %} px-1.25{% else %} px-4.5{% endif %}">
+<div class="wb-flex gap-0.5 flex-col w-full bg-white/50 pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase {% if template.suffix == 'single-serve' %} px-1.25{% elsif template.suffix == '96oz' %} px-1.25 md:px-6{% else %} px-4.5{% endif %}">
 <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
   {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%] mt-px', svg_class: 'text-gold'%}
 </div>

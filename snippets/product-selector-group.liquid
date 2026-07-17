@@ -7,6 +7,18 @@
 
     assign restock_success_text = section.settings.restock_modal_success_text | default: "You're on the list! We'll email you when it's back in stock."
     assign klaviyo_public_key = section.settings.klaviyo_public_key | default: 'NBGeDz'
+
+    assign member_tier = ''
+    for tag in customer.tags
+      case tag
+        when 'inveterate-tier#72ccf378'
+          assign member_tier = 'VIP'
+        when 'inveterate-tier#dc38b982'
+          assign member_tier = 'Elite'
+        when 'inveterate-tier#99a431e2'
+          assign member_tier = 'Elite'
+      endcase
+    endfor
 %}
 
 <div x-data="overlayScrollbar">
@@ -25,7 +37,7 @@
           assign product_badge_text_color = product_badge.value.text_color
         %}
         {% if child_product.handle == product.handle %}
-          {% render 'product-selector', title: title, image: image, flavor_description: flavor_description, member_only: member_only, product_badge: product_badge, product_badge_text: product_badge_text, product_badge_color: product_badge_color, product_badge_text_color: product_badge_text_color, child_product: child_product, bundle_type: bundle_type %}
+          {% render 'product-selector', title: title, image: image, flavor_description: flavor_description, member_only: member_only, member_tier: member_tier, product_badge: product_badge, product_badge_text: product_badge_text, product_badge_color: product_badge_color, product_badge_text_color: product_badge_text_color, child_product: child_product, bundle_type: bundle_type %}
         {% endif %}
       {% endfor %}
       {% for child_product in bundle_collection.products %}
@@ -41,7 +53,7 @@
           assign product_badge_text_color = product_badge.value.text_color
         %}
         {% unless child_product.handle == product.handle %}
-          {% render 'product-selector', title: title, image: image, flavor_description: flavor_description, member_only: member_only, product_badge: product_badge, product_badge_text: product_badge_text, product_badge_color: product_badge_color, product_badge_text_color: product_badge_text_color, child_product: child_product, bundle_type: bundle_type %}
+          {% render 'product-selector', title: title, image: image, flavor_description: flavor_description, member_only: member_only, member_tier: member_tier, product_badge: product_badge, product_badge_text: product_badge_text, product_badge_color: product_badge_color, product_badge_text_color: product_badge_text_color, child_product: child_product, bundle_type: bundle_type %}
         {% endunless %}
       {% endfor %}
     </div>
@@ -66,16 +78,16 @@
             autocomplete="email"
             required
             placeholder="{{ restock_placeholder }}"
-            class="flex-1 min-w-[323px] rounded-[5px] border border-espresso/30 bg-[#FAF2ED] pl-4 pr-30 py-3 text-sm font-kurdis-semi-condensed font-semibold text-espresso placeholder:text-espresso focus:outline-none focus:border-espresso disabled:opacity-60 smd:min-w-[352px]"
+            class="flex-1 min-w-[323px] rounded-[5px] border border-espresso/30 bg-[#FAF2ED] pt-4 pb-3.5 pr-[134px] pl-4 text-sm font-kurdis-semi-condensed font-semibold text-espresso placeholder:text-espresso focus:outline-none focus:border-espresso disabled:opacity-60 smd:min-w-[352px]"
           >
           <button
             type="submit"
             :disabled="status === 'loading'"
-            class="group absolute right-2 top-0 scale-[1.35] shrink-0 h-auto min-h-[46px] px-5 cursor-pointer shadow-button disabled:opacity-60 disabled:pointer-events-none"
+            class="group absolute right-2 top-0.5 scale-[1.35] shrink-0 h-auto min-h-[46px] px-5 cursor-pointer shadow-button disabled:opacity-60 disabled:pointer-events-none"
             aria-label="{{ restock_button_text }}"
           >
             <span
-              class="relative z-1 text-xl text-cream font-gothic_condensed uppercase font-extrabold whitespace-nowrap"
+              class="relative z-1 text-xl text-cream font-kurdis-condensed uppercase font-extrabold whitespace-nowrap"
             >
               <span x-show="status !== 'loading'">{{ restock_button_text }}</span>
               <span x-show="status === 'loading'" x-cloak>...</span>

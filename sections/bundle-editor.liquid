@@ -293,7 +293,7 @@
 
                 {% comment %} Add button (quantity 0 / unselected) {% endcomment %}
               
-                {% if member_only and member_tier != 'Elite' %}
+                {% if member_only and member_tier != 'Elite' and member_tier != 'VIP' %}
                   <button
                     on:click="bundle-editor-component/openMembershipModal"
                     type="button"
