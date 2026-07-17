@@ -512,6 +512,7 @@
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589.svg",
+        "title_image_mobile": "shopify://shop_images/rightsized.svg",
         "large_image": "shopify://shop_images/image_140_1.png",
         "padding-block-start": 54,
         "padding-block-end": 64,
@@ -752,7 +753,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-11oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -765,7 +767,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Mocha-Latte-8oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -778,7 +781,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/3-1-Concentrate-32oz_bd218ab7-f7e2-4a56-a053-4b1b50efd297.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -791,7 +795,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-32oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         }
