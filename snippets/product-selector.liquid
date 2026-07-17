@@ -30,6 +30,7 @@
   <div class="
     min-w-[77px] w-[77px] shrink-0 self-stretch min-h-22.5 md:min-h-20 bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden
     {% if template.suffix == 'single-serve' %} md:min-w-[83px] md:w-[83px]{% endif %}
+    {% if template.suffix == 'single-serve' or template.suffix == '32oz'%} rounded-tr-[5px]{% endif %}
   ">
     {% if image != blank %}
       {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}

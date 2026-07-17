@@ -41,7 +41,11 @@
     endif
   endif
 
-  if product_group.multi_unit_product_quantity != blank and product_group.multi_unit_product_quantity > 1
+  if block_settings.custom_price_text != blank
+    assign price_label = block_settings.custom_price_text
+  elsif block_product.metafields.airf.fromprice != blank
+    assign price_label = product_group.multi_unit_product_quantity | append: ' ' | append: pack_label | append: ' from ' | append: block_product.metafields.airf.fromprice
+  elsif product_group.multi_unit_product_quantity != blank and product_group.multi_unit_product_quantity > 1
     assign price_label = product_group.multi_unit_product_quantity | append: ' ' | append: pack_label | append: ' from ' | append: price_amount
   else
     assign price_label = 'content.price_from' | t: price: price_amount
@@ -135,7 +139,7 @@
           {{- card_title_main -}}
         </span>
         {% if card_title_small != blank %}
-          <span class="font-(family-name:--font-kurdis-condensed) tracking-[0.18px] text-base/none md:text-lg/none font-extrabold leading-[120%] group-hover:text-gold transition-all duration-300">
+          <span class="font-(family-name:--font-kurdis-condensed) tracking-[0.18px] text-base/none md:text-lg/none font-bold leading-[120%] group-hover:text-gold transition-all duration-300">
             · {{ card_title_small }}
           </span>
         {% endif %}

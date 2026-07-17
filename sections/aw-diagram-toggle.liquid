@@ -16,7 +16,7 @@
 
 <div
     x-data="diagramToggle(0)"
-    class="aw-diagram-toggle relative spacing-style wb-section-bg{% if template.suffix == '32oz' %} mt-3{% endif %}{% if template.suffix == 'single-serve' %} mt-12.5 md:mt-14{% endif %}"
+    class="aw-diagram-toggle relative spacing-style wb-section-bg{% if template.suffix == 'single-serve' %} mt-12.5 md:mt-14{% endif %}"
     style="{% render 'section-background', settings: section.settings, part: 'style' %} {% render 'spacing-style', settings: section.settings %}"
 >
     {% render 'section-background', settings: section.settings, part: 'media' %}
@@ -66,6 +66,7 @@
     <div x-ref="content" class="relative z-[1]"></div>        
 
     {% for block in section.blocks %}
+      {% assign block_index = forloop.index %}
         {% capture diagram_content %}
             {% liquid
                 assign block_settings = block.settings
@@ -139,6 +140,10 @@
 
                                 if template.suffix == '32oz'
                                     assign class_width = ' md:!w-[228px]'
+
+                                    if block_index == 1
+                                      assign class_width = ' md:!w-[228px] xl:!w-[255px]'
+                                    endif
                                 elsif template.suffix == 'single-serve'
                                     assign class_width = ' md:!w-[256px]'
                                 endif
@@ -163,6 +168,10 @@
 
                                 if template.suffix == '32oz'
                                     assign class_width = ' md:!w-[236px]'
+
+                                    if block_index == 1
+                                      assign class_width = ' md:!w-[236px] xl:!w-[274px]'
+                                    endif
                                 endif
 
                                 assign class = 'md:!mb-0 md:!mt-0 order-4 md:absolute md:left-[75%] md:top-[54%] lg:top-[55%] lg:left-[75%] xl:top-[60%] xl:left-[69%]' | append: class_width
@@ -197,7 +206,7 @@
                             {{ icon | image_url: width: 100 | image_tag: class: icon_class, alt: title }}
 
                             <div class="wb-flex flex-col gap-2">
-                                <span class="h2 text-xl! leading-none uppercase">{{ title }}</span>
+                                <span class="h2 text-xl! leading-none uppercase">{{ title | replace: '\n', '<br>' }}</span>
                                 <span class="body">{{ description }}</span>
                             </div>
                         </div>
@@ -262,7 +271,7 @@
 
                     {% if text_background_color != blank %}
                       <div
-                        class="diagram-text-background w-full flex flex-col max-lg:order-2"
+                        class="diagram-text-background w-full flex flex-col max-lg:order-2{% if template.suffix == '32oz' %} max-md:-mt-5{% elsif template.suffix == 'single-serve' %} max-md:-mt-6{% endif %}"
                         style="background-color: {{ text_background_color | color_modify: 'alpha', text_background_alpha }};"
                       >
                         {{ diagram_icons }}
@@ -319,7 +328,6 @@
             max-width: 100vw;
             margin-left: calc(50% - 50vw);
             margin-right: calc(50% - 50vw);
-            margin-top: -1.5rem;
             padding: 2.25rem 1rem 1.875rem;
             box-sizing: border-box;
         }
@@ -349,12 +357,8 @@
     }
 
     @media screen and (max-width: 749px) {
-        .aw-diagram-toggle .diagram-item[data-mobile-margin='first'] > img {
-            margin-top: 0.938rem;
-        }
-
-        .aw-diagram-toggle .diagram-item[data-mobile-margin='middle'] > img {
-            margin-top: 1.625rem;
+        .aw-diagram-toggle .diagram-item[data-mobile-margin='first'] {
+          align-items: center;
         }
     }
 
@@ -760,7 +764,8 @@
         {
           "type": "text",
           "id": "title_1",
-          "label": "Title 1"
+          "label": "Title 1",
+          "info": "Use \\n to add a line break."
         },
         {
           "type": "text",
@@ -780,7 +785,8 @@
         {
           "type": "text",
           "id": "title_2",
-          "label": "Title 2"
+          "label": "Title 2",
+          "info": "Use \\n to add a line break."
         },
         {
           "type": "text",
@@ -800,7 +806,8 @@
         {
           "type": "text",
           "id": "title_3",
-          "label": "Title 3"
+          "label": "Title 3",
+          "info": "Use \\n to add a line break."
         },
         {
           "type": "text",
