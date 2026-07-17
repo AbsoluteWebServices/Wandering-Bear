@@ -43,8 +43,6 @@ class FilterPills extends Component {
 
     if (!(link instanceof HTMLAnchorElement)) return;
 
-    // Leave anything that isn't a plain left click to the browser: new tab, new
-    // window and "open in background" must keep working.
     if (
       event.button !== 0 ||
       event.metaKey ||
@@ -59,18 +57,14 @@ class FilterPills extends Component {
 
     const url = new URL(link.href, window.location.href);
 
-    // Re-clicking the active pill is a no-op: these are single-select, so there is
-    // nothing to toggle off. "Shop all" is how you clear.
+
     if (url.href === new URL(window.location.href).href) return;
 
     history.pushState({ filterPills: true }, '', url.href);
     this.#render(url);
   }
 
-  /**
-   * Re-renders for whatever URL the history entry points at, so Back and Forward
-   * land on the right filter instead of a stale grid.
-   */
+
   #handlePopState = () => {
     this.#render(new URL(window.location.href));
   };
@@ -93,14 +87,9 @@ class FilterPills extends Component {
     }
   }
 
-  /**
-   * Tells screen readers the grid changed. A visual user sees the swap; without
-   * this the filtering is silent, since no page load is announced.
-   */
+
   #announce() {
-    // Query the live document rather than `this` or a ref: if the morph ever swaps
-    // this element out, both would point at a detached node and the announcement
-    // would silently go nowhere.
+
     const root =
       document.querySelector(`filter-pills-component[section-id="${this.sectionId}"]`) ?? this;
 
