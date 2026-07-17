@@ -26,7 +26,7 @@
           "settings": {
             "style": "secondary-cream",
             "label": "Shop Cold Brew",
-            "link": "shopify://collections/cold-brew-boxes"
+            "link": "shopify://collections/on-tap-cold-brew"
           }
         }
       },
