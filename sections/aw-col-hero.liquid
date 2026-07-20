@@ -1,0 +1,106 @@
+{% liquid
+  assign image = section.settings.image
+  assign background_color = section.settings.background_color
+  assign color_scheme = section.settings.color_scheme
+  assign button_url = section.settings.button_url
+  assign button_text = section.settings.button_text
+  assign button_bg = color_scheme.settings.primary_button_background
+%}
+
+{% capture background_color %}
+    --background-image: {{ background_color }};
+    --background-color: {{ color_scheme.settings.background }};
+{% endcapture %}
+
+{% capture color_styles %}
+    --color: {{ color_scheme.settings.foreground }};
+{% endcapture %}
+
+{% style %}
+    .hero-{{ section.id }} .col-1-{{ section.id }} {
+       {% if background_color != blank %}
+          background-image: var(--background-image);
+        {% else %}
+          background-color: var(--background-color);
+       {% endif %}
+    }
+
+    .hero-{{ section.id }} {
+        h1 {
+            color: var(--color);
+        }
+        ul li, ul li strong {
+            color: var(--color);
+        }
+    }
+{% endstyle %}
+
+<div class="hero-{{ section.id }} grid grid-cols-2" style="{{ color_styles }}">
+   <div class="col-1-{{ section.id }} flex justify-center items-center" style="{{ background_color }}">
+        <div class="flex flex-col justify-center items-center gap-8 max-w-[420px]">
+            <h1 class="text-inherit display-md !leading-[100%]">{{ section.settings.title }}</h1>
+            <div class="text-inherit">
+                {{ section.settings.description }}
+            </div>
+            {% if button_url != blank and button_text != blank %}
+                <div class="flex justify-start w-full">
+                    {% render 'wb-button', style: 'custom', link: button_url, label: button_text, class: 'w-full', width: 'full', height: 'large', background: button_bg %}
+                </div>
+            {% endif %}
+        </div> 
+   </div>
+   <div>
+    {{ image | image_url: width: 1000 | image_tag }}
+   </div>
+</div>
+
+{% schema %}
+{
+  "name": "AW Col Hero",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+        "type": "color_background",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "AW Col Hero"
+    }
+  ]
+}
+{% endschema %}

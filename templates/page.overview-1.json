@@ -53,12 +53,26 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 32,
         "color_scheme": "",
         "padding-block-start": 40,
         "padding-block-end": 80
+      }
+    },
+    "aw_col_hero_DFqFUG": {
+      "type": "aw-col-hero",
+      "name": "AW Col Hero",
+      "settings": {
+        "color_scheme": "scheme-6",
+        "background_color": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
+        "title": "COFFEE SHOP QUALITY  COLD BREW",
+        "description": "<ul><li><strong>Zero Sugar, Zero Dairy, Zero Guilt</strong></li><li><strong>Smooth & Bold (~2x caffeine)</strong></li><li><strong>Over 16,000 5-star reviews</strong></li><li><strong>8+ Flavors for Every Kind of Holiday Mood</strong></li></ul>",
+        "image": "shopify://shop_images/Rectangle_10486.png",
+        "button_url": "shopify://collections/perfect-pour",
+        "button_text": "Shop Now"
       }
     },
     "lp_product_information_bundle_mQLChG": {
@@ -142,10 +156,186 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "marquee_8mdxLw": {
+      "type": "marquee",
+      "blocks": {
+        "text_tTbh9B": {
+          "type": "text",
+          "settings": {
+            "block_class": "",
+            "text": "<p>SAVE 20% ON FIRST AUTOSHIP ORDER</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "custom",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "tight",
+            "letter_spacing": "tight",
+            "case": "none",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "text_ka4DDn": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "block_class": "",
+            "text": "<p>·</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "text_VUCLjL": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "block_class": "",
+            "text": "<p>USE CODE “NEWONTAP” AT CHECKOUT </p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "text_nJX4ck": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "block_class": "",
+            "text": "<p>·</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_tTbh9B",
+        "text_ka4DDn",
+        "text_VUCLjL",
+        "text_nJX4ck"
+      ],
+      "name": "t:names.marquee_section",
+      "settings": {
+        "movement_direction": "normal",
+        "color_scheme": "scheme-4",
+        "padding-block-start": 24,
+        "padding-block-end": 24,
+        "gap_between_elements": 24
+      }
+    },
+    "aw_frequently_asked_questions_dwThL3": {
+      "type": "aw-frequently-asked-questions",
+      "name": "AW FAQs",
+      "settings": {
+        "color_scheme": "",
+        "background_type": "transparent",
+        "background_solid": "#F2E6DC",
+        "background_gradient": "",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#F2E6DC",
+        "background_gradient_mobile": "",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
+        "title_type": "image",
+        "title": "",
+        "title_color": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
+        "title_alt": "Frequently Asked Questions",
+        "title_image": "shopify://shop_images/Group_1327226590.svg",
+        "faqs_metaobject": "96-oz-cold-brew-straight-black",
+        "button_label": "",
+        "button_link": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
+      }
     }
   },
   "order": [
     "main",
-    "lp_product_information_bundle_mQLChG"
+    "aw_col_hero_DFqFUG",
+    "lp_product_information_bundle_mQLChG",
+    "marquee_8mdxLw",
+    "aw_frequently_asked_questions_dwThL3"
   ]
 }
