@@ -107,7 +107,7 @@
 <div class="products-slider-card group flex flex-col gap-2 h-full" {{ block.shopify_attributes }}>
   <a href="{{ product_url }}" class="group flex flex-col gap-4 h-full no-underline md:gap-5.5">
     <div
-      class="products-slider-card__media relative flex items-center justify-center overflow-hidden rounded-[10px] aspect-square w-full [&_picture]:w-full"
+      class="products-slider-card__media relative flex items-center justify-center overflow-hidden rounded-[10px] aspect-square w-full [&_picture]:w-full aspect-[141/156] md:aspect-[225/250] md:rounded-[12px]"
       style="background-color: {{ card_bg }};"
     >
       {% if badge_text != blank %}
@@ -133,7 +133,7 @@
       {% endif %}
     </div>
 
-    <div class="products-slider-card__content flex flex-col gap-2 md:gap-3">
+    <div class="products-slider-card__content flex flex-col gap-2 md:gap-3 grow">
       <span class="products-slider-card__title flex flex-wrap items-baseline gap-x-1 text-bear-black">
         <span class="font-(family-name:--font-kurdis-condensed) tracking-[0.18px] text-base/none md:text-lg/none font-extrabold leading-[110%] group-hover:text-gold transition-all duration-300">
           {{- card_title_main -}}
@@ -144,7 +144,7 @@
           </span>
         {% endif %}
       </span>
-      <span class="font-(family-name:--font-kurdis-semi-condensed) text-sm/none font-bold leading-[120%] text-espresso group-hover:text-gold transition-all duration-300">
+      <span class="mt-auto font-(family-name:--font-kurdis-semi-condensed) text-sm/none font-bold leading-[120%] text-espresso group-hover:text-gold transition-all duration-300">
         {{- price_label -}}
       </span>
     </div>

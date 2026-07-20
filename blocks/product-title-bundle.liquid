@@ -12,12 +12,12 @@
       href="{{ closest.product.selected_or_first_available_variant.url }}"
     >
       <span class="font-gothic_condensed text-[35px] lg:text-[45px]! font-extrabold leading-[100%] uppercase">{{ block.settings.product_title }}</span>
-      <span class="font-kurdis-semi-condensed text-base font-bold leading-[120%] whitespace-nowrap md:text-[20px]{% if template.suffix == '96oz' or template.suffix == '32oz' or template.suffix == 'concentrate' %} uppercase{% elsif template.suffix != 'single-serve' %} capitalize{% endif %}">
+      <span class="font-kurdis-semi-condensed text-base font-bold leading-[120%] whitespace-nowrap md:text-[20px]{% if template.suffix == 'gallon' %} ml-2.5 md:ml-1.5{% endif %}{% if template.suffix == '96oz' or template.suffix == '32oz' or template.suffix == 'concentrate' %} uppercase{% elsif template.suffix != 'single-serve' %} capitalize{% endif %}">
         {{ block.settings.product_title_small | replace: '8 oz', '8oz' }}
       </span>
     </a>
   {% endif %}
-  
+
   {% schema %}
   {
     "name": "Product Title Bundle",
@@ -46,4 +46,3 @@
     ]
   }
   {% endschema %}
-  

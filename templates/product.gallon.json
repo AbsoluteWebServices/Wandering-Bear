@@ -204,6 +204,7 @@
         "gap": 20,
         "gap_mobile": 20,
         "hide_thumbnails_desktop": false,
+        "disable_gallery_background": false,
         "color_scheme": "",
         "padding-block-start": 48,
         "padding-block-end": 0,
@@ -247,6 +248,9 @@
         "diagram_item_EdexbY",
         "diagram_item_BdiWiA"
       ],
+      "custom_css": [
+        ".wb-section-bg__image img {object-position: 50% 40%;}"
+      ],
       "name": "AW Diagram Section",
       "settings": {
         "color_scheme": "",
@@ -261,12 +265,9 @@
         "background_gradient_mobile": "",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
@@ -274,7 +275,11 @@
         "title_image_mobile": "shopify://shop_images/cold-brew-title.svg",
         "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png",
         "text_background_color": "",
-        "text_background_opacity": 100
+        "text_background_opacity": 100,
+        "padding-block-start": 48,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 38,
+        "padding-block-end-mobile": 0
       }
     },
     "aw_image_text_icons_a77yKj": {
@@ -320,18 +325,19 @@
         "background_gradient_mobile": "",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "padding-block-start": 32,
-        "padding-block-end": 54,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 44,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589-2.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226589-2-mobile.png",
-        "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png"
+        "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png",
+        "padding-block-start": 32,
+        "padding-block-end": 54,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 44
       }
     },
     "aw_guarantee_banner_HAr7Rz": {
@@ -469,19 +475,20 @@
         "background_gradient_mobile": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/OUR_MEMBERS_UNLOCK_MORE_WITH_EVERY_SIP....svg",
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
-        "bullet_icon": "shopify://shop_images/Crown-1.svg"
+        "bullet_icon": "shopify://shop_images/Crown-1.svg",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "aw_frequently_asked_questions_33izYW": {
@@ -500,19 +507,20 @@
         "background_gradient_mobile": "linear-gradient(184deg, rgba(242, 230, 220, 1) 3%, rgba(191, 215, 233, 1) 99%)",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "padding-block-start": 0,
-        "padding-block-end": 0,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
         "title_type": "image",
         "title": "",
+        "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226590.svg",
         "faqs_metaobject": "96-oz-cold-brew-straight-black",
         "button_label": "",
-        "button_link": ""
+        "button_link": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
       }
     },
     "products_slider_eeqjMT": {
@@ -565,7 +573,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-11oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -578,7 +587,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Mocha-Latte-8oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -591,7 +601,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/3-1-Concentrate-32oz_bd218ab7-f7e2-4a56-a053-4b1b50efd297.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -604,7 +615,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-32oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         }
