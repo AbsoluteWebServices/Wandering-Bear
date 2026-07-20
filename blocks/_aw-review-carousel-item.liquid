@@ -1,8 +1,10 @@
 {% liquid
     assign review = block.settings.review
+    assign color_scheme = section.settings.color_scheme
+    assign text_color = color_scheme.settings.foreground
 %}
 
-<div class="display-md !leading-[100%] text-center max-w-[500px] mx-auto" style="color: {{ color_scheme.settings.foreground }};">
+<div class="display-md !leading-[100%] text-center max-w-[500px] mx-auto" style="color: {{ text_color }};">
     {{ review }}
 </div>
 

@@ -77,7 +77,7 @@
 {% endcapture %}
 
 
-<div class="section-{{ section.id }}" x-data="productFormBundle({{ selected_product.id }},{{ params }})" style="{{ background_style }}">
+<div id="{{ section.settings.section_id }}" class="section-{{ section.id }}" x-data="productFormBundle({{ selected_product.id }},{{ params }})" style="{{ background_style }}">
   {% render 'product-information-content',
     product_media_size: closest.product.media.size,
     section_id: section.id,
@@ -285,6 +285,12 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "text",
+      "id": "section_id",
+      "label": "Section ID",
+      "info": "This is used to identify the section in the DOM"
+    },
     {
       "type": "product",
       "id": "product",

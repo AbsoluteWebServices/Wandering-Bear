@@ -51,6 +51,10 @@ rte-formatter.product-description {
     margin-top: 0.25rem;
 }
 
+input[name="purchase_option"]:not(:checked) + label {
+    background-color: #F2E6DC;
+}
+
 input[name="purchase_option"]:checked + label {
     background-color: var(--color-dark-foam);
     border: 1px solid var(--color-espresso);
