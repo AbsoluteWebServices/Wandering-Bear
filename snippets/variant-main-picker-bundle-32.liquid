@@ -5,6 +5,7 @@
   @param {object} [block] - The block object
   @param {object} section - The section object.
   @param {object} product - The current product object (used to determine selected variant state).
+  @param {array} bundle_products - The bundle products array.
 {%- enddoc -%}
 
 {% liquid
@@ -13,7 +14,7 @@
    assign block_settings = block.settings
    assign bundle_collection = section.settings.bundle_collection
    assign first_product = bundle_collection.products.first
-   assign product_object = product.metafields.custom.product_group
+   assign product_object = product_resource.metafields.custom.product_group
 
    assign bundle_placeholder_image = section.settings.bundle_placeholder_image
 

@@ -1,0 +1,455 @@
+<script type="application/ld+json">
+  {{ section.settings.product | structured_data }}
+</script>
+
+{% liquid
+  assign product = section.settings.product
+  assign product_id = product.id
+  assign bundle_collection = section.settings.bundle_collection
+  assign disable_gallery_background = section.settings.disable_gallery_background
+  assign first_product = bundle_collection.products.first
+
+  for bundle_product in bundle_collection.products
+    if bundle_product.id == product_id
+      assign selected_product = bundle_product
+      break
+    endif
+  endfor
+
+  if selected_product == blank
+    assign selected_product = first_product
+  endif
+
+  assign is_32oz = false
+  if template.suffix == '32oz'
+    assign is_32oz = true
+  endif
+
+  if is_32oz
+    assign params = "3,'single','32oz'"
+  else
+    assign params = '3,null,null'
+  endif
+%}
+
+{% capture media_gallery %}
+  <div data-media-gallery-bundle-container class="md:max-w-[580px] transition-opacity duration-300">
+    <div class="max-w-full flex">
+      {% render 'media-gallery-bundle',
+        bundle_product: selected_product,
+        disable_gallery_background: disable_gallery_background
+      %}
+    </div>
+  </div>
+{% endcapture %}
+
+{% capture product_details %}
+  {% content_for 'block',
+    type: '_product-details',
+    id: 'product-details',
+    closest.product: closest.product
+  %}
+{% endcapture %}
+
+{% capture additional_blocks %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+
+<div x-data="productFormBundle({{ selected_product.id }},{{ params }})">
+  {% render 'product-information-content',
+    product_media_size: closest.product.media.size,
+    section_id: section.id,
+    settings: section.settings,
+    media_gallery: media_gallery,
+    product_details: product_details,
+    additional_blocks: additional_blocks
+  %}
+</div>
+
+{% stylesheet %}
+  .sticky-add-to-cart__bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(100% + 40px));
+    z-index: calc(var(--layer-sticky) - 1); /* Below sticky header */
+    display: block;
+    width: 600px;
+    border-radius: calc(
+      var(--style-border-radius-buttons-primary) + min(var(--padding-sm), var(--style-border-radius-buttons-primary))
+    );
+    box-shadow: var(--shadow-popover);
+    padding: var(--padding-sm);
+    /* Layout styling */
+    display: flex;
+    align-items: center;
+    gap: var(--gap-md);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateX(-50%) translateY(calc(100% + 40px));
+    }
+
+    &::before {
+      --border: 2px;
+      content: '';
+      position: absolute;
+      inset: calc(var(--border) * -1);
+      background: linear-gradient(var(--color-background) 0 100%), linear-gradient(hsl(0 0% 0% / 0.15) 0 100%);
+      background-clip: content-box, border-box;
+      border: var(--border) solid #0000;
+      border-radius: inherit;
+      z-index: -1;
+      backdrop-filter: blur(20px) saturate(180%) brightness(1.5);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sticky-add-to-cart__bar {
+      transition-property: transform, opacity, display;
+      transition-duration: 0.3s;
+      transition-timing-function: var(--ease-out-quad);
+      transition-behavior: allow-discrete;
+    }
+  }
+
+  .sticky-add-to-cart__bar[data-stuck='true'] {
+    transform: translateX(-50%) translateY(0%);
+    opacity: 1;
+  }
+
+  sticky-add-to-cart:not([data-variant-available='true']) .sticky-add-to-cart__bar {
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(100% + 40px));
+    display: none;
+  }
+
+  .sticky-add-to-cart__info[data-has-image='false'] {
+    padding-left: var(--padding-lg);
+  }
+
+  .sticky-add-to-cart__image {
+    flex-shrink: 0;
+    aspect-ratio: 1;
+    height: var(--height-buy-buttons);
+    overflow: hidden;
+    border-radius: var(--style-border-radius-buttons-primary);
+    background: var(--color-background-secondary);
+  }
+
+  .sticky-add-to-cart__image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sticky-add-to-cart__info {
+    flex: 1;
+    min-width: 0; /* Allow text truncation */
+  }
+
+  .sticky-add-to-cart__title {
+    font-size: var(--font-paragraph-medium--size);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--font-paragraph--line-height);
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sticky-add-to-cart__variant {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+    font-size: var(--font-paragraph-small--size);
+    margin-top: var(--margin-3xs);
+  }
+
+  .sticky-add-to-cart__price {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .sticky-add-to-cart__button {
+    height: var(--height-buy-buttons);
+    position: relative;
+  }
+
+  /* Mobile adjustments */
+  @media screen and (max-width: 749px) {
+    .sticky-add-to-cart__bar {
+      bottom: 0;
+      width: 100%;
+      max-width: none;
+      border-radius: 0;
+
+      &::before {
+        --border: 1px;
+      }
+    }
+
+    .sticky-add-to-cart__bar .add-to-cart-text__content {
+      display: none;
+    }
+
+    .sticky-add-to-cart__info[data-has-image='false'] {
+      padding-left: 0;
+    }
+
+    .sticky-add-to-cart__title {
+      font-size: var(--font-paragraph--size);
+    }
+
+    .sticky-add-to-cart__button {
+      padding: var(--padding-lg);
+    }
+
+    .sticky-add-to-cart__price {
+      font-size: var(--font-paragraph-small--size);
+    }
+
+    .sticky-add-to-cart__button {
+      width: var(--height-buy-buttons);
+    }
+
+    sticky-add-to-cart:not([data-variant-available='true']) .add-to-cart-text__content {
+      display: initial;
+    }
+
+    sticky-add-to-cart:not([data-variant-available='true']) .sticky-add-to-cart__button {
+      width: auto;
+    }
+  }
+
+  /* Small mobile - hide text content and compare price */
+  @media screen and (max-width: 389px) {
+    .sticky-add-to-cart__bar {
+      .compare-at-price {
+        display: none;
+      }
+    }
+
+    .sticky-add-to-cart__title {
+      display: none;
+    }
+
+    /* For product with only default variant show title */
+    .sticky-add-to-cart__info[data-singleton='true'] .sticky-add-to-cart__title {
+      display: block;
+    }
+
+    /* For single variant show title and variant, truncate both. variant should be identifiable with truncation */
+    .sticky-add-to-cart__info[data-single-option='true'] .sticky-add-to-cart__title {
+      display: block;
+    }
+
+    .sticky-add-to-cart__info[data-single-option='true'] .sticky-add-to-cart__variant {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "LP Product Bundle",
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "collection",
+      "id": "bundle_collection",
+      "label": "Bundle Collection"
+    },
+    {
+      "type": "text",
+      "id": "bundle_add_to_cart_text",
+      "label": "Bundle Add to Cart Text",
+      "default": "Add"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_placeholder_image",
+      "label": "Bundle Placeholder Image",
+      "info": "For 32oz carton bundle only"
+    },
+    {
+      "type": "header",
+      "content": "Out of stock"
+    },
+    {
+      "type": "text",
+      "id": "oos_badge_text",
+      "label": "Out of stock badge text",
+      "default": "Out of Stock"
+    },
+    {
+      "type": "text",
+      "id": "oos_button_text",
+      "label": "Out of stock button text",
+      "default": "Get Notified"
+    },
+    {
+      "type": "text",
+      "id": "restock_modal_title",
+      "label": "Restock modal title",
+      "default": "Get notified when your favorite flavors return"
+    },
+    {
+      "type": "text",
+      "id": "restock_modal_description",
+      "label": "Restock modal description",
+      "default": "Sign up below for restock notifications"
+    },
+    {
+      "type": "text",
+      "id": "restock_modal_placeholder",
+      "label": "Restock modal email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "restock_modal_button_text",
+      "label": "Restock modal submit button text",
+      "default": "Sign Up"
+    },
+    {
+      "type": "text",
+      "id": "restock_modal_success_text",
+      "label": "Restock modal success message",
+      "default": "You're on the list! We'll email you when it's back in stock."
+    },
+    {
+      "type": "text",
+      "id": "klaviyo_public_key",
+      "label": "Klaviyo public API key",
+      "info": "Public site ID used for back-in-stock subscriptions",
+      "default": "NBGeDz"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "content-center-aligned",
+          "label": "t:options.page"
+        },
+        {
+          "value": "content-full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "content-center-aligned"
+    },
+    {
+      "type": "select",
+      "id": "desktop_media_position",
+      "label": "t:settings.media_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.left"
+        },
+        {
+          "value": "right",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "equal_columns",
+      "label": "t:settings.equal_columns",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "limit_details_width",
+      "label": "t:settings.limit_product_details_width",
+      "default": false,
+      "visible_if": "{{ section.settings.equal_columns }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_gallery_background",
+      "label": "t:settings.hide_gallery_background",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "subscription_value_props",
+      "label": "Subscription Value Props"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_add_to_cart",
+      "label": "t:settings.enable_sticky_add_to_cart",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LP Product Bundle"
+    }
+  ]
+}
+{% endschema %}
