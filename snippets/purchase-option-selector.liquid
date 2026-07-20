@@ -90,5 +90,11 @@
 </button>
 
 <template x-if="currentSavingsAmount > 0">
-  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-3.75 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+  <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%]
+  {% if template.name == 'product' %}
+    text-kraft
+  {% else %}
+    text-espresso
+  {% endif %}
+  text-center flex justify-center items-center md:mb-3.75 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>

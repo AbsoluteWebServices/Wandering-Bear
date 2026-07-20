@@ -5,6 +5,7 @@
   @param {object} [block] - The block object
   @param {object} section - The section object.
   @param {object} product - The current product object (used to determine selected variant state).
+  @param {object} bundle_products - The bundle products array.
 {%- enddoc -%}
 
 {% liquid
@@ -13,7 +14,7 @@
    assign block_settings = block.settings
    assign bundle_collection = section.settings.bundle_collection
    assign first_product = bundle_collection.products.first
-   assign product_object = product.metafields.custom.product_group
+   assign product_object = product_resource.metafields.custom.product_group
 
    if first_product.selected_or_first_available_variant.compare_at_price > first_product.selected_or_first_available_variant.price
     assign compare_at_price = first_product.selected_or_first_available_variant.compare_at_price
@@ -91,10 +92,12 @@
   }
 {% endstyle %}
 
+
 <div data-pdp class="flex flex-col gap-2.5">
     <span class="text-xl font-gothic_condensed uppercase text-gold md:text-base">Build Your Bundle</span>
 
     {% render 'progress-indicator', 
+      product: product,
       multi_unit_product: multi_unit_product,
       multi_unit_quantity: multi_unit_quantity,
       multi_unit_product_unit: multi_unit_product_unit,

@@ -71,26 +71,8 @@
           Figma overlaps the arrows onto the cards — prev by 17px, next by 19px. The track starts
           at the container's 64px padding, so the arrow sits 25px before it: 64 − 25 = 39.
         {% endcomment %}
-        <button
-          type="button"
-          class="review-carousel__arrow review-carousel__prev absolute left-0 smd:!left-[39px] top-1/2 -translate-y-1/2 z-[2] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80"
-          style="background-color: {{ arrow_bg }};"
-          aria-label="{{ 'general.slider.previous' | t | default: 'Previous' }}"
-        >
-          <svg class="w-[9px] h-[15px]" viewBox="0 0 9 15" fill="none" aria-hidden="true">
-            <path d="M8 1L1.5 7.5L8 14" stroke="{{ arrow_icon }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <button
-          type="button"
-          class="review-carousel__arrow review-carousel__next absolute right-0 smd:!right-[41px] top-1/2 -translate-y-1/2 z-[2] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80"
-          style="background-color: {{ arrow_bg }};"
-          aria-label="{{ 'general.slider.next' | t | default: 'Next' }}"
-        >
-          <svg class="w-[9px] h-[15px]" viewBox="0 0 9 15" fill="none" aria-hidden="true">
-            <path d="M1 1L7.5 7.5L1 14" stroke="{{ arrow_icon }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        {% render 'slider-button', direction: 'prev', arrow_bg: arrow_bg, arrow_icon: arrow_icon %}
+        {% render 'slider-button', direction: 'next', arrow_bg: arrow_bg, arrow_icon: arrow_icon %}
       {% endif %}
     </div>
 

@@ -85,6 +85,7 @@ const init = async () => {
     const { default: ReviewCarousel } = await import("~/scripts/components/reviewCarousel")
     const { default: OverlayScrollbar } = await import("~/scripts/components/overlayScrollbar")
     const { default: Cart } = await import("~/scripts/components/cart")
+    const { default: ReviewCarouselBlock } = await import("~/scripts/components/reviewCarouselBlock")
 
     Alpine.plugin(morph)
 
@@ -109,7 +110,8 @@ const init = async () => {
     Alpine.plugin(ReviewCarousel)
     Alpine.plugin(OverlayScrollbar)
     Alpine.plugin(Cart)
-
+    Alpine.plugin(ReviewCarouselBlock)
+    
     Alpine.start()
     window.Alpine = Alpine
 }

@@ -1,0 +1,183 @@
+{% liquid
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile
+  assign background_color = section.settings.background_color
+  assign color_scheme = section.settings.color_scheme
+  assign button_url = section.settings.button_url
+  assign button_label = section.settings.button_text
+  assign bullet_color = section.settings.bullet_color
+  assign button_bg = color_scheme.settings.primary_button_background
+  assign button_hover_bg = color_scheme.settings.primary_button_hover_background
+  assign button_text = color_scheme.settings.primary_button_text
+  assign button_hover_text = color_scheme.settings.primary_button_hover_text
+  assign button_border_color = color_scheme.settings.primary_button_border_color
+  assign button_border_hover_color = color_scheme.settings.primary_button_border_color_hover
+%}
+
+{% capture background_color %}
+    --background-image: {{ background_color }};
+    --background-color: {{ color_scheme.settings.background }};
+{% endcapture %}
+
+{% capture color_styles %}
+    --color: {{ color_scheme.settings.foreground }};
+{% endcapture %}
+
+{% style %}
+    .hero-{{ section.id }} .col-1-{{ section.id }} {
+       {% if background_color != blank %}
+          background-image: var(--background-image);
+        {% else %}
+          background-color: var(--background-color);
+       {% endif %}
+    }
+
+    .hero-{{ section.id }} {
+        h1 {
+            color: var(--color);
+        }
+        ul li, ul li strong {
+            color: var(--color);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        ul li {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        ul li::before {
+            content: "";
+            flex: 0 0 auto;
+            width: 15px;
+            height: 15px;
+            margin-top: 0.15em;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15.2284' fill='none'><path d='M0 6.50004C0.212305 6.87815 0.427232 7.2542 0.644779 7.6282C1.93383 9.84426 3.31491 11.988 4.78801 14.0595L5.62723 15.2284L6.32213 13.8795C6.92334 12.7293 7.53226 11.5784 8.13846 10.426C9.97167 7.10243 11.4712 3.51342 13.9565 0.689026C14.2574 0.400314 14.5874 0.130878 15 3.82382e-05C14.564 -0.00295815 14.1281 0.17054 13.7335 0.381349C10.3147 2.5859 8.23631 6.10621 6.36877 9.49423C5.7474 10.6756 5.18162 11.881 4.67787 13.1206L6.21199 12.9406C4.54788 11.0193 2.79174 9.17019 0.94358 7.39343C0.631675 7.09357 0.317148 6.79577 0 6.50004Z' fill='{{ bullet_color | default: '#955325' | replace: '#', '%23' }}'/></svg>");
+        }
+    }
+{% endstyle %}
+
+{% capture custom_svg_styles %}
+    --svg-fill: {{ button_bg }};
+    --svg-hover-fill: {{ button_hover_bg }};
+{% endcapture %}
+{% capture custom_styles %}
+   --button-text: {{ button_text }};
+   --button-hover-text: {{ button_hover_text }};
+{% endcapture %}
+
+<div class="hero-{{ section.id }} wb-grid grid-cols-1 md:grid-cols-2" style="{{ color_styles }}">
+   <div class="col-1-{{ section.id }} flex justify-center items-center px-[55px] py-[40px] order-2 md:order-1" style="{{ background_color }}">
+        <div class="flex flex-col justify-center items-start max-w-[420px]">
+            <h1 class="text-inherit display-md !leading-[100%] mb-5 text-center md:text-left">{{ section.settings.title }}</h1>
+            <div class="text-inherit font-kurdis-semi-condensed mb-5 [&_ul]:md:ml-5 [&_ul]:!gap-3 [&_ul]:font-kurdis-semi-condensed [&_li]:font-kurdis-semi-condensed">
+                {{ section.settings.description }}
+            </div>
+            {% if button_url != blank and button_text != blank %}
+                <div class="flex justify-start w-full">
+                    {% render 'wb-button',
+                        style: 'custom', 
+                        link: button_url, 
+                        label: button_label, 
+                        class: '!w-full md:!w-[205px] md:ml-5', 
+                        width: '!w-full md:!w-[205px]', 
+                        height: 'large', 
+                        custom_svg_styles: custom_svg_styles, 
+                        custom_styles: custom_styles,
+                        button_bg: button_bg,
+                        button_hover_bg: button_hover_bg,
+                        button_text: button_text,
+                        button_hover_text: button_hover_text,
+                        button_border: button_border_color,
+                        button_hover_border: button_border_hover_color
+                    %}
+                </div>
+            {% endif %}
+        </div> 
+   </div>
+   <div class="order-1 md:order-2">
+    <picture>
+      <source srcset="{{ image | image_url: width: 1000 }}" media="(min-width: 768px)">
+      {% if image_mobile != blank %}
+        <source srcset="{{ image_mobile | image_url: width: 1000 }}" media="(max-width: 767px)">
+      {% else %}
+        <source srcset="{{ image | image_url: width: 1000 }}" media="(min-width: 768px)">
+      {% endif %}
+      <img src="{{ image | image_url: width: 1000 }}" alt="{{ section.settings.title }}" width="1000" height="1000">
+    </picture>
+   </div>
+</div>
+
+{% schema %}
+{
+  "name": "AW Col Hero",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+        "type": "color_background",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "color",
+      "id": "bullet_color",
+      "label": "Bullet color",
+      "info": "Checkmark marker used for bulleted lists in the description.",
+      "default": "#955325"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image Mobile"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "AW Col Hero"
+    }
+  ]
+}
+{% endschema %}

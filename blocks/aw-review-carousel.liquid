@@ -1,0 +1,194 @@
+{% liquid
+    assign s = section.settings
+    assign color_scheme = s.color_scheme | default: 'color_scheme_1'
+    assign arrow_bg = s.arrow_background | default: '#FEF8F3'
+    assign arrow_icon = s.arrow_icon_color | default: '#431A03'
+    assign button_text = s.button_text | default: 'Shop Now'
+    assign button_url = s.button_url | default: '/collections/all'
+%}
+
+{% style %}
+    .swiper-pagination-bullet {
+        opacity: 0.5;
+    }
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+        background: {{ color_scheme.settings.foreground }};
+    }
+{% endstyle %}
+
+<div x-data="reviewCarouselBlock" class="mx-auto max-w-[650px] pt-[100px] md:!pt-[54px] relative z-[2] mb-20 px-4">
+    <div class="hidden md:flex items-center justify-center gap-[40px] relative z-[2] mb-10">
+        {% for i in (1..3) %}
+        {% assign index = i | minus: 1 %}
+        {% assign image_key = 'image_' | append: i %}
+        {% assign desktop_width_key = 'desktop_width_' | append: i %}
+        {% assign mobile_width_key = 'mobile_width_' | append: i %}
+        {% assign image = block.settings[image_key] %}
+        {% assign desktop_width = block.settings[desktop_width_key] %}
+        {% assign mobile_width = block.settings[mobile_width_key] %}
+
+        {% capture image_widths %}
+            --desktop-width: {{ desktop_width }}px;
+            --mobile-width: {{ mobile_width }}px;
+        {% endcapture %}
+
+        {% if image != blank %}
+            <div class="review-{{ block.id }}-{{ i }} cursor-pointer opacity-50" @click="swiper.slideTo({{ index }})" 
+            :class="{ '!opacity-100': activeIndex === {{ index }}}"
+            style="{{ image_widths }}"
+            >
+            {{
+                image
+                | image_url: width: 200
+                | image_tag:
+                loading: 'lazy',
+                widths: '100, 150, 200',
+                alt: image.alt,
+                class: 'w-full h-auto'
+            }}
+            </div>
+        {% endif %}
+
+        {% style %}
+            .review-{{ block.id }}-{{ i }} {
+            width: var(--desktop-width);
+            @media (max-width: 768px) {
+                width: var(--mobile-width);
+            }
+            }
+        {% endstyle %}
+        {% endfor %}
+    </div>
+
+    <div class="swiper">
+        <div class="review-carousel-{{ section.id }} swiper-wrapper mx-auto">
+            {% content_for 'blocks' %}
+        </div>
+        {% render 'slider-button', direction: 'prev', arrow_bg: arrow_bg, arrow_icon: arrow_icon %}
+        {% render 'slider-button', direction: 'next', arrow_bg: arrow_bg, arrow_icon: arrow_icon %}
+    </div>
+    <div class="swiper-pagination !-bottom-5 !relative"></div>
+    <div class="w-full flex justify-center mt-[40px]">
+        {% if button_text != blank and button_url != blank %}
+            {% render 'wb-button', 
+            label: button_text, 
+            link: button_url, 
+            style: 'secondary',
+            size: 'small',
+            type: 'link' 
+            %}
+        {% endif %}
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "AW Review Carousel",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_1",
+      "label": "Desktop Width",
+      "default": 100,
+      "min": 2,
+      "max": 200,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "mobile_width_1",
+      "label": "Mobile Width",
+      "default": 100,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_2",
+      "label": "Desktop Width",
+      "default": 100,
+      "min": 2,
+      "max": 200,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "mobile_width_2",
+      "label": "Mobile Width",
+      "default": 100,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_3",
+      "label": "Desktop Width",
+      "default": 100,
+      "min": 2,
+      "max": 200,
+      "step": 2
+    },
+    {
+      "type": "range",
+      "id": "mobile_width_3",
+      "label": "Mobile Width",
+      "default": 100,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "color",
+      "id": "arrow_background",
+      "label": "Arrow Background",
+      "default": "#FEF8F3"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Arrow Icon Color",
+      "default": "#431A03"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Read Review"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL",
+      "default": "/collections/all"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_aw-review-carousel-item"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Review Carousel"
+    }
+  ]
+}
+{% endschema %}

@@ -19,8 +19,11 @@
 {% endcapture %}
 
 
-<div class="wb-flex justify-center relative overflow-hidden spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
+<div class="flex flex-col justify-center relative overflow-hidden spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
     {% render 'section-background', settings: section.settings, part: 'media' %}
+    <div>
+      {% content_for 'blocks' %}
+    </div>
     <div class="max-w-[1096px] w-full mx-auto wb-flex flex-col px-4 py-9 relative z-[1]">
     <div class="wb-flex flex-col gap-4 max-w-[640px] w-full mx-auto">
         <div class="wb-flex flex-col justify-center items-start mx-auto w-full">
@@ -361,6 +364,11 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
     }
   ],
   "presets": [
