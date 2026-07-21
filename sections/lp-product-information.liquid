@@ -1,66 +1,23 @@
+
+
 <script type="application/ld+json">
   {{ section.settings.product | structured_data }}
 </script>
 
 {% liquid
   assign product = section.settings.product
-  assign product_id = product.id
   assign bundle_collection = section.settings.bundle_collection
+  assign hide_thumbnails_desktop = section.settings.hide_thumbnails_desktop
   assign disable_gallery_background = section.settings.disable_gallery_background
-  assign first_product = bundle_collection.products.first
-
-  for bundle_product in bundle_collection.products
-    if bundle_product.id == product_id
-      assign selected_product = bundle_product
-      break
-    endif
-  endfor
-
-  if selected_product == blank
-    assign selected_product = first_product
-  endif
-
-  assign is_32oz = false
-  if template.suffix == '32oz'
-    assign is_32oz = true
-  endif
-
-  if is_32oz
-    assign params = "3,'single','32oz'"
-  else
-    assign params = '3,null,null'
-  endif
-
-  assign background_type = section.settings.background_type | default: 'gradient'
-  if background_type == 'gradient'
-      assign background = section.settings.background_gradient | default: 'linear-gradient(180deg, #F8F8F8 0%, #FFFFFF 100%)'
-  else
-    assign background = section.settings.color_scheme.settings.background | default: '#F8F8F8'
-  endif
 %}
 
-{% capture background_style %}
-  --background: {{ background }};
-{% endcapture %}
-
-{% style %}
-  .section-{{ section.id }} {
-    {% if background_type == 'gradient' %}
-      background-image: var(--background);
-    {% else %}
-      background: var(--background);
-    {% endif %}
-  }
-{% endstyle %}
-
 {% capture media_gallery %}
-  <div data-media-gallery-bundle-container class="md:max-w-[580px] transition-opacity duration-300">
-    <div class="max-w-full flex">
-      {% render 'media-gallery-bundle',
-        bundle_product: selected_product,
-        disable_gallery_background: disable_gallery_background
-      %}
-    </div>
+  <div x-data="mediaGalleryBundle" data-media-gallery-bundle-container>
+  {% render 'media-gallery-bundle',
+    bundle_product: product,
+    hide_thumbnails_desktop: hide_thumbnails_desktop,
+    disable_gallery_background: disable_gallery_background
+  %}
   </div>
 {% endcapture %}
 
@@ -76,18 +33,159 @@
   {% content_for 'blocks' %}
 {% endcapture %}
 
-
-<div id="{{ section.settings.section_id }}" class="section-{{ section.id }}" x-data="productFormBundle({{ selected_product.id }},{{ params }})" style="{{ background_style }}">
-  {% render 'product-information-content',
-    product_media_size: closest.product.media.size,
-    section_id: section.id,
-    settings: section.settings,
-    media_gallery: media_gallery,
-    product_details: product_details,
-    additional_blocks: additional_blocks
+{% if section.settings.enable_sticky_add_to_cart %}
+  {% liquid
+    assign current_variant = product.selected_or_first_available_variant
+    # Get the initial quantity based on quantity rules
+    assign initial_quantity = current_variant.quantity_rule.min | default: 1
   %}
-</div>
 
+  <sticky-add-to-cart
+    class="sticky-add-to-cart"
+    data-variant-available="{{ current_variant.available }}"
+    data-product-id="{{ product.id }}"
+    data-current-variant-id="{{ current_variant.id }}"
+    data-initial-quantity="{{ initial_quantity }}"
+    data-default-variant-title="{{ 'products.product.default_title' | t }}"
+  >
+    <div
+      class="sticky-add-to-cart__bar color-{{ settings.popover_color_scheme }}"
+      data-stuck="false"
+      ref="stickyBar"
+      role="region"
+      aria-label="{{ 'products.product.sticky_add_to_cart' | t }}"
+    >
+      {% liquid
+        assign image_to_show = current_variant.featured_image | default: product.featured_image
+      %}
+      {% if image_to_show %}
+        <div
+          class="sticky-add-to-cart__image"
+        >
+          {% assign image_alt = image_to_show.alt | default: product.title | escape %}
+          {{
+            image_to_show
+            | image_url: width: 120
+            | image_tag:
+              loading: 'lazy',
+              alt: image_alt,
+              class: 'sticky-add-to-cart__image-img',
+              data-testid: 'sticky-product-image',
+              srcset: null,
+              sizes: null,
+              ref: 'productImage'
+          }}
+        </div>
+      {% endif %}
+
+      {% liquid
+        assign has_single_option = false
+        if product.has_only_default_variant != true and product.options.size == 1
+          assign has_single_option = true
+        endif
+
+        if image_to_show == blank
+          assign has_image = false
+        else
+          assign has_image = true
+        endif
+      %}
+      <div
+        class="sticky-add-to-cart__info"
+        data-has-image="{{ has_image }}"
+        data-singleton="{{ product.has_only_default_variant }}"
+        data-single-option="{{ has_single_option }}"
+      >
+        <p
+          class="sticky-add-to-cart__title"
+          data-testid="sticky-product-title"
+        >
+          {{ product.title | escape }}
+        </p>
+        <div
+          class="sticky-add-to-cart__variant"
+          data-testid="sticky-variant-title"
+          {% if product.has_only_default_variant %}
+            style="display: none;"
+          {% endif %}
+        >
+          {% unless product.has_only_default_variant %}
+            {% if current_variant != blank %}
+              {% assign variant_title = current_variant.title | escape %}
+            {% endif %}
+            {{ variant_title }}
+          {% endunless %}
+        </div>
+      </div>
+
+      <div
+        class="sticky-add-to-cart__price"
+        data-testid="sticky-price-display"
+      >
+        {% render 'price', product_resource: product, show_sale_price_first: true %}
+      </div>
+
+      <button
+        type="button"
+        class="sticky-add-to-cart__button add-to-cart-button button"
+        ref="addToCartButton"
+        on:click="/handleAddToCartClick"
+        {% unless current_variant.available %}
+          disabled
+        {% endunless %}
+      >
+        <span
+          class="add-to-cart-text"
+        >
+          {% if current_variant.available %}
+            <span class="svg-wrapper add-to-cart-icon">
+              {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
+            </span>
+          {% endif %}
+          <span class="add-to-cart-text__content">
+            <span>
+              {%- if current_variant.available -%}
+                {{- 'products.product.add_to_cart' | t -}}
+              {%- elsif current_variant == blank -%}
+                {{- 'products.product.unavailable' | t -}}
+              {%- else -%}
+                {{- 'products.product.sold_out' | t -}}
+              {%- endif -%}
+            </span>
+            <span
+              ref="quantityDisplay"
+              {% if current_variant.available and initial_quantity > 1 %}
+                style="display: inline;"
+              {% else %}
+                style="display: none;"
+              {% endif %}
+            >
+              {{- ' (' -}}
+              <span ref="quantityNumber">{{- initial_quantity -}}</span>
+              {{- ')' -}}
+            </span>
+          </span>
+        </span>
+        <span class="add-to-cart__added">
+          <span class="svg-wrapper add-to-cart__added-icon">
+            {{- 'icon-checkmark-burst.svg' | inline_asset_content -}}
+          </span>
+        </span>
+      </button>
+    </div>
+  </sticky-add-to-cart>
+{% endif %}
+
+<div x-data="productForm({{ product.id }},{{ product.selected_or_first_available_variant.id }},{{ selling_plan_id }})">
+{% render 'product-information-content',
+  product_media_size: closest.product.media.size,
+  section_id: section.id,
+  settings: section.settings,
+  media_gallery: media_gallery,
+  product_details: product_details,
+  additional_blocks: additional_blocks
+%}
+</div>
 {% stylesheet %}
   .sticky-add-to-cart__bar {
     position: fixed;
@@ -275,7 +373,7 @@
 
 {% schema %}
 {
-  "name": "LP Product Bundle",
+  "name": "LP Product Information",
   "blocks": [
     {
       "type": "@app"
@@ -286,85 +384,9 @@
   },
   "settings": [
     {
-      "type": "text",
-      "id": "section_id",
-      "label": "Section ID",
-      "info": "This is used to identify the section in the DOM"
-    },
-    {
       "type": "product",
       "id": "product",
       "label": "Product"
-    },
-    {
-      "type": "collection",
-      "id": "bundle_collection",
-      "label": "Bundle Collection"
-    },
-    {
-      "type": "text",
-      "id": "bundle_add_to_cart_text",
-      "label": "Bundle Add to Cart Text",
-      "default": "Add"
-    },
-    {
-      "type": "image_picker",
-      "id": "bundle_placeholder_image",
-      "label": "Bundle Placeholder Image",
-      "info": "For 32oz carton bundle only"
-    },
-    {
-      "type": "header",
-      "content": "Out of stock"
-    },
-    {
-      "type": "text",
-      "id": "oos_badge_text",
-      "label": "Out of stock badge text",
-      "default": "Out of Stock"
-    },
-    {
-      "type": "text",
-      "id": "oos_button_text",
-      "label": "Out of stock button text",
-      "default": "Get Notified"
-    },
-    {
-      "type": "text",
-      "id": "restock_modal_title",
-      "label": "Restock modal title",
-      "default": "Get notified when your favorite flavors return"
-    },
-    {
-      "type": "text",
-      "id": "restock_modal_description",
-      "label": "Restock modal description",
-      "default": "Sign up below for restock notifications"
-    },
-    {
-      "type": "text",
-      "id": "restock_modal_placeholder",
-      "label": "Restock modal email placeholder",
-      "default": "Enter your email"
-    },
-    {
-      "type": "text",
-      "id": "restock_modal_button_text",
-      "label": "Restock modal submit button text",
-      "default": "Sign Up"
-    },
-    {
-      "type": "text",
-      "id": "restock_modal_success_text",
-      "label": "Restock modal success message",
-      "default": "You're on the list! We'll email you when it's back in stock."
-    },
-    {
-      "type": "text",
-      "id": "klaviyo_public_key",
-      "label": "Klaviyo public API key",
-      "info": "Public site ID used for back-in-stock subscriptions",
-      "default": "NBGeDz"
     },
     {
       "type": "header",
@@ -416,60 +438,46 @@
       "visible_if": "{{ section.settings.equal_columns }}"
     },
     {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "t:settings.gap_mobile",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Product Gallery"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_thumbnails_desktop",
+      "label": "Hide thumbnails on Desktop",
+      "default": false
+    },
+    {
       "type": "checkbox",
       "id": "disable_gallery_background",
       "label": "t:settings.hide_gallery_background",
       "default": false
     },
     {
-      "type": "richtext",
-      "id": "subscription_value_props",
-      "label": "Subscription Value Props"
-    },
-    {
-      "type": "range",
-      "id": "gap",
-      "label": "t:settings.gap",
-      "min": 0,
-      "max": 48,
-      "step": 4,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_sticky_add_to_cart",
-      "label": "t:settings.enable_sticky_add_to_cart",
-      "default": true
-    },
-    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:settings.color_scheme",
       "default": "scheme-1"
-    },
-    {
-      "type": "select",
-      "id": "background_type",
-      "label": "Background Type",
-      "options": [
-        {
-          "value": "gradient",
-          "label": "Gradient"
-        },
-        {
-          "value": "color",
-          "label": "Color"
-        }
-      ],
-      "default": "gradient"
-    },
-    {
-      "type": "color_background",
-      "id": "background_gradient",
-      "label": "Background Gradient",
-      "default": "linear-gradient(180deg, #F8F8F8 0%, #FFFFFF 100%)",
-      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
     },
     {
       "type": "header",
@@ -494,11 +502,31 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [
     {
-      "name": "LP Product Bundle"
+      "name": "LP Product Information"
     }
   ]
 }

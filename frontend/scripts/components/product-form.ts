@@ -226,6 +226,50 @@ export default (Alpine: AlpineType) => {
             });
         },
 
+        changeFlavor(productResourceSlug: string) {
+            this.fetchProduct(productResourceSlug);
+        },
+
+        async fetchProduct(productResourceSlug: string) {
+            // use section rendering to fetch an entirely new section
+            const section = this.$el.closest('.shopify-section') as HTMLElement;
+            console.log('section', section);
+            section.innerHTML = '';
+            const sectionId = section.id;
+
+            console.log('section', section);
+            console.log('sectionId', sectionId);
+
+            console.log('section.innerHTML', section?.innerHTML);
+
+            // fetch the section from the shopify section rendering api
+            const res = await fetch(`/sections/${sectionId}.json`);
+            const data = await res.json();
+            console.log('data', data);
+            section.innerHTML = data.content;
+
+            // const url = new URL(window.location.href);
+            // url.searchParams.set('product', productResourceSlug);
+            // window.history.replaceState({}, '', url.toString());
+
+            // // fetch product from Shopify public products.json
+          
+            // const res = await fetch(`/products/${productResourceSlug}.json`);
+            // const data = await res.json();
+            // const product = data.product;
+
+            // const firstVariantId = String(product.variants[0].id);           
+            // const productObject = this.productObject[String(product.id)];
+            // this.selectedVariantId = productObject[firstVariantId];
+
+            // window.dispatchEvent(new CustomEvent('product-changed', {
+            //     detail: { product: product }
+            // }));
+            // this.selectedVariant = productObject[this.selectedVariantId];
+            // this._syncSelectedVariant();
+            // this.updatePrices();
+        },
+
         async addToCart() {
             if (!this.canAddToCart || this.loading) {
                 return;

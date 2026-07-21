@@ -1,0 +1,42 @@
+{% liquid
+    assign product = section.settings.product
+    assign product_data = product.metafields.custom.product_group.value
+    assign collection = product_data.collection_handle
+%}
+
+<div class="font-bold font-gothic_condensed text-bear-black block uppercase mb-2.5 text-base">
+    Choose Your Flavor
+</div>
+
+<div class="wb-grid grid-cols-5 gap-4">
+    {% for product_resource in collection.value.products  %}
+        {% if product_resource.id == product.id %}
+            {% render 'flavor-swatch', product_resource: product_resource, selected: true %}
+        {% break %}
+        {% endif %}
+    {% endfor %}
+    {% for product_resource in collection.value.products  %}
+        {% unless product_resource.id == product.id %}
+            {% render 'flavor-swatch', product_resource: product_resource %}
+        {% endunless %}
+    {% endfor %}
+</div>
+
+
+{% schema %}
+    {
+        "name": "Flavor Selector",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title"
+            }
+        ],
+        "presets": [
+            {
+                "name": "Flavor Selector"
+            }
+        ]
+    }
+{% endschema %}

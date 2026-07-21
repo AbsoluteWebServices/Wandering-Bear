@@ -234,6 +234,7 @@ export default (Alpine: typeof AlpineType) => {
 
       async renderGallery(product: { handle: string }) {
         const mediaWrapper = this._getMediaWrapper()
+        console.log('mediaWrapper', mediaWrapper);
         if (!mediaWrapper) {
           console.error('mediaWrapper not found')
           return
