@@ -1,0 +1,501 @@
+{% comment %}
+  Our Foodservice Heroes — product grid with decorative blocks.
+  Figma: FOODSERVICE_DESKTOP 1790:283, FOODSERVICE_MOBILE 1790:656
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign color_scheme = s.color_scheme
+  assign container_class = 'w-full'
+  if s.section_width == 'container'
+    assign container_class = 'w-full max-w-[1280px] mx-auto'
+  endif
+%}
+
+<div
+  class="aw-our-heroes relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: color_scheme.settings.background %} {% render 'spacing-style', settings: s %}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media', image_fit: 'natural' %}
+
+  <div class="{{ container_class }} relative z-[1] px-6 md:px-10 lg:px-[68px]">
+    {% if s.title != blank %}
+      <div class="aw-our-heroes__header text-center mb-8 md:mb-12">
+        <h2
+          class="aw-our-heroes__title font-parslay leading-[1.29] tracking-[-0.01em] mx-auto max-w-[932px]"
+          style="color: {{ s.title_color | default: '#F2E6DC' }}"
+        >
+          {{ s.title }}
+        </h2>
+
+        {% if s.title_decoration != blank %}
+          <div class="aw-our-heroes__title-decoration mx-auto mt-3 max-w-[242px]">
+            {{ s.title_decoration | image_url: width: 500 | image_tag: class: 'w-full h-auto block', loading: 'lazy', alt: '' }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="aw-our-heroes__grid grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-x-6 md:gap-y-12 pb-10 md:pb-16">
+        {% for block in section.blocks %}
+          {% liquid
+            assign block_bg = block.settings.block_background
+            assign block_image = block.settings.image
+            assign block_image_mobile = block.settings.image_mobile
+            assign badge = block.settings.badge
+            assign badge_position = block.settings.badge_position | default: 'top-left'
+          %}
+
+          <article
+            class="aw-our-heroes__block aw-our-heroes__block--{{ forloop.index }} relative w-full max-w-[509px] mx-auto"
+            {{ block.shopify_attributes }}
+          >
+            {% if block_bg != blank %}
+              <div class="aw-our-heroes__block-bg pointer-events-none" aria-hidden="true">
+                {{ block_bg | image_url: width: 1100 | image_tag: class: 'w-full h-auto block', loading: 'lazy', alt: '' }}
+              </div>
+            {% endif %}
+
+            <div class="aw-our-heroes__block-inner relative z-[1] px-6 py-8 md:px-8 md:py-10 flex flex-col items-center text-center">
+              <div class="aw-our-heroes__block-media w-full max-w-[388px] mb-5 md:mb-6">
+                {% if block_image != blank %}
+                  {% render 'picture',
+                    source: block_image,
+                    mobile_source: block_image_mobile,
+                    class: 'w-full h-auto object-contain mx-auto',
+                    alt: block.settings.title,
+                    width: 800,
+                    height: 441,
+                    loading: 'lazy'
+                  %}
+                {% else %}
+                  <div class="aw-our-heroes__block-image-placeholder aspect-[388/328] w-full bg-white/20 rounded-[4px]"></div>
+                {% endif %}
+              </div>
+
+              {% if block.settings.title != blank %}
+                <h3 class="aw-our-heroes__block-title font-kurdis-condensed font-extrabold uppercase leading-[1.29] tracking-[-0.02em] text-bear-black mb-3 md:mb-4 max-w-[458px]">
+                  {{ block.settings.title }}
+                </h3>
+              {% endif %}
+
+              {% if block.settings.description != blank %}
+                <div class="aw-our-heroes__block-description body text-[15px] leading-[1.38] text-bear-black font-kurdis-semi-condensed font-semibold max-w-[434px]">
+                  {{ block.settings.description }}
+                </div>
+              {% endif %}
+            </div>
+
+            {% if badge != blank %}
+              <div class="aw-our-heroes__badge aw-our-heroes__badge--{{ badge_position }} pointer-events-none">
+                {{ badge | image_url: width: 220 | image_tag: class: 'w-[72px] md:w-[88px] h-auto', loading: 'lazy', alt: '' }}
+              </div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .aw-our-heroes__title {
+    font-size: 1.5625rem;
+  }
+
+  .aw-our-heroes__block-title {
+    font-size: 1.25rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .aw-our-heroes__title {
+      font-size: 3.75rem;
+    }
+
+    .aw-our-heroes__block-title {
+      font-size: 1.875rem;
+    }
+  }
+
+  .aw-our-heroes__block-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .aw-our-heroes__block-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .aw-our-heroes__badge {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .aw-our-heroes__badge--top-right {
+    top: 6%;
+    right: 6%;
+  }
+
+  .aw-our-heroes__badge--top-left {
+    top: 6%;
+    left: 6%;
+  }
+
+  .aw-our-heroes__badge--bottom-right {
+    bottom: 6%;
+    right: 6%;
+  }
+
+  .aw-our-heroes__badge--bottom-left {
+    bottom: 6%;
+    left: 6%;
+  }
+
+  @media screen and (max-width: 767px) {
+    .aw-our-heroes__block--2,
+    .aw-our-heroes__block--4 {
+      transform: translateX(-28px);
+    }
+
+    .aw-our-heroes__block--1,
+    .aw-our-heroes__block--3 {
+      transform: translateX(0);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW Our Foodservice Heroes",
+  "tag": "section",
+  "class": "aw-our-heroes-section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        { "value": "full", "label": "Full width" },
+        { "value": "container", "label": "Container" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Our Foodservice Heroes"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#F2E6DC"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_decoration",
+      "label": "Title decoration (SVG underline)"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image (desktop)"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
+      "options": [
+        { "value": "cover", "label": "Cover (may crop)" },
+        { "value": "natural", "label": "Natural (no crop)" }
+      ],
+      "default": "natural",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow",
+      "label": "Allow background image overflow",
+      "default": true,
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image (mobile)"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit_mobile",
+      "label": "Background image fit mobile",
+      "options": [
+        { "value": "cover", "label": "Cover (may crop)" },
+        { "value": "natural", "label": "Natural (no crop)" }
+      ],
+      "default": "natural",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow_mobile",
+      "label": "Allow background image overflow",
+      "default": true,
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Left mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Right mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero",
+      "name": "Hero block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "block_background",
+          "label": "Block background (SVG)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image mobile"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "image_picker",
+          "id": "badge",
+          "label": "Badge image (SVG)"
+        },
+        {
+          "type": "select",
+          "id": "badge_position",
+          "label": "Badge position",
+          "options": [
+            { "value": "top-right", "label": "Top right" },
+            { "value": "top-left", "label": "Top left" },
+            { "value": "bottom-right", "label": "Bottom right" },
+            { "value": "bottom-left", "label": "Bottom left" }
+          ],
+          "default": "top-left"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Our Foodservice Heroes",
+      "blocks": [
+        {
+          "type": "hero",
+          "settings": {
+            "title": "3:1 Concentrate",
+            "description": "Endlessly versatile. The same organic, 100% Arabica, specialty-grade coffee, as a concentrate. Simply mix 1 part concentrate with 3 parts water for fuss-free, delicious cold brew. Make it by the cup or mix one carton of concentrate with 96oz of water to make a gallon. Another popular use is as an easy base for smoothies, cocktails, and everything in between.",
+            "badge_position": "top-left"
+          }
+        },
+        {
+          "type": "hero",
+          "settings": {
+            "title": "3 Gallon Bag-in-Box",
+            "description": "Serve our super-premium organic cold brew in bulk. Hook our 3 Gallon Bag-in-Box up to a keg system, whether that's a countertop kegerator or a standard kegerator, and you've got a high margin way to serve Wandering Bear at scale. More cups, low cost.",
+            "badge_position": "top-left"
+          }
+        },
+        {
+          "type": "hero",
+          "settings": {
+            "title": "96oz BAG-IN-BOX",
+            "description": "Serve our super-premium organic cold brew in bulk with a compact bag-in-box format built for back-of-house efficiency.",
+            "badge_position": "top-left"
+          }
+        },
+        {
+          "type": "hero",
+          "settings": {
+            "title": "8oz CANS",
+            "description": "For grab-and-go ease, we offer our black cold brew in an 8oz can as well as a craveworthy line of high protein canned lattes, available in 3 flavors.",
+            "badge_position": "top-left"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
