@@ -1,0 +1,168 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "food_service": {
+      "type": "aw-food-service",
+      "blocks": {
+        "venue_offices": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/ood-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "image": "shopify://shop_images/offices.jpg",
+            "image_mobile": "shopify://shop_images/offices-mobile.jpg",
+            "title": "OFFICES",
+            "description": "New York City offices were some of Wandering Bear's first customers. It was the first space where we learned our product was the perfect fit for high-volume service. Wandering Bear grew up in the office coffee space where it still has a strong hold and continues to grow. We are proud to fuel teams all around the country.",
+            "badge": "shopify://shop_images/super-premium.svg",
+            "badge_position": "bottom-right"
+          }
+        },
+        "venue_coffee_shops": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/ood-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "image": "shopify://shop_images/coffee-shops.jpg",
+            "image_mobile": "shopify://shop_images/coffee-shops-mobile.jpg",
+            "title": "Coffee Shops, Restaurants & Bars",
+            "description": "A smooth, full-bodied cold brew with a chocolate-forward finish. Bold enough to anchor a coffee menu, balanced enough to headline a cocktail list. Easy to work into multiple sections of your menu. Low acidity and ready to drink whether you're pouring it straight, dressing it up behind the bar, or building a signature drink around it.",
+            "badge_position": "top-right"
+          }
+        },
+        "venue_hospitality": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/ood-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "title": "Hospitality & Wellness",
+            "description": "From lobby service to hospitals, our cold brew delivers a delicious, consistently smooth pour that reflects well on your space — whether that's guest experience, member wellness, patient care, or caregiver care. Made with just two ingredients, filtered water and organic, 100% Arabica coffee, it holds its quality through long service hours. No stale, sat-out coffee to apologize for.",
+            "badge": "shopify://shop_images/coffee.svg",
+            "badge_position": "top-left"
+          }
+        },
+        "venue_colleges": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/ood-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "title": "Colleges & Universities",
+            "description": "High volume, zero compromise. Whether it's a dining hall, locker rooms, or micro markets, our cold brew is built to serve a lot of people without compromising quality. Zero effort, fresh-tasting and consistent, batch after batch, even with limited staff or equipment.",
+            "badge": "shopify://shop_images/wb-tag.svg",
+            "badge_position": "bottom-right"
+          }
+        }
+      },
+      "block_order": [
+        "venue_offices",
+        "venue_coffee_shops",
+        "venue_hospitality",
+        "venue_colleges"
+      ],
+      "settings": {
+        "title": "WANDERING BEAR FOODSERVICE",
+        "subtitle": "Barista Quality in Every Pour",
+        "intro": "Expertly crafted, super premium organic cold brew that performs at any volume, from a single cup to a keg.",
+        "description": "<p>Wandering Bear started with a simple mission: bring the coffee shop to your fridge. The convenience and quality of our product easily extended that mission to offices, bars, restaurants, coffee shops, dining halls, and beyond. Today, Wandering Bear serves everywhere. Super premium organic cold brew, expertly crafted and packaged to stay fresh, so you'll never have serve stale or bitter cold brew again</p>",
+        "title_color": "#1b1b1b",
+        "subtitle_color": "#ffffff",
+        "intro_color": "#ffffff",
+        "text_color": "#ffffff",
+        "background_type": "image",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "linear-gradient(180deg, rgba(242, 230, 220, 0), rgba(242, 230, 220, NaN) 28.846%, rgba(69, 148, 186, NaN) 78.846%, rgba(69, 148, 186, 0) 89.904%)",
+        "background_image": "shopify://shop_images/food-service-background-top.png",
+        "background_type_mobile": "image",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "background_image_mobile": "shopify://shop_images/food-service-background-top-mobile.png",
+        "padding-block-start": 78,
+        "padding-block-end": 0,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 42,
+        "padding-block-end-mobile": 0,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
+    },
+    "our_heroes": {
+      "type": "aw-our-heroes",
+      "blocks": {
+        "hero_concentrate": {
+          "type": "hero",
+          "settings": {
+            "title": "3:1 Concentrate",
+            "description": "Endlessly versatile. The same organic, 100% Arabica, specialty-grade coffee, as a concentrate. Simply mix 1 part concentrate with 3 parts water for fuss-free, delicious cold brew. Make it by the cup or mix one carton of concentrate with 96oz of water to make a gallon. Another popular use is as an easy base for smoothies, cocktails, and everything in between.",
+            "badge_position": "top-left"
+          }
+        },
+        "hero_keg": {
+          "type": "hero",
+          "settings": {
+            "title": "3 Gallon Bag-in-Box",
+            "description": "Serve our super-premium organic cold brew in bulk. Hook our 3 Gallon Bag-in-Box up to a keg system, whether that's a countertop kegerator or a standard kegerator, and you've got a high margin way to serve Wandering Bear at scale. More cups, low cost.",
+            "badge_position": "top-left"
+          }
+        },
+        "hero_96oz": {
+          "type": "hero",
+          "settings": {
+            "title": "96oz BAG-IN-BOX",
+            "description": "Serve our super-premium organic cold brew in bulk with a compact bag-in-box format built for back-of-house efficiency.",
+            "badge_position": "top-left"
+          }
+        },
+        "hero_cans": {
+          "type": "hero",
+          "settings": {
+            "title": "8oz CANS",
+            "description": "For grab-and-go ease, we offer our black cold brew in an 8oz can as well as a craveworthy line of high protein canned lattes, available in 3 flavors.",
+            "badge_position": "top-left"
+          }
+        }
+      },
+      "block_order": [
+        "hero_concentrate",
+        "hero_keg",
+        "hero_96oz",
+        "hero_cans"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "section_width": "full",
+        "title": "Our Foodservice Heroes",
+        "title_color": "#f2e6dc",
+        "background_type": "image",
+        "background_solid": "#af7404",
+        "background_gradient": "",
+        "background_image_fit": "natural",
+        "background_image_overflow": true,
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#af7404",
+        "background_gradient_mobile": "",
+        "background_image_fit_mobile": "natural",
+        "background_image_overflow_mobile": true,
+        "padding-block-start": 40,
+        "padding-block-end": 40,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 32,
+        "padding-block-end-mobile": 32,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
+    }
+  },
+  "order": [
+    "food_service",
+    "our_heroes"
+  ]
+}
