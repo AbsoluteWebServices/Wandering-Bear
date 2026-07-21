@@ -409,12 +409,15 @@
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "SUPER PREMIUM COFFEE",
             "description_1": "Made with our signature cold brew from organic, specialty-grade beans",
+            "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226583.svg",
             "title_2": "CREAMY & PROTEIN RICH",
             "description_2": "Ultra-filtered skim milk protein for creaminess with nutrition cred",
+            "order_mobile_2": 1,
             "icon_3": "shopify://shop_images/Group_1327226584.svg",
             "title_3": "SUBTLY SWEET,\\nNO COMPROMISE",
-            "description_3": "Only 100 calories and just 5 grams of real sugar"
+            "description_3": "Only 100 calories and just 5 grams of real sugar",
+            "order_mobile_3": 3
           }
         }
       },
