@@ -204,18 +204,163 @@
         "enable_block_image_mask": true,
         "block_image_mask": "shopify://shop_images/food-service-mask.png",
         "padding-block-start": 40,
-        "padding-block-end": 40,
+        "padding-block-end": 98,
         "padding-inline-start": 0,
         "padding-inline-end": 0,
         "padding-block-start-mobile": 32,
-        "padding-block-end-mobile": 32,
+        "padding-block-end-mobile": 28,
         "padding-inline-start-mobile": 0,
         "padding-inline-end-mobile": 0
+      }
+    },
+    "section_XXDaV3": {
+      "type": "section",
+      "blocks": {
+        "heading_Rmgnah": {
+          "type": "_heading",
+          "name": "t:names.heading",
+          "settings": {
+            "block_class": "",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_family": "var(--font-kurdis-condensed)",
+            "font_family_mobile": "",
+            "font_size": "2.813rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "text": "<p>FIND US ON MENU</p>",
+            "read_only": false,
+            "type_preset_mobile": "custom",
+            "font_mobile": "var(--font-heading--family)",
+            "font_size_mobile": "1.25rem",
+            "line_height_mobile": "",
+            "letter_spacing_mobile": "",
+            "case_mobile": "",
+            "wrap_mobile": "",
+            "color_mobile": "",
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "show_alignment": true,
+            "padding-block-start": 0,
+            "padding-block-end": 60,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 36,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "heading_DLjRQH": {
+          "type": "_heading",
+          "name": "t:names.heading",
+          "settings": {
+            "block_class": "custom-text",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_family": "var(--font-kurdis-condensed)",
+            "font_family_mobile": "",
+            "font_size": "2.813rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "text": "<p>add containers for logos</p>",
+            "read_only": false,
+            "type_preset_mobile": "custom",
+            "font_mobile": "",
+            "font_size_mobile": "1.25rem",
+            "line_height_mobile": "",
+            "letter_spacing_mobile": "",
+            "case_mobile": "",
+            "wrap_mobile": "",
+            "color_mobile": "",
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "show_alignment": true,
+            "padding-block-start": 0,
+            "padding-block-end": 100,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 100,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "custom_liquid_aywCeh": {
+          "type": "custom-liquid",
+          "name": "t:names.custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"wb-flex justify-center mt-10 w-full smd:mt-25 smd:w-[402px] mx-auto\">\n              <a\n                href=\"#\"\n                class=\"group relative flex w-full px-7.5 items-center justify-center shadow-button h-[61px] uppercase disabled:pointer-events-none smd:max-w-[402px]\"\n                title=\"CONTACT OUR TEAM TO LEARN MORE\"\n              >\n                <span class=\"relative z-2 text-[#F2E6DC] text-base smd:text-[20px]/5 font-kurdis-semi-condensed font-bold md:mt-0.5 uppercase\">\n                  CONTACT OUR TEAM TO LEARN MORE\n                </span>\n                <svg\n                  xmlns=\"http://www.w3.org/2000/svg\"\n                  class=\"absolute inset-0 z-1 h-full w-full text-espresso group-hover:text-gold! transition-all duration-300\" viewBox=\"0 0 402 61\" fill=\"none\" preserveAspectRatio=\"none\"\n                >\n                  <path d=\"M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z\" fill=\"currentColor\"/>\n                </svg>\n              </a>\n            </div>"
+          },
+          "blocks": {}
+        },
+        "spacer_CFQcYK": {
+          "type": "spacer",
+          "name": "t:names.spacer",
+          "settings": {
+            "size": "pixel",
+            "percent_size": 100,
+            "pixel_size": 200,
+            "custom_mobile_size": true,
+            "size_mobile": "percent",
+            "percent_size_mobile": 100,
+            "pixel_size_mobile": 120
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_Rmgnah",
+        "heading_DLjRQH",
+        "custom_liquid_aywCeh",
+        "spacer_CFQcYK"
+      ],
+      "custom_css": [
+        ".custom-text > p {color: #af7404 !important;}"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 98,
+        "padding-block-end": 100,
+        "padding-block-start-mobile": 28,
+        "padding-block-end-mobile": 100
       }
     }
   },
   "order": [
     "food_service",
-    "our_heroes"
+    "our_heroes",
+    "section_XXDaV3"
   ]
 }

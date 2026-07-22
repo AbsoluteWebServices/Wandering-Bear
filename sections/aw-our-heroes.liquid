@@ -101,7 +101,7 @@
     {% endif %}
 
     {% if section.blocks.size > 0 %}
-      <div class="our-heroes__grid wb-grid grid-cols-1 smd:grid-cols-2 gap-y-5 smd:gap-x-5 smd:gap-y-[160px] md:gap-y-66.5 pb-10 md:pb-16">
+      <div class="our-heroes__grid wb-grid grid-cols-1 smd:grid-cols-2 gap-y-5 smd:gap-x-5 smd:gap-y-[160px] md:gap-y-66.5">
         {% for block in section.blocks %}
           {% liquid
             assign block_bg = block.settings.block_background
