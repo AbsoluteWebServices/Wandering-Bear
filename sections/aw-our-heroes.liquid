@@ -5,26 +5,95 @@
 
 {% liquid
   assign section_settings = section.settings
+
+  assign bg_type = section_settings.background_type | default: 'image'
+  assign bg_type_mobile = section_settings.background_type_mobile | default: 'same'
+  assign bg_image = section_settings.background_image
+  assign bg_image_mobile = section_settings.background_image_mobile
+
+  if bg_type_mobile == 'same'
+    assign resolved_mobile_bg_type = bg_type
+    assign resolved_mobile_bg_image = bg_image_mobile
+
+    if resolved_mobile_bg_image == blank
+      assign resolved_mobile_bg_image = bg_image
+    endif
+  else
+    assign resolved_mobile_bg_type = bg_type_mobile
+    assign resolved_mobile_bg_image = bg_image_mobile
+  endif
+
+  assign show_desktop_bg_image = false
+  if bg_type == 'image' and bg_image != blank
+    assign show_desktop_bg_image = true
+  endif
+
+  assign show_mobile_bg_image = false
+  if resolved_mobile_bg_type == 'image' and resolved_mobile_bg_image != blank
+    assign show_mobile_bg_image = true
+  endif
+
+  if section_settings.enable_block_image_mask == false
+    assign enable_block_image_mask = false
+  else
+    assign enable_block_image_mask = true
+  endif
+  assign block_image_mask = section_settings.block_image_mask
+
+  assign use_block_image_mask = false
+  if enable_block_image_mask and block_image_mask != blank
+    assign use_block_image_mask = true
+  endif
 %}
 
 <div
-  class="aw-our-heroes relative spacing-style wb-section-bg"
-  style="{% render 'section-background', settings: section_settings, part: 'style', fallback_color: '#AF7404' %} {% render 'spacing-style', settings: section_settings %}"
+  class="our-heroes relative spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: section_settings, part: 'style', fallback_color: '#AF7404' %} {% render 'spacing-style', settings: section_settings %}{% if use_block_image_mask %} --aw-oh-block-image-mask: url('{{ block_image_mask | image_url }}');{% endif %}"
   {{ section.shopify_attributes }}
 >
-  {% render 'section-background', settings: section_settings, part: 'media', image_fit: 'natural' %}
-  <div class="w-full relative z-1 px-6 md:px-10 lg:px-17">
+  {% if show_desktop_bg_image or show_mobile_bg_image %}
+    <div class="absolute bottom-0 left-0 right-0 z-0 overflow-visible pointer-events-none lg:-top-[200px]" aria-hidden="true">
+      {% if show_desktop_bg_image %}
+        <div class="hidden md:block [&_picture]:block [&_picture]:w-full [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:max-w-none!">
+          {% render 'picture',
+            source: bg_image,
+            mobile_source: bg_image,
+            class: 'w-full h-auto !max-w-none block',
+            alt: bg_image.alt,
+            width: 1920,
+            height: 2400,
+            loading: 'lazy'
+          %}
+        </div>
+      {% endif %}
+
+      {% if show_mobile_bg_image %}
+        <div class="md:hidden [&_picture]:block [&_picture]:w-full [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:max-w-none!">
+          {% render 'picture',
+            source: resolved_mobile_bg_image,
+            mobile_source: resolved_mobile_bg_image,
+            class: 'w-full h-auto !max-w-none block',
+            alt: resolved_mobile_bg_image.alt,
+            width: 1200,
+            height: 2400,
+            loading: 'lazy'
+          %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="w-full relative z-1 max-w-[1036px] mx-auto smd:px-6 lg:px-0">
     {% if section_settings.title != blank %}
-      <div class="aw-our-heroes__header text-center mb-8 md:mb-12">
+      <div class="our-heroes__header text-center mb-8 md:mb-12">
         <h2
-          class="aw-our-heroes__title font-parslay leading-[1.29] tracking-[-0.01em] mx-auto max-w-[932px]"
+          class="our-heroes__title font-parslay leading-[1.29] tracking-[-0.01em] mx-auto max-w-[932px]"
           style="color: {{ section_settings.title_color | default: '#F2E6DC' }}"
         >
           {{ section_settings.title }}
         </h2>
 
         {% if section_settings.title_decoration != blank %}
-          <div class="aw-our-heroes__title-decoration mx-auto mt-3 max-w-[242px]">
+          <div class="our-heroes__title-decoration mx-auto mt-3 max-w-[242px]">
             {{ section_settings.title_decoration | image_url: width: 500 | image_tag: class: 'w-full h-auto block', loading: 'lazy', alt: '' }}
           </div>
         {% endif %}
@@ -32,7 +101,7 @@
     {% endif %}
 
     {% if section.blocks.size > 0 %}
-      <div class="aw-our-heroes__grid wb-grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-x-6 md:gap-y-12 pb-10 md:pb-16">
+      <div class="our-heroes__grid wb-grid grid-cols-1 smd:grid-cols-2 gap-8 smd:gap-x-5 smd:gap-y-66.5 pb-10 md:pb-16">
         {% for block in section.blocks %}
           {% liquid
             assign block_bg = block.settings.block_background
@@ -43,47 +112,72 @@
           %}
 
           <div
-            class="aw-our-heroes__block aw-our-heroes__block--{{ forloop.index }} relative md:col-span-1 w-full max-w-[509px] mx-auto"
+            class="our-heroes__block our-heroes__block--{{ forloop.index }}
+            relative md:col-span-1 w-full max-w-[509px] mx-auto odd:[&_img]:smd:aspect-388/328 even:[&_img]:smd:aspect-388/352
+            smd:odd:[&_.our-heroes-block-media]:smd:bottom-[calc(100%-124px)] smd:even:[&_.our-heroes-block-media]:smd:bottom-[calc(100%-150px)]
+            smd:odd:[&_.our-heroes-block-inner]:pt-37.5 smd:even:[&_.our-heroes-block-inner]:pt-43.5"
             {{ block.shopify_attributes }}
           >
             {% if block_bg != blank %}
-              <div class="aw-our-heroes__block-bg pointer-events-none" aria-hidden="true">
-                {{ block_bg | image_url: width: 1100 | image_tag: class: 'w-full h-auto block', loading: 'lazy', alt: '' }}
-              </div>
+              <svg
+                class="absolute inset-0 size-full pointer-events-none"
+                viewBox="0 0 1 1"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <image href="{{ block_bg | image_url }}" width="1" height="1" preserveAspectRatio="none"/>
+              </svg>
             {% endif %}
 
-            <div class="aw-our-heroes__block-inner relative z-1 px-6 py-8 md:px-8 md:py-10 flex flex-col items-center text-center">
-              <div class="aw-our-heroes__block-media w-full max-w-[388px] mb-5 md:mb-6">
+            <div class="our-heroes__block-inner our-heroes-block-inner relative flex flex-col items-center text-center z-1 px-6 py-8 smd:px-8 smd:pb-10 md:pb-14 md:px-12.5">
+              <div class="our-heroes__block-media our-heroes-block-media w-full max-w-[388px] smd:absolute smd:left-1/2 smd:translate-x-[-50%]">
                 {% if block_image != blank %}
-                  {% render 'picture',
-                    source: block_image,
-                    mobile_source: block_image_mobile,
-                    class: 'w-full h-auto object-contain mx-auto',
-                    alt: block.settings.title,
-                    width: 800,
-                    height: 441,
-                    loading: 'lazy'
-                  %}
+                  {% if use_block_image_mask %}
+                    <div
+                      class="w-full overflow-hidden [mask-image:var(--aw-oh-block-image-mask)] [-webkit-mask-image:var(--aw-oh-block-image-mask)] [mask-size:100%_100%] [-webkit-mask-size:100%_100%] [mask-repeat:no-repeat] [-webkit-mask-repeat:no-repeat] [mask-mode:alpha] [-webkit-mask-mode:alpha] [&_picture]:block [&_picture]:size-full [&_img]:block [&_img]:size-full [&_img]:object-cover"
+                    >
+                      {% render 'picture',
+                        source: block_image,
+                        mobile_source: block_image_mobile,
+                        class: 'size-full object-cover',
+                        alt: block.settings.title,
+                        width: 800,
+                        height: 441,
+                        loading: 'lazy'
+                      %}
+                    </div>
+                  {% else %}
+                    {% render 'picture',
+                      source: block_image,
+                      mobile_source: block_image_mobile,
+                      class: 'w-full h-auto object-contain mx-auto',
+                      alt: block.settings.title,
+                      width: 800,
+                      height: 441,
+                      loading: 'lazy'
+                    %}
+                  {% endif %}
                 {% else %}
-                  <div class="aw-our-heroes__block-image-placeholder aspect-388/328 w-full bg-white/20 rounded-sm"></div>
+                  <div class="our-heroes__block-image-placeholder aspect-388/328 w-full bg-white/20 rounded-sm"></div>
                 {% endif %}
               </div>
 
               {% if block.settings.title != blank %}
-                <h3 class="aw-our-heroes__block-title font-kurdis-condensed font-extrabold uppercase leading-[1.29] tracking-[-0.02em] text-bear-black mb-3 md:mb-4 max-w-[458px]">
+                <h3 class="our-heroes__block-title font-kurdis-condensed font-extrabold uppercase leading-[1.29] tracking-[-0.02em] text-bear-black mb-3 md:mb-1.5 max-w-[458px]">
                   {{ block.settings.title }}
                 </h3>
               {% endif %}
 
               {% if block.settings.description != blank %}
-                <div class="aw-our-heroes__block-description body text-[15px] leading-[1.38] text-bear-black font-kurdis-semi-condensed font-semibold max-w-[434px]">
+                <div class="our-heroes__block-description body text-[15px] leading-[150%]! text-bear-black font-kurdis-semi-condensed tracking-[-0.15px] font-semibold mx-auto max-w-[350px]">
                   {{ block.settings.description }}
                 </div>
               {% endif %}
             </div>
 
             {% if badge != blank %}
-              <div class="aw-our-heroes__badge aw-our-heroes__badge--{{ badge_position }} pointer-events-none">
+              <div class="our-heroes__badge our-heroes__badge--{{ badge_position }} pointer-events-none">
                 {{ badge | image_url: width: 220 | image_tag: class: 'w-[72px] md:w-[88px] h-auto', loading: 'lazy', alt: '' }}
               </div>
             {% endif %}
@@ -95,71 +189,57 @@
 </div>
 
 {% stylesheet %}
-  .aw-our-heroes__title {
+  .our-heroes__title {
     font-size: 1.5625rem;
   }
 
-  .aw-our-heroes__block-title {
+  .our-heroes__block-title {
     font-size: 1.25rem;
   }
 
   @media screen and (min-width: 768px) {
-    .aw-our-heroes__title {
+    .our-heroes__title {
       font-size: 3.75rem;
     }
 
-    .aw-our-heroes__block-title {
+    .our-heroes__block-title {
       font-size: 1.875rem;
     }
   }
 
-  .aw-our-heroes__block-bg {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-  }
-
-  .aw-our-heroes__block-bg img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-  }
-
-  .aw-our-heroes__badge {
+  .our-heroes__badge {
     position: absolute;
     z-index: 2;
   }
 
-  .aw-our-heroes__badge--top-right {
+  .our-heroes__badge--top-right {
     top: 6%;
     right: 6%;
   }
 
-  .aw-our-heroes__badge--top-left {
+  .our-heroes__badge--top-left {
     top: 6%;
     left: 6%;
   }
 
-  .aw-our-heroes__badge--bottom-right {
+  .our-heroes__badge--bottom-right {
     bottom: 6%;
     right: 6%;
   }
 
-  .aw-our-heroes__badge--bottom-left {
+  .our-heroes__badge--bottom-left {
     bottom: 6%;
     left: 6%;
   }
 
   @media screen and (max-width: 767px) {
-    .aw-our-heroes__block--2,
-    .aw-our-heroes__block--4 {
+    .our-heroes__block--2,
+    .our-heroes__block--4 {
       transform: translateX(-28px);
     }
 
-    .aw-our-heroes__block--1,
-    .aw-our-heroes__block--3 {
+    .our-heroes__block--1,
+    .our-heroes__block--3 {
       transform: translateX(0);
     }
   }
@@ -169,7 +249,7 @@
 {
   "name": "AW Our Foodservice Heroes",
   "tag": "section",
-  "class": "aw-our-heroes-section",
+  "class": "our-heroes-section",
   "settings": [
     {
       "type": "header",
@@ -262,6 +342,23 @@
       "id": "background_image_mobile",
       "label": "Background image (mobile)",
       "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Blocks"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_block_image_mask",
+      "label": "Enable mask for block",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "block_image_mask",
+      "label": "Block image mask",
+      "info": "Applied to all block images in this section.",
+      "visible_if": "{{ section.settings.enable_block_image_mask }}"
     },
     {
       "type": "header",
@@ -360,7 +457,7 @@
         {
           "type": "image_picker",
           "id": "block_background",
-          "label": "Block background (SVG)"
+          "label": "Block background"
         },
         {
           "type": "image_picker",
@@ -385,7 +482,7 @@
         {
           "type": "image_picker",
           "id": "badge",
-          "label": "Badge image (SVG)"
+          "label": "Badge image"
         },
         {
           "type": "select",
