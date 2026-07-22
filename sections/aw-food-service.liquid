@@ -34,24 +34,16 @@
     assign enable_block_image_mask = true
   endif
   assign block_image_mask = section_settings.block_image_mask
-  assign block_image_mask_mobile = section_settings.block_image_mask_mobile
-
-  assign resolved_block_image_mask_mobile = block_image_mask_mobile
-  if resolved_block_image_mask_mobile == blank
-    assign resolved_block_image_mask_mobile = block_image_mask
-  endif
 
   assign use_block_image_mask = false
-  if enable_block_image_mask
-    if block_image_mask != blank or resolved_block_image_mask_mobile != blank
-      assign use_block_image_mask = true
-    endif
+  if enable_block_image_mask and block_image_mask != blank
+    assign use_block_image_mask = true
   endif
 %}
 
 <div
   class="aw-food-service relative spacing-style wb-section-bg"
-  style="{% render 'section-background', settings: section_settings, part: 'style', fallback_color: '#F2E6DC' %} {% render 'spacing-style', settings: section_settings %}{% if use_block_image_mask and resolved_block_image_mask_mobile != blank %} --aw-fs-block-image-mask-mobile: url('{{ resolved_block_image_mask_mobile | image_url }}');{% endif %}{% if use_block_image_mask and block_image_mask != blank %} --aw-fs-block-image-mask: url('{{ block_image_mask | image_url }}');{% endif %}"
+  style="{% render 'section-background', settings: section_settings, part: 'style', fallback_color: '#F2E6DC' %} {% render 'spacing-style', settings: section_settings %}{% if use_block_image_mask %} --aw-fs-block-image-mask: url('{{ block_image_mask | image_url }}');{% endif %}"
   {{ section.shopify_attributes }}
 >
   {% if show_desktop_bg_image or show_mobile_bg_image %}
@@ -188,7 +180,7 @@
                     {% if block_image != blank %}
                       {% if use_block_image_mask %}
                         <div
-                          class="w-full aspect-264/211 overflow-hidden translate-y-8.5 smd:translate-y-0 [mask-image:var(--aw-fs-block-image-mask-mobile,var(--aw-fs-block-image-mask))] [-webkit-mask-image:var(--aw-fs-block-image-mask-mobile,var(--aw-fs-block-image-mask))] smd:aspect-268/328 smd:[mask-image:var(--aw-fs-block-image-mask)] smd:[-webkit-mask-image:var(--aw-fs-block-image-mask)] [mask-size:100%_100%] [-webkit-mask-size:100%_100%] [mask-repeat:no-repeat] [-webkit-mask-repeat:no-repeat] [mask-mode:alpha] [-webkit-mask-mode:alpha] [&_picture]:block [&_picture]:size-full [&_img]:block [&_img]:size-full [&_img]:object-cover"
+                          class="w-full aspect-264/211 overflow-hidden translate-y-8.5 smd:translate-y-0 smd:aspect-268/328 [mask-image:var(--aw-fs-block-image-mask)] [-webkit-mask-image:var(--aw-fs-block-image-mask)] [mask-size:100%_100%] [-webkit-mask-size:100%_100%] [mask-repeat:no-repeat] [-webkit-mask-repeat:no-repeat] [mask-mode:alpha] [-webkit-mask-mode:alpha] [&_picture]:block [&_picture]:size-full [&_img]:block [&_img]:size-full [&_img]:object-cover"
                         >
                           {% render 'picture',
                             source: block_image,
@@ -399,15 +391,8 @@
     {
       "type": "image_picker",
       "id": "block_image_mask",
-      "label": "Block image mask (SVG)",
-      "info": "Applied to block images on desktop.",
-      "visible_if": "{{ section.settings.enable_block_image_mask }}"
-    },
-    {
-      "type": "image_picker",
-      "id": "block_image_mask_mobile",
-      "label": "Block image mask mobile (SVG)",
-      "info": "Applied to block images on mobile. Falls back to desktop mask if empty.",
+      "label": "Block image mask",
+      "info": "Applied to all block images in this section.",
       "visible_if": "{{ section.settings.enable_block_image_mask }}"
     },
     {
