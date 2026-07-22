@@ -22,7 +22,10 @@
 %}
 
 <div x-data="overlayScrollbar">
-  <div class="{% if bundle_collection.products.size > 4 %} h-[486px] md:h-[436px] {% endif %} overflow-hidden relative py-2">
+  <div
+    class="{% if bundle_collection.products.size > 4 %} h-[486px] md:h-[436px] {% endif %} overflow-hidden relative py-2"
+    :class="{ 'lg:mb-3': bundleSize < 1 }"
+  >
     <div class="flavor-container flex flex-col gap-2.5{% if bundle_collection.products.size > 4 %} overflow-y-auto absolute {% endif %} top-0 left-0 w-full h-full py-0.5 px-1 md:pr-4">
       {% for child_product in bundle_collection.products %}
         {% liquid
