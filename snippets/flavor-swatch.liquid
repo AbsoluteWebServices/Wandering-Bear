@@ -9,11 +9,14 @@
     assign product_resource_slug = product_resource.handle | handleize
     assign page_url = page.url | append: "?view=overview-2&product=" | append: product_resource_slug
 %}
+
+
 <fieldset>
     <label for="flavor-{{ product_resource_slug }}" @click="changeFlavor('{{ product_resource_slug }}')" class="flex flex-col gap-2 items-center cursor-pointer relative">
-        <input type="radio" id="flavor-{{ product_resource_slug }}" name="flavor" value="{{ product_resource_slug }}" class="h-full w-full opacity-0 absolute top-0 left-0">
-        <div class="flex w-12 h-12 flex-col justify-center items-center gap-2 rounded-full {% if selected %}outline outline-black outline-2{% endif %} bg-transparent">
-            <div class="w-11 h-11 rounded-full flex items-center justify-center overflow-hidden">
+        <input type="radio" id="flavor-{{ product_resource_slug }}" name="flavor" value="{{ product_resource_slug }}" class="h-full w-full opacity-0 absolute top-0 left-0"
+        {% if checked %}checked{% endif %}>
+        <div class="flavor-swatch relative flex flex-col justify-center items-center gap-2 rounded-full bg-transparent">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
                 {% if flavor_image %}
                     {{ flavor_image | image_url: width: 100 | image_tag }}
                 {% else %}

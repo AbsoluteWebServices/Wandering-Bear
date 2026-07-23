@@ -155,9 +155,9 @@
                     endfor
                   %}
                     <span class="variant-option-name transition-colors duration-300 text-base text-bear-black font-bold font-gothic_condensed uppercase">{{- option_name | escape -}}</span>
-                    <span x-text="productObject['{{ product_option_value.variant.id }}'].currentPriceFormatted + '/{{ box_text }}'" class="text-xs text-bear-black font-kurdis-semi-condensed">{{- option_price | money -}}/{{ box_text }}</span>
-                    <span x-text="productObject['{{ product_option_value.variant.id }}'].currentSavingsPercentageFormatted"
-                    :class="productObject['{{ product_option_value.variant.id }}'].currentSavingsPercentage > 0 ? '!block' : '!hidden'"
+                    <span x-text="variantPriceFormatted('{{ product_option_value.variant.id }}', '/{{ box_text }}')" class="text-xs text-bear-black font-kurdis-semi-condensed">{{- option_price | money -}}/{{ box_text }}</span>
+                    <span x-text="variantSavingsFormatted('{{ product_option_value.variant.id }}')"
+                    :class="variantSavingsPercentage('{{ product_option_value.variant.id }}') > 0 ? '!block' : '!hidden'"
                     class="font-kurdis-semi-condensed font-bold text-kraft text-xs/none md:text-[10px] {% if option_savings > 0 %}block{% else %}hidden{% endif %}">{{- option_savings_text | escape -}}</span>
                   </div>
               </label>
@@ -191,7 +191,7 @@
               {% liquid 
                   assign one_month_allocation = blank
                   assign product_object = product_resource.metafields.custom.product_group.value
-                  assign quantified = false
+                  assign quantified = true
                   assign quantified_units = variant.metafields.custom.quantified_units
 
                   if quantified_units != blank and quantified_units > 0
@@ -233,9 +233,7 @@
                   "quantified_units": {{ quantified_units | json }},
                 {% endif %}
                 "price": {{ price | json }},
-                {% if compare_at_price and quantified %}
-                  "compare_at_price": {{ compare_at_price | divided_by: quantified_units | json }},
-                {% elsif compare_at_price %}
+                {% if compare_at_price %}
                   "compare_at_price": {{ compare_at_price | json }},
                 {% endif %}
                 "featured_media_position": {{ variant.featured_media.position | default: 1 | json }}

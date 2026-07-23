@@ -2,7 +2,20 @@
     assign product = section.settings.product
     assign product_data = product.metafields.custom.product_group.value
     assign collection = product_data.collection_handle
+    assign checked = false
 %}
+
+{% style %}
+    input[name="flavor"]:checked + .flavor-swatch::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        outline: 2px solid black;
+        outline-offset: -2px;
+        border-radius: 100%;
+    }
+{% endstyle %}
 
 <div class="font-bold font-gothic_condensed text-bear-black block uppercase mb-2.5 text-base">
     Choose Your Flavor
@@ -11,13 +24,15 @@
 <div class="variant-selector wb-grid grid-cols-5 gap-4">
     {% for product_resource in collection.value.products  %}
         {% if product_resource.id == product.id %}
-            {% render 'flavor-swatch', product_resource: product_resource, selected: true %}
+            {% assign checked = true %}
+            {% render 'flavor-swatch', product_resource: product_resource, checked: checked %}
         {% break %}
         {% endif %}
     {% endfor %}
     {% for product_resource in collection.value.products  %}
         {% unless product_resource.id == product.id %}
-            {% render 'flavor-swatch', product_resource: product_resource %}
+            {% assign checked = false %}
+            {% render 'flavor-swatch', product_resource: product_resource, checked: checked %}
         {% endunless %}
     {% endfor %}
 </div>
