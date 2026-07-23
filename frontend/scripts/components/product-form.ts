@@ -272,9 +272,16 @@ export default (Alpine: AlpineType) => {
             this.product = this.productObject[String(this.productId)];
 
             if (landingPage) {
-                // this.product is the product's variant map, which carries no .id — pass the
-                // id itself so this reprices instead of silently missing.
-                this.updateSelectedProductPrices(this.productId);
+                // If the URL has a product query param, use it to fetch the product
+                const url = new URL(window.location.href);
+                const productResourceSlug = url.searchParams.get('product');
+
+                if (productResourceSlug) {
+                    this.fetchProduct(productResourceSlug);
+                } else {
+                    this.updateSelectedProductPrices(this.productId);
+                }
+
             } else {
 
                 Object.values(this.productObject).forEach((variant: any) => {
@@ -326,15 +333,11 @@ export default (Alpine: AlpineType) => {
             this._variantGroups().forEach((variants) => this._repriceGroup(variants));
         },
 
-        // For Overview-2 LP. Takes a product object (fetchProduct passes one from
-        // products.json) or a bare product id — init has only the id to hand.
         updateSelectedProductPrices(product: any) {
             const productId = product?.id ?? product;
             const group = this.productObject?.[String(productId)];
             if (!group) return;
 
-            // Keep the variant-id keys intact — fetchProduct looks variants up by id, so
-            // flattening this to an array breaks every flavor change after the first.
             this._repriceGroup(Object.values(group) as any[]);
         },
 
@@ -352,8 +355,8 @@ export default (Alpine: AlpineType) => {
             const product = data.product;
             const productId = String(product.id);
 
-            // Point variant resolution at the new product before syncing, otherwise the sync
-            // below re-reads the stale radio ids and snaps the selection back to the old one.
+            console.log('currentProduct',product.title)
+
             this.currentProductId = productId;
 
             const firstVariantId = String(product.variants[0].id);
@@ -366,7 +369,8 @@ export default (Alpine: AlpineType) => {
             }));
 
             // Check the radio of the selected variant
-            const radio = this.$root?.querySelector(`label[for="flavor-${this.selectedVariantId}"] input`);
+            const radio = this.$root?.querySelector(`label[for="flavor-${productResourceSlug}"] input`);
+            console.log('radio', radio);
             if (radio) {
                 radio.checked = true;
             }
