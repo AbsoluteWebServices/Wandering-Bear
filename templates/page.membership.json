@@ -65,9 +65,88 @@
         "padding-inline-start-mobile": 0,
         "padding-inline-end-mobile": 0
       }
+    },
+    "how_it_works": {
+      "type": "aw-how-it-works",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Sign up",
+            "description": "<p>Join for free in seconds and get $5 off your first order. Just for signing up!</p>",
+            "action_type": "join",
+            "join_label": "JOIN FOR FREE",
+            "custom_button_label": "",
+            "custom_button_link": "",
+            "custom_button_style": "secondary",
+            "link_label": "",
+            "link_url": ""
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "Sip & Earn",
+            "description": "<p>Earn $5 for every $50 you spend. The more you sip, the more you earn! \\nPlus, VIP and Elite members can access exclusive flavors and even bigger discounts.</p>",
+            "action_type": "link",
+            "join_label": "JOIN FOR FREE",
+            "custom_button_label": "",
+            "custom_button_link": "",
+            "custom_button_style": "secondary",
+            "link_label": "View all member tiers",
+            "link_url": "#membership-tiers"
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Redeem, then repeat",
+            "description": "<p>Cash in your credit at checkout for money off your cold brew. \\nThen do it all over again.</p>",
+            "action_type": "none",
+            "join_label": "JOIN FOR FREE",
+            "custom_button_label": "",
+            "custom_button_link": "",
+            "custom_button_style": "secondary",
+            "link_label": "",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ],
+      "settings": {
+        "subtitle": "REWARDS, MADE RIDICULOUSLY EASY",
+        "subtitle_color": "#af7404",
+        "subtitle_font_size": 16,
+        "subtitle_font_size_mobile": 14,
+        "title_type": "text",
+        "title": "How It Works",
+        "title_color": "#431a03",
+        "font_size": 35,
+        "font_size_mobile": 35,
+        "title_alt": "",
+        "background_type": "gradient",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "linear-gradient(180deg, rgba(242, 230, 220, 1), rgba(191, 215, 233, 1) 100%)",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "padding-block-start": 48,
+        "padding-block-end": 48,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 40,
+        "padding-block-end-mobile": 40,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
     }
   },
   "order": [
-    "hero"
+    "hero",
+    "how_it_works"
   ]
 }
