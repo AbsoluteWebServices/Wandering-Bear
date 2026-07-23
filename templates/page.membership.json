@@ -1,0 +1,73 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "aw-membership-hero",
+      "custom_css": [
+        "@media screen and (min-width: 480px) {.wb-section-bg__image--mobile img {object-position: 50% 75%; }}"
+      ],
+      "settings": {
+        "alignment": "right",
+        "mobile_alignment": "center",
+        "title_type": "image",
+        "title": "OUR MEMBERSUNLOCK MOREWITH EVERY SIP...",
+        "title_color": "#af7404",
+        "font_size": 75,
+        "font_size_mobile": 40,
+        "title_alt": "",
+        "title_image": "shopify://shop_images/membership-page-title.png",
+        "title_image_mobile": "shopify://shop_images/Membership-Page-Mobile.png",
+        "badge": "shopify://shop_images/membership-badge.png",
+        "badge_offset_x": 0,
+        "badge_offset_y": 0,
+        "badge_rotate": 0,
+        "description": "<p>Earn $5 in credit for every $50 you spend. Join for free, then level up to VIP or Elite for exclusive flavors, bigger discounts, and perks worth waking up for.</p>",
+        "description_color": "#ffffff",
+        "join_button_label": "JOIN FOR FREE",
+        "join_button_style": "secondary",
+        "join_button_bg": "#af7404",
+        "join_button_text": "#f2e6dc",
+        "join_button_hover_bg": "#431a03",
+        "join_button_hover_text": "#f2e6dc",
+        "perks_button_label": "SEE THE PERKS",
+        "perks_button_link": "#membership-tiers",
+        "perks_button_style": "custom",
+        "perks_button_bg": "#f2e6dc",
+        "perks_button_text": "#431a03",
+        "perks_button_hover_bg": "#af7404",
+        "perks_button_hover_text": "#f2e6dc",
+        "background_type": "image",
+        "background_solid": "#431a03",
+        "background_gradient": "",
+        "background_image": "shopify://shop_images/membership-page-banner.jpg",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "image",
+        "background_solid_mobile": "#431a03",
+        "background_gradient_mobile": "",
+        "background_image_mobile": "shopify://shop_images/membership-page-banner-mobile.jpg",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
+        "padding-block-start": 86,
+        "padding-block-end": 80,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 54,
+        "padding-block-end-mobile": 100,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
+    }
+  },
+  "order": [
+    "hero"
+  ]
+}

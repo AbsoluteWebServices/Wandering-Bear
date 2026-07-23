@@ -1,0 +1,674 @@
+{% comment %}
+  Membership hero — split layout from Figma Membership Landing Page (node 1:23).
+  Heading: text or image. JOIN FOR FREE: guests only. SEE THE PERKS: configurable link/anchor.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+
+  assign title_type = s.title_type | default: 'text'
+  assign title = s.title
+  assign title_color = s.title_color | default: '#AF7404'
+  assign title_alt = s.title_alt
+  assign title_image = s.title_image
+  assign title_image_mobile = s.title_image_mobile
+
+  assign description = s.description
+  assign description_color = s.description_color | default: '#FFFFFF'
+
+  assign join_label = s.join_button_label | default: 'JOIN FOR FREE'
+  assign join_style = s.join_button_style | default: 'primary'
+  assign join_button_bg = s.join_button_bg | default: '#AF7404'
+  assign join_button_text = s.join_button_text | default: '#F2E6DC'
+  assign join_button_hover_bg = s.join_button_hover_bg | default: join_button_bg
+  assign join_button_hover_text = s.join_button_hover_text | default: join_button_text
+
+  assign perks_label = s.perks_button_label | default: 'SEE THE PERKS'
+  assign perks_link = s.perks_button_link
+  assign perks_style = s.perks_button_style | default: 'secondary'
+  assign perks_button_bg = s.perks_button_bg | default: '#F2E6DC'
+  assign perks_button_text = s.perks_button_text | default: '#431A03'
+  assign perks_button_hover_bg = s.perks_button_hover_bg | default: perks_button_bg
+  assign perks_button_hover_text = s.perks_button_hover_text | default: perks_button_text
+
+  assign badge = s.badge
+  assign badge_offset_x = s.badge_offset_x | default: 0
+  assign badge_offset_y = s.badge_offset_y | default: 0
+  assign badge_rotate = s.badge_rotate | default: 0
+
+  assign alignment = s.alignment | default: 'left'
+  assign mobile_alignment = s.mobile_alignment | default: 'left'
+
+  case mobile_alignment
+    when 'center'
+      assign content_align_mobile = 'justify-center'
+      assign text_align_mobile = 'text-center'
+      assign buttons_align_mobile = 'justify-center'
+    when 'right'
+      assign content_align_mobile = 'justify-end'
+      assign text_align_mobile = 'text-left'
+      assign buttons_align_mobile = 'justify-end'
+    else
+      assign content_align_mobile = 'justify-start'
+      assign text_align_mobile = 'text-left'
+      assign buttons_align_mobile = 'justify-start'
+  endcase
+
+  case alignment
+    when 'center'
+      assign content_align_desktop = 'md:justify-center'
+      assign text_align_desktop = 'md:text-center'
+      assign buttons_align_desktop = 'md:justify-center'
+    when 'right'
+      assign content_align_desktop = 'md:justify-end lg:pr-[128px]! xl:pr-0!'
+      assign text_align_desktop = 'md:text-left'
+      assign buttons_align_desktop = 'md:justify-start'
+    else
+      assign content_align_desktop = 'md:justify-start lg:pl-[128px]! xl:pl-0!'
+      assign text_align_desktop = 'md:text-left'
+      assign buttons_align_desktop = 'md:justify-start'
+  endcase
+%}
+
+{% capture title_styles %}
+  --font-size: {{ s.font_size | default: 75 }}px;
+  --font-size-mobile: {{ s.font_size_mobile | default: 40 }}px;
+{% endcapture %}
+
+<div
+  class="aw-membership-hero relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: 'transparent' %} {% render 'spacing-style', settings: s %}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  <div class="relative z-1 w-full max-w-[1280px] mx-auto">
+    <div class="flex">
+      <div class="container flex w-full mx-auto {{ content_align_mobile }} {{ content_align_desktop }}">
+        <div class="aw-membership-hero__content relative flex flex-col justify-center gap-5 max-w-[538px] px-6 pb-24 smd:gap-6.5 lg:px-0 md:pb-0">
+          <div class="relative w-full px-5.5 smd:px-10 md:px-0">
+            {% if title_type == 'image' %}
+              {% if title_image != blank %}
+                <div class="w-full max-w-[538px]">
+                  {% render 'title-image',
+                    image: title_image,
+                    image_mobile: title_image_mobile,
+                    alt: title_alt,
+                    class: 'w-full max-h-full object-contain',
+                    loading: 'eager',
+                    preload: 'eager'
+                  %}
+                </div>
+              {% endif %}
+            {% elsif title_type == 'text' %}
+              {% if title != blank %}
+                <h1
+                  class="aw-membership-hero__title font-kurdis-condensed font-extrabold uppercase leading-none tracking-[-0.02em] {{ text_align_mobile }} {{ text_align_desktop }}"
+                  style="color: {{ title_color }}; {{ title_styles }}"
+                >
+                  {{ title | replace: '\n', '<br>' }}
+                </h1>
+              {% endif %}
+            {% endif %}
+
+            {% if badge != blank %}
+              <div
+                class="aw-membership-hero__badge absolute hidden z-2 pointer-events-none lg:block lg:-top-15 lg:-right-16"
+                style="transform: translate({{ badge_offset_x }}px, {{ badge_offset_y }}px) rotate({{ badge_rotate }}deg);"
+              >
+                {{ badge | image_url: width: 300 | image_tag: class: 'w-[88px] smd:w-[120px] md:w-[145px] h-auto block', loading: 'eager', alt: '' }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if description != blank %}
+            <div
+              class="aw-membership-hero__description rte font-kurdis-semi-condensed font-semibold text-[15px] px-3.5 leading-[120%] max-w-[429px] [&_p]:mb-0 smd:px-0 smd:text-lg {{ text_align_mobile }} {{ text_align_desktop }} {% if mobile_alignment == 'center' %} text-center mx-auto{% else %} text-left mx-0{% endif %}{% if alignment == 'center' %} md:text-center md:mx-auto{% else %} md:text-left md:mx-0{% endif %}"
+              style="color: {{ description_color }}"
+            >
+              {{ description }}
+            </div>
+          {% endif %}
+
+          {% if join_label != blank or perks_label != blank %}
+            <div class="flex flex-col items-stretch px-5.5 gap-3 smd:gap-4 mt-3.5 smd:px-0 smd:flex-row md:mt-1 {{ buttons_align_mobile }} {{ buttons_align_desktop }}">
+              {% unless customer %}
+                {% if join_label != blank %}
+                  {% if join_style == 'custom' %}
+                    {% render 'wb-button',
+                      style: 'custom',
+                      label: join_label,
+                      link: routes.account_register_url,
+                      class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl',
+                      button_bg: join_button_bg,
+                      button_text: join_button_text,
+                      button_border: join_button_bg,
+                      button_hover_bg: join_button_hover_bg,
+                      button_hover_text: join_button_hover_text,
+                      button_hover_border: join_button_hover_bg
+                    %}
+                  {% else %}
+                    {% render 'wb-button',
+                      style: join_style,
+                      label: join_label,
+                      link: routes.account_register_url,
+                      class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl'
+                    %}
+                  {% endif %}
+                {% endif %}
+              {% endunless %}
+
+              {% if perks_label != blank and perks_link != blank %}
+                {% if perks_style == 'custom' %}
+                  {% render 'wb-button',
+                    style: 'custom',
+                    label: perks_label,
+                    link: perks_link,
+                    class: 'w-full! xs:w-auto! min-w-[205px] !h-[43px] !text-xl',
+                    button_bg: perks_button_bg,
+                    button_text: perks_button_text,
+                    button_border: perks_button_bg,
+                    button_hover_bg: perks_button_hover_bg,
+                    button_hover_text: perks_button_hover_text,
+                    button_hover_border: perks_button_hover_bg
+                  %}
+                {% else %}
+                  {% render 'wb-button',
+                    style: perks_style,
+                    label: perks_label,
+                    link: perks_link,
+                    class: 'w-full! xs:w-auto! min-w-[205px] !h-[43px] !text-xl'
+                  %}
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .aw-membership-hero__title {
+    font-size: var(--font-size-mobile) !important;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .aw-membership-hero__title {
+      font-size: var(--font-size) !important;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW Membership Hero",
+  "tag": "section",
+  "class": "aw-membership-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content alignment"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "title_type",
+      "label": "Heading type",
+      "options": [
+        { "value": "text", "label": "Text" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "OUR MEMBERS\nUNLOCK MORE\nWITH EVERY SIP...",
+      "info": "Use \\n to add a line break.",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading color",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Heading size",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 75,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Heading size mobile",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "text",
+      "id": "title_alt",
+      "label": "Heading image alt",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image",
+      "label": "Heading image",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image_mobile",
+      "label": "Heading image mobile",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge",
+      "label": "Badge image",
+      "info": "Shown at the top-right of the heading."
+    },
+    {
+      "type": "range",
+      "id": "badge_offset_x",
+      "label": "Badge offset horizontal",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "Negative moves left, positive moves right."
+    },
+    {
+      "type": "range",
+      "id": "badge_offset_y",
+      "label": "Badge offset vertical",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "Negative moves up, positive moves down."
+    },
+    {
+      "type": "number",
+      "id": "badge_rotate",
+      "label": "Badge rotation",
+      "default": 0,
+      "info": "Rotation in degrees from 0 to 360."
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Earn $5 in credit for every $50 you spend. Join for free, then level up to VIP or Elite for exclusive flavors, bigger discounts, and perks worth waking up for.</p>"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Join button"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shown only to guests (not logged in). Links to account registration."
+    },
+    {
+      "type": "text",
+      "id": "join_button_label",
+      "label": "Join button text",
+      "default": "JOIN FOR FREE"
+    },
+    {
+      "type": "select",
+      "id": "join_button_style",
+      "label": "Join button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "color",
+      "id": "join_button_bg",
+      "label": "Join button background",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.join_button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "join_button_text",
+      "label": "Join button text color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.join_button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "join_button_hover_bg",
+      "label": "Join button hover background",
+      "default": "#431A03",
+      "visible_if": "{{ section.settings.join_button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "join_button_hover_text",
+      "label": "Join button hover text color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.join_button_style == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Perks button"
+    },
+    {
+      "type": "text",
+      "id": "perks_button_label",
+      "label": "Perks button text",
+      "default": "SEE THE PERKS"
+    },
+    {
+      "type": "url",
+      "id": "perks_button_link",
+      "label": "Perks button link",
+      "info": "Use a page URL or an on-page anchor."
+    },
+    {
+      "type": "select",
+      "id": "perks_button_style",
+      "label": "Perks button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "secondary"
+    },
+    {
+      "type": "color",
+      "id": "perks_button_bg",
+      "label": "Perks button background",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.perks_button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "perks_button_text",
+      "label": "Perks button text color",
+      "default": "#431A03",
+      "visible_if": "{{ section.settings.perks_button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "perks_button_hover_bg",
+      "label": "Perks button hover background",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.perks_button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "perks_button_hover_text",
+      "label": "Perks button hover text color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.perks_button_style == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#431A03",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
+      "options": [
+        { "value": "cover", "label": "Cover (may crop)" },
+        { "value": "natural", "label": "Natural (no crop)" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "paragraph",
+      "content": "Applies up to 1023px."
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#431A03",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit_mobile",
+      "label": "Background image fit mobile",
+      "options": [
+        { "value": "cover", "label": "Cover (may crop)" },
+        { "value": "natural", "label": "Natural (no crop)" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow_mobile",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Membership Hero"
+    }
+  ]
+}
+{% endschema %}
