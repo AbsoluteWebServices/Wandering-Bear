@@ -3,7 +3,19 @@
 
   The maximum number of items in the cart to display. If the number of items in the cart is greater than this limit, the
   count will be displayed as "99+".
+
+  Exclude items with a price of 0 from the count (as to not include ghost products)
 {%- enddoc -%}
+
+{%- liquid
+   assign cart_item_count = 0 
+   for item in cart.items
+      if item.price > 0
+        assign item_count = item.quantity | default: 1
+        assign cart_item_count = cart_item_count | plus: item_count
+      endif
+   endfor
+-%}
 
 <div
   ref="cartBubble"
@@ -26,7 +38,7 @@
       data-testid="cart-bubble"
     >
       {%- if limit == blank or cart.item_count < limit %}
-        {{- cart.item_count -}}
+        {{- cart_item_count -}}
       {%- endif -%}
     </span>
   </span>

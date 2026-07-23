@@ -231,11 +231,11 @@
 
   <div class="px-5 mb-5">
     {% comment %} Editable flavor list {% endcomment %}
-    <form on:submit="bundle-editor-component/update" class="wb-flex"
+    <form x-data="overlayScrollbar" on:submit="bundle-editor-component/update" class="wb-flex"
     data-is-member="{{ is_member }}"
     data-member-tier="{{ member_tier }}"
     >
-      <div data-bundle-editor-content class="w-full flex flex-col gap-3 overflow-auto">
+      <div data-bundle-editor-content class="flavor-container w-full flex flex-col gap-3 overflow-auto">
         {% paginate collection.products by 50 %}
           {% for product in collection.products %}
             {% assign member_only = product.metafields.product.member_only | default: false %}
@@ -301,7 +301,7 @@
                   >
                     <span class="absolute whitespace-nowrap text-cream uppercase font-kurdis-condensed text-sm font-bold">
                     {% render 'icons', icon: 'unlock', class: 'mr-1' %}
-                     Locked
+                     Unlock
                     </span>
                     <svg class="text-kraft group-hover:!text-gold" xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40" fill="none">
                       <path d="M0.740482 4.15938C0.111533 6.47951 0.0863218 9.21376 0.0757066 11.8348C0.0504956 18.0724 0.0266114 24.3075 0.00140038 30.5451C-0.0052341 32.2401 -0.00390717 34.0047 0.38222 35.5249C1.31237 39.18 2.48668 39.9773 5.96049 39.9773C29.2608 39.9773 52.5624 40.1137 75.8641 39.7175C76.6907 39.7047 77.5983 39.787 78.2764 38.8687C80.1141 36.3814 79.9138 31.8363 79.858 28.4641C79.7545 22.1854 80 17.0255 80 10.7442C80 6.3509 79.7466 4.58636 78.9955 2.84755C78.0335 0.61745 76.0299 0.712621 74.5292 0.653461C64.6624 0.259913 54.7903 0.0567088 44.9195 0.0104091C34.985 -0.0384628 25.0506 0.0850031 15.1161 0.375662C12.3137 0.457973 9.5126 0.553144 6.71152 0.663749C4.59644 0.74606 1.91346 -0.159357 0.740482 4.15938Z" fill="currentColor"/>
@@ -389,12 +389,12 @@
         <button
           type="submit"
           data-bundle-update
-          class="relative cursor-pointer flex justify-center items-center opacity-50 !pointer-events-none"
+          class="group relative cursor-pointer flex justify-center items-center opacity-50 !pointer-events-none"
           disabled
         >
           <span data-no-load class="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-cream uppercase font-kurdis-condensed text-xl font-bold">Update bundle</span>
           <span data-loading class="hidden absolute flex items-center justify-center animate-spin rounded-full h-4 w-4 border-2 border-dashed border-dash-offset-5 border-cream"></span>
-          <svg class="text-espresso" xmlns="http://www.w3.org/2000/svg" width="330" height="50" viewBox="0 0 330 50" fill="none">
+          <svg class="text-espresso group-hover:!text-gold" xmlns="http://www.w3.org/2000/svg" width="330" height="50" viewBox="0 0 330 50" fill="none">
             <path d="M3.05449 5.19922C0.460073 8.09938 0.356077 11.5172 0.31229 14.7935C0.208294 22.5905 0.109772 30.3843 0.00577657 38.1813C-0.0215907 40.3002 -0.0161172 42.5059 1.57666 44.4061C5.41354 48.9749 10.2575 49.9717 24.587 49.9717C120.701 49.9717 216.82 50.1421 312.939 49.6469C316.349 49.6309 320.093 49.7337 322.89 48.5859C330.471 45.4767 329.644 39.7954 329.414 35.5802C328.987 27.7317 330 21.2819 330 13.4303C330 7.93862 328.955 5.73295 325.857 3.55944C321.888 0.771812 313.623 0.890777 307.433 0.816826C266.732 0.324891 226.01 0.070886 185.293 0.0130114C144.313 -0.0480785 103.334 0.106254 62.3538 0.469578C50.7939 0.572466 39.2395 0.691431 27.685 0.829687C18.9603 0.932575 7.89302 -0.199196 3.05449 5.19922Z" fill="currentColor"/>
           </svg>
         </button>

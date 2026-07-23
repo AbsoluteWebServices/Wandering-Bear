@@ -261,46 +261,7 @@
               {%- else -%}
     
                 <div data-cart-view>
-                  <div
-                    class="cart-drawer__header !p-0 flex flex-col gap-0"
-                    id="cart-drawer-header"
-                  >
-                  {% if settings.announcement_text != blank %}
-                  <div class="w-full flex items-center justify-center gap-2 p-3"
-                  style="background-color: {{ settings.announcement_color_scheme.settings.background }};
-                  color: {{ settings.announcement_color_scheme.settings.text }};"
-                  >
-                    {% if settings.announcement_text != blank %}
-                      <span class="font-kurdis-semi-condensed text-xs font-semibold">
-                        {% if settings.announcement_icon != blank %}
-                          {{ settings.announcement_icon | image_url: width: 20 | image_tag: class: 'w-4 h-4 inline-block' }}
-                        {% endif %}
-                         {{ settings.announcement_text }}
-                      </span>
-                    {% endif %}
-                  </div>
-                  {% endif %}
-                  <div class="flex justify-between items-center p-5 w-full relative">
-                    <h2
-                      class="cart-drawer__heading font-kurdis-semi-condensed font-extrabold text-espresso uppercase text-xl"
-                      id="cart-drawer-heading"
-                    >
-                      YOUR BAG
-                    </h2>
-    
-                    <button
-                      ref="closeButton"
-                      on:click="cart-drawer-component/close"
-                      class="button close-button cart-drawer__close-button button-unstyled"
-                      aria-label="{{ 'actions.close_dialog' | t }}"
-                    >
-                      <span class="svg-wrapper">
-                        {% render 'icons', icon: 'close', class: 'w-4 h-4' %}
-                      </span>
-                    </button>
-                    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
-                    </div>
-                  </div>
+                  {% render 'cart-header' %}
     
                   <scroll-hint
                     class="cart-drawer__content"

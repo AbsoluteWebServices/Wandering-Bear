@@ -1,0 +1,501 @@
+{% comment %}
+  Our Foodservice Heroes — product grid with decorative blocks.
+  Figma: FOODSERVICE_DESKTOP 1790:283, FOODSERVICE_MOBILE 1790:656
+{% endcomment %}
+
+{% liquid
+  assign section_settings = section.settings
+
+  assign bg_type = section_settings.background_type | default: 'image'
+  assign bg_type_mobile = section_settings.background_type_mobile | default: 'same'
+  assign bg_image = section_settings.background_image
+  assign bg_image_mobile = section_settings.background_image_mobile
+
+  if bg_type_mobile == 'same'
+    assign resolved_mobile_bg_type = bg_type
+    assign resolved_mobile_bg_image = bg_image_mobile
+
+    if resolved_mobile_bg_image == blank
+      assign resolved_mobile_bg_image = bg_image
+    endif
+  else
+    assign resolved_mobile_bg_type = bg_type_mobile
+    assign resolved_mobile_bg_image = bg_image_mobile
+  endif
+
+  assign show_desktop_bg_image = false
+  if bg_type == 'image' and bg_image != blank
+    assign show_desktop_bg_image = true
+  endif
+
+  assign show_mobile_bg_image = false
+  if resolved_mobile_bg_type == 'image' and resolved_mobile_bg_image != blank
+    assign show_mobile_bg_image = true
+  endif
+
+  if section_settings.enable_block_image_mask == false
+    assign enable_block_image_mask = false
+  else
+    assign enable_block_image_mask = true
+  endif
+  assign block_image_mask = section_settings.block_image_mask
+
+  assign use_block_image_mask = false
+  if enable_block_image_mask and block_image_mask != blank
+    assign use_block_image_mask = true
+  endif
+%}
+
+<div
+  class="our-heroes relative spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: section_settings, part: 'style', fallback_color: 'transparent' %} {% render 'spacing-style', settings: section_settings %}{% if use_block_image_mask %} --aw-oh-block-image-mask: url('{{ block_image_mask | image_url }}');{% endif %}"
+  {{ section.shopify_attributes }}
+>
+  {% if show_desktop_bg_image or show_mobile_bg_image %}
+    <div class="absolute bottom-0 left-0 right-0 z-0 overflow-visible pointer-events-none -top-[300px] smd:-top-5 md:-top-[200px] xl:-top-[310px]" aria-hidden="true">
+      {% if show_desktop_bg_image %}
+        <div class="hidden smd:block [&_picture]:block [&_picture]:w-full [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:max-w-none!">
+          {% render 'picture',
+            source: bg_image,
+            mobile_source: bg_image,
+            class: 'w-full h-auto !max-w-none block',
+            alt: bg_image.alt,
+            width: 1920,
+            height: 2400,
+            loading: 'lazy'
+          %}
+        </div>
+      {% endif %}
+
+      {% if show_mobile_bg_image %}
+        <div class="smd:hidden [&_picture]:block [&_picture]:w-full [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:max-w-none!">
+          {% render 'picture',
+            source: resolved_mobile_bg_image,
+            mobile_source: resolved_mobile_bg_image,
+            class: 'w-full h-auto !max-w-none block',
+            alt: resolved_mobile_bg_image.alt,
+            width: 1200,
+            height: 2400,
+            loading: 'lazy'
+          %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="w-full relative z-1 max-w-[1036px] mx-auto smd:px-6 lg:px-0">
+    {% if section_settings.title != blank %}
+      <div class="our-heroes__header text-center mb-9 md:mb-[250px] lg:mb-[264px]">
+        <h2
+          class="our-heroes__title font-parslay text-[25px] smd:text-[60px] leading-[130%] tracking-[-0.01em] mx-auto max-w-[932px]"
+          style="color: {{ section_settings.title_color | default: '#F2E6DC' }}"
+        >
+          {{ section_settings.title }}
+        </h2>
+
+        {% if section_settings.title_decoration != blank %}
+          <div class="our-heroes__title-decoration mx-auto mt-1.75 smd:-mt-2 max-w-[164px] smd:max-w-[242px]">
+            {{ section_settings.title_decoration | image_url: width: 500 | image_tag: class: 'w-full h-auto block', loading: 'lazy', alt: '' }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="our-heroes__grid wb-grid grid-cols-1 smd:grid-cols-2 gap-y-5 smd:gap-x-5 smd:gap-y-[160px] md:gap-y-66.5">
+        {% for block in section.blocks %}
+          {% liquid
+            assign block_bg = block.settings.block_background
+            assign block_image = block.settings.image
+            assign block_image_mobile = block.settings.image_mobile
+            assign badge = block.settings.badge
+            assign badge_position = block.settings.badge_position | default: 'top-left'
+
+            assign badge_position_classes = ''
+            case badge_position
+              when 'top-right'
+                assign badge_position_classes = '-top-19 -right-13'
+              when 'top-left'
+                assign badge_position_classes = '-top-19 -left-13'
+              when 'bottom-right'
+                assign badge_position_classes = '-bottom-19 -right-13'
+              when 'bottom-left'
+                assign badge_position_classes = '-bottom-19 -left-13'
+            endcase
+          %}
+
+          <div
+            class="our-heroes__block our-heroes__block--{{ forloop.index }}
+            relative w-full overflow-hidden 
+            max-smd:even:mr-auto max-smd:odd:ml-auto 
+            max-smd:even:[&_.block-background]:-translate-x-5 
+            max-smd:even:[&_.our-heroes-block-inner]:pl-11.5 max-smd:odd:[&_.our-heroes-block-inner]:pr-11.5
+            smd:odd:[&_img]:aspect-388/328 smd:even:[&_img]:aspect-388/352 max-w-[356px] smd:max-w-[509px]
+            smd:odd:[&_.our-heroes-block-media]:bottom-[calc(100%-124px)] smd:even:[&_.our-heroes-block-media]:bottom-[calc(100%-150px)]
+            smd:odd:[&_.our-heroes-block-inner]:pt-37.5 smd:even:[&_.our-heroes-block-inner]:pt-43.5 smd:overflow-visible smd:mx-auto md:col-span-1"
+            {{ block.shopify_attributes }}
+          >
+            {% if block_bg != blank %}
+              <svg
+                class="our-heroes__block-background block-background absolute top-0 left-0 right-0 bottom-0 h-full max-w-[calc(100%+20px)] smd:size-full pointer-events-none smd:max-w-full"
+                viewBox="0 0 1 1"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <image href="{{ block_bg | image_url }}" width="1" height="1" preserveAspectRatio="none"/>
+              </svg>
+            {% endif %}
+
+            <div class="our-heroes__block-inner our-heroes-block-inner relative flex flex-col z-1 px-6 py-8 smd:text-center smd:items-center smd:px-8 smd:pb-10 md:pb-14 md:px-12.5">
+              <div class="our-heroes__block-media our-heroes-block-media w-full mb-4.5 max-w-[286px] smd:max-w-[280px] smd:mb-0 smd:absolute smd:left-1/2 smd:translate-x-[-50%] md:max-w-[388px]">
+                {% if block_image != blank %}
+                  {% if use_block_image_mask %}
+                    <div
+                      class="w-full overflow-hidden [mask-image:var(--aw-oh-block-image-mask)] [-webkit-mask-image:var(--aw-oh-block-image-mask)] [mask-size:100%_100%] [-webkit-mask-size:100%_100%] [mask-repeat:no-repeat] [-webkit-mask-repeat:no-repeat] [mask-mode:alpha] [-webkit-mask-mode:alpha] [&_picture]:block [&_picture]:size-full [&_img]:block [&_img]:size-full [&_img]:object-cover"
+                    >
+                      {% render 'picture',
+                        source: block_image,
+                        mobile_source: block_image_mobile,
+                        class: 'size-full object-cover',
+                        alt: block.settings.title,
+                        width: 800,
+                        height: 441,
+                        loading: 'lazy'
+                      %}
+                    </div>
+                  {% else %}
+                    {% render 'picture',
+                      source: block_image,
+                      mobile_source: block_image_mobile,
+                      class: 'w-full h-auto object-contain mx-auto',
+                      alt: block.settings.title,
+                      width: 800,
+                      height: 441,
+                      loading: 'lazy'
+                    %}
+                  {% endif %}
+                {% else %}
+                  <div class="our-heroes__block-image-placeholder aspect-388/328 w-full bg-white/20 rounded-sm"></div>
+                {% endif %}
+              </div>
+
+              {% if block.settings.title != blank %}
+                <h3 class="our-heroes__block-title font-kurdis-condensed text-xl min-[768px]:text-[30px] font-extrabold uppercase leading-[130%] tracking-[-0.02em] text-bear-black mb-3 smd:mb-1.5 max-w-[280px] smd:max-w-[458px]">
+                  {{ block.settings.title }}
+                </h3>
+              {% endif %}
+
+              {% if block.settings.description != blank %}
+                <div class="our-heroes__block-description body text-xs! smd:text-[15px]! leading-[150%]! text-bear-black font-kurdis-semi-condensed tracking-[-0.12px] font-semibold max-w-[280px] smd:tracking-normal smd:max-w-[350px] smd:mx-auto">
+                  {{ block.settings.description }}
+                </div>
+              {% endif %}
+            </div>
+
+            {% if badge != blank %}
+              <div class="our-heroes__badge absolute z-2 {{ badge_position_classes }} pointer-events-none hidden lg:block">
+                {{ badge | image_url: width: 220 | image_tag: class: 'w-[118px] h-auto aspect-auto!', loading: 'lazy', alt: '' }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AW Our Foodservice Heroes",
+  "tag": "section",
+  "class": "our-heroes-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Our Foodservice Heroes"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#F2E6DC"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_decoration",
+      "label": "Title decoration (SVG underline)"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image (desktop)",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image (mobile)",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Blocks"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_block_image_mask",
+      "label": "Enable mask for block",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "block_image_mask",
+      "label": "Block image mask",
+      "info": "Applied to all block images in this section.",
+      "visible_if": "{{ section.settings.enable_block_image_mask }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Left mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Right mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hero",
+      "name": "Hero block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "block_background",
+          "label": "Block background"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image mobile"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "image_picker",
+          "id": "badge",
+          "label": "Badge image"
+        },
+        {
+          "type": "select",
+          "id": "badge_position",
+          "label": "Badge position",
+          "options": [
+            { "value": "top-right", "label": "Top right" },
+            { "value": "top-left", "label": "Top left" },
+            { "value": "bottom-right", "label": "Bottom right" },
+            { "value": "bottom-left", "label": "Bottom left" }
+          ],
+          "default": "top-left"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Our Foodservice Heroes",
+      "blocks": [
+        {
+          "type": "hero",
+          "settings": {
+            "title": "3:1 Concentrate",
+            "description": "Endlessly versatile. The same organic, 100% Arabica, specialty-grade coffee, as a concentrate. Simply mix 1 part concentrate with 3 parts water for fuss-free, delicious cold brew. Make it by the cup or mix one carton of concentrate with 96oz of water to make a gallon. Another popular use is as an easy base for smoothies, cocktails, and everything in between.",
+            "badge_position": "top-left"
+          }
+        },
+        {
+          "type": "hero",
+          "settings": {
+            "title": "3 Gallon Bag-in-Box",
+            "description": "Serve our super-premium organic cold brew in bulk. Hook our 3 Gallon Bag-in-Box up to a keg system, whether that's a countertop kegerator or a standard kegerator, and you've got a high margin way to serve Wandering Bear at scale. More cups, low cost.",
+            "badge_position": "top-left"
+          }
+        },
+        {
+          "type": "hero",
+          "settings": {
+            "title": "96oz BAG-IN-BOX",
+            "description": "Serve our super-premium organic cold brew in bulk with a compact bag-in-box format built for back-of-house efficiency.",
+            "badge_position": "top-left"
+          }
+        },
+        {
+          "type": "hero",
+          "settings": {
+            "title": "8oz CANS",
+            "description": "For grab-and-go ease, we offer our black cold brew in an 8oz can as well as a craveworthy line of high protein canned lattes, available in 3 flavors.",
+            "badge_position": "top-left"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

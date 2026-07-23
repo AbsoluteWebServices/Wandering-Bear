@@ -155,3 +155,37 @@
         background: var(--section-bg-desktop, transparent);
     }
 }
+
+[data-bundle-editor-content].flavor-container [data-overlayscrollbars-viewport] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    overflow-anchor: none;
+    margin-right: 20px !important;
+}
+
+/* OverlayScrollbars only for ≥1280px — force native scroll below that. */
+@media screen and (max-width: 1279px) {
+    [data-bundle-editor-content].flavor-container {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    [data-bundle-editor-content].flavor-container .os-scrollbar,
+    [data-bundle-editor-content].flavor-container [data-overlayscrollbars-padding] {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+    /* If OS host markup is still present, make the viewport scroll natively. */
+    [data-bundle-editor-content].flavor-container[data-overlayscrollbars],
+    [data-bundle-editor-content].flavor-container [data-overlayscrollbars-viewport] {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
+}

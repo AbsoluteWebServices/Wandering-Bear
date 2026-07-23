@@ -10,6 +10,22 @@
 {% render 'shoplift' %}
 <!-- End of Shoplift scripts -->
 
+    {% if request.path == '/cart' %}
+      <script>
+        window.location.replace('/?openCart=1');
+      </script>
+    {% endif %}
+
+    <script>
+      if (window.location.search.includes('openCart=1')) {
+        document.addEventListener('DOMContentLoaded', () => {
+          const cartDrawer = document.querySelector('.cart-drawer');
+          console.log('cartDrawer',cartDrawer);
+          cartDrawer.open();
+        });
+      }
+    </script>
+
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"

@@ -271,7 +271,7 @@
 
                     {% if text_background_color != blank %}
                       <div
-                        class="diagram-text-background w-full flex flex-col max-lg:order-2{% if template.suffix == '32oz' %} max-md:-mt-5{% elsif template.suffix == 'single-serve' %} max-md:-mt-6{% endif %}"
+                        class="diagram-text-background w-full flex flex-col max-lg:order-2{% if template.suffix == 'single-serve' %} max-md:-mt-6{% endif %}"
                         style="background-color: {{ text_background_color | color_modify: 'alpha', text_background_alpha }};"
                       >
                         {{ diagram_icons }}
@@ -287,7 +287,7 @@
                               image: diagram_image,
                               image_mobile: diagram_image_mobile,
                               alt: title_alt,
-                              class: 'diagram-image !h-[355px] lg:!h-[573px] !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto',
+                              class: 'diagram-image h-full max-h-[355px]! lg:!h-[573px] lg:max-h-[initial]! !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto',
                               img_attributes: 'data-diagram-image'
                             %}
                         </div>
@@ -328,7 +328,7 @@
             max-width: 100vw;
             margin-left: calc(50% - 50vw);
             margin-right: calc(50% - 50vw);
-            padding: 2.25rem 1rem 1.875rem;
+            padding: 2.25rem 1rem;
             box-sizing: border-box;
         }
         .aw-diagram-toggle .diagram-text-background .diagram-item[data-mobile-margin='first'],
@@ -343,11 +343,11 @@
 
         .aw-diagram-toggle .diagram-item[data-mobile-margin='first'] {
             margin-top: 3.313rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 2.25rem;
         }
 
         .aw-diagram-toggle .diagram-item[data-mobile-margin='middle'] {
-            margin-bottom: 1.25rem;
+            margin-bottom: 2.25rem;
         }
 
         .aw-diagram-toggle .diagram-item[data-mobile-margin='last'] {

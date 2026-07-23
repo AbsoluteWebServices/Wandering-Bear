@@ -384,12 +384,15 @@
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "BEAN QUALITY",
             "description_1": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
-            "icon_2": "shopify://shop_images/Group_1327226584.svg",
+            "order_mobile_1": 2,
+            "icon_2": "shopify://shop_images/Group_1327226583.svg",
             "title_2": "MORE COFFEE",
             "description_2": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine.",
-            "icon_3": "shopify://shop_images/Group_1327226583.svg",
+            "order_mobile_2": 1,
+            "icon_3": "shopify://shop_images/Group_1327226584.svg",
             "title_3": "COLD BREW PROCESS",
-            "description_3": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic"
+            "description_3": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic",
+            "order_mobile_3": 3
           }
         },
         "view_ECNwDW": {
@@ -409,12 +412,15 @@
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
             "title_1": "SUPER PREMIUM COFFEE",
             "description_1": "Made with our signature cold brew from organic, specialty-grade beans",
+            "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226583.svg",
             "title_2": "CREAMY & PROTEIN RICH",
             "description_2": "Ultra-filtered skim milk protein for creaminess with nutrition cred",
+            "order_mobile_2": 1,
             "icon_3": "shopify://shop_images/Group_1327226584.svg",
             "title_3": "SUBTLY SWEET,\\nNO COMPROMISE",
-            "description_3": "Only 100 calories and just 5 grams of real sugar"
+            "description_3": "Only 100 calories and just 5 grams of real sugar",
+            "order_mobile_3": 3
           }
         }
       },

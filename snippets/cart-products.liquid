@@ -219,7 +219,7 @@
                       <div data-key="{{ item.key }}" 
                       data-bundle-id="{{ bundle_id }}" 
                       data-bundle-image="{{ item.product.metafields.custom.bundle_image | image_url: width: 200 }}"
-                      class="relative flex p-4 gap-2">
+                      class="relative flex py-2.5 px-4 gap-2">
                         <a href="{{ item.url | append: '?' | append: item.product.metafields.custom.product_group.value.template_suffix }}" class="w-12">
                           {{ item.image | image_url: width: 100 | image_tag }}
                         </a>

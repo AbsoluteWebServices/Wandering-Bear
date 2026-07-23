@@ -1,0 +1,366 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "food_service": {
+      "type": "aw-food-service",
+      "blocks": {
+        "venue_offices": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/food-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "image": "shopify://shop_images/offices.jpg",
+            "image_mobile": "shopify://shop_images/offices-mobile.jpg",
+            "title": "OFFICES",
+            "description": "New York City offices were some of Wandering Bear's first customers. It was the first space where we learned our product was the perfect fit for high-volume service. Wandering Bear grew up in the office coffee space where it still has a strong hold and continues to grow. We are proud to fuel teams all around the country.",
+            "badge": "shopify://shop_images/super-premium.svg",
+            "badge_position": "bottom-right",
+            "badge_offset_x": -34,
+            "badge_offset_y": 11,
+            "badge_rotate": 0
+          }
+        },
+        "venue_colleges": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/food-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "image": "shopify://shop_images/colleges-universities.jpg",
+            "image_mobile": "shopify://shop_images/colleges-universities-mobile.jpg",
+            "title": "Colleges & Universities",
+            "description": "High volume, zero compromise. Whether it's a dining hall, locker rooms, or micro markets, our cold brew is built to serve a lot of people without compromising quality. Zero effort, fresh-tasting and consistent, batch after batch, even with limited staff or equipment.",
+            "badge_position": "bottom-right",
+            "badge_offset_x": 0,
+            "badge_offset_y": 0,
+            "badge_rotate": 0
+          }
+        },
+        "venue_coffee_shops": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/food-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "image": "shopify://shop_images/coffee-shops.jpg",
+            "image_mobile": "shopify://shop_images/coffee-shops-mobile.jpg",
+            "title": "Coffee Shops",
+            "description": "Some days you need one cup. Some days you need 50. Wandering Bear works either way. No brewing overnight, no watching a batch, no wasted product when the rush doesn't show. Just a smooth, full-bodied cold brew that's ready the second you need it, so your team can spend less time on process and more time on the customer in front of them.",
+            "badge": "shopify://shop_images/coffee.svg",
+            "badge_position": "top-left",
+            "badge_offset_x": 5,
+            "badge_offset_y": 8,
+            "badge_rotate": 0
+          }
+        },
+        "venue_HmgRFJ": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/food-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "image": "shopify://shop_images/restaurants-bars.png",
+            "title": "Restaurants & Bars",
+            "description": "A smooth, full-bodied cold brew with a chocolate-forward finish. Bold enough to anchor a coffee menu, balanced enough to headline a cocktail list. Easy to work into multiple sections of your menu. Low acidity and ready to drink whether you're pouring it straight, dressing it up behind the bar, or building a signature drink around it.",
+            "badge": "shopify://shop_images/wb-tag.svg",
+            "badge_position": "bottom-right",
+            "badge_offset_x": -30,
+            "badge_offset_y": -20,
+            "badge_rotate": -8
+          }
+        },
+        "venue_hospitality": {
+          "type": "venue",
+          "settings": {
+            "block_background": "shopify://shop_images/food-service-block-background.svg",
+            "block_background_mobile": "shopify://shop_images/food-service-block-background-mobile.svg",
+            "image": "shopify://shop_images/hospitality-wellness.jpg",
+            "image_mobile": "shopify://shop_images/hospitality-wellness-mobile.jpg",
+            "title": "Hospitality & Wellness",
+            "description": "From lobby service to hospitals, our cold brew delivers a delicious, consistently smooth pour that reflects well on your space — whether that's guest experience, member wellness, patient care, or caregiver care. Made with just two ingredients, filtered water and organic, 100% Arabica coffee, it holds its quality through long service hours. No stale, sat-out coffee to apologize for.",
+            "badge_position": "top-left",
+            "badge_offset_x": 0,
+            "badge_offset_y": 0,
+            "badge_rotate": 0
+          }
+        }
+      },
+      "block_order": [
+        "venue_offices",
+        "venue_colleges",
+        "venue_coffee_shops",
+        "venue_HmgRFJ",
+        "venue_hospitality"
+      ],
+      "custom_css": [
+        "@media screen and (min-width: 1024px) {.food-service-block:first-child .food-service-block__description {max-width: 395px; } .food-service-block:nth-child(2) .food-service-block__description {max-width: 399px; } .food-service-block:last-child .food-service-block__description {max-width: 424px; }}"
+      ],
+      "settings": {
+        "title": "WANDERING BEAR FOODSERVICE",
+        "subtitle": "Barista Quality in Every Pour",
+        "intro": "Expertly crafted, super premium organic cold brew that performs at any volume, from a single cup to a keg.",
+        "description": "<p>Wandering Bear started with a simple mission: bring the coffee shop to your fridge. The convenience and quality of our product easily extended that mission to offices, bars, restaurants, coffee shops, dining halls, and beyond. Today, Wandering Bear serves everywhere. Super premium organic cold brew, expertly crafted and packaged to stay fresh, so you'll never have serve stale or bitter cold brew again</p>",
+        "title_color": "#1b1b1b",
+        "subtitle_color": "#ffffff",
+        "intro_color": "#ffffff",
+        "text_color": "#ffffff",
+        "background_type": "image",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "linear-gradient(180deg, rgba(242, 230, 220, 0), rgba(242, 230, 220, NaN) 28.846%, rgba(69, 148, 186, NaN) 78.846%, rgba(69, 148, 186, 0) 89.904%)",
+        "background_image": "shopify://shop_images/food-service-background-top.png",
+        "background_type_mobile": "image",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "background_image_mobile": "shopify://shop_images/food-service-background-top-mobile.png",
+        "button_text": "Contact our team to learn more",
+        "button_url": "#",
+        "enable_block_image_mask": true,
+        "block_image_mask": "shopify://shop_images/food-service-mask.png",
+        "padding-block-start": 80,
+        "padding-block-end": 0,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 63,
+        "padding-block-end-mobile": 0,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
+    },
+    "our_heroes": {
+      "type": "aw-our-heroes",
+      "blocks": {
+        "hero_concentrate": {
+          "type": "hero",
+          "settings": {
+            "block_background": "shopify://shop_images/Rectangle.svg",
+            "image": "shopify://shop_images/3-1-concentrate.jpg",
+            "image_mobile": "shopify://shop_images/3-1-concentrate-mobile.jpg",
+            "title": "3:1 Concentrate",
+            "description": "Endlessly versatile. The same organic, 100% Arabica, specialty-grade coffee, as a concentrate. Simply mix 1 part concentrate with 3 parts water for fuss-free, delicious cold brew. Make it by the cup or mix one carton of concentrate with 96oz of water to make a gallon. Another popular use is as an easy base for smoothies, cocktails, and everything in between.",
+            "badge_position": "top-left"
+          }
+        },
+        "hero_keg": {
+          "type": "hero",
+          "settings": {
+            "block_background": "shopify://shop_images/Rectangle.svg",
+            "image": "shopify://shop_images/3-gallon-bag-in-box.jpg",
+            "image_mobile": "shopify://shop_images/3-gallon-bag-in-box-mobile.jpg",
+            "title": "3 Gallon Bag-in-Box",
+            "description": "Serve our super-premium organic cold brew in bulk. Hook our 3 Gallon Bag-in-Box up to a keg system, whether that's a countertop kegerator or a standard kegerator, and you've got a high margin way to serve Wandering Bear at scale. More cups, low cost.",
+            "badge_position": "top-left"
+          }
+        },
+        "hero_96oz": {
+          "type": "hero",
+          "settings": {
+            "block_background": "shopify://shop_images/Rectangle.svg",
+            "image": "shopify://shop_images/96oz-bag-in-box.jpg",
+            "image_mobile": "shopify://shop_images/96oz-bag-in-box-mobile.jpg",
+            "title": "96oz BAG-IN-BOX",
+            "description": "Serve our super-premium organic cold brew in bulk with a compact bag-in-box format built for back-of-house efficiency.",
+            "badge": "shopify://shop_images/boxed-cold-brew-club.svg",
+            "badge_position": "top-left"
+          }
+        },
+        "hero_cans": {
+          "type": "hero",
+          "settings": {
+            "block_background": "shopify://shop_images/Rectangle.svg",
+            "image": "shopify://shop_images/8oz-cans.jpg",
+            "image_mobile": "shopify://shop_images/8oz-cans-mobile.jpg",
+            "title": "8oz CANS",
+            "description": "For grab-and-go ease, we offer our black cold brew in an 8oz can as well as a craveworthy line of high protein canned lattes, available in 3 flavors.",
+            "badge_position": "top-left"
+          }
+        }
+      },
+      "block_order": [
+        "hero_concentrate",
+        "hero_keg",
+        "hero_96oz",
+        "hero_cans"
+      ],
+      "custom_css": [
+        "@media screen and (min-width: 750px) {.our-heroes__block:first-child .our-heroes__block-description {max-width: 434px; } .our-heroes__block:nth-child(2) .our-heroes__block-description {max-width: 380px; }}"
+      ],
+      "settings": {
+        "title": "Our Foodservice Heroes",
+        "title_color": "#f2e6dc",
+        "title_decoration": "shopify://shop_images/Vector_45.svg",
+        "background_type": "image",
+        "background_solid": "rgba(0,0,0,0)",
+        "background_gradient": "",
+        "background_image": "shopify://shop_images/food-service-background-bottom.png",
+        "background_type_mobile": "image",
+        "background_solid_mobile": "rgba(0,0,0,0)",
+        "background_gradient_mobile": "",
+        "background_image_mobile": "shopify://shop_images/food-service-background-bottom-mobile.png",
+        "enable_block_image_mask": true,
+        "block_image_mask": "shopify://shop_images/food-service-mask.png",
+        "padding-block-start": 40,
+        "padding-block-end": 98,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "padding-block-start-mobile": 32,
+        "padding-block-end-mobile": 28,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
+    },
+    "section_XXDaV3": {
+      "type": "section",
+      "blocks": {
+        "heading_Rmgnah": {
+          "type": "_heading",
+          "name": "t:names.heading",
+          "settings": {
+            "block_class": "",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_family": "var(--font-kurdis-condensed)",
+            "font_family_mobile": "",
+            "font_size": "2.813rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "text": "<p>FIND US ON MENU</p>",
+            "read_only": false,
+            "type_preset_mobile": "custom",
+            "font_mobile": "var(--font-heading--family)",
+            "font_size_mobile": "1.25rem",
+            "line_height_mobile": "",
+            "letter_spacing_mobile": "",
+            "case_mobile": "",
+            "wrap_mobile": "",
+            "color_mobile": "",
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "show_alignment": true,
+            "padding-block-start": 0,
+            "padding-block-end": 60,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 36,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "heading_DLjRQH": {
+          "type": "_heading",
+          "name": "t:names.heading",
+          "settings": {
+            "block_class": "custom-text",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_family": "var(--font-kurdis-condensed)",
+            "font_family_mobile": "",
+            "font_size": "2.813rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "text": "<p>add containers for logos</p>",
+            "read_only": false,
+            "type_preset_mobile": "custom",
+            "font_mobile": "",
+            "font_size_mobile": "1.25rem",
+            "line_height_mobile": "",
+            "letter_spacing_mobile": "",
+            "case_mobile": "",
+            "wrap_mobile": "",
+            "color_mobile": "",
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "show_alignment": true,
+            "padding-block-start": 0,
+            "padding-block-end": 100,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 100,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "custom_liquid_aywCeh": {
+          "type": "custom-liquid",
+          "name": "t:names.custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"wb-flex justify-center mt-10 w-full smd:mt-25 smd:w-[402px] mx-auto\">\n              <a\n                href=\"#\"\n                class=\"group relative flex w-full px-7.5 items-center justify-center shadow-button h-[61px] uppercase disabled:pointer-events-none smd:max-w-[402px]\"\n                title=\"CONTACT OUR TEAM TO LEARN MORE\"\n              >\n                <span class=\"relative z-2 text-[#F2E6DC] text-base smd:text-[20px]/5 font-kurdis-semi-condensed font-bold md:mt-0.5 uppercase\">\n                  CONTACT OUR TEAM TO LEARN MORE\n                </span>\n                <svg\n                  xmlns=\"http://www.w3.org/2000/svg\"\n                  class=\"absolute inset-0 z-1 h-full w-full text-espresso group-hover:text-gold! transition-all duration-300\" viewBox=\"0 0 402 61\" fill=\"none\" preserveAspectRatio=\"none\"\n                >\n                  <path d=\"M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z\" fill=\"currentColor\"/>\n                </svg>\n              </a>\n            </div>"
+          },
+          "blocks": {}
+        },
+        "spacer_CFQcYK": {
+          "type": "spacer",
+          "name": "t:names.spacer",
+          "settings": {
+            "size": "pixel",
+            "percent_size": 100,
+            "pixel_size": 200,
+            "custom_mobile_size": true,
+            "size_mobile": "percent",
+            "percent_size_mobile": 100,
+            "pixel_size_mobile": 120
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_Rmgnah",
+        "heading_DLjRQH",
+        "custom_liquid_aywCeh",
+        "spacer_CFQcYK"
+      ],
+      "custom_css": [
+        ".custom-text > p {color: #af7404 !important;}"
+      ],
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 98,
+        "padding-block-end": 100,
+        "padding-block-start-mobile": 28,
+        "padding-block-end-mobile": 100
+      }
+    }
+  },
+  "order": [
+    "food_service",
+    "our_heroes",
+    "section_XXDaV3"
+  ]
+}
