@@ -166,7 +166,7 @@
       },
       "name": "t:names.blog_posts_grid",
       "settings": {
-        "blog": "",
+        "blog": "articles",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "post_limit": 3,
