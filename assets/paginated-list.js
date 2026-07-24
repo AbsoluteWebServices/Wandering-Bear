@@ -30,7 +30,7 @@ export default class PaginatedList extends Component {
   /** @type {((value: void) => void) | null} */
   #resolvePreviousPagePromise = null;
 
-  /** @type {PaginatedListAspectRatioHelper} */
+  /** @type {PaginatedListAspectRatioHelper | undefined} - Only set when the list renders a card gallery. */
   #aspectRatioHelper;
 
   connectedCallback() {
@@ -189,7 +189,7 @@ export default class PaginatedList extends Component {
 
     grid.append(...nextPageItemElements);
 
-    this.#aspectRatioHelper.processNewElements();
+    this.#aspectRatioHelper?.processNewElements();
 
     history.pushState('', '', nextPage.url.toString());
 
@@ -228,7 +228,7 @@ export default class PaginatedList extends Component {
     // Prepend the new elements
     grid.prepend(...previousPageItemElements);
 
-    this.#aspectRatioHelper.processNewElements();
+    this.#aspectRatioHelper?.processNewElements();
 
     history.pushState('', '', previousPage.url.toString());
 

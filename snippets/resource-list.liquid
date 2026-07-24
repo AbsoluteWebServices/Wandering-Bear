@@ -11,6 +11,9 @@
   @param {number} slide_count - Number of slides for carousel layouts
   @param {string} content_type - Type of content: 'products' | 'collections' | 'articles'
   @param {string} [test_id] - Data test ID for the main resource list
+  @param {string} [grid_attributes] - Raw HTML attributes for the list container, used by paginated
+    sections to mark it up as a `ref="grid"` target. Only applied to the desktop list, never to the
+    mobile carousel fallback.
 
   @example
   {% render 'resource-list',
@@ -109,6 +112,9 @@
   style="{{ resource_list_styles }}"
   {% if test_id %}
     data-testid="{{ test_id }}"
+  {% endif %}
+  {% if grid_attributes != blank %}
+    {{ grid_attributes }}
   {% endif %}
 >
   {% case settings.layout_type %}

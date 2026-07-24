@@ -258,7 +258,7 @@
       "type": "divider",
       "name": "t:names.divider_section",
       "settings": {
-        "color_scheme": "scheme-86fda943-8b90-41a8-a9fe-d5d11e7bb384",
+        "color_scheme": "scheme-73397ec6-a6b4-448d-bd46-4b3ee040e482",
         "section_width": "page-width",
         "thickness": 1,
         "corner_radius": "square",
@@ -420,6 +420,8 @@
         "mobile_card_size": "60cqw",
         "columns_gap": 25,
         "rows_gap": 16,
+        "enable_load_more": false,
+        "load_more_label": "Load more",
         "icons_style": "none",
         "icons_shape": "circle",
         "section_width": "page-width",
