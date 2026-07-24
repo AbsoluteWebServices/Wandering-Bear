@@ -64,7 +64,7 @@
                                 image_mobile: image_mobile,
                                 tablet_source: image_mobile,
                                 mobile_source: image_mobile,
-                                class: ' w-full h-full relative z-[1] top-0 left-0 object-cover group-hover:md:opacity-0 transition-opacity duration-300',
+                                class: ' w-full h-full relative z-[2] top-0 left-0 object-cover transition-opacity duration-300',
                                 preload: 'eager',
                                 loading: 'eager'
                             %}
@@ -72,7 +72,7 @@
                         {% if hover_image != blank %}
                             {% render 'picture', 
                                 source: hover_image,
-                                class: 'hidden md:block opacity-0 absolute h-[calc(100%+4px)] w-[calc(100%+4px)] z-[2] top-0 left-0 object-cover w-full h-full group-hover:!opacity-100 transition-opacity duration-300'
+                                class: 'hidden md:block opacity-100 absolute h-[calc(100%+4px)] w-[calc(100%+4px)] z-[1] top-0 left-0 object-cover w-full h-full group-hover:opacity-0 transition-opacity duration-300'
                                 preload: 'eager',
                                 loading: 'eager'
                             %}
