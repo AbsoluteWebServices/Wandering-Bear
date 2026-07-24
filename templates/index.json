@@ -73,7 +73,7 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/on-tap-cold-brew",
-            "image": "shopify://shop_images/homepage-1.png",
+            "image": "shopify://shop_images/homepage-1-shadow.png",
             "hover_image": "shopify://shop_images/homepage-1.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
