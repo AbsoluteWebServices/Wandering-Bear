@@ -13,8 +13,8 @@
       "type": "aw-col-hero",
       "name": "AW Col Hero",
       "settings": {
-        "color_scheme": "",
-        "background_color": "#000000",
+        "color_scheme": "scheme-6",
+        "background_color": "linear-gradient(180deg, #391704 50.84%, #955325 100.36%)",
         "title": "EVERYTHING TASTES BETTER WITH COFFEE",
         "description": "",
         "bullet_color": "#955325",
