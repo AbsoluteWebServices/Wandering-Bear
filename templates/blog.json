@@ -60,7 +60,7 @@
           "static": true,
           "settings": {
             "alignment": "left",
-            "gap": 8,
+            "gap": 24,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "border": "none",
