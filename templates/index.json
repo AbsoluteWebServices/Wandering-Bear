@@ -73,8 +73,8 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/on-tap-cold-brew",
-            "image": "shopify://shop_images/homepage-1-shadow.png",
-            "hover_image": "shopify://shop_images/homepage-1.png",
+            "image": "shopify://shop_images/homepage-1-top-layer.png",
+            "hover_image": "shopify://shop_images/shadow-layer.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
             "title": "Cold Brew Boxes",
@@ -87,8 +87,8 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/multi-serve",
-            "image": "shopify://shop_images/wb-col-2.png",
-            "hover_image": "shopify://shop_images/Mask_group-1_efd91f61-d803-4a91-bbc9-5b1ba9ed80fb.png",
+            "image": "shopify://shop_images/homepage-2-top-layer_6b98a222-1661-4c07-a82d-eee3093c3630.png",
+            "hover_image": "shopify://shop_images/shadow-layer.png",
             "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
             "mobile_image_alt": "",
             "title": "Multi-Serve Cartons",
@@ -100,8 +100,8 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/single-serve",
-            "image": "shopify://shop_images/wb-col-3.png",
-            "hover_image": "shopify://shop_images/Mask_group-2_82320e84-9058-4f03-a6c3-d62f181ad141.png",
+            "image": "shopify://shop_images/homepage-3-top-layer_71c09c93-38a8-4352-82ca-a2392d02867e.png",
+            "hover_image": "shopify://shop_images/shadow-layer.png",
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
             "mobile_image_alt": "",
             "title": "Single Serves",
