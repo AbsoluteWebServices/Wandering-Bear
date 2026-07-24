@@ -134,11 +134,13 @@
             <div class="flex flex-col items-stretch px-5.5 gap-3 smd:gap-4 mt-3.5 smd:px-0 smd:flex-row md:mt-1 {{ buttons_align_mobile }} {{ buttons_align_desktop }}">
               {% unless customer %}
                 {% if join_label != blank %}
+                  {% capture join_modal_attrs %}@click.prevent="$dispatch('modal-open', { modal: 'membership-signup' })"{% endcapture %}
                   {% if join_style == 'custom' %}
                     {% render 'wb-button',
                       style: 'custom',
                       label: join_label,
-                      link: routes.account_register_url,
+                      link: '#',
+                      attributes: join_modal_attrs,
                       class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl',
                       button_bg: join_button_bg,
                       button_text: join_button_text,
@@ -151,7 +153,8 @@
                     {% render 'wb-button',
                       style: join_style,
                       label: join_label,
-                      link: routes.account_register_url,
+                      link: '#',
+                      attributes: join_modal_attrs,
                       class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl'
                     %}
                   {% endif %}

@@ -151,7 +151,9 @@
       {{ content_for_layout }}
     </main>
     {% section 'aw-membership-modal' %}
-
+    {% unless customer %}
+      {% section 'aw-membership-signup-modal' %}
+    {% endunless %}
 
     <footer class="z-1 relative">
       {% sections 'footer-group' %}

@@ -9,6 +9,12 @@
  */
 {
   "customer": {
+    "general": {
+      "slider": {
+        "next": "Next",
+        "previous": "Previous"
+      }
+    },
     "login": {
       "title": "Login",
       "email": "Email",

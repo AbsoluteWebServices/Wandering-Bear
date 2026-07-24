@@ -8,22 +8,22 @@
     {% when 'next' %}
         <button
             type="button"
-            class="review-carousel__arrow review-carousel__next absolute right-0 smd:!right-[41px] top-1/2 -translate-y-1/2 z-[3] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80 !cursor-pointer"
+            class="review-carousel__arrow review-carousel__next absolute right-0 top-1/2 -translate-y-1/2 z-[3] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80 !cursor-pointer"
             style="background-color: {{ arrow_bg }};"
             aria-label="{{ 'general.slider.next' | t | default: 'Next' }}"
         >
-            <svg class="w-[9px] h-[15px]" viewBox="0 0 9 15" fill="none" aria-hidden="true">
+            <svg class="w-[9px] h-[15px] ml-0.75" viewBox="0 0 9 15" fill="none" aria-hidden="true">
             <path d="M1 1L7.5 7.5L1 14" stroke="{{ arrow_icon }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </button>
     {% when 'prev' %}
         <button
           type="button"
-          class="review-carousel__arrow review-carousel__prev absolute left-0 smd:!left-[39px] top-1/2 -translate-y-1/2 z-[3] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80 !cursor-pointer"
+          class="review-carousel__arrow review-carousel__prev absolute left-0 top-1/2 -translate-y-1/2 z-[3] w-11 h-11 rounded-full wb-flex items-center justify-center transition-opacity hover:!opacity-80 !cursor-pointer"
           style="background-color: {{ arrow_bg }};"
           aria-label="{{ 'general.slider.previous' | t | default: 'Previous' }}"
         >
-          <svg class="w-[9px] h-[15px]" viewBox="0 0 9 15" fill="none" aria-hidden="true">
+          <svg class="w-[9px] h-[15px] mr-0.75" viewBox="0 0 9 15" fill="none" aria-hidden="true">
             <path d="M8 1L1.5 7.5L8 14" stroke="{{ arrow_icon }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
