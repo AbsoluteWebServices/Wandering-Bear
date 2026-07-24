@@ -23,6 +23,7 @@
     --color: {{ color_scheme.settings.foreground }};
 {% endcapture %}
 
+
 {% style %}
     .hero-{{ section.id }} .col-1-{{ section.id }} {
        {% if background_color != blank %}
@@ -79,8 +80,23 @@
 
 <div class="hero-{{ section.id }} wb-grid grid-cols-1 md:grid-cols-2" style="{{ color_styles }}">
    <div class="col-1-{{ section.id }} flex justify-center items-center px-[55px] py-[40px] order-2 md:order-1" style="{{ background_color }}">
-        <div class="flex flex-col justify-center items-start max-w-[420px]">
-            <h1 class="text-inherit display-md !leading-[100%] mb-5 text-center md:text-left">{{ section.settings.title }}</h1>
+        <div class="flex flex-col justify-center items-start
+        {% if template.name == 'blog' %}
+            max-w-[482px]
+        {% else %}
+            max-w-[420px]
+        {% endif %}
+        max-w-[420px]">
+            <h1 class="text-inherit !leading-[100%] mb-5 text-center md:text-left
+            {% case section.settings.title_size %}
+                {% when 'display-md' %}
+                    display-md
+                {% when 'display-lg' %}
+                    display-lg
+                {% when 'display-xl' %}
+                    display-xl
+            {% endcase %}
+            ">{{ section.settings.title }}</h1>
             <div class="text-inherit font-kurdis-semi-condensed mb-5 [&_ul]:md:ml-5 [&_ul]:!gap-3 [&_ul]:font-kurdis-semi-condensed [&_li]:font-kurdis-semi-condensed">
                 {{ section.settings.description }}
             </div>
@@ -139,6 +155,26 @@
       "type": "text",
       "id": "title",
       "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title Size",
+      "options": [
+        {
+          "value": "display-md",
+          "label": "Medium"
+        },
+        {
+          "value": "display-lg",
+          "label": "Large"
+        },
+        {
+          "value": "display-xl",
+          "label": "X-Large"
+        }
+      ],
+      "default": "display-md"
     },
     {
       "type": "richtext",
