@@ -1,3 +1,17 @@
+{% assign word_count = article.title | split: ' ' | size %}
+
+{% capture title_width %}
+{% case word_count %}
+  {% when 1, 2, 3 %}
+    --title-width: 20ch;
+  {% when 4, 5, 6 %}
+    --title-width: 40ch;
+  {% when 7, 8, 9 %}
+    --title-width: 50ch;
+  {% else %}
+  --title-width: 38ch;
+{% endcase %}
+{% endcapture %}
 
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
@@ -16,7 +30,12 @@
     "
   >
     <header>
+      <div class="blog-post-title-container" style="{{ title_width }}">
       {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
+      </div>
+      <div class="mx-auto w-fit mt-8">
+        {%- content_for 'block', id: 'social-links', type: 'social-links' %}
+      </div>
       {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}
     </header>
 

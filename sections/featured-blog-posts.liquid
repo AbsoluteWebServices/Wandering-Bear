@@ -22,10 +22,17 @@
 >
   {% content_for 'block', id: 'static-blog-title', type: '_featured-blog-posts-title' %}
 
+
+ 
   {% if section.settings.blog != blank and section.settings.blog.articles_count > 0 %}
-    {% paginate section.settings.blog.articles by max_items %}
+    {% assign fetch_count = max_items | plus: 1 %}
+    {% paginate section.settings.blog.articles by fetch_count %}
       {% assign section_articles = section.settings.blog.articles %}
     {% endpaginate %}
+
+    {% if article != blank and article.id != blank %}
+      {% assign section_articles = section_articles | reject: 'id', article.id %}
+    {% endif %}
   {% else %}
     {% assign section_articles = '' %}
     {% for i in (1..max_items) %}
