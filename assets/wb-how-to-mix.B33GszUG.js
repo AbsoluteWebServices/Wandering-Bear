@@ -1,0 +1,4 @@
+var e=e=>{e.data(`howToMix`,e=>({activeTitle:e,indicatorStyle:``,init(){this.$nextTick(()=>{this.updateIndicator()}),window.addEventListener(`resize`,()=>{requestAnimationFrame(()=>this.updateIndicator())})},setActive(e){this.activeTitle=e,this.$nextTick(()=>{this.updateIndicator()})},updateIndicator(){let e=this.$refs.toggle;if(!e)return;let t=e.querySelectorAll(`[data-step-title]`),n=Array.from(t).find(e=>e.dataset.title===this.activeTitle);n&&(this.indicatorStyle=`
+                width: ${n.offsetWidth}px;
+                transform: translateX(${n.offsetLeft-6}px);
+            `)}}))};export{e as default};
