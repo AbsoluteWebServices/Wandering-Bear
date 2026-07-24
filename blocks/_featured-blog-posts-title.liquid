@@ -28,7 +28,7 @@
   <h3>{{ blog_title }}</h3>
 {% endcapture %}
 
-{% render 'text', fallback_text: blog_title_text, block: block %}
+{% render 'text', fallback_text: blog_title_text, block: block, class: 'featured-blog-posts-title' %}
 
 {% schema %}
 {

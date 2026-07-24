@@ -1,0 +1,11 @@
+.featured-blog-posts {
+    .featured-blog-posts-title {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .resource-list {
+        max-width: 1140px;
+        margin: 0 auto;
+    }
+}
