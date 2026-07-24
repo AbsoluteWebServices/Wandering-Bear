@@ -14,6 +14,7 @@
   @param {string} [body_class] - Extra classes for the body section
   @param {string} [panel_class] - Extra classes for the panel
   @param {string} [wrapper_class] - Extra classes for the dialog wrapper
+  @param {boolean} [initially_open] - Open the modal on page load (e.g. after form errors)
 {%- enddoc -%}
 
 {% liquid
@@ -23,10 +24,14 @@
   assign base_body_class = 'wb-flex flex-col items-center justify-center py-14 px-4.5 md:px-15 md:pt-7.5 md:pb-11'
   assign base_panel_class = 'relative bg-white rounded-[5px] overflow-hidden w-full'
   assign base_wrapper_class = 'z-20 max-w-[calc(100%-20px)] smd:max-w-[90%] h-fit flex flex-col mx-auto'
+  assign initially_open_js = 'false'
+  if initially_open
+    assign initially_open_js = 'true'
+  endif
 %}
 
 <div
-  x-data="modal({ handle: '{{ handle }}' })"
+  x-data="modal({ handle: '{{ handle }}', initiallyOpen: {{ initially_open_js }} })"
   @modal-open.window="open($event.detail)"
   @modal-close.window="close($event.detail)"
   @keydown.escape.window="isOpen && close()"

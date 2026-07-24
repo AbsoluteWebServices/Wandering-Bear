@@ -99,6 +99,21 @@
         "settings": {
           "modal_title": ""
         }
+      },
+      "aw-membership-signup-modal": {
+        "type": "aw-membership-signup-modal",
+        "settings": {
+          "title": "SIGN UP TO BE A\nFREE MEMBER!",
+          "benefit_1": "Get $5 off your first order",
+          "benefit_2": "Earn $5 for every $50 spent",
+          "checkbox_text": "Check to receive information about your membership, marketing messages, & $5 off your first order via email",
+          "button_label": "SIGN UP FOR MEMBERSHIP",
+          "login_heading": "Already a member?",
+          "login_label": "Login",
+          "login_text": "to access all your exclusive flavors.",
+          "return_to": "/pages/membership",
+          "customer_tag": "Membership Signup"
+        }
       }
     },
     "content_for_index": [],
@@ -613,9 +628,9 @@
       },
       "scheme-df29c3cf-7093-4d05-91b6-3b2d45cf0312": {
         "settings": {
-          "background": "#00000000",
-          "foreground_heading": "#1B1B1B",
-          "foreground": "#1B1B1B",
+          "background": "rgba(0,0,0,0)",
+          "foreground_heading": "#1b1b1b",
+          "foreground": "#1b1b1b",
           "primary": "#000000cf",
           "primary_hover": "#000000",
           "border": "#0000000f",
