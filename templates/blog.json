@@ -173,7 +173,7 @@
         "columns": 3,
         "mobile_columns": "2",
         "mobile_card_size": "60cqw",
-        "columns_gap": 8,
+        "columns_gap": 25,
         "rows_gap": 8,
         "icons_style": "arrow",
         "icons_shape": "none",
