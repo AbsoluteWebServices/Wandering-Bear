@@ -73,8 +73,8 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/on-tap-cold-brew",
-            "image": "shopify://shop_images/wb-col-1.png",
-            "hover_image": "shopify://shop_images/Mask_group_6c054578-0a6b-4740-8788-33bb454ba56a.png",
+            "image": "shopify://shop_images/homepage-1.png",
+            "hover_image": "shopify://shop_images/homepage-1.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
             "title": "Cold Brew Boxes",
