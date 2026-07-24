@@ -1,0 +1,60 @@
+{%- doc -%}
+  Absolutely-positioned sticker (image with a tilt), used across the About Us page.
+  All offsets are percentages of the section box so it scales with the layout; desktop and
+  mobile take separate values, defaulting to the desktop ones.
+
+  @param {object} block - a "sticker" block whose settings drive the image and placement
+{%- enddoc -%}
+
+{%- liquid
+  assign s = block.settings
+  assign top_m = s.top_mobile | default: s.top
+  assign left_m = s.left_mobile | default: s.left
+  assign width_m = s.width_mobile | default: s.width
+  assign rotate_m = s.rotate_mobile | default: s.rotate
+  # Figma rotation is CCW-positive; CSS rotate is CW-positive. Flip the sign so the values in
+  # the editor read the same as Figma.
+  assign rot_css = 0 | minus: s.rotate
+  assign rot_m_css = 0 | minus: rotate_m
+  # Anchor offset for translate(): defaults centre the sticker on its top/left point (-50/-50),
+  # but can be tweaked to nudge it off that anchor without moving the anchor itself.
+  assign tx = s.tx | default: -50
+  assign ty = s.ty | default: -50
+  assign tx_m = s.tx_mobile | default: tx
+  assign ty_m = s.ty_mobile | default: ty
+-%}
+
+{%- liquid
+  assign sticker_src = ''
+  if s.image != blank
+    assign sticker_src = s.image | image_url: width: 600
+  elsif s.preview_asset != blank
+    assign sticker_src = s.preview_asset | asset_url
+  endif
+-%}
+
+{%- if sticker_src != blank -%}
+  <img
+    src="{{ sticker_src }}"
+    alt="{{ s.image.alt }}"
+    class="aw-sticker aw-sticker--{{ block.id }} absolute pointer-events-none select-none z-[3]{% if s.desktop_only %} hidden smd:!block{% elsif s.mobile_only %} smd:!hidden{% endif %}"
+    loading="lazy"
+    {{ block.shopify_attributes }}
+  >
+  {%- style -%}
+    .aw-sticker--{{ block.id }} {
+      top: {{ top_m }}%;
+      left: {{ left_m }}%;
+      width: {{ width_m }}%;
+      transform: translate({{ tx_m }}%, {{ ty_m }}%) rotate({{ rot_m_css }}deg);
+    }
+    @media screen and (min-width: 750px) {
+      .aw-sticker--{{ block.id }} {
+        top: {{ s.top }}%;
+        left: {{ s.left }}%;
+        width: {{ s.width }}%;
+        transform: translate({{ tx }}%, {{ ty }}%) rotate({{ rot_css }}deg);
+      }
+    }
+  {%- endstyle -%}
+{%- endif -%}

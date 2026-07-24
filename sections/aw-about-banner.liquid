@@ -1,0 +1,185 @@
+{% comment %}
+  About Us banner — a centred, fixed-width block holding a photo, with a half-width text block
+  (heading + paragraph) laid over its left side. Figma: "STARTED WITH A BOX, NOW WE'RE HERE."
+
+  · Section background is a flat colour (cream by default).
+  · The block is a fixed px width, centred; its right corners are rounded.
+  · The photo fills the block; the text block is a % of the block width, over the left side.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign img_src = ''
+  if s.image != blank
+    assign img_src = s.image | image_url: width: 1600
+  elsif s.image_preview != blank
+    assign img_src = s.image_preview | asset_url
+  endif
+
+  assign radius_l = s.radius_left | default: 0
+  assign radius_r = s.radius_right | default: 20
+  assign block_radius = radius_l | append: 'px ' | append: radius_r | append: 'px ' | append: radius_r | append: 'px ' | append: radius_l | append: 'px'
+
+  assign overlay_src = ''
+  if s.overlay_image != blank
+    assign overlay_src = s.overlay_image | image_url: width: 1600
+  elsif s.overlay_preview != blank
+    assign overlay_src = s.overlay_preview | asset_url
+  endif
+
+  assign badge_src = ''
+  if s.badge_image != blank
+    assign badge_src = s.badge_image | image_url: width: 400
+  elsif s.badge_preview != blank
+    assign badge_src = s.badge_preview | asset_url
+  endif
+%}
+
+<div
+  class="aw-about-banner spacing-style"
+  style="background-color: {{ s.background_color | default: '#F2E6DC' }};{% if s.section_min_height != blank %} min-height: {{ s.section_min_height }}px;{% endif %} --padding-block-start-desktop: {{ s.padding_top | default: 60 }}px; --padding-block-end-desktop: {{ s.padding_bottom | default: 60 }}px; --padding-block-start-mobile: {{ s.padding_top_mobile | default: 32 }}px; --padding-block-end-mobile: {{ s.padding_bottom_mobile | default: 32 }}px; --font-size: {{ s.heading_size | default: 40 }}px; --font-size-mobile: {{ s.heading_size_mobile | default: 28 }}px;"
+  {{ section.shopify_attributes }}
+>
+  <div class="aw-about-banner__block relative mx-auto w-full"
+       style="max-width: {{ s.block_width | default: 1024 }}px;">
+    {%- comment -%}
+      Media: a rounded frame (clips the background photo) plus a transparent cut-out overlay of
+      the same shot laid on top. The overlay isn't clipped, so its subject breaks out above the
+      frame. Both images share the same width + vertical offset so their subjects line up.
+    {%- endcomment -%}
+    <div class="aw-about-banner__media relative w-full" style="height: {{ s.image_height | default: 500 }}px;">
+      <div class="aw-about-banner__frame absolute inset-0 overflow-hidden" style="border-radius: {{ block_radius }};">
+        {% if img_src != blank %}
+          <img src="{{ img_src }}" alt="{{ s.image.alt }}" class="absolute inset-x-0 w-full max-w-none" style="top: {{ s.media_img_top | default: 0 }}px;" loading="lazy">
+        {% endif %}
+      </div>
+      {% if overlay_src != blank %}
+        {% assign ov_top = s.overlay_top | default: s.media_img_top | default: 0 %}
+        {% assign ov_w = s.overlay_width | default: s.block_width | default: 1024 %}
+        <img src="{{ overlay_src }}" alt="" class="aw-about-banner__overlay absolute max-w-none z-[2]" style="left: {{ s.overlay_left | default: 0 }}px; width: {{ ov_w }}px; top: {{ ov_top }}px;" loading="lazy">
+      {% endif %}
+    </div>
+
+    {%- comment -%}
+      Text below the media. Inside it a half-width card, pushed left, with its right corners
+      rounded; the heading + body live in the card. text_card_margin_top (negative) can pull the
+      card up over the photo.
+    {%- endcomment -%}
+    <div class="aw-about-banner__text relative z-[1]"
+         style="width: {{ s.text_width | default: '100%' }};{% if s.text_bg != blank %} background: {{ s.text_bg }};{% endif %}">
+      {%- comment -%}
+        Card = full-width flex column with two children:
+        · heading block — half width, cream, right corners rounded, holds the title
+        · body block — full width, holds the paragraph
+      {%- endcomment -%}
+      <div class="aw-about-banner__card {% if s.card_abs %}absolute{% else %}relative{% endif %}"
+           style="width: {{ s.card_width | default: '100%' }};{% if s.card_abs %} top: {{ s.card_top | default: '0' }}; left: {{ s.card_left | default: '0' }}; z-index: {{ s.card_z | default: 3 }};{% else %}{% if s.text_card_margin_top != blank %} margin-top: {{ s.text_card_margin_top }}px;{% endif %}{% endif %} display: flex; flex-direction: column; justify-content: {{ s.text_valign | default: 'flex-start' }};">
+        {% if s.heading != blank %}
+          <div class="aw-about-banner__heading-wrap" style="width: {{ s.text_card_width | default: '50%' }}; padding: {{ s.text_pad_y | default: 40 }}px {{ s.text_pad_x | default: 40 }}px;{% if s.heading_wrap_pad_bottom != blank %} padding-bottom: {{ s.heading_wrap_pad_bottom }}px;{% endif %} border-radius: 0 {{ s.text_card_radius | default: 20 }}px {{ s.text_card_radius | default: 20 }}px 0;{% if s.text_card_bg != blank %} background: {{ s.text_card_bg }};{% endif %}{% if s.heading_gap != blank %} margin-bottom: {{ s.heading_gap }}px;{% endif %}">
+            <h2 class="aw-about-banner__title {{ s.heading_style | default: 'display-md' }} aw-about-banner__title-size uppercase" style="color: {{ s.text_color | default: '#1B1B1B' }}; line-height: {{ s.heading_lh | default: 1.09 }};{% if s.title_pad_top != blank %} padding-top: {{ s.title_pad_top }}px;{% endif %}">
+              {{ s.heading }}
+            </h2>
+          </div>
+        {% endif %}
+        {% if s.body != blank %}
+          <div class="aw-about-banner__body-wrap" style="width: {{ s.body_wrap_width | default: '100%' }}; padding: {{ s.body_pad_y | default: 0 }}px {{ s.body_pad_x | default: 40 }}px;">
+            <div class="aw-about-banner__body body" style="color: {{ s.text_color | default: '#1B1B1B' }}; font-size: {{ s.body_size | default: 15 }}px; line-height: {{ s.body_lh | default: 1.38 }};">
+              {{ s.body }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {%- comment -%} Decorative badge, absolutely placed on the block (e.g. left edge). {%- endcomment -%}
+    {% if badge_src != blank %}
+      <img src="{{ badge_src }}" alt="" class="aw-about-banner__badge absolute z-[4] pointer-events-none select-none"
+           style="{% if s.badge_right != blank %}right: {{ s.badge_right }};{% else %}left: {{ s.badge_left | default: '0' }};{% endif %} top: {{ s.badge_top | default: '0' }}; width: {{ s.badge_width | default: 112 }}px;{% if s.badge_rotate != blank %} transform: rotate({{ s.badge_rotate }}deg);{% endif %}" loading="lazy">
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .aw-about-banner__title-size {
+    font-size: var(--font-size) !important;
+  }
+  @media screen and (max-width: 749px) {
+    .aw-about-banner__title-size {
+      font-size: var(--font-size-mobile) !important;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW About Banner",
+  "tag": "section",
+  "settings": [
+    { "type": "color", "id": "background_color", "label": "Section background", "default": "#F2E6DC" },
+    { "type": "number", "id": "section_min_height", "label": "Section min height px" },
+    { "type": "number", "id": "block_width", "label": "Block width px" },
+    { "type": "number", "id": "image_height", "label": "Image block height px" },
+    { "type": "image_picker", "id": "image", "label": "Background image (in frame)" },
+    { "type": "text", "id": "image_preview", "label": "Background preview asset (dev only)" },
+    { "type": "number", "id": "media_img_top", "label": "Image vertical offset px (negative = up)" },
+    { "type": "image_picker", "id": "overlay_image", "label": "Cut-out overlay (breaks out top)" },
+    { "type": "text", "id": "overlay_preview", "label": "Overlay preview asset (dev only)" },
+    { "type": "number", "id": "overlay_left", "label": "Overlay left px" },
+    { "type": "number", "id": "overlay_width", "label": "Overlay width px" },
+    { "type": "number", "id": "overlay_top", "label": "Overlay top px (negative = up)" },
+    { "type": "number", "id": "radius_left", "label": "Radius left px" },
+    { "type": "number", "id": "radius_right", "label": "Radius right px" },
+    { "type": "header", "content": "Text block" },
+    { "type": "text", "id": "text_width", "label": "Text wrapper width (e.g. 100%)" },
+    { "type": "text", "id": "text_bg", "label": "Text wrapper background (blank = transparent)" },
+    { "type": "header", "content": "Text card (heading block + body block)" },
+    { "type": "text", "id": "card_width", "label": "Card wrapper width (e.g. 100%)" },
+    { "type": "text", "id": "text_card_width", "label": "Heading block width (e.g. 50%)" },
+    { "type": "text", "id": "text_card_bg", "label": "Card background (blank = transparent)" },
+    { "type": "number", "id": "text_card_radius", "label": "Card right corner radius px" },
+    { "type": "number", "id": "text_card_margin_top", "label": "Card margin-top px (flow mode)" },
+    { "type": "checkbox", "id": "card_abs", "label": "Card absolute (free placement)", "default": false },
+    { "type": "text", "id": "card_top", "label": "Card top (e.g. 300px) — when absolute" },
+    { "type": "text", "id": "card_left", "label": "Card left (e.g. 0) — when absolute" },
+    { "type": "number", "id": "card_z", "label": "Card z-index — when absolute" },
+    { "type": "number", "id": "text_pad_x", "label": "Card padding X px" },
+    { "type": "number", "id": "text_pad_y", "label": "Card padding Y px" },
+    { "type": "select", "id": "text_valign", "label": "Text vertical align", "options": [ { "value": "center", "label": "Center" }, { "value": "flex-start", "label": "Top" }, { "value": "flex-end", "label": "Bottom" } ], "default": "center" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1B1B1B" },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    {
+      "type": "select", "id": "heading_style", "label": "Heading font",
+      "options": [ { "value": "display-md", "label": "Display M (Kurdis Condensed)" }, { "value": "display-lg", "label": "Display L" }, { "value": "h1", "label": "H1" } ],
+      "default": "display-md"
+    },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 16, "max": 80, "step": 1, "unit": "px", "default": 40 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading size mobile", "min": 16, "max": 80, "step": 1, "unit": "px", "default": 28 },
+    { "type": "text", "id": "heading_lh", "label": "Heading line-height (e.g. 1.09)" },
+    { "type": "number", "id": "heading_gap", "label": "Gap heading→body px" },
+    { "type": "number", "id": "heading_wrap_pad_bottom", "label": "Heading block padding-bottom px" },
+    { "type": "number", "id": "title_pad_top", "label": "Title padding-top px" },
+    { "type": "header", "content": "Body" },
+    { "type": "richtext", "id": "body", "label": "Body" },
+    { "type": "range", "id": "body_size", "label": "Body size", "min": 10, "max": 30, "step": 1, "unit": "px", "default": 15 },
+    { "type": "text", "id": "body_lh", "label": "Body line-height (e.g. 1.38)" },
+    { "type": "text", "id": "body_wrap_width", "label": "Body block width (e.g. 100%)" },
+    { "type": "number", "id": "body_pad_x", "label": "Body block padding X px" },
+    { "type": "number", "id": "body_pad_y", "label": "Body block padding Y px" },
+    { "type": "header", "content": "Badge (absolute on block)" },
+    { "type": "image_picker", "id": "badge_image", "label": "Badge image" },
+    { "type": "text", "id": "badge_preview", "label": "Badge preview asset (dev only)" },
+    { "type": "text", "id": "badge_left", "label": "Badge left (e.g. -30px, 0)" },
+    { "type": "text", "id": "badge_right", "label": "Badge right (overrides left)" },
+    { "type": "text", "id": "badge_top", "label": "Badge top (e.g. 40%, 200px)" },
+    { "type": "number", "id": "badge_width", "label": "Badge width px" },
+    { "type": "number", "id": "badge_rotate", "label": "Badge rotate deg" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_top_mobile", "label": "t:settings.top_mobile", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "t:settings.bottom_mobile", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 32 }
+  ],
+  "presets": [ { "name": "AW About Banner" } ]
+}
+{% endschema %}
