@@ -175,6 +175,8 @@
         "mobile_card_size": "60cqw",
         "columns_gap": 25,
         "rows_gap": 40,
+        "enable_load_more": true,
+        "load_more_label": "Load more",
         "icons_style": "arrow",
         "icons_shape": "none",
         "section_width": "page-width",

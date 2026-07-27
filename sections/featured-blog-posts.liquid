@@ -2,10 +2,28 @@
 
 {% liquid
   assign max_items = section.settings.post_limit
+
+  # Paginated mode turns the grid into the full blog index: every article is reachable, a page at a
+  # time. It is off for the carousel/editorial layouts and for the mobile carousel fallback (cards
+  # inside a slideshow can't be appended to), and on article pages, where this section is a
+  # "related posts" list rather than the index.
+  assign paginated = false
+  if section.settings.enable_load_more and section.settings.layout_type == 'grid' and section.settings.carousel_on_mobile == false and section.settings.blog != blank and section.settings.blog.articles_count > 0 and article == blank
+    assign paginated = true
+  endif
 %}
+
+{% if paginated %}
+  <script
+    src="{{ 'blog-posts-list.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
+{% if paginated %}<blog-posts-list section-id="{{ section.id }}">{% endif %}
 <div
   class="
     section
@@ -22,9 +40,25 @@
 >
   {% content_for 'block', id: 'static-blog-title', type: '_featured-blog-posts-title' %}
 
+  {% if paginated %}
+    {% comment %}
+      One page of articles, plus the pagination facts the grid and the load more button need.
+      `paginate` limits `blog.articles` for the duration of the block; the assignments carry the
+      limited list and the page numbers back out.
+    {% endcomment %}
+    {% paginate section.settings.blog.articles by max_items %}
+      {% liquid
+        assign section_articles = section.settings.blog.articles
+        assign current_page = paginate.current_page
+        assign last_page = paginate.pages
+        assign has_next_page = paginate.next.is_link
+        assign next_page_url = paginate.next.url
+      %}
+    {% endpaginate %}
 
- 
-  {% if section.settings.blog != blank and section.settings.blog.articles_count > 0 %}
+    {% capture grid_attributes %}ref="grid" data-last-page="{{ last_page }}"{% endcapture %}
+    {% capture item_attributes %}ref="cards[]" data-page="{{ current_page }}"{% endcapture %}
+  {% elsif section.settings.blog != blank and section.settings.blog.articles_count > 0 %}
     {% assign fetch_count = max_items | plus: 1 %}
     {% paginate section.settings.blog.articles by fetch_count %}
       {% assign section_articles = section.settings.blog.articles %}
@@ -43,7 +77,7 @@
 
   {% capture list_items %}
     {% for article in section_articles limit: max_items %}
-      <div class="resource-list__item">
+      <div class="resource-list__item" {{ item_attributes }}>
         {% content_for 'block', id: 'static-blog-post-card', type: '_featured-blog-posts-card', article: article, closest.article: article %}
       </div>
       {% unless forloop.last %}
@@ -63,9 +97,33 @@
     carousel_ref: 'featuredBlog',
     slide_count: max_items,
     content_type: 'articles',
-    test_id: 'featured-blog-posts'
+    test_id: 'featured-blog-posts',
+    grid_attributes: grid_attributes
   %}
+
+  {% comment %}
+    A real link to the next page, so pagination still works with JS unavailable.
+    `blog-posts-list` intercepts the click and appends the page in place instead.
+  {% endcomment %}
+  {% if paginated and has_next_page %}
+    {% liquid
+      assign load_more_label = section.settings.load_more_label
+      if load_more_label == blank
+        assign load_more_label = 'actions.load_more' | t
+      endif
+    %}
+    <div class="featured-blog-posts__load-more">
+      {% render 'wb-button',
+        style: 'secondary-gold',
+        link: next_page_url,
+        label: load_more_label,
+        class: 'featured-blog-posts__load-more-button',
+        attributes: 'ref="loadMore" on:click="/loadNextPage"'
+      %}
+    </div>
+  {% endif %}
 </div>
+{% if paginated %}</blog-posts-list>{% endif %}
 
 {% schema %}
 {
@@ -197,6 +255,25 @@
       "unit": "px",
       "default": 16,
       "visible_if": "{{ section.settings.layout_type == 'grid' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.pagination"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_load_more",
+      "label": "t:settings.enable_load_more",
+      "info": "t:info.enable_load_more",
+      "default": false,
+      "visible_if": "{{ section.settings.layout_type == 'grid' and section.settings.carousel_on_mobile == false }}"
+    },
+    {
+      "type": "text",
+      "id": "load_more_label",
+      "label": "t:settings.load_more_label",
+      "default": "t:text_defaults.load_more",
+      "visible_if": "{{ section.settings.enable_load_more }}"
     },
     {
       "type": "header",

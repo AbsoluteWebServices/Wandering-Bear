@@ -3,7 +3,18 @@
   assign image_mobile = section.settings.image_mobile
   assign background_color = section.settings.background_color
   assign color_scheme = section.settings.color_scheme
-  assign button_url = section.settings.button_url
+
+  assign is_blog = false
+  if template.name == 'blog'
+    assign is_blog = true
+  endif
+
+  if is_blog
+    assign button_url = blog.articles.first.url
+  else
+    assign button_url = section.settings.button_url
+  endif
+
   assign button_label = section.settings.button_text
   assign bullet_color = section.settings.bullet_color
   assign button_bg = color_scheme.settings.primary_button_background
