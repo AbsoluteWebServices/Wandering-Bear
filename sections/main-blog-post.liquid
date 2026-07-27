@@ -29,11 +29,11 @@
       {% render 'spacing-style', settings: section.settings %}
     "
   >
-    <header>
+    <header class="mb-5 md:mb-8">
       <div class="blog-post-title-container" style="{{ title_width }}">
       {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
       </div>
-      <div class="mx-auto w-fit mt-8">
+      <div class="mx-auto w-fit !mt-0 md:!mt-8">
         {%- content_for 'block', id: 'social-links', type: 'social-links' %}
       </div>
       {%- content_for 'block', id: 'blog-post-details', type: '_blog-post-info-text' %}

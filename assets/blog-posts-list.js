@@ -50,8 +50,6 @@ export default class BlogPostsList extends PaginatedList {
       const [firstNewCard] = cards;
       grid.append(...cards);
 
-      // The URL deliberately stays on the canonical blog URL. Writing `?page=N` into it would make a
-      // refresh re-render the section as page N alone, dropping every post appended before it.
 
       if (nextPage < lastPage) {
         const followingUrl = new URL(nextUrl);
@@ -63,10 +61,8 @@ export default class BlogPostsList extends PaginatedList {
         loadMore.remove();
       }
 
-      // Move focus into the new articles so keyboard users carry on where they left off.
       firstNewCard?.querySelector('a')?.focus({ preventScroll: true });
     } catch (error) {
-      // Leave the button in place pointing at the same page so the reader can retry.
       console.error(error);
     } finally {
       this.#loading = false;
