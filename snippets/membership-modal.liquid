@@ -51,7 +51,7 @@
     %}
 </div>
 {% if item.learn_more_button != blank %}
-    {% render 'wb-button', style: 'primary', class: 'z-[3] w-full max-w-[280px]! h-[47px]! text-[20px]!', width: 98, height: 25, label: item.learn_more_button.value.text, link: item.learn_more_button.value.url %}
+    {% render 'wb-button', style: 'primary', class: 'z-[3] w-full! max-w-[280px]! h-[47px]! text-[20px]!', width: 98, height: 25, label: item.learn_more_button.value.text, link: item.learn_more_button.value.url %}
 {% endif %}
 </div>
 {% if item.login_text != blank and is_elite == false %}
