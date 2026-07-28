@@ -1,1 +1,0 @@
-var e=e=>{e.data(`waysToEnjoy`,e=>({activeTitle:e,setActive(e){this.activeTitle=e}}))};export{e as default};
