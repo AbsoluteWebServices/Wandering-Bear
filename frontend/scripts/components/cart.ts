@@ -19,14 +19,6 @@ export default (Alpine: AlpineType) => {
     activeBundleName: null,
     tempBundleIndex: 0,
 
-    get state() {
-      return Alpine.store('cart').state;
-    },
-
-    set state(value) {
-      Alpine.store('cart').state = value;
-    },
-
     get cart() {
       return Alpine.store('cart').cart;
     },
@@ -54,7 +46,6 @@ export default (Alpine: AlpineType) => {
     },
 
     async refreshCart() {
-      console.log('refreshing cart');
       this.cart = await fetch('/cart.js', {
         headers: { Accept: 'application/json' },
       }).then(res => res.json());
@@ -67,7 +58,7 @@ export default (Alpine: AlpineType) => {
 
       this.activeBundle = bundleId;
       this.activeBundleCount = this.bundleItems.length;
-      this.state = 'modifyBundle';
+      this.showModifyBundle = true;
     },
 
     async _getFlavorCollection(collectionHandle) {
@@ -82,6 +73,11 @@ export default (Alpine: AlpineType) => {
 
       const data = await res.json();
       return data.products || [];
+    },
+
+    _formatMoney(price) {
+      console.log('price', price);
+      return price.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     },
 
     async changeBundleFrequency(event, sellingPlanId, bundleId) {
@@ -133,23 +129,55 @@ export default (Alpine: AlpineType) => {
       );
     },
 
-    closeDropdown(event) {
-      const target = event.currentTarget.closest('[data-selector-container]');
-      target.querySelector('[data-frequency-dropdown]').classList.remove('open');
-    },
-
-    openDropdown(event) {
-      const target = event.currentTarget.closest('[data-selector-container]');
-      target.querySelector('[data-frequency-dropdown]').classList.add('open');
-    },
-
-    toggleDropdown(event) {
-      const target = event.currentTarget.closest('[data-selector-container]');
-      if (target.querySelector('[data-frequency-dropdown]').classList.contains('open')) {
-        this.closeDropdown(event);
-      } else {
-        this.openDropdown(event);
+    async changeBundleFrequency(event, sellingPlanId, bundleId) {
+      const option = event.currentTarget;
+      const selector = option.closest('[data-selector-container]');
+      const frequencyLabel = selector?.querySelector(
+        '[data-frequency-label]'
+      );
+    
+      const newSellingPlanId = sellingPlanId
+        ? Number(sellingPlanId)
+        : null;
+    
+      if (frequencyLabel) {
+        frequencyLabel.textContent =
+          option.dataset.sellingPlanName || 'One Time Purchase';
       }
+    
+      const bundleItems = this.cart.items.filter(item =>
+        String(item.properties?._bundle_id) === String(bundleId)
+      );
+    
+      for (const item of bundleItems) {
+        const response = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            id: item.key,
+            quantity: item.quantity,
+            selling_plan: newSellingPlanId,
+          }),
+        });
+    
+        if (!response.ok) {
+          console.error(await response.text());
+          await this.refreshCart();
+          return;
+        }
+      }
+    
+      await this.refreshCart();
+    
+      document.dispatchEvent(
+        new CartUpdateEvent(this.cart, 'cart', {
+          itemCount: this.cart.item_count,
+          source: 'cart',
+        })
+      );
     },
 
     async removeBundle(bundleId) {
@@ -202,12 +230,28 @@ export default (Alpine: AlpineType) => {
     },
 
     async hydrateModifyBundle(collectionHandle, bundleName, bundleId) {
-      const flavorCollection = await this._getFlavorCollection(collectionHandle);
+      const flavorCollection = await this._getFlavorCollection(collectionHandle);      
 
-      this.bundleItems = this.cart.items
-        .filter(item => String(item.properties?._bundle_id) === String(bundleId))
-        .filter(item => String(item.properties?._bundle_parent) !== 'true')
-        .map(item => ({ ...item }));
+      await this.refreshCart();
+
+      const cart = await fetch('/cart.js', {
+        headers: { Accept: 'application/json' },
+      }).then(res => res.json());
+
+      if (!cart || !cart.items || cart.items.length === 0) return;
+
+      this.bundleItems = (cart?.items ?? [])
+      .filter(item =>
+        String(item.properties?._bundle_id) === String(bundleId)
+      )
+      .filter(item =>
+        String(item.properties?._bundle_parent) !== 'true'
+      )
+      .map(item => ({ ...item }));
+
+
+      const bundleCount = this.getIndexFromCount(this.bundleItems.length);
+
 
       this.tempBundle = flavorCollection.map(product => {
 
@@ -215,7 +259,8 @@ export default (Alpine: AlpineType) => {
           Number(item.product_id) === Number(product.id)
         );
 
-        const price = this.bundleItems[0].price
+        const price = product.variants[bundleCount].price;
+        const flavorName = cartItem?.properties?._flavor ?? product.title.split(' - ')[1];
 
         return {
           id: product.id,
@@ -227,13 +272,15 @@ export default (Alpine: AlpineType) => {
           quantity: cartItem?.quantity ?? 0,
           bundleId,
           collectionHandle: collectionHandle,
-          flavorName: cartItem?.properties?._flavor,
+          flavorName: flavorName,
           variants: product.variants,
           cartVariantId: cartItem?.variant_id,
         };
       });
 
       this.tempBundleIndex = this.getIndexFromCount(this.tempBundleCount);
+
+      this.tempBundle = [...this.tempBundle];
 
       // change price based on index (its an object)
       this.tempBundle[this.tempBundleIndex].price = this.bundleDetails[this.activeBundleName].bundle_products[this.tempBundleIndex].price;
@@ -260,6 +307,7 @@ export default (Alpine: AlpineType) => {
     backToCart() {
       this.showModifyBundle = false;
       this.state = '';
+      document.querySelector('.modify-bundle').style.transform = 'translateX(100%)';
     },
 
     bundleDecrement(id) {
@@ -311,7 +359,7 @@ export default (Alpine: AlpineType) => {
       this.bundleChanged = false;
       this.activeBundle = null;
       this.activeBundleCount = 0;
-      this.state = 'isCartDrawer';
+      this.showModifyBundle = false;
     },
 
     async updateBundle() {
@@ -359,7 +407,7 @@ export default (Alpine: AlpineType) => {
             _bundle_id: item.bundleId,
             _bundle_name: this.activeBundleName,
             _collection_handle: collectionHandle,
-            _flavor_name: item.flavorName,
+            _flavor: item.flavorName,
           },
         });
       };

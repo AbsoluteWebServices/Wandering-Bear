@@ -95,9 +95,11 @@
     {% assign product_href = '#ProductInformation-' | append: section_id %}
     {% render 'skip-to-content-link', href: product_href, text: 'accessibility.skip_to_product_info' %}
   {% endif %}
-  <div class="max-w-[1092px] w-full mx-auto">
-    {% render 'breadcrumbs', product: product %}
-  </div>
+  {% if template.name == 'product' %}
+      <div class="max-w-[1092px] w-full mx-auto">
+        {% render 'breadcrumbs', product: product %}
+      </div>
+    {% endif %}
   <div
     class="{{ product_grid_class }} max-w-[1092px]! mx-auto w-full"
     data-product-grid-content

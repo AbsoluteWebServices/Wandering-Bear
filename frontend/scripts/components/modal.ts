@@ -7,11 +7,17 @@ type ModalPayload = {
 }
 
 export default (Alpine: AlpineType) => {
-  Alpine.data('modal', (config: { handle: string }) => ({
+  Alpine.data('modal', (config: { handle: string; initiallyOpen?: boolean }) => ({
     handle: config.handle,
     isOpen: false,
     isShown: false,
     payload: null as ModalPayload | null,
+
+    init() {
+      if (config.initiallyOpen) {
+        queueMicrotask(() => this.open({ modal: this.handle }))
+      }
+    },
 
     async open(payload: ModalPayload | null = null) {
       const targetHandle = payload?.modal ?? payload?.handle

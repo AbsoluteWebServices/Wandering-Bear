@@ -1758,6 +1758,23 @@
     "name": "t:names.cart",
     "settings": [
       {
+        "type": "text",
+        "id": "announcement_text",
+        "label": "Announcement text",
+        "default": "Announcement text"
+      },
+      {
+        "type": "image_picker",
+        "id": "announcement_icon",
+        "label": "Announcement icon"
+      },
+      {
+        "type": "color_scheme",
+        "id": "announcement_color_scheme",
+        "label": "Announcement color scheme",
+        "default": "scheme-1"
+      },
+      {
         "type": "select",
         "id": "cart_type",
         "label": "t:settings.cart_type",

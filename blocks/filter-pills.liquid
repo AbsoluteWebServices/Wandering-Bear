@@ -1,0 +1,189 @@
+{%- doc -%}
+  Renders one storefront filter's values as a row of pills.
+
+  Which values appear — and in what order — comes from the collection's
+  `custom.filters` metafield: a list of `tag` metaobjects, each whose `value` field
+  names a filter value to show. Each collection curates its own pills without a
+  template edit. Leave the metafield unset and every value of the filter renders.
+
+  Match `value` against the filter value's LABEL, not a raw product tag: values
+  grouped in Search & Discovery expose an opaque FilterSettingGroup gid as their
+  value, so the label is the only stable handle (e.g. "On-Tap").
+
+  Pills are single-select: each one points at the collection filtered by just that
+  value, and the first pill clears back to the unfiltered collection. They are real
+  links built from the storefront filter URLs, so with JS off they navigate and filter
+  normally; `filter-pills.js` upgrades a plain left click into a Section Rendering API
+  swap of the surrounding section.
+
+  Because this block renders *inside* the section it re-renders, the active pill is
+  re-resolved by the server on every swap — there is no client-side state to sync.
+{%- enddoc -%}
+
+{% liquid
+  assign filter_param = block.settings.filter_param | default: 'filter.p.tag'
+
+  # `custom.filters` is a list of `tag` metaobjects; each entry's `value` field holds
+  # the filter value to show. `.value` on the metafield unwraps it to the list.
+  assign curated_tags = collection.metafields.custom.filters.value
+
+  assign target_filter = null
+  for candidate in collection.filters
+    if candidate.param_name == filter_param
+      assign target_filter = candidate
+      break
+    endif
+  endfor
+%}
+
+{% if target_filter != null and target_filter.values.size > 0 %}
+  {% liquid
+    assign show_all_is_current = false
+    if target_filter.active_values.size == 0
+      assign show_all_is_current = true
+    endif
+
+    assign show_all_label = block.settings.show_all_label | default: 'Shop All'
+    assign nav_label = block.settings.nav_label | default: target_filter.label
+  %}
+
+
+  <script
+    src="{{ 'filter-pills.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+
+  {% if collection.metafields.custom.filters != blank %}
+    <filter-pills-component
+      class="filter-pills col-span-full block mb-4"
+      section-id="{{ section.id }}"
+    >
+
+      <nav aria-label="{{ nav_label | escape }}" class="mb-10 lg:mb-2.5">
+        <ul class="filter-pills__list list-unstyled flex flex-wrap items-center justify-center gap-2 !m-0 px-2 lg:!px-0" role="list">
+          {% if block.settings.show_all %}
+            {% render 'filter-pill',
+              label: show_all_label,
+              url: collection.url,
+              is_current: show_all_is_current,
+              count: collection.all_products_count
+            %}
+          {% endif %}
+
+          {% if curated_tags.size > 0 %}
+            {% for tag_entry in curated_tags %}
+              {% liquid
+                assign curated = tag_entry.value
+                assign value = target_filter.values | where: 'label', curated | first
+                unless value
+                  assign value = target_filter.values | where: 'value', curated | first
+                endunless
+              %}
+              {% if value %}
+                {% assign icon = null %}
+                {% assign tag_object = shop.metaobjects.tag.values | where: 'value', value.label | first %}
+                {% if tag_object.icon != blank %}
+                  {% assign icon = tag_object.icon.value %}
+                {% endif %}
+
+                {% assign encoded_value = value.value | url_encode %}
+                {% capture pill_url %}{{ collection.url }}?{{ filter_param }}={{ encoded_value }}{% endcapture %}
+                {% render 'filter-pill',
+                  label: value.label,
+                  url: pill_url,
+                  is_current: value.active,
+                  count: value.count,
+                  icon: icon
+                %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for value in target_filter.values %}
+              {% assign icon = null %}
+              {% assign tag_object = shop.metaobjects.tag.values | where: 'value', value.label | first %}
+              {% if tag_object.icon != blank %}
+                {% assign icon = tag_object.icon.value %}
+              {% endif %}
+
+              {% assign encoded_value = value.value | url_encode %}
+              {% capture pill_url %}{{ collection.url }}?{{ filter_param }}={{ encoded_value }}{% endcapture %}
+              {% render 'filter-pill',
+                label: value.label,
+                url: pill_url,
+                is_current: value.active,
+                count: value.count,
+                icon: icon
+              %}
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </nav>
+
+      <span
+        class="visually-hidden"
+        role="status"
+        data-filter-pills-status="{{ section.id }}"
+      ></span>
+    </filter-pills-component>
+  {% endif %}
+{% endif %}
+
+{% stylesheet %}
+
+  filter-pills-component[aria-busy='true'] .filter-pills__list {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .filter-pills__pill:focus-visible {
+    outline: 2px solid var(--color-espresso, #431a03);
+    outline-offset: 2px;
+  }
+
+  @media screen and (prefers-reduced-motion: reduce) {
+    .filter-pills__pill {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Filter pills",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "filter_param",
+      "label": "Filter",
+      "default": "filter.p.tag",
+      "info": "The storefront filter to render as pills, by parameter name. Tags are filter.p.tag; product type is filter.p.product_type. The filter must be enabled in Search & Discovery. Which values show is curated per collection by the custom.filters metafield."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_all",
+      "label": "Show a \"Shop all\" pill",
+      "default": true,
+      "info": "Clears the filter. Active when nothing is filtered."
+    },
+    {
+      "type": "text",
+      "id": "show_all_label",
+      "label": "\"Shop all\" label",
+      "default": "Shop All"
+    },
+    {
+      "type": "text",
+      "id": "nav_label",
+      "label": "Navigation label",
+      "info": "Describes this navigation to screen readers. Not shown visually. Defaults to the filter's own name."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Filter pills"
+    }
+  ]
+}
+{% endschema %}

@@ -6,9 +6,12 @@
     assign product_resource = collections.all.products.first
   endif
 -%}
+{% capture variant_picker_blocks %}
+  {% content_for 'blocks' %}
+{% endcapture %}
 
 {% unless product_resource == blank %}
-  {% render 'aw-variant-picker', product_resource: product_resource, section: section, product: product, block: block %}
+  {% render 'aw-variant-picker', product_resource: product_resource, section: section, product: product, block: block, variant_picker_blocks: variant_picker_blocks %}
 {% endunless %}
 
 {% schema %}
@@ -45,6 +48,23 @@
       "id": "show_swatches",
       "label": "t:settings.swatches",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "savings_display",
+      "label": "Savings display",
+      "info": "How the per-unit saving is shown under each quantity tier.",
+      "options": [
+        {
+          "value": "percent",
+          "label": "Percentage (Save 22%)"
+        },
+        {
+          "value": "amount",
+          "label": "Flat rate (Save $10)"
+        }
+      ],
+      "default": "percent"
     },
     {
       "type": "text_alignment",
@@ -139,6 +159,11 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
     }
   ],
   "presets": [

@@ -96,7 +96,7 @@
     {% endfor %}
 {% endcapture %}
 
-<div class="aw-diagram wb-flex flex-col gap-4 relative spacing-style wb-section-bg{% if template.suffix == 'gallon' %} mt-5.5 md:mt-8{% endif %}" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
+<div class="aw-diagram wb-flex flex-col gap-4 relative spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
     {% render 'section-background', settings: section.settings, part: 'media', image_class: 'w-full !h-full object-cover !max-w-none absolute inset-0 md:!-top-[77px]' %}
    <div class="wb-flex flex-col mx-auto relative z-[1]">
     {% if title_type == 'image' %}

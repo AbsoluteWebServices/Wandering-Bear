@@ -1,0 +1,221 @@
+{% liquid
+  assign membership_signup_has_errors = false
+  assign title = section.settings.title | default: 'SIGN UP TO BE A FREE MEMBER!'
+  assign benefit_1 = section.settings.benefit_1 | default: 'Get $5 off your first order'
+  assign benefit_2 = section.settings.benefit_2 | default: 'Earn $5 for every $50 spent'
+  assign checkbox_text = section.settings.checkbox_text | default: 'Check to receive information about your membership, marketing messages, & $5 off your first order via email'
+  assign button_label = section.settings.button_label | default: 'SIGN UP FOR MEMBERSHIP'
+  assign login_heading = section.settings.login_heading | default: 'Already a member?'
+  assign login_text = section.settings.login_text | default: ' to access all your exclusive flavors.'
+  assign login_label = section.settings.login_label | default: 'Login'
+  assign return_to = section.settings.return_to | default: '/pages/membership'
+  assign customer_tag = section.settings.customer_tag | default: 'Membership Signup'
+%}
+
+{% capture membership_signup_content %}
+  {% form 'create_customer',
+    id: 'membership-signup-form',
+    return_to: return_to,
+    class: 'membership-signup-form flex flex-col items-center w-full'
+  %}
+    {% if form.errors %}
+      {% assign membership_signup_has_errors = true %}
+    {% endif %}
+
+    <input type="hidden" name="customer[tags]" value="{{ customer_tag }}">
+
+    <div class="flex flex-col items-center w-full px-3 pt-10 pb-6 smd:px-8">
+      <div class="flex flex-col items-center w-full max-w-[352px]">
+        {% if title != blank %}
+          <h2 class="font-gothic_condensed font-extrabold uppercase text-center text-[25px] leading-none text-espresso max-w-[269px] mb-4.5">
+            {{ title | newline_to_br }}
+          </h2>
+        {% endif %}
+
+        {% if benefit_1 != blank or benefit_2 != blank %}
+          <ul class="flex flex-col gap-1.5 mb-5 w-full max-w-[280px]">
+            {% if benefit_1 != blank %}
+              <li class="flex items-center gap-2.5 font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.8] text-[#431A03]">
+                <span class="shrink-0 w-3.5 h-[9px] inline-flex" aria-hidden="true">
+                  {{ 'icon-crown.svg' | inline_asset_content }}
+                </span>
+                <span>{{ benefit_1 }}</span>
+              </li>
+            {% endif %}
+
+            {% if benefit_2 != blank %}
+              <li class="flex items-center gap-2.5 font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.8] text-[#431A03]">
+                <span class="shrink-0 w-3.5 h-[9px] inline-flex" aria-hidden="true">
+                  {{ 'icon-crown.svg' | inline_asset_content }}
+                </span>
+                <span>{{ benefit_2 }}</span>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}
+
+        <div class="flex flex-col gap-2.5 w-full mb-4">
+          <input
+            type="email"
+            id="membership-signup-email"
+            name="customer[email]"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+            class="w-full h-[51px] px-5.5 rounded-[5px] bg-foam border-0 font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.6] text-[#431A03] placeholder:text-[#431A03]/70 outline-none"
+          >
+          <input
+            type="password"
+            id="membership-signup-password"
+            name="customer[password]"
+            placeholder="Enter your password"
+            autocomplete="new-password"
+            required
+            class="w-full h-[51px] px-5.5 rounded-[5px] bg-foam border-0 font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.6] text-[#431A03] placeholder:text-[#431A03]/70 outline-none"
+          >
+        </div>
+
+        <div
+          class="flex items-start gap-2 w-full mb-5 cursor-pointer"
+          x-data="{ checkboxChecked: true }"
+          @click="checkboxChecked = !checkboxChecked; $refs.signupCheckbox.checked = checkboxChecked"
+        >
+          <input
+            x-ref="signupCheckbox"
+            type="checkbox"
+            name="customer[accepts_marketing]"
+            id="membership-signup-marketing"
+            value="true"
+            checked
+            required
+            class="sr-only"
+            @click.stop
+          >
+          <span
+            class="flex items-center justify-center size-[25px] shrink-0 rounded-[2px] mt-px"
+            :class="checkboxChecked ? 'bg-[#AF7404]' : 'bg-transparent border border-[#AF7404]'"
+            aria-hidden="true"
+          >
+            <span x-cloak x-show="checkboxChecked" class="text-cream">
+              {% render 'icons', icon: 'checkmark', class: 'w-3 h-3' %}
+            </span>
+          </span>
+          {% if checkbox_text != blank %}
+            <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none text-[#431A03] pt-1">
+              {{ checkbox_text }}
+            </span>
+          {% endif %}
+        </div>
+
+        {% render 'customer-form-button',
+          label: button_label,
+          style: 'secondary-gold',
+          class: '!w-full !h-[43px] !text-[20px]'
+        %}
+
+        {% if form.errors %}
+          <div class="text-sunrise_orange text-sm text-center mt-3" role="alert">
+            {{ form.errors | default_errors }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="bg-[#BFD7E9] w-full px-4 py-4">
+      <p class="font-kurdis-semi-condensed text-[14px] leading-[1.6] text-center text-espresso mb-0">
+        {% if login_heading != blank %}
+          <span class="font-bold">{{ login_heading }}</span>
+          <br>
+        {% endif %}
+        <a href="{{ routes.account_login_url }}" class="font-bold underline underline-offset-2 hover:text-dark-gold">{{ login_label }}</a>
+        {% if login_text != blank %}
+          <span>{{ login_text }}</span>
+        {% endif %}
+      </p>
+    </div>
+  {% endform %}
+{% endcapture %}
+
+{% render 'modal',
+  handle: 'membership-signup',
+  content: membership_signup_content,
+  initially_open: membership_signup_has_errors,
+  panel_class: '!bg-[#F2E6DC]',
+  body_class: '!p-0 !items-stretch',
+  content_class: '!w-full',
+  wrapper_class: '!max-w-[calc(100%-24px)] smd:!max-w-[481px] w-full'
+%}
+
+{% schema %}
+{
+  "name": "AW Membership Signup",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title",
+      "default": "SIGN UP TO BE A\nFREE MEMBER!"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1",
+      "label": "Benefit 1",
+      "default": "Get $5 off your first order"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2",
+      "label": "Benefit 2",
+      "default": "Earn $5 for every $50 spent"
+    },
+    {
+      "type": "textarea",
+      "id": "checkbox_text",
+      "label": "Marketing checkbox text",
+      "default": "Check to receive information about your membership, marketing messages, & $5 off your first order via email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Submit button label",
+      "default": "SIGN UP FOR MEMBERSHIP"
+    },
+    {
+      "type": "text",
+      "id": "login_heading",
+      "label": "Login heading",
+      "default": "Already a member?"
+    },
+    {
+      "type": "text",
+      "id": "login_label",
+      "label": "Login link label",
+      "default": "Login"
+    },
+    {
+      "type": "text",
+      "id": "login_text",
+      "label": "Login supporting text",
+      "default": " to access all your exclusive flavors."
+    },
+    {
+      "type": "text",
+      "id": "return_to",
+      "label": "Return path after signup",
+      "default": "/pages/membership",
+      "info": "Relative path customers land on after successful registration"
+    },
+    {
+      "type": "text",
+      "id": "customer_tag",
+      "label": "Customer tag",
+      "default": "Membership Signup"
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Membership Signup"
+    }
+  ]
+}
+{% endschema %}

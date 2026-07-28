@@ -3,10 +3,11 @@
 
   @param {string} [accelerated_checkout_buttons_layout] - { 'vertical' } Forced layout of the additional checkout buttons, instead of relying on platform's layout.
   @param {string} [section_id] - The section ID for cart discount component.
+  @param {string} [total_savings] - The total savings for the cart.
 {%- enddoc -%}
 
 {% capture shipping_fee %}
-    {% if is_elite or is_vip or is_autoship %}
+    {% if member_tier == 'Elite' or member_tier == 'VIP' or is_autoship %}
         FREE
     {% else %}
         Calculated at checkout
@@ -30,13 +31,15 @@
     {% if cart.total_discounts > 0 %}
         <div class="flex justify-between items-center">
             <span class="cart-totals__original-label">Discounts</span>
-            <span
-            class="cart-totals__original-value cart-secondary-typography"
-            data-testid="cart-subtotal-value"
-            >
-            -{{ cart.total_discounts | money -}}
-            </span>
         </div>
+        {% for discount in cart.cart_level_discount_applications %}
+          <div class="ml-3.5 text-gold font-semibold text-xs flex justify-between items-center">
+            <span class="cart-totals__original-label">{{ discount.title }}</span>
+            <span class="cart-totals__original-value cart-secondary-typography" data-testid="cart-subtotal-value">
+              -{{ discount.total_allocated_amount | money -}}
+            </span>
+          </div>
+        {% endfor %}
     {% endif %}
 
     <div class="flex justify-between items-center">
@@ -60,10 +63,20 @@
         </span>
     </div>
     <div class="absolute bottom-0 left-0 right-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+
+</div>
+<div>
+  <div class="relative flex justify-between items-center gap-4 px-6 py-4 font-kurdis-semi-condensed text-bear-black font-bold text-sm">
+    <div class="absolute bottom-0 left-0 right-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
+    <span class="cart-totals__original-label">Total</span>
+    <span class="cart-totals__original-value cart-secondary-typography" data-testid="cart-subtotal-value">
+      {{ cart.total_price | money }}
+    </span>
+  </div>
 </div>
 
   {% # We need to keep this node in place to allow morphing to work properly # %}
-  <div class="cart-totals__original-container cart-primary-typography">
+  <div class="cart-totals__original-container cart-primary-typography !hidden">
     {%- if cart.cart_level_discount_applications.size > 0 -%}
       <span class="cart-totals__item cart-totals__original">
         <span class="cart-totals__original-label">{{ 'content.cart_subtotal' | t }}</span>
@@ -105,32 +118,8 @@
 
 </div>
 
-<div class="cart__ctas">
-  <button
-    type="submit"
-    id="checkout"
-    class="cart__checkout-button button"
-    name="checkout"
-    {% if cart == empty %}
-      disabled
-    {% endif %}
-    form="cart-form"
-  >
-    <span class="button-text">
-      {{ 'content.checkout' | t }}
-    </span>
-  </button>
-
-  {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons %}
-    <div
-      class="
-        additional-checkout-buttons
-        {% if accelerated_checkout_buttons_layout == 'vertical' %}additional-checkout-buttons--vertical{% endif %}
-      "
-    >
-      {{ content_for_additional_checkout_buttons }}
-    </div>
-  {% endif %}
+<div class="!py-5 px-6 w-full flex flex-col justify-center items-center">
+    {% render 'cart-buttons', button_type: 'checkout', cart: cart %}
 </div>
 
 {% stylesheet %}
@@ -322,7 +311,6 @@
   }
 
   .cart-drawer__summary .cart-totals:not(:has(.cart-totals__original-container:empty)) {
-    border-block-start: var(--style-border-width) solid var(--color-border);
     padding-block-start: var(--padding-2xl);
   }
 

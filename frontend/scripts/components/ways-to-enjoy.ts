@@ -3,15 +3,9 @@ export default (Alpine: AlpineType) => {
         activeTitle: string
     ) => ({
         activeTitle: activeTitle,
-        init() {
-            
-        },
 
         setActive(title: string) {
-            console.log('active title', title);
             this.activeTitle = title;
         }
-
-
     }))
 }

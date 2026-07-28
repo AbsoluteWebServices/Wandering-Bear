@@ -29,9 +29,9 @@
     {% if floating_image != blank %}
         {% render 'picture', source: floating_image, mobile_source: floating_image_mobile, class: 'bottom-7 !max-h-[300px] md:-bottom-2 xl:!bottom-auto !h-auto !w-auto sm:!max-w-[70vw] md:!max-h-full object-contain absolute right-0 z-[2] md:!w-[50vw] lg:!w-auto !flex justify-end', alt: floating_image.alt, width: 1920, height: 1080 %}
     {% endif %}
-    <div class="container max-w-[1000px] px-4 mx-auto lg:relative z-[2] pt-10 md:!pt-[60px] pb-[250px] md:!pb-20">
+    <div class="container max-w-[1000px] px-4 mx-auto lg:relative z-[2] pt-10 lg:!pt-[60px] pb-[250px] md:!pb-20">
         <div class="relative z-[3] md:!w-1/2 wb-flex flex-col max-w-[263px] md:!max-w-[457px] mx-auto md:!mx-0">
-            <div class="flex flex-col mb-6 md:!mb-8 relative md:-left-6.5">
+            <div class="flex flex-col mb-6 md:!mb-8 relative md:left-0 lg:-left-6.5">
                 {% if badge != blank %}
                     {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[30px] -left-[30px] !w-[60px] !h-auto shadow-button', loading: 'eager', preload: 'eager' }}
                 {% endif %}

@@ -9,6 +9,12 @@
  */
 {
   "customer": {
+    "general": {
+      "slider": {
+        "next": "Next",
+        "previous": "Previous"
+      }
+    },
     "login": {
       "title": "Login",
       "email": "Email",
@@ -202,6 +208,8 @@
     },
     "show_filters": "Filter",
     "show_less": "Show less",
+    // Button that appends the next page of blog posts to the list
+    "load_more": "Load more",
     "show_more": "Show more",
     "sign_in_options": "Other sign in options",
     // AR button to view 3D product model in physical space

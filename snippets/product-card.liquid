@@ -18,9 +18,45 @@
       min-width: 250px;
     }
   {% endif %}
+
+  .product-card .product-title {
+    margin-top: 10px;
+    font-size: 18px;
+
+    strong {
+      font-weight: 700;
+    }
+  }
+
+  .product-card .product-title, .product-card .price {
+    transition: color 0.3s ease;
+  }
+
+  .product-card .price {
+    font-size: 14px;
+    font-family: var(--font-kurdis-semi-condensed);
+    font-weight: 600;
+  }
+
+  .product-card:hover {
+    .product-title,.price {
+      color: var(--color-gold);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-card .product-title {
+      font-size: 16px;
+    }
+
+    .product-card .price {
+      font-size: 14px;
+    }
+  }
 {% endstyle %}
 
-{% liquid
+{%-
+  liquid
   assign has_quick_add = false
   if settings.quick_add and product.available
     assign has_quick_add = true
@@ -52,10 +88,22 @@
   if product.id == empty or product == blank
     assign onboarding = true
   endif
-%}
+
+  assign product_data = product.metafields.custom.product_group.value
+  assign template_suffix = product_data.template_suffix
+  if template_suffix and product.url contains '?'
+    assign product_url = product.url | append: '&view=' | append: template_suffix
+  elsif template_suffix
+    assign product_url = product.url | append: '?view=' | append: template_suffix
+  else
+    assign product_url = product.url
+  endif
+
+  assign vip = product.metafields.custom.vip
+-%}
 
 <product-card
-  class="product-card size-style"
+  class="product-card size-style relative"
   style="{% render 'size-style', settings: block_settings %}"
   data-product-id="{{ product.id }}"
   id="product-card-{{ block.id }}"
@@ -72,15 +120,24 @@
   <a
     id="{{ product_card_id | md5 }}"
     {% unless onboarding %}
-      href="{{ variant_to_link.url }}"
+      href="{{- product_url -}}"
     {% endunless %}
-    class="product-card__link"
+    class="product-card__link z-[2]"
     ref="productCardLink"
   >
     <span class="visually-hidden">
       {{ product.title }}
     </span>
   </a>
+  {% if vip %}
+    {% render 'vip-badge', vip: vip, product: product %}
+  {% endif %}
+  {% assign product_badge = product.metafields.product.product_badge.value %}
+    {% if product_badge != blank %}
+      <div class="cursor-pointer flex justify-center items-center rounded-[10px] absolute top-1.5 left-3.5 lg:left-1.5 w-auto z-1 product-card__badge text-[10px] uppercase font-kurdis-semi-condensed font-bold py-0.5 px-2" style="background-color: {{ product_badge.background_color }}; color: {{ product_badge.text_color }};">
+        {{ product_badge.badge_text }}
+      </div>
+  {% endif %}
   <div
     class="
       product-card__content

@@ -1,0 +1,28 @@
+{% liquid
+    assign review = block.settings.review
+    assign color_scheme = section.settings.color_scheme
+    assign text_color = color_scheme.settings.foreground
+%}
+
+<div class="display-md !leading-[100%] text-center max-w-[283px] sm:max-w-[500px] mx-auto" style="color: {{ text_color }};">
+    {{ review }}
+</div>
+
+{% schema %}
+{
+  "name": "Review Carousel Item",
+  "class": "swiper-slide",
+  "settings": [
+    {
+      "type": "text",
+      "id": "review",
+      "label": "Review"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Review Carousel Item"
+    }
+  ]
+}
+{% endschema %}

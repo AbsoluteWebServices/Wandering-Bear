@@ -7,10 +7,27 @@
 {% liquid
   assign bundle_collection = section.settings.bundle_collection
   assign hide_thumbnails_desktop = section.settings.hide_thumbnails_desktop
+  assign disable_gallery_background = section.settings.disable_gallery_background
+  assign landing_page = false
+  if template.name == 'page'
+    assign landing_page = true
+  endif
+
+  assign selling_plan_id = nil
+  for selling_plan_allocation in product.selling_plan_allocations
+    if selling_plan_allocation.selling_plan.name contains '1 Month'
+      assign selling_plan_id = selling_plan_allocation.selling_plan.id
+      break
+    endif
+  endfor
 %}
 
 {% capture media_gallery %}
-  {% render 'media-gallery-bundle', bundle_product: product, hide_thumbnails_desktop: hide_thumbnails_desktop %}
+  {% render 'media-gallery-bundle',
+    bundle_product: product,
+    hide_thumbnails_desktop: hide_thumbnails_desktop,
+    disable_gallery_background: disable_gallery_background
+  %}
 {% endcapture %}
 
 {% capture product_details %}
@@ -168,7 +185,7 @@
   </sticky-add-to-cart>
 {% endif %}
 
-<div x-data="productForm({{ product.id }},{{ product.selected_or_first_available_variant.id }},{{ selling_plan_id }})">
+<div x-data="productForm({{ product.id }},{{ product.selected_or_first_available_variant.id }},{% if selling_plan_id %}{{ selling_plan_id }}{% else %}null{% endif %}, {{ landing_page }})">
 {% render 'product-information-content',
   product_media_size: closest.product.media.size,
   section_id: section.id,
@@ -457,6 +474,12 @@
       "type": "checkbox",
       "id": "hide_thumbnails_desktop",
       "label": "Hide thumbnails on Desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_gallery_background",
+      "label": "t:settings.hide_gallery_background",
       "default": false
     },
     {

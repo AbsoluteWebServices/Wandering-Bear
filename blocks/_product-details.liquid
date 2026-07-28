@@ -1,3 +1,7 @@
+{% assign is_landing_page = false %}
+{% if template.suffix == 'overview-2' %}
+  {% assign is_landing_page = true %}
+{% endif %}
 
 
 {%- assign block_settings = block.settings -%}
@@ -5,6 +9,7 @@
   id="ProductInformation-{{ section.id }}"
   class="
     product-details
+    {% if is_landing_page %} pt-5 lg:pt-0 {% endif %}
     {% if block_settings.sticky_details_desktop %} sticky-content--desktop{% endif %}
     {% if block_settings.height == 'fill' -%} full-height--desktop{% endif -%}
   "

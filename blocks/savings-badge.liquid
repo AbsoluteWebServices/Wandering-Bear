@@ -1,0 +1,35 @@
+{% liquid
+    assign color_scheme = block.settings.color_scheme
+    assign color = color_scheme.settings.foreground
+    assign background_color = color_scheme.settings.background
+    assign text = block.settings.text
+%}
+<div
+class="max-w-[150px] text-center text-[11px] !leading-[100%] font-bold font-kurdis-semi-condensed text-white rounded-[5px] py-2 px-1 rotate-[-6.732deg]"
+style="background-color: {{ background_color }}; color: {{ color }};">
+    {{ text }}
+</div>
+
+{% schema %}
+{
+  "name": "Savings Badge",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "color-scheme-1"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Savings Badge"
+    }
+  ]
+}
+{% endschema %}

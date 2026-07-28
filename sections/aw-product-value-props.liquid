@@ -47,13 +47,13 @@
           {%- comment -%} Left column {%- endcomment -%}
           <div class="wb-flex flex-col justify-between py-7" data-col="left">
             {% for block in left_blocks %}
-              <div class="wb-flex flex-col items-center gap-2 mr-auto w-[150px]" data-prop {{ block.shopify_attributes }}>
+              <div class="wb-flex flex-col items-center gap-2 mr-auto w-[158px]" data-prop {{ block.shopify_attributes }}>
                 {% if block.settings.icon != blank %}
                   <div class="wb-flex items-center justify-center !w-[72px] !h-[72px] rounded-full bg-[#f0ebe3] shrink-0" data-icon data-side="left">
                     {{ block.settings.icon | image_url: width: 80 | image_tag: class: '!w-[36px] !h-[36px] object-contain md:w-18! md:h-18!' , alt: block.settings.label }}
                   </div>
                 {% endif %}
-                <span class="font-extrabold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[150px]">{{ block.settings.label }}</span>
+                <span class="font-extrabold uppercase text-base font-gothic_condensed leading-tight text-center max-w-[158px]">{{ block.settings.label }}</span>
                 {% if block.settings.subtext != blank %}
                   <span class="uppercase text-xs/[120%] font-semibold! text-center font-kurdis-semi-condensed">{{ block.settings.subtext }}</span>
                 {% endif %}

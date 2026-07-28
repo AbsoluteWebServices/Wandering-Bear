@@ -36,6 +36,18 @@
   endcapture
 %}
 
+{% if template.name == 'collection' %}
+  {% assign product_data = product_resource.metafields.custom.product_group.value %}
+  {% assign multi_unit_quantity = product_data.multi_unit_product_quantity %}
+
+  <product-price>
+    {% if multi_unit_quantity > 1 %}
+      <span class="price">{{ multi_unit_quantity }} Pack from {{ product_resource.price_min | money }}</span>
+    {% else %}
+      <span class="price">From {{ product_resource.price_min | money }}</span>
+    {% endif %}
+  </product-price>
+{% else %}
 <product-price
   class="text-block {{ text_block_classes }} text-{{ block_settings.alignment }} {{ block_settings.type_preset | default: 'paragraph' }} spacing-style"
   data-block-id="{{ block.id }}"
@@ -83,7 +95,7 @@
     </div>
   {%- endif -%}
 </product-price>
-
+{% endif %}
 {% schema %}
 {
   "name": "t:names.product_price",

@@ -19,15 +19,15 @@
 <div class="wb-flex items-stretch relative w-full rounded-[5px] h-fit mb-3 md:mb-4" style="background-color: {{ background_color }}">
   {% if image != blank %}
     <div class="flex-1 h-auto wb-flex min-w-[130px] max-w-[130px] md:min-w-[104px] md:max-w-[104px]">
-      {% render 'picture', source: image, class: 'w-full !h-full object-cover rounded-[5px]', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+      {% render 'picture', source: image, class: 'w-full !h-full object-cover rounded-l-[5px]', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
     </div>
   {% endif %}
 
-  <div class="wb-flex flex-col gap-1.5 px-3 pt-2.25 pb-3 h-fit flex-2 my-auto md:p-4 md:gap-2">
+  <div class="wb-flex flex-col gap-1.5 px-3 pt-3 pb-3 h-fit flex-2 my-auto md:p-4 md:gap-2">
     <h2 class="text-[20px] font-gothic_condensed font-extrabold leading-[100%] md:text-base" style="color: {{ text_color }}">{{ title }}</h2>
     <span class="text-[12px] font-semibold font-kurdis-semi-condensed leading-[120%]" style="color: {{ text_color }}">{{ subtitle }}</span>
     {% if button_label != blank and button_link != blank %}
-      {% render 'wb-button', style: 'custom', class: 'z-[3] !w-[98px] !h-[25px] !text-[12px]', width: 98, height: 25, label: button_label, link: button_link, button_bg: button_bg, button_text: button_text, button_hover_bg: button_hover_bg, button_hover_text: button_hover_text, button_hover_border: button_hover_border %}
+      {% render 'wb-button', style: 'custom', class: 'z-[3] !w-[98px] !h-[25px] !text-[12px] mt-1.5 md:mt-0', width: 98, height: 25, label: button_label, link: button_link, button_bg: button_bg, button_text: button_text, button_hover_bg: button_hover_bg, button_hover_text: button_hover_text, button_hover_border: button_hover_border %}
     {% endif %}
   </div>
 </div>

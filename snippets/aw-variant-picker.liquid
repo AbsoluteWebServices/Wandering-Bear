@@ -11,12 +11,19 @@
     assign one_month_allocation = blank
     assign product_object = product_resource.metafields.custom.product_group.value
     assign is_concentrate_template = false
+    assign is_landing_page_template = false
+    assign selected_index = 0
+
     if template.suffix == 'concentrate'
       assign is_concentrate_template = true
     endif
+    if template.suffix == 'overview-2'
+      assign is_landing_page_template = true
+      assign selected_index = 1
+    endif
     assign quantified = false
     if variant.metafields.custom.quantified_units != blank
-      if is_concentrate_template or product_object.quantified
+      if is_concentrate_template or product_object.quantified or is_landing_page_template
         assign quantified = true
       endif
     endif
@@ -45,9 +52,19 @@
 
     assign choose_quantity_text = 'products.product.choose_quantity' | t
     assign box_text = 'products.product.box' | t
+
+    assign savings_display = block.settings.savings_display | default: 'percent'
 %}
 
 {% assign block_settings = block.settings %}
+
+{% style %}
+  .variant-picker label:has(input[type='radio']:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+    border-radius: 5px;
+  }
+{% endstyle %}
 
 {% unless product_resource.has_only_default_variant %}
   {% liquid
@@ -111,12 +128,19 @@
                 data-variant-id="{{ product_option_value.variant.id }}"
                 class="bg-transparent p-0 m-0 flex !items-start justify-center relative w-full h-full py-1.75 hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300 md:pb-2.5 md:pt-1.5 {% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
               >
+                {% if is_landing_page_template and forloop.index0 == selected_index %}
+                  <div
+                  class="absolute bottom-[calc(100%+2px)] w-fit mx-auto px-2 font-kurdis-semi-condensed font-bold py-1 rounded-tl-[5px] rounded-tr-[5px] text-[11px] !leading-[100%] text-center flex items-center justify-center uppercase"
+                   style="background-color: {{ section.settings.color_scheme.settings.foreground }}; color: {{ section.settings.color_scheme.settings.background }};">
+                    <span class="text-xs font-bold font-kurdis-semi-condensed">Most Popular</span>
+                  </div>
+                {% endif %}
                 <input
                   type="radio"
                   class="flex !h-[0px] !w-[0px] opacity-0 absolute top-0 left-0"
                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
                   value="{{ product_option_value | escape }}"
-                  aria-label="{{ product_option_value.name | escape }}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  aria-label="{{ product_option_value.name | escape }}{% if is_landing_page_template and forloop.index0 == selected_index %} - {{ 'products.product.most_popular' | t: default: 'Most Popular' }}{% endif %}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
                   {% if product_option_value.available == false %}
                     aria-disabled="true"
                   {% endif %}
@@ -131,7 +155,10 @@
                   {% if product_option_value.variant.id %}
                     data-variant-id="{{ product_option_value.variant.id }}"
                   {% endif %}
-                  {% if product_option_value.selected %}
+                  {% if is_landing_page_template and forloop.index0 == selected_index %}
+                    data-current-checked="true"
+                    checked
+                  {% elsif product_option_value.selected %}
                     data-current-checked="true"
                     checked
                   {% else %}
@@ -150,15 +177,26 @@
                       assign option_price = variant.price
                       assign discount = product_resource.variants[0].compare_at_price | minus: variant.price
                       assign option_savings = discount | times: 100.0 | divided_by: product_resource.variants[0].compare_at_price | round: 0
-                      assign option_savings_text = 'Save' | append: ' ' | append: option_savings | append: '%'
+
+                      if savings_display == 'amount'
+                        assign discount_remainder = discount | modulo: 100
+                        if discount_remainder == 0
+                          assign option_savings_amount = discount | money_without_trailing_zeros
+                        else
+                          assign option_savings_amount = discount | money
+                        endif
+                        assign option_savings_text = 'Save' | append: ' ' | append: option_savings_amount
+                      else
+                        assign option_savings_text = 'Save' | append: ' ' | append: option_savings | append: '%'
+                      endif
                     endif
                     endfor
                   %}
                     <span class="variant-option-name transition-colors duration-300 text-base text-bear-black font-bold font-gothic_condensed uppercase">{{- option_name | escape -}}</span>
-                    <span x-text="productObject[{{ product_option_value.variant.id }}].currentPriceFormatted + '/{{ box_text }}'" class="text-xs text-bear-black font-kurdis-semi-condensed">{{- option_price | money -}}/{{ box_text }}</span>
-                    <span x-text="productObject[{{ product_option_value.variant.id }}].currentSavingsPercentageFormatted"
-                    :class="productObject[{{ product_option_value.variant.id }}].currentSavingsPercentage > 0 ? '!block' : '!hidden'"
-                    class="font-kurdis-semi-condensed font-bold text-kraft text-xs/none md:text-[10px] {% if option_savings > 0 %}block{% else %}hidden{% endif %}">{{- option_savings_text | escape -}}</span>
+                    <span x-text="variantPriceFormatted('{{ product_option_value.variant.id }}', '/{{ box_text }}')" class="text-xs text-bear-black font-kurdis-semi-condensed font-semibold">{{- option_price | money -}}/{{ box_text }}</span>
+                    <span x-text="{% if savings_display == 'amount' %}variantSavingsAmountFormatted{% else %}variantSavingsFormatted{% endif %}('{{ product_option_value.variant.id }}')"
+                    :class="variantSavingsPercentage('{{ product_option_value.variant.id }}') > 0 ? '!block' : '!hidden'"
+                    class="font-kurdis-semi-condensed font-semibold text-kraft text-xs/none md:text-[10px] {% if option_savings > 0 %}block{% else %}hidden{% endif %}">{{- option_savings_text | escape -}}</span>
                   </div>
               </label>
             {%- endfor -%}
@@ -180,74 +218,145 @@
     </form>
   </variant-picker>
 
-  {% render 'purchase-options', product_resource: product_resource, section: section %}
 
-<script x-ref="productObject" type="application/json">
-{
-      {% for variant in product_resource.variants %}
-        
-        {% liquid 
-            assign one_month_allocation = blank
-            assign product_object = product_resource.metafields.custom.product_group.value
-            assign quantified = false
-            assign quantified_units = variant.metafields.custom.quantified_units
+  {% render 'purchase-options', product_resource: product_resource, section: section, variant_picker_blocks: variant_picker_blocks %}
 
-            if quantified_units != blank and quantified_units > 0
-              if is_concentrate_template or product_object.quantified
-                assign quantified = true
-              endif
-            endif
+{% if template.suffix == 'overview-2' %}
+  <script x-ref="productObject" type="application/json">
+  {
+    {% for grouped_product in product_resource.metafields.custom.product_group.value.collection_handle.value.products %}
+      "{{ grouped_product.id }}": {
+            {% for variant in grouped_product.variants %}
+              {% liquid 
+                  assign one_month_allocation = blank
+                  assign product_object = product_resource.metafields.custom.product_group.value
+                  assign quantified = true
+                  assign quantified_units = variant.metafields.custom.quantified_units
 
-            for allocation in variant.selling_plan_allocations
-                if allocation.selling_plan.name contains '1 Month'
-                    assign one_month_allocation = allocation
-                    assign selling_plan_price = allocation.price
-                    if quantified
-                        assign selling_plan_price = selling_plan_price
+                  if quantified_units != blank and quantified_units > 0
+                    if is_concentrate_template or product_object.quantified
+                      assign quantified = true
                     endif
-                    break
-                endif
-            endfor
+                  endif
 
-            if variant.compare_at_price > variant.price
-                assign compare_at_price = variant.compare_at_price
-            else
-                assign compare_at_price = variant.price
-            endif
+                  for allocation in variant.selling_plan_allocations
+                      if allocation.selling_plan.name contains '1 Month'
+                          assign one_month_allocation = allocation
+                          assign selling_plan_price = allocation.price
+                          if quantified
+                              assign selling_plan_price = selling_plan_price
+                          endif
+                          break
+                      endif
+                  endfor
 
-            assign price = variant.price 
-            #if quantified
-            #    assign price = price | times: variant.metafields.custom.quantified_units
-            #endif
-        %}
+                  if variant.compare_at_price > variant.price
+                      assign compare_at_price = variant.compare_at_price
+                  else
+                      assign compare_at_price = variant.price
+                  endif
 
-        "{{ variant.id }}": {
-          "available": {{ variant.available | json }},
-          "title": {{ variant.title | json }},
-          "id": {{ variant.id | json }},
-          "quantified": {{ quantified | json }},
-          {% if quantified %}
-            "quantified_units": {{ quantified_units | json }},
-          {% endif %}
-          "price": {{ price | json }},
-          {% if compare_at_price and quantified %}
-            "compare_at_price": {{ compare_at_price | divided_by: quantified_units | json }},
-          {% elsif compare_at_price %}
-            "compare_at_price": {{ compare_at_price | json }},
-          {% endif %}
-          "featured_media_position": {{ variant.featured_media.position | default: 1 | json }}
-          {% if one_month_allocation != blank %}
-            ,
-            "selling_plan_id": {{ one_month_allocation.selling_plan.id | json }},
-            "selling_plan_name": {{ one_month_allocation.selling_plan.name | json }},
-            "selling_plan_price": {{ selling_plan_price | json }},
-            "selling_plan_savings": {{ variant.price | minus: one_month_allocation.price | json }}
-          {% endif %}
+                  assign price = variant.price 
+                  #if quantified
+                  #    assign price = price | times: variant.metafields.custom.quantified_units
+                  #endif
+              %}
+
+              "{{ variant.id }}": {
+                "available": {{ variant.available | json }},
+                "title": {{ variant.title | json }},
+                "id": {{ variant.id | json }},
+                "flavor_name": "{{- grouped_product.metafields.custom.flavor_name -}}",
+                "quantified": {{ quantified | json }},
+                {% if quantified %}
+                  "quantified_units": {{ quantified_units | json }},
+                {% endif %}
+                "price": {{ price | json }},
+                {% if compare_at_price %}
+                  "compare_at_price": {{ compare_at_price | json }},
+                {% endif %}
+                "featured_media_position": {{ variant.featured_media.position | default: 1 | json }}
+                {% if one_month_allocation != blank %}
+                  ,
+                  "selling_plan_id": {{ one_month_allocation.selling_plan.id | json }},
+                  "selling_plan_name": {{ one_month_allocation.selling_plan.name | json }},
+                  "selling_plan_price": {{ selling_plan_price | json }},
+                  "selling_plan_savings": {{ variant.price | minus: one_month_allocation.price | json }}
+                {% endif %}
+              }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
         }{% unless forloop.last %},{% endunless %}
       {% endfor %}
-}
-</script>
+    }
+  </script>
+{% else %}
+  <script x-ref="productObject" type="application/json">
+  {
+        {% for variant in product_resource.variants %}
+          
+          {% liquid 
+              assign one_month_allocation = blank
+              assign product_object = product_resource.metafields.custom.product_group.value
+              assign quantified = false
+              assign quantified_units = variant.metafields.custom.quantified_units
 
+              if quantified_units != blank and quantified_units > 0
+                if is_concentrate_template or product_object.quantified
+                  assign quantified = true
+                endif
+              endif
+
+              for allocation in variant.selling_plan_allocations
+                  if allocation.selling_plan.name contains '1 Month'
+                      assign one_month_allocation = allocation
+                      assign selling_plan_price = allocation.price
+                      if quantified
+                          assign selling_plan_price = selling_plan_price
+                      endif
+                      break
+                  endif
+              endfor
+
+              if variant.compare_at_price > variant.price
+                  assign compare_at_price = variant.compare_at_price
+              else
+                  assign compare_at_price = variant.price
+              endif
+
+              assign price = variant.price 
+              #if quantified
+              #    assign price = price | times: variant.metafields.custom.quantified_units
+              #endif
+          %}
+
+          "{{ variant.id }}": {
+            "available": {{ variant.available | json }},
+            "title": {{ variant.title | json }},
+            "id": {{ variant.id | json }},
+            "flavor_name": "{{- product_resource.metafields.custom.flavor_name -}}",
+            "quantified": {{ quantified | json }},
+            {% if quantified %}
+              "quantified_units": {{ quantified_units | json }},
+            {% endif %}
+            "price": {{ price | json }},
+            {% if compare_at_price and quantified %}
+              "compare_at_price": {{ compare_at_price | divided_by: quantified_units | json }},
+            {% elsif compare_at_price %}
+              "compare_at_price": {{ compare_at_price | json }},
+            {% endif %}
+            "featured_media_position": {{ variant.featured_media.position | default: 1 | json }}
+            {% if one_month_allocation != blank %}
+              ,
+              "selling_plan_id": {{ one_month_allocation.selling_plan.id | json }},
+              "selling_plan_name": {{ one_month_allocation.selling_plan.name | json }},
+              "selling_plan_price": {{ selling_plan_price | json }},
+              "selling_plan_savings": {{ variant.price | minus: one_month_allocation.price | json }}
+            {% endif %}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+  }
+  </script>
+{% endif %}
 {% endunless %}
 
 {% stylesheet %}

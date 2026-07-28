@@ -1,0 +1,56 @@
+{% liquid
+    assign flavor = product_resource.metafields.custom.flavor.value
+    assign flavor_name = flavor.name
+    assign flavor_color = flavor.color
+    if flavor_color == blank
+        assign flavor_color = "#D9D9D9"
+    endif
+    assign flavor_image = flavor.image
+    assign product_resource_slug = product_resource.handle | handleize
+    assign page_url = page.url | append: "?view=overview-2&product=" | append: product_resource_slug
+    assign swatch_label = flavor_name
+    if swatch_label == blank
+        assign swatch_label = product_resource.title
+    endif
+%}
+
+{% unless type == 'bundle' %}
+        <label for="flavor-{{ product_resource_slug }}" class="swatch-label flex flex-col gap-2 items-center cursor-pointer relative">
+            <input type="radio" id="flavor-{{ product_resource_slug }}" name="flavor" value="{{ product_resource_slug }}"
+            data-product-id="{{ product_resource.id }}"
+            @change="changeFlavor('{{ product_resource_slug }}')"
+            class="swatch-input h-full w-full opacity-0 absolute top-0 left-0"
+            {% if checked %}checked{% endif %}>
+            <div class="flavor-swatch relative flex flex-col justify-center items-center gap-2 rounded-full bg-transparent">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                    {% if flavor_image %}
+                        {{ flavor_image | image_url: width: 100 | image_tag: alt: swatch_label }}
+                    {% else %}
+                        <div class="h-full w-full" style="background-color: {{ flavor_color }};"></div>
+                    {% endif %}
+                </div>
+                <div class="swatch-check absolute z-[2]">
+                    {% render 'icons', icon: 'checkmark', class: 'w-5 h-5 text-white opacity-0' %}
+                </div>
+            </div>
+            <div class="leading-[100%] text-center">
+                <span class="text-xs font-bold font-kurdis-semi-condensed text-bear-black">{{ swatch_label }}</span>
+            </div>
+        </label>
+{% else %}
+        <a href="{{ bundle_url }}" class="swatch-label flex flex-col gap-2 items-center cursor-pointer relative">
+            <div class="flavor-swatch relative flex flex-col justify-center items-center gap-2 rounded-full bg-transparent">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+                    {% if bundle_swatch %}
+                        {{ bundle_swatch | image_url: width: 100 | image_tag: alt: bundle_label }}
+                    {% endif %}
+                </div>
+                <div class="swatch-check absolute z-[2]">
+                    {% render 'icons', icon: 'checkmark', class: 'w-5 h-5 text-white opacity-0' %}
+                </div>
+            </div>
+            <div class="leading-[100%] text-center">
+                <span class="text-xs font-bold font-kurdis-semi-condensed text-bear-black">{{ bundle_label }}</span>
+            </div>
+        </a>
+{% endunless %}

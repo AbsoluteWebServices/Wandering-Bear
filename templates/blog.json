@@ -6,37 +6,189 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
-    "main": {
-      "type": "main-blog",
+    "aw_col_hero_exqmCh": {
+      "type": "aw-col-hero",
+      "name": "AW Col Hero",
+      "settings": {
+        "color_scheme": "scheme-6",
+        "background_color": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
+        "title": "EVERYTHING TASTES BETTER WITH COFFEE",
+        "title_size": "display-xl",
+        "description": "",
+        "bullet_color": "#955325",
+        "image": "shopify://shop_images/96oz-bag-in-box.jpg",
+        "button_url": "shopify://blogs/articles",
+        "button_text": "Read the Latest"
+      }
+    },
+    "featured_blog_posts_rXKLyR": {
+      "type": "featured-blog-posts",
       "blocks": {
-        "title": {
-          "type": "text",
-          "name": "Title",
+        "static-blog-title": {
+          "type": "_featured-blog-posts-title",
+          "name": "t:names.title",
+          "static": true,
           "settings": {
-            "text": "<h1>{{ closest.blog.title }}</h1>",
+            "text": "<h1>BLOG</h1>",
             "width": "fit-content",
-            "max_width": "narrow",
+            "max_width": "normal",
             "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-primary--family)",
-            "font_size": "",
+            "type_preset": "h1",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
-            "color": "",
+            "color": "var(--color-foreground)",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
-            "padding-block-start": 48,
-            "padding-block-end": 48,
+            "padding-block-start": 0,
+            "padding-block-end": 60,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
           "blocks": {}
         },
+        "static-blog-post-card": {
+          "type": "_featured-blog-posts-card",
+          "name": "t:names.blog_card",
+          "static": true,
+          "settings": {
+            "alignment": "left",
+            "gap": 30,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "image": {
+              "type": "_featured-blog-posts-image",
+              "static": true,
+              "settings": {
+                "image_ratio": "landscape",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0
+              },
+              "blocks": {}
+            },
+            "title": {
+              "type": "_heading",
+              "name": "t:names.title",
+              "static": true,
+              "settings": {
+                "block_class": "",
+                "type_preset": "h5",
+                "font": "var(--font-body--family)",
+                "font_family": "",
+                "font_family_mobile": "",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "text": "<h5>{{ closest.article.title }}</h5>",
+                "read_only": false,
+                "type_preset_mobile": "",
+                "font_mobile": "",
+                "font_size_mobile": "",
+                "line_height_mobile": "",
+                "letter_spacing_mobile": "",
+                "case_mobile": "",
+                "wrap_mobile": "",
+                "color_mobile": "",
+                "alignment": "left",
+                "alignment_mobile": "left",
+                "show_alignment": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {}
+            },
+            "blog-post-info-text": {
+              "type": "_blog-post-info-text",
+              "name": "t:names.details",
+              "disabled": true,
+              "static": true,
+              "settings": {
+                "show_date": true,
+                "show_author": true,
+                "type_preset": "",
+                "alignment": "left",
+                "show_alignment": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            },
+            "blog-post-description": {
+              "type": "_blog-post-description",
+              "name": "t:names.excerpt",
+              "disabled": true,
+              "static": true,
+              "settings": {
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "padding-block-start": 8,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        }
+      },
+      "name": "t:names.blog_posts_grid",
+      "settings": {
+        "blog": "articles",
+        "layout_type": "grid",
+        "carousel_on_mobile": false,
+        "post_limit": 6,
+        "columns": 3,
+        "mobile_columns": "1",
+        "mobile_card_size": "60cqw",
+        "columns_gap": 25,
+        "rows_gap": 40,
+        "enable_load_more": true,
+        "load_more_label": "Load more",
+        "icons_style": "arrow",
+        "icons_shape": "none",
+        "section_width": "page-width",
+        "gap": 12,
+        "color_scheme": "",
+        "padding-block-start": 80,
+        "padding-block-end": 48
+      }
+    },
+    "main": {
+      "type": "main-blog",
+      "blocks": {
         "static-blog-post-card": {
           "type": "_blog-post-card",
           "static": true,
@@ -44,13 +196,28 @@
             "alignment": "left"
           },
           "blocks": {
+            "image": {
+              "type": "_blog-post-image",
+              "static": true,
+              "settings": {
+                "height": "large",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 4
+              },
+              "blocks": {}
+            },
             "heading": {
               "type": "_heading",
               "name": "t:names.title",
               "static": true,
               "settings": {
-                "type_preset": "h4",
+                "block_class": "",
+                "type_preset": "h5",
                 "font": "var(--font-primary--family)",
+                "font_family": "",
+                "font_family_mobile": "",
                 "font_size": "",
                 "line_height": "normal",
                 "letter_spacing": "normal",
@@ -59,18 +226,32 @@
                 "color": "",
                 "text": "",
                 "read_only": true,
+                "type_preset_mobile": "",
+                "font_mobile": "",
+                "font_size_mobile": "",
+                "line_height_mobile": "",
+                "letter_spacing_mobile": "",
+                "case_mobile": "",
+                "wrap_mobile": "",
+                "color_mobile": "",
                 "alignment": "left",
+                "alignment_mobile": "left",
                 "show_alignment": false,
                 "padding-block-start": 0,
                 "padding-block-end": 10,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {}
             },
             "blog-post-details": {
               "type": "_blog-post-info-text",
               "name": "t:names.details",
+              "disabled": true,
               "static": true,
               "settings": {
                 "show_date": true,
@@ -83,15 +264,21 @@
               },
               "blocks": {}
             },
-            "image": {
-              "type": "_blog-post-image",
+            "content": {
+              "type": "_blog-post-description",
+              "disabled": true,
               "static": true,
               "settings": {
-                "height": "large",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 4
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "padding-block-start": 16,
+                "padding-block-end": 0
               },
               "blocks": {}
             }
@@ -99,9 +286,7 @@
           "block_order": []
         }
       },
-      "block_order": [
-        "title"
-      ],
+      "disabled": true,
       "settings": {
         "color_scheme": "",
         "padding-block-start": 0,
@@ -110,6 +295,8 @@
     }
   },
   "order": [
+    "aw_col_hero_exqmCh",
+    "featured_blog_posts_rXKLyR",
     "main"
   ]
 }

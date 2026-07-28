@@ -1,5 +1,6 @@
 import { Alpine as AlpineType } from 'alpinejs'
 import Swiper from 'swiper'
+import { Keyboard } from 'swiper/modules'
 
 export default (Alpine: typeof AlpineType) => {
   Alpine.data('mediaGalleryBundle', () => {
@@ -130,6 +131,8 @@ export default (Alpine: typeof AlpineType) => {
           slidesPerView: 5,
           spaceBetween: 6,
           watchSlidesProgress: true,
+          modules: [Keyboard],
+          keyboard: true,
           breakpoints: {
             1024: {
               slidesPerView: 5,
@@ -160,6 +163,8 @@ export default (Alpine: typeof AlpineType) => {
         this.swiper = new Swiper(mainEl, {
           slidesPerView: 1.12,
           centeredSlides: true,
+          modules: [Keyboard],
+          keyboard: true,
           loop: true,
           spaceBetween: 10,
           breakpoints: {
@@ -234,6 +239,7 @@ export default (Alpine: typeof AlpineType) => {
 
       async renderGallery(product: { handle: string }) {
         const mediaWrapper = this._getMediaWrapper()
+        console.log('mediaWrapper', mediaWrapper);
         if (!mediaWrapper) {
           console.error('mediaWrapper not found')
           return

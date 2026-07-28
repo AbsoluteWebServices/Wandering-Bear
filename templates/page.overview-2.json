@@ -1,0 +1,597 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "block_class": "",
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "aw_col_hero_DFqFUG": {
+      "type": "aw-col-hero",
+      "name": "AW Col Hero",
+      "settings": {
+        "color_scheme": "scheme-6",
+        "background_color": "linear-gradient(180deg, rgba(57, 23, 4, 1) 50.84%, rgba(149, 83, 37, 1) 100.36%)",
+        "title": "COFFEE SHOP QUALITY COLD BREW",
+        "description": "<ul><li><strong>Zero Sugar, Zero Dairy, Zero Guilt</strong></li><li><strong>Smooth & Bold (~2x caffeine)</strong></li><li><strong>Over 16,000 5-star reviews</strong></li><li><strong>8+ Flavors for Every Kind of Holiday Mood</strong></li></ul>",
+        "bullet_color": "#955325",
+        "image": "shopify://shop_images/Rectangle_10486.png",
+        "image_mobile": "shopify://shop_images/Rectangle_10486_a41e64ca-391f-411d-b134-8980d2bf1dee.png",
+        "button_url": "#shop-now",
+        "button_text": "Shop Now"
+      }
+    },
+    "lp_product_information_WPDjek": {
+      "type": "lp-product-information",
+      "blocks": {
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 12,
+            "gap_tablet": 0,
+            "gap_mobile": 12,
+            "sticky_details_desktop": false,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 40,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 20,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {
+            "group_34L9UG": {
+              "type": "group",
+              "name": "t:names.group",
+              "settings": {
+                "class": "",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
+                "gap_mobile": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {
+                "review_4ht3tg": {
+                  "type": "review",
+                  "name": "t:names.product_review_stars",
+                  "settings": {
+                    "stars_style": "shaded",
+                    "show_number": true,
+                    "text_color": "#000000",
+                    "star_color": "#bd8053",
+                    "rating_color": "primary",
+                    "type_preset": "paragraph",
+                    "width": "100%",
+                    "alignment": "left",
+                    "star_height_desktop": 13,
+                    "star_height_mobile": 13,
+                    "star_gap_desktop": 1,
+                    "star_gap_mobile": 1
+                  },
+                  "blocks": {}
+                },
+                "product_title_bundle_MrXFwx": {
+                  "type": "product-title-bundle",
+                  "name": "Product Title Bundle",
+                  "settings": {
+                    "product_title": "{{ closest.product.metafields.custom.product_group.value.headline.value }}",
+                    "product_title_small": "{{ closest.product.metafields.custom.product_group.value.size.value }}"
+                  },
+                  "blocks": {}
+                },
+                "text_jwWpxy": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "block_class": "product-description",
+                    "text": "{{ closest.product.metafields.custom.product_group.value.description | metafield_tag }}",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "review_4ht3tg",
+                "product_title_bundle_MrXFwx",
+                "text_jwWpxy"
+              ]
+            },
+            "flavor_selector_36R6EC": {
+              "type": "flavor-selector",
+              "name": "Flavor Selector",
+              "settings": {
+                "title": "",
+                "show_bundle": true,
+                "bundle_url": "https://wanderingbearcoffee.com/products/extra-strong-cold-brew-on-tap-96oz-straight-black?view=96oz",
+                "bundle_swatch": "shopify://shop_images/bundle_swatch.png",
+                "bundle_label": "Bundle & Save"
+              },
+              "blocks": {}
+            },
+            "variant_picker_YEC6ET": {
+              "type": "variant-picker",
+              "name": "t:names.product_variant_picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": true,
+                "savings_display": "amount",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 8,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {
+                "savings_badge_7RhBEK": {
+                  "type": "savings-badge",
+                  "name": "Savings Badge",
+                  "settings": {
+                    "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
+                    "text": "<p>SAVE 20% OFF YOUR FIRST AUTOSHIP ORDER WITH CODE: <span style=\"text-decoration:underline\">NEWONTAP</span></p>"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "savings_badge_7RhBEK"
+              ]
+            }
+          },
+          "block_order": [
+            "group_34L9UG",
+            "flavor_selector_36R6EC",
+            "variant_picker_YEC6ET"
+          ]
+        }
+      },
+      "name": "LP Product Information",
+      "settings": {
+        "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 16,
+        "gap_mobile": 16,
+        "hide_thumbnails_desktop": false,
+        "disable_gallery_background": false,
+        "color_scheme": "",
+        "background_type": "gradient",
+        "background_gradient": "linear-gradient(180deg, rgba(242, 230, 220, 1) 60%, rgba(175, 116, 4, 1) 100%)",
+        "padding-block-start": 70,
+        "padding-block-end": 0,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
+      }
+    },
+    "marquee_8mdxLw": {
+      "type": "marquee",
+      "blocks": {
+        "text_tTbh9B": {
+          "type": "text",
+          "settings": {
+            "block_class": "",
+            "text": "<h3>SAVE 20% ON FIRST AUTOSHIP ORDER</h3>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "tight",
+            "letter_spacing": "tight",
+            "case": "none",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "text_ka4DDn": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "block_class": "",
+            "text": "<h3>·</h3>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "text_VUCLjL": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "block_class": "",
+            "text": "<h3>USE CODE “NEWONTAP” AT CHECKOUT </h3>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        },
+        "text_nJX4ck": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "block_class": "",
+            "text": "<h3>·</h3>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h3",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_tTbh9B",
+        "text_ka4DDn",
+        "text_VUCLjL",
+        "text_nJX4ck"
+      ],
+      "name": "t:names.marquee_section",
+      "settings": {
+        "movement_direction": "normal",
+        "color_scheme": "scheme-4",
+        "padding-block-start": 22,
+        "padding-block-end": 21,
+        "gap_between_elements": 24
+      }
+    },
+    "aw_review_carousel_YreQ8A": {
+      "type": "aw-review-carousel",
+      "blocks": {
+        "review_rRg8Xf": {
+          "type": "review",
+          "settings": {
+            "quote": "“Loyal subscriber for 3+ years - Why? Because the brew is perfection. Love this brand, the team and most of all the brew!”"
+          }
+        },
+        "review_hgACJi": {
+          "type": "review",
+          "settings": {
+            "quote": "“Absolutely LOVE Wandering Bear! Not only is their coffee AMAZING but it ships quickly and if I ever have an issue, the staff takes care of me right away.”"
+          }
+        },
+        "review_tG73JH": {
+          "type": "review",
+          "settings": {
+            "quote": "“Loyal subscriber for 3+ years - Why? Because the brew is perfection. Love this brand, the team and most of all the brew!”"
+          }
+        },
+        "review_TCybcL": {
+          "type": "review",
+          "settings": {
+            "quote": "“Absolutely LOVE Wandering Bear! Not only is their coffee AMAZING but it ships quickly and if I ever have an issue, the staff takes care of me right away.”"
+          }
+        }
+      },
+      "block_order": [
+        "review_rRg8Xf",
+        "review_hgACJi",
+        "review_tG73JH",
+        "review_TCybcL"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "title": "Over 16,000 5 Star Reviews",
+        "title_color": "#f4ece5",
+        "font_size": 25,
+        "font_size_mobile": 25,
+        "card_background": "#e6cdb7",
+        "card_text_color": "#431a03",
+        "show_navigation": true,
+        "arrow_background": "#fef8f3",
+        "arrow_icon_color": "#431a03",
+        "show_dots": true,
+        "background_type": "gradient",
+        "background_solid": "#431a03",
+        "background_gradient": "linear-gradient(180deg, rgba(57, 23, 4, 1), rgba(149, 83, 37, 1) 100%)",
+        "background_type_mobile": "same",
+        "background_solid_mobile": "",
+        "background_gradient_mobile": "",
+        "padding-block-start": 40,
+        "padding-block-end": 40,
+        "padding-block-start-mobile": 32,
+        "padding-block-end-mobile": 32
+      }
+    },
+    "aw_frequently_asked_questions_dwThL3": {
+      "type": "aw-frequently-asked-questions",
+      "blocks": {
+        "aw_review_carousel_AE34Ca": {
+          "type": "aw-review-carousel",
+          "name": "AW Review Carousel",
+          "settings": {
+            "section_id": "product-reviews",
+            "image_1": "shopify://shop_images/pureWow-logo.png",
+            "desktop_width_1": 92,
+            "mobile_width_1": 66,
+            "image_2": "shopify://shop_images/Food_Wine_5a6340ca-91a9-4d31-b0c1-734645fabcdd.svg",
+            "desktop_width_2": 92,
+            "mobile_width_2": 84,
+            "image_3": "shopify://shop_images/Food_Network_7a92f6ec-9fd7-433b-9757-cda61bc1c198.svg",
+            "desktop_width_3": 60,
+            "mobile_width_3": 40,
+            "arrow_background": "#fef8f3",
+            "arrow_icon_color": "#431a03",
+            "button_text": "Shop Now",
+            "button_url": "#shop-now"
+          },
+          "blocks": {
+            "aw_review_carousel_item_UCpfBQ": {
+              "type": "_aw-review-carousel-item",
+              "name": "Review Carousel Item",
+              "settings": {
+                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+              },
+              "blocks": {}
+            },
+            "aw_review_carousel_item_xYVjxn": {
+              "type": "_aw-review-carousel-item",
+              "name": "Review Carousel Item",
+              "settings": {
+                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+              },
+              "blocks": {}
+            },
+            "aw_review_carousel_item_TEDkzk": {
+              "type": "_aw-review-carousel-item",
+              "name": "Review Carousel Item",
+              "settings": {
+                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "aw_review_carousel_item_UCpfBQ",
+            "aw_review_carousel_item_xYVjxn",
+            "aw_review_carousel_item_TEDkzk"
+          ]
+        }
+      },
+      "block_order": [
+        "aw_review_carousel_AE34Ca"
+      ],
+      "name": "AW FAQs",
+      "settings": {
+        "color_scheme": "scheme-3b11458a-b7da-4318-b7a5-e12dd98e6bc9",
+        "background_type": "image",
+        "background_solid": "#f2e6dc",
+        "background_gradient": "",
+        "background_image": "shopify://shop_images/faq-bg.png",
+        "background_image_fit": "cover",
+        "background_image_overflow": false,
+        "background_type_mobile": "same",
+        "background_solid_mobile": "#f2e6dc",
+        "background_gradient_mobile": "",
+        "background_image_fit_mobile": "cover",
+        "background_image_overflow_mobile": false,
+        "title_type": "image",
+        "title": "",
+        "title_color": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
+        "title_alt": "Frequently Asked Questions",
+        "title_image": "shopify://shop_images/Group_1327226590.svg",
+        "faqs_metaobject": "96-oz-cold-brew-straight-black",
+        "button_label": "",
+        "button_link": "",
+        "padding-block-start": 0,
+        "padding-block-end": 80,
+        "padding-block-start-mobile": 0,
+        "padding-block-end-mobile": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "aw_col_hero_DFqFUG",
+    "lp_product_information_WPDjek",
+    "marquee_8mdxLw",
+    "aw_review_carousel_YreQ8A",
+    "aw_frequently_asked_questions_dwThL3"
+  ]
+}

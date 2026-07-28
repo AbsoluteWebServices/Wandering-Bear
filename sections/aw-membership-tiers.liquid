@@ -1,0 +1,552 @@
+{% liquid
+  assign s = section.settings
+  assign title_type = s.title_type | default: 'text'
+  assign title = s.title
+  assign title_color = s.title_color | default: '#431A03'
+  assign title_alt = s.title_alt
+  assign title_image = s.title_image
+  assign title_image_mobile = s.title_image_mobile
+  assign bullet_icon = s.bullet_icon
+  assign tier_items = section.blocks
+
+  if bullet_icon != blank
+    assign bullet_icon_url = bullet_icon | image_url: width: 28
+  else
+    assign bullet_icon_url = 'icon-crown.svg' | asset_url
+  endif
+%}
+
+{%- capture membership_tier -%}{%- render 'customer-membership-tier' -%}{%- endcapture -%}
+{%- assign membership_tier = membership_tier | strip -%}
+
+{% capture title_styles %}
+  --font-size: {{ s.font_size | default: 35 }}px;
+  --font-size-mobile: {{ s.font_size_mobile | default: 35 }}px;
+{% endcapture %}
+
+<div
+  id="membership-tiers"
+  class="aw-membership-tiers relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: '#AF7404' %} {% render 'spacing-style', settings: s %} {{ title_styles }}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  <div class="container wb-flex justify-center mx-auto">
+    <div class="relative z-1 w-full mx-auto max-w-[1150px] px-2.5 smd:px-6 lg:px-0">
+      <div class="flex flex-col items-center text-center mb-8.5 smd:mb-9">
+        {% if title_type == 'image' %}
+          {% if title_image != blank %}
+            <div class="w-full max-w-[340px]">
+              {% render 'title-image',
+                image: title_image,
+                image_mobile: title_image_mobile,
+                alt: title_alt,
+                class: 'w-full max-h-full object-contain mx-auto',
+                loading: 'lazy'
+              %}
+            </div>
+          {% endif %}
+        {% elsif title_type == 'text' %}
+          {% if title != blank %}
+            <h2
+              class="aw-membership-tiers__title font-kurdis-condensed font-extrabold leading-none"
+              style="color: {{ title_color }}"
+            >
+              {{ title | replace: '\n', '<br>' }}
+            </h2>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      {% if tier_items.size > 0 %}
+        <div class="wb-flex flex-col items-center md:items-stretch gap-4 md:grid! md:grid-cols-3 md:gap-5">
+          {% for tier_item in tier_items %}
+            {% liquid
+              assign button_label = tier_item.settings.button_label
+              assign button_action = tier_item.settings.button_action | default: 'link'
+              assign button_link = tier_item.settings.button_link
+              assign card_bg = tier_item.settings.background_color | default: '#FAF2ED'
+              assign show_button = false
+
+              if button_label != blank
+                if button_action == 'join'
+                  unless customer
+                    assign show_button = true
+                  endunless
+                elsif button_action == 'elite_add_to_cart'
+                  if membership_tier != 'ELITE'
+                    assign show_button = true
+                  endif
+                elsif button_action == 'link' and button_link != blank
+                  if membership_tier != 'VIP' and membership_tier != 'ELITE'
+                    assign show_button = true
+                  endif
+                endif
+              endif
+            %}
+
+            <div
+              class="aw-membership-tiers__card wb-flex flex-col rounded-[10px] w-full max-w-[547px] border-2 border-espresso shadow-[4px_4px_4px_0_rgba(0,0,0,0.25)] px-5.5 pt-4.5 pb-5 smd:px-6 smd:pt-5 smd:pb-5 md:max-w-full"
+              style="background: {{ card_bg }}"
+              {{ tier_item.shopify_attributes }}
+            >
+              <div class="flex flex-col items-start smd:mb-3.5{% if button_action == 'elite_add_to_cart' %} mb-7.5{% else %} mb-3.5{% endif %}">
+                {% if tier_item.settings.title != blank %}
+                  <div class="relative">
+                    <h3 class="font-kurdis-condensed font-extrabold text-[25px] leading-none text-espresso">
+                      {{ tier_item.settings.title }}
+                    </h3>
+
+                    {% if tier_item.settings.title contains 'Elite' %}
+                      <svg class="absolute -bottom-1.25 left-0 w-auto h-auto" xmlns="http://www.w3.org/2000/svg" width="121" height="4" viewBox="0 0 121 4" fill="none" aria-hidden="true">
+                        <path d="M1.58045e-05 3.31446C0.00911985 3.43913 0.0182239 3.5638 0.0273279 3.68847C2.02906 3.56325 4.02657 3.41324 6.02408 3.25336C23.4527 1.63579 40.8835 0.94981 58.392 1.00124C58.9369 1.00139 59.4777 1.00216 60.0145 1.00354C78.0178 0.998044 96.0279 1.97284 114.003 3.30852C116.002 3.44402 118.001 3.574 120.001 3.68854C120.05 3.69136 120.099 3.6748 120.136 3.64213C120.174 3.60945 120.196 3.56341 120.2 3.51406C120.203 3.46471 120.187 3.41601 120.154 3.37862C120.122 3.34122 120.076 3.31825 120.026 3.31439C120.026 3.31439 120.026 3.31439 120.026 3.31439C118.031 3.15841 116.036 2.98907 114.041 2.81623C96.1011 1.14457 78.0477 -0.0022682 60.0171 0.00354066C59.4794 0.00216329 58.9377 0.00154012 58.392 0.00169072C40.868 -0.0407383 23.3706 0.818042 5.98009 2.76158C3.98732 2.95868 1.99579 3.1479 1.58045e-05 3.31446Z" fill="#AF7404"/>
+                      </svg>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                {% if tier_item.settings.subtitle != blank %}
+                  <p class="font-kurdis-semi-condensed font-normal text-sm leading-[160%] text-espresso mb-0 max-w-[280px]{% if button_action == 'elite_add_to_cart' %} mt-2.5 smd:min-h-9.5{% else %} mt-1.5 smd:mt-0.75 smd:min-h-[45px]{% endif %}">
+                    {{ tier_item.settings.subtitle }}
+                  </p>
+                {% endif %}
+              </div>
+
+              {% if tier_item.settings.description != blank %}
+                <div
+                  style="--bullet-icon: url('{{ bullet_icon_url }}')"
+                  class="
+                    rte body flex-1 mb-3.5 font-kurdis-semi-condensed
+                    [&_p]:mb-0!
+                    [&_p:has(strong)]:mb-1.5! smd:[&_p:has(strong)]:mb-3.75!
+                    [&_p>strong]:font-bold! [&_p>strong]:text-lg! [&_p>strong]:leading-[130%]! [&_p>strong]:text-espresso
+                    [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2.75 [&_ul]:list-none [&_ul]:m-0! [&_ul]:p-0! smd:[&_ul]:gap-2.5
+                    [&_ul_li]:flex [&_ul_li]:items-start [&_ul_li]:text-sm! [&_ul_li]:font-semibold [&_ul_li]:gap-2 [&_ul_li]:leading-[130%] [&_ul_li]:text-espresso
+                    [&_ul_li_strong]:font-bold!
+                    [&_ul_li]:before:content-[''] [&_ul_li]:before:block [&_ul_li]:before:shrink-0
+                    [&_ul_li]:before:w-3.5 [&_ul_li]:before:min-w-3.5 [&_ul_li]:before:h-[9px] [&_ul_li]:before:mt-1
+                    [&_ul_li]:before:bg-no-repeat [&_ul_li]:before:bg-[length:14px_9px] [&_ul_li]:before:bg-[image:var(--bullet-icon)]
+                  "
+                >
+                  {{ tier_item.settings.description }}
+                </div>
+              {% endif %}
+
+              {% if show_button %}
+                <div class="mt-auto">
+                  {% if button_action == 'elite_add_to_cart' %}
+                    {% render 'elite-atc-button',
+                      label: button_label,
+                      class: '!w-[158px] !h-[40px] !text-[15px]',
+                      wrapper_classes: 'w-fit'
+                    %}
+                  {% elsif button_action == 'join' %}
+                    {% capture join_modal_attrs %}@click.prevent="$dispatch('modal-open', { modal: 'membership-signup' })"{% endcapture %}
+                    {% render 'wb-button',
+                      style: 'secondary-gold',
+                      label: button_label,
+                      link: '#',
+                      attributes: join_modal_attrs,
+                      class: '!w-[158px] !h-[40px] !text-[15px]'
+                    %}
+                  {% else %}
+                    {% render 'wb-button',
+                      style: 'secondary-gold',
+                      label: button_label,
+                      link: button_link,
+                      class: '!w-[158px] !h-[40px] !text-[15px]'
+                    %}
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .aw-membership-tiers__title {
+    font-size: var(--font-size-mobile) !important;
+  }
+
+  @media screen and (min-width: 1024px) {
+    .aw-membership-tiers__title {
+      font-size: var(--font-size) !important;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW Membership Tiers",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, #AF7404 0%, #FFCB3B 100%)",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit",
+      "label": "Background image fit",
+      "options": [
+        { "value": "cover", "label": "Cover (may crop)" },
+        { "value": "natural", "label": "Natural (no crop)" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "select",
+      "id": "background_image_fit_mobile",
+      "label": "Background image fit mobile",
+      "options": [
+        { "value": "cover", "label": "Cover (may crop)" },
+        { "value": "natural", "label": "Natural (no crop)" }
+      ],
+      "default": "cover",
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_image_overflow_mobile",
+      "label": "Allow background image overflow",
+      "default": false,
+      "visible_if": "{{ section.settings.background_type_mobile == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_type",
+      "label": "Title type",
+      "options": [
+        { "value": "text", "label": "Text" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Membership Tiers",
+      "info": "Use \\n to add a line break.",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#431A03",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 35,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font size mobile",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 35,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "text",
+      "id": "title_alt",
+      "label": "Title alt",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image",
+      "label": "Title image",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image_mobile",
+      "label": "Title image mobile",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "bullet_icon",
+      "label": "Bullet icon",
+      "info": "Defaults to theme crown icon if empty"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Left mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Right mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tier_item",
+      "name": "Tier Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "color_background",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#FAF2ED"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "select",
+          "id": "button_action",
+          "label": "Button action",
+          "options": [
+            { "value": "link", "label": "Link" },
+            { "value": "join", "label": "Open signup modal" },
+            { "value": "elite_add_to_cart", "label": "Add Elite to cart" }
+          ],
+          "default": "link"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link",
+          "visible_if": "{{ block.settings.button_action == 'link' }}"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW Membership Tiers",
+      "blocks": [
+        {
+          "type": "tier_item",
+          "settings": {
+            "title": "Free Member",
+            "subtitle": "Sign up and start earning for free",
+            "description": "<p><strong>What's Included:</strong></p><ul><li>Get $5 off your first order</li><li>Earn $5 for every $50 spent</li></ul>",
+            "background_color": "#FAF2ED",
+            "button_label": "JOIN FOR FREE",
+            "button_action": "join"
+          }
+        },
+        {
+          "type": "tier_item",
+          "settings": {
+            "title": "VIP Member",
+            "subtitle": "Sign up for autoship on any product or spend $250 annually to join.",
+            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
+            "background_color": "#FAF2ED",
+            "button_label": "BROWSE AUTOSHIP",
+            "button_action": "link",
+            "button_link": "shopify://collections"
+          }
+        },
+        {
+          "type": "tier_item",
+          "settings": {
+            "title": "Elite Member",
+            "subtitle": "Pay $25 or spend $250 annually to join",
+            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free & VIP Member perks plus...</strong></li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
+            "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
+            "button_label": "ADD ELITE · $25",
+            "button_action": "elite_add_to_cart"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

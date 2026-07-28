@@ -3,16 +3,33 @@
     assign subscription_value_props_mobile = settings.subscription_value_props_mobile | default: subscription_value_props 
 %}
 
-<div class="mb-0 mt-3 md:mb-5{% if template.suffix == 'concentrate' %} md:mt-5{% else %} md:mt-0.5{% endif %}">
-    <span class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</span>
+<div class="mb-0 mt-3 md:mb-5
+   {% if template.suffix == 'concentrate' %} md:mt-5
+   {% else if template.suffix == 'overview-2' %} mt-6
+   {% else %} md:mt-0.5{% endif %}">
+    {% style %}
+      .purchase-options-group {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        min-width: 0;
+      }
+
+    {% endstyle %}
+
     <input x-model="sellingPlanId" type="hidden" name="selling_plan_id" id="selling_plan_id">
-    <fieldset>
-        <input x-model="purchaseOption" @change="onPurchaseOptionChange('autoship')" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
+    <fieldset class="purchase-options-group">
+        <legend class="font-bold font-gothic_condensed text-bear-black block uppercase">Choose Your Frequency</legend>
+        <div class="purchase-option">
+        <input x-model="purchaseOption" @change="onPurchaseOptionChange('autoship')" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="purchase-option-input absolute! top-0 left-0 w-0 h-0 opacity-0">
         <label
-            class="subscription-value-label wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-2.5 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300 md:mt-2.5"
+            class="relative subscription-value-label wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-2.5 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300 md:mt-2.5"
             :class="purchaseOption === 'autoship' ? 'border-kraft pb-3.5!' : 'border-[#CFBDB1]'"
             for="autoship"
         >
+            <div class="absolute -top-[40px] md:-top-9 right-5 md:right-12 z-[2] w-fit">
+                {{ variant_picker_blocks }}
+            </div>
             <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
                 :class="purchaseOption === 'autoship' ? 'bg-dark-gold border-dark-gold' : 'bg-transparent border-[#CFBDB1]'"
             >
@@ -26,7 +43,7 @@
             <div class="col-start-2 wb-flex flex-col row-start-2 col-end-4">
                 <span class="text-sm font-kurdis-semi-condensed">Skip, reschedule, cancel at anytime</span>
             </div>
-            <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
+            <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm font-kurdis-semi-condensed font-semibold">
                 <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.base !== totalPrice.autoship" x-text="totalPrice.base"></span>
                 <span x-text="totalPrice.autoship"></span>
             </div>
@@ -41,13 +58,14 @@
                 {{ subscription_value_props }}
             </div>
         </label>
+        </div>
         <div class="subscription-value-props mt-3.5 pb-2 col-start-1 col-end-4 row-start-3 tracking-tight md:hidden">
             {{ subscription_value_props_mobile }}
         </div>
-    </fieldset>
-    <fieldset>
-        <input x-model="purchaseOption" @change="onPurchaseOptionChange('one_time')" type="radio" value="one_time" name="purchase_option" id="one_time" class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
-        <label 
+
+        <div class="purchase-option">
+        <input x-model="purchaseOption" @change="onPurchaseOptionChange('one_time')" type="radio" value="one_time" name="purchase_option" id="one_time" class="purchase-option-input absolute! top-0 left-0 w-0 h-0 opacity-0">
+        <label
             class="wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-1.75 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300"
             :class="purchaseOption === 'one_time' ? 'border-kraft' : 'border-[#CFBDB1]'"
             for="one_time"
@@ -62,11 +80,12 @@
             <div class="col-start-2 wb-flex flex-col row-start-1 font-gothic_condensed uppercase font-bold -mt-0.75">
                 <span class="subscription-label-name transition-colors duration-300">One Time Purchase</span>
             </div>
-            <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm">
+            <div class="col-start-3 row-start-1 wb-flex justify-end gap-1 text-sm font-kurdis-semi-condensed font-semibold">
                 <span class="line-through text-[#1B1B1B80]" x-show="totalPrice.base !== totalPrice.oneTime" x-text="totalPrice.base"></span>
                 <span x-text="totalPrice.oneTime"></span>
             </div>
         </label>
+        </div>
     </fieldset>
 </div>
 
@@ -76,7 +95,7 @@
   class="group relative flex w-full items-center justify-center shadow-button h-[61px] uppercase mb-0.5 md:mb-3.75 disabled:pointer-events-none"
   @click.prevent="addToCart"
 >
-    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold mt-0.5 uppercase">
+    <span x-show="!loading" x-text="addToCartText" class="relative z-[2] text-[#F2E6DC] text-[20px]/5 font-['Kurdis_SemiCondensed'] font-bold md:mt-0.5 uppercase">
         {{ 'products.product.add_to_bag' | t }}
     </span>
     {% render 'loading-animation', class: 'z-[2]' %}
@@ -90,5 +109,11 @@
 </button>
 
 <template x-if="currentSavingsAmount > 0">
-    <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] text-kraft text-center flex justify-center items-center md:mb-3.75 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
+    <span class="text-sm font-kurdis-semi-condensed font-semibold leading-[120%] 
+    {% if template.name == 'product' %}
+      text-kraft
+    {% else %}
+      text-espresso
+    {% endif %}
+    text-center flex justify-center items-center md:mb-3.75 md:mt-0" x-text="`You're saving ` + currentSavingsAmountFormatted + `!`"></span>
 </template>

@@ -121,7 +121,7 @@
                 <div class="wb-flex flex-col gap-4">
                     {% for tier_item in tier_items %}
                         <div class="wb-grid md:!grid-cols-2 pb-4 pt-3 rounded-[3px] shadow-button md:pt-4" style="background: {{ tier_item.settings.background_color }}">
-                            <div class="wb-flex flex-col items-center md:!items-start px-6.5 pb-3 md:!pb-0 col-start-1 w-full md:gap-1">
+                            <div class="wb-flex flex-col items-center md:!items-start px-12.5 pb-3 col-start-1 w-full md:gap-1 md:px-6.5 md:pb-0!">
                                 <span class="h1 text-[25px]/none! font-extrabold!">{{ tier_item.settings.title }}</span>
 
                                 {% if tier_item.settings.title contains 'Elite' %}

@@ -51,9 +51,23 @@ rte-formatter.product-description {
     margin-top: 0.25rem;
 }
 
+input[name="purchase_option"]:not(:checked) + label {
+    background-color: #F2E6DC;
+}
+
 input[name="purchase_option"]:checked + label {
     background-color: var(--color-dark-foam);
     border: 1px solid var(--color-espresso);
+}
+
+.purchase-option {
+    position: relative;
+}
+
+
+.purchase-option-input:focus-visible + label {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }
 
 .subscription-value-props ul {

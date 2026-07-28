@@ -8,10 +8,12 @@ export default (Alpine: AlpineType) => {
     Alpine.data("productForm", ( 
         productId: any, 
         selectedVariantId: any,
-        sellingPlanId: any
+        sellingPlanId: any,
+        landingPage: boolean = false
     ) => ({
         productObject: null,
         productId: productId,
+        currentProductId: String(productId),
         product: null,
         selectedVariantId: selectedVariantId,
         selectedVariant: null,
@@ -82,11 +84,150 @@ export default (Alpine: AlpineType) => {
         },
 
         _getVariantDisplayPrice(variant: any) {
+
             if (this.purchaseOption === 'autoship' && variant?.selling_plan_price != null) {
                 return variant.selling_plan_price;
             }
 
             return variant?.price;
+        },
+
+        // productObject is keyed by variant id on a PDP, but by product id on the overview-2
+        // LP, where each entry holds that product's own variant map. Return one variant list
+        // per pricing group so savings are always compared within a single product.
+        _variantGroups(): any[][] {
+            const isVariant = (v: any) => v != null && typeof v === 'object' && 'price' in v;
+            const values = Object.values(this.productObject ?? {}) as any[];
+
+            if (values.length > 0 && values.every(isVariant)) {
+                return [values];
+            }
+
+            return values
+                .map((group) => Object.values(group ?? {}).filter(isVariant))
+                .filter((group) => group.length > 0);
+        },
+
+        // `price` is per box, but `compare_at_price` is the bundle total — the 2-box variant
+        // carries 2x the regular price. Dividing one by the other overstates the discount
+        // (a 22% tier renders as 61%), so compare per-box against the single-box regular.
+        _applySavings(variant: any, regularPerBox: number) {
+            const price = variant.currentPrice;
+
+            if (!(regularPerBox > 0) || !(price > 0) || price >= regularPerBox) {
+                variant.currentSavings = 0;
+                variant.currentSavingsPercentage = 0;
+                variant.currentSavingsPercentageFormatted = '';
+                variant.currentSavingsUnitAmount = 0;
+                variant.currentSavingsUnitAmountFormatted = '';
+                return;
+            }
+
+            variant.currentSavings = price / regularPerBox;
+            variant.currentSavingsPercentage = Math.round(100 - variant.currentSavings * 100);
+            variant.currentSavingsPercentageFormatted = 'Save ' + variant.currentSavingsPercentage + '%';
+
+            // Flat-rate alternative to the percentage — the same per-unit saving expressed in
+            // currency ("Save $10"). Designs show whole dollars, so cents are dropped when the
+            // amount is exact and kept when it isn't, rather than rounding a real price away.
+            const unitAmount = regularPerBox - price;
+            variant.currentSavingsUnitAmount = unitAmount;
+            variant.currentSavingsUnitAmountFormatted = 'Save ' + this._formatPrice(
+                unitAmount,
+                { withoutCents: unitAmount % 100 === 0 }
+            );
+        },
+
+        variantById(variantId: any) {
+            const key = String(variantId);
+            const root = this.productObject ?? {};
+            const isVariant = (v: any) => v != null && typeof v === 'object' && 'price' in v;
+
+            if (isVariant(root[key])) {
+                return root[key];
+            }
+
+            for (const group of Object.values(root) as any[]) {
+                if (isVariant(group?.[key])) {
+                    return group[key];
+                }
+            }
+
+            return null;
+        },
+
+
+        _currentVariants(): any[] {
+            const isVariant = (v: any) => v != null && typeof v === 'object' && 'price' in v;
+            const group = this.productObject?.[String(this.currentProductId)];
+            const nested = group ? (Object.values(group) as any[]).filter(isVariant) : [];
+
+            return nested.length > 0 ? nested : (this._variantGroups()[0] ?? []);
+        },
+
+        variantPriceFormatted(variantId: any, suffix = '') {
+            const formatted = this.variantById(variantId)?.currentPriceFormatted;
+            return formatted ? formatted + suffix : '';
+        },
+
+        variantSavingsFormatted(variantId: any) {
+            return this.variantById(variantId)?.currentSavingsPercentageFormatted ?? '';
+        },
+
+        variantSavingsPercentage(variantId: any) {
+            return this.variantById(variantId)?.currentSavingsPercentage ?? 0;
+        },
+
+        // Flat-rate counterpart, selected by the variant picker's "Savings display" setting.
+        variantSavingsAmountFormatted(variantId: any) {
+            return this.variantById(variantId)?.currentSavingsUnitAmountFormatted ?? '';
+        },
+
+        _restoreFromDom() {
+            const root = this.$root;
+            if (!root) return;
+
+            const flavor = root.querySelector('input[name="flavor"]:checked') as HTMLInputElement | null;
+            const restoredProductId = flavor?.dataset.productId;
+
+            if (restoredProductId && this.productObject?.[String(restoredProductId)]) {
+                this.currentProductId = String(restoredProductId);
+            }
+
+            const purchase = root.querySelector('input[name="purchase_option"]:checked') as HTMLInputElement | null;
+            if (purchase?.value) {
+                this.purchaseOption = purchase.value;
+                this.sellingPlanId = purchase.value === 'autoship'
+                    ? this.selectedVariant?.selling_plan_id ?? null
+                    : null;
+            }
+
+            this._syncSelectedVariant();
+            this.updatePrices();
+        },
+
+        _restoreFromUrl() {
+            const slug = new URL(window.location.href).searchParams.get('product');
+            if (!slug) return;
+
+            const radio = this.$root?.querySelector(
+                `input[name="flavor"][value="${CSS.escape(slug)}"]`
+            ) as HTMLInputElement | null;
+
+            if (!radio) return;
+
+            radio.checked = true;
+            this._restoreFromDom();
+        },
+
+        _repriceGroup(variants: any[]) {
+            const regularPerBox = variants[0]?.compare_at_price || variants[0]?.price || 0;
+
+            variants.forEach((variant) => {
+                variant.currentPrice = this._getVariantDisplayPrice(variant);
+                variant.currentPriceFormatted = this._formatPrice(variant.currentPrice);
+                this._applySavings(variant, regularPerBox);
+            });
         },
 
         _getCartQuantity(variant: any) {
@@ -131,16 +272,24 @@ export default (Alpine: AlpineType) => {
                 return;
             }
 
-            const variantId = checked.dataset.variantId;
+            const variants = this._currentVariants();
+            const checkedId = checked.dataset.variantId;
 
-            if (!variantId || !this.productObject?.[variantId]) {
+            let variant = variants.find((v: any) => String(v.id) === String(checkedId)) ?? null;
+
+            if (!variant) {
+                const index = Number(checked.dataset.inputIndex);
+                variant = Number.isInteger(index) ? variants[index] ?? null : null;
+            }
+
+            if (!variant) {
                 return;
             }
 
-            this.selectedVariantId = String(variantId);
-            this.selectedVariant = this.productObject[this.selectedVariantId];
+            this.selectedVariantId = String(variant.id);
+            this.selectedVariant = variant;
             this.sellingPlanId = this.purchaseOption === 'autoship'
-                ? this.selectedVariant.selling_plan_id
+                ? variant.selling_plan_id
                 : null;
         },
 
@@ -159,22 +308,37 @@ export default (Alpine: AlpineType) => {
         init() {
             this.productObject = JSON.parse(this.$refs.productObject.textContent);
 
-            // Get first variant's compare_at_price or price as base for volume discount calculation
-            const variants = Object.values(this.productObject) as any[];
-            if (variants.length > 0) {
-                const firstVariant = variants[0];
-                this.basePrice = firstVariant.compare_at_price || firstVariant.price || 0;
+            // Single-box regular price, used as the comparison base for volume discounts.
+            // Read via _variantGroups because the LP nests variants under each product id,
+            // where a direct Object.values() yields product groups and leaves basePrice at 0.
+            const firstVariant = this._variantGroups()[0]?.[0];
+            this.basePrice = firstVariant?.compare_at_price || firstVariant?.price || 0;
+
+            this.product = this.productObject[String(this.productId)];
+
+            if (landingPage) {
+                // If the URL has a product query param, use it to fetch the product
+                const url = new URL(window.location.href);
+                const productResourceSlug = url.searchParams.get('product');
+
+                if (productResourceSlug) {
+                    this.fetchProduct(productResourceSlug);
+                } else {
+                    this.updateSelectedProductPrices(this.productId);
+                }
+
+            } else {
+
+                Object.values(this.productObject).forEach((variant: any) => {
+                    variant.currentPrice = variant.price;
+                    variant.currentPriceFormatted = this._formatPrice(variant.price);
+                    variant.currentSavingsPercentage = 0;
+                    variant.currentSavingsPercentageFormatted = '';
+                });
             }
 
-            Object.values(this.productObject).forEach((variant: any) => {
-                variant.currentPrice = variant.price;
-                variant.currentPriceFormatted = this._formatPrice(variant.price);
-                variant.currentSavingsPercentage = 0;
-                variant.currentSavingsPercentageFormatted = '';
-            });
-
             this.selectedVariantId = String(this.selectedVariantId);
-            this.selectedVariant = this.productObject[this.selectedVariantId];
+            this.selectedVariant = this.variantById(this.selectedVariantId);
             this._syncSelectedVariant();
             this.updatePrices();
 
@@ -195,12 +359,22 @@ export default (Alpine: AlpineType) => {
                 }
             });
 
+
             window.addEventListener('pageshow', (event: PageTransitionEvent) => {
                 if (event.persisted) {
-                    this._syncSelectedVariant();
-                    this.updatePrices();
+                    this._restoreFromDom();
+                } else {
+                    this.$nextTick(() => this._restoreFromDom());
                 }
             });
+
+            window.addEventListener('popstate', () => {
+                this._restoreFromUrl();
+            });
+        },
+
+        goToBundle(url: string) {
+            window.location.href = url;
         },
 
         onPurchaseOptionChange(option: string) {
@@ -211,19 +385,52 @@ export default (Alpine: AlpineType) => {
         },
 
         updatePrices() {
-            Object.values(this.productObject).forEach((variant: any) => {
-                variant.currentPrice = this._getVariantDisplayPrice(variant);
-                variant.currentPriceFormatted = this._formatPrice(variant.currentPrice);
+            this._variantGroups().forEach((variants) => this._repriceGroup(variants));
+        },
 
-                if (variant.compare_at_price > 0) {
-                    variant.currentSavings = variant.currentPrice / variant.compare_at_price;
-                    variant.currentSavingsPercentage = Math.round(100 - variant.currentSavings * 100);
-                    variant.currentSavingsPercentageFormatted = 'Save ' + Math.round(variant.currentSavingsPercentage) + '%';
-                } else {
-                    variant.currentSavingsPercentage = 0;
-                    variant.currentSavingsPercentageFormatted = '';
-                }
-            });
+        updateSelectedProductPrices(product: any) {
+            const productId = product?.id ?? product;
+            const group = this.productObject?.[String(productId)];
+            if (!group) return;
+
+            this._repriceGroup(Object.values(group) as any[]);
+        },
+
+        changeFlavor(productResourceSlug: string) {
+            this.fetchProduct(productResourceSlug);
+        },
+
+        async fetchProduct(productResourceSlug: string) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('product', productResourceSlug);
+            window.history.replaceState({}, '', url.toString());
+          
+            const res = await fetch(`/products/${productResourceSlug}.json`);
+            const data = await res.json();
+            const product = data.product;
+            const productId = String(product.id);
+
+            console.log('currentProduct',product.title)
+
+            this.currentProductId = productId;
+
+            const firstVariantId = String(product.variants[0].id);
+            const productObject = this.productObject[productId];
+            this.selectedVariant = productObject?.[firstVariantId] ?? null;
+            this.selectedVariantId = this.selectedVariant?.id ?? null;
+
+            window.dispatchEvent(new CustomEvent('product-changed', {
+                detail: { product: product }
+            }));
+
+            // Check the radio of the selected variant
+            const radio = this.$root?.querySelector(`label[for="flavor-${productResourceSlug}"] input`);
+            console.log('radio', radio);
+            if (radio) {
+                radio.checked = true;
+            }
+            this._syncSelectedVariant();
+            this.updateSelectedProductPrices(product);
         },
 
         async addToCart() {

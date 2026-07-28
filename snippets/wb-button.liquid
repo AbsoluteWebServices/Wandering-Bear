@@ -3,15 +3,16 @@
     @param {string} style - The style of the button
     @param {string} label - The label of the button
     @param {string} link - The link of the button
-    @param {string} class - The class of the button (optional)
-    @param {number} width - The width of the button (optional)
-    @param {number} height - The height of the button (optional)
-    @param {string} button_bg - The background color of the button (optional)
-    @param {string} button_text - The text color of the button (optional)
-    @param {string} button_border - The border color of the button (optional)
-    @param {string} button_hover_bg - The background color of the button on hover (optional)
-    @param {string} button_hover_text - The text color of the button on hover (optional)
-    @param {string} button_hover_border - The border color of the button on hover (optional)
+    @param {string} [class] - The class of the button
+    @param {number} [width] - The width of the button
+    @param {number} [height] - The height of the button
+    @param {string} [button_bg] - The background color of the button
+    @param {string} [button_text] - The text color of the button
+    @param {string} [button_border] - The border color of the button
+    @param {string} [button_hover_bg] - The background color of the button on hover
+    @param {string} [button_hover_text] - The text color of the button on hover
+    @param {string} [button_hover_border] - The border color of the button on hover
+    @param {string} [attributes] - Extra HTML attributes for the anchor (e.g. Alpine @click)
 {%- enddoc -%}
 
 {%- if width -%}
@@ -62,7 +63,12 @@
 {%- endcapture -%}
 
 
-<a href="{{ link }}" class="btn {{ style }} {% if class %} {{ class }} {% endif %}" {% if custom_styles %} style="{{ custom_styles }}" {% endif %}>
+<a
+  href="{{ link | default: '#' }}"
+  class="btn {{ style }} {% if class %} {{ class }} {% endif %}"
+  {% if custom_styles %}style="{{ custom_styles }}"{% endif %}
+  {% if attributes != blank %}{{ attributes }}{% endif %}
+>
     <span class="mt-0.5">{{ label }}</span>
     {{ svg_filter }}
 </a>

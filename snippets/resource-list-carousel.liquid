@@ -84,7 +84,8 @@
           var(--column-count)
       );
       --fallback-slide-width: clamp(150px, var(--mobile-card-size, 60cqw), var(--slide-width-max));
-      --slide-width: var(--section-slide-width, var(--fallback-slide-width));
+      /* --slide-width: var(--section-slide-width, var(--fallback-slide-width)); */
+      --slide-width: calc(calc(100% / 3) - var(--resource-list-column-gap));
     }
   }
 

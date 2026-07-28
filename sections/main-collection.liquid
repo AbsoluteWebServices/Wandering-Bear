@@ -22,46 +22,122 @@
   }
 {% endjavascript %}
 
-{% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<picture>
+  <source srcset="{{ section.settings.image | image_url: width: 1920 }}" media="(min-width: 750px)">
+  <source srcset="{{ section.settings.image | image_url: width: 750 }}" media="(max-width: 749px)">
+  <img class="absolute top-0 left-0 w-full object-cover h-[400px] -z-[1]" src="{{ section.settings.image | image_url: width: 1920 }}" alt="{{ section.settings.image.alt }}" width="1920" height="1080" loading="lazy">
+</picture>
 <results-list
-  class="section product-grid-container color-{{ section.settings.color_scheme }}"
+  class="section product-grid-container relative z-1 color-{{ section.settings.color_scheme }}"
   style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
   section-id="{{ section.id }}"
   infinite-scroll="{{ section.settings.enable_infinite_scroll }}"
 >
   {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
 
-  <div
-    class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
-  >
+  <div class="w-full mt-5 lg:mt-[37px] mb-8 lg:mb-[46px] gap-2">
+      <div class="mx-auto flex flex-col gap-3 items-center px-4 lg:px-0">
+        <h1 class="display-lg font-gothic_condensed uppercase font-bold !text-[35px] max-w-[250px] mx-auto lg:max-w-none lg:!text-[60px] text-center leading-[1.1] !m-0">{{ section.settings.title }}</h1>
+        {% if section.settings.description != blank %}
+          <p class="body font-kurdis-semi-condensed font-semibold text-[12px] text-center leading-[1.6] !m-0">
+            {{- section.settings.description -}}
+          </p>
+        {% endif %}
+      </div>
+  </div>
+  {% content_for 'block',
+      type: 'filter-pills',
+      id: 'filter-pills'
+    %}
     {% content_for 'block',
       type: 'filters',
       id: 'filters',
       results: collection,
       results_size: collection.products_count
     %}
-
+  <div
+    class="collection-wrapper !max-w-[970px] w-full mx-auto gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
+  >
+    
     {% assign products_per_page = 24 %}
 
     {% if section.settings.enable_infinite_scroll == false %}
       {% assign products_per_page = section.settings.products_per_page %}
     {% endif %}
 
+    {% assign sort_groups = collection.metafields.custom.sort.value %}
+
     {% paginate collection.products by products_per_page %}
       {% capture children %}
+        {% assign card_index = 0 %}
+        {% assign grouped_ids = '' %}
+
+        {% for group in sort_groups %}
+          {% assign group_handle = group.system.handle %}
+          {% if group_handle == blank %}
+            {% continue %}
+          {% endif %}
+
+          {% capture group_items %}
+            {% for product in collection.products %}
+              {% assign product_token = ',' | append: product.id | append: ',' %}
+              {% if product.metafields.custom.size.value.system.handle == group_handle %}
+                {% unless grouped_ids contains product_token %}
+                  <li
+                    id="{{ section.id }}-{{ product.id }}"
+                    class="product-grid__item product-grid__item--{{ card_index }}"
+                    data-page="{{ paginate.current_page }}"
+                    data-product-id="{{ product.id }}"
+                    ref="cards[]"
+                  >
+                    {% # theme-check-disable %}
+                    {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product, collection_image: true %}
+                    {% # theme-check-enable %}
+                  </li>
+                  {% assign card_index = card_index | plus: 1 %}
+                  {% assign grouped_ids = grouped_ids | append: product_token %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+          {% endcapture %}
+
+
+          {% assign group_items = group_items | strip %}
+          {% if group_items != blank %}
+            <li
+              class="product-grid__group col-span-full flex flex-wrap items-baseline gap-x-3 gap-y-1 pb-4 border-b border-[#431A031A]{% unless forloop.first %} mt-6{% endunless %}"
+              role="presentation"
+            >
+              <h2 class="font-gothic_condensed uppercase font-bold {% if group.title contains '96' or '128' %} text-[30px] {% else %} text-[25px] {% endif %} leading-[1.1] !m-0">
+                {{- group.title | default: group.display_name -}}
+              </h2>
+              {% if group.description != blank %}
+                <p class="font-kurdis-semi-condensed font-semibold text-sm leading-[1.6] !m-0">
+                  {{- group.description -}}
+                </p>
+              {% endif %}
+            </li>
+            {{ group_items }}
+          {% endif %}
+        {% endfor %}
+
         {% for product in collection.products %}
-          <li
-            id="{{ section.id }}-{{ product.id }}"
-            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-            data-page="{{ paginate.current_page }}"
-            data-product-id="{{ product.id }}"
-            ref="cards[]"
-          >
-            {% # theme-check-disable %}
-            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-            {% # theme-check-enable %}
-          </li>
+          {% assign product_token = ',' | append: product.id | append: ',' %}
+          {% unless grouped_ids contains product_token %}
+            <li
+              id="{{ section.id }}-{{ product.id }}"
+              class="product-grid__item product-grid__item--{{ card_index }}"
+              data-page="{{ paginate.current_page }}"
+              data-product-id="{{ product.id }}"
+              ref="cards[]"
+            >
+              {% # theme-check-disable %}
+              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+              {% # theme-check-enable %}
+            </li>
+            {% assign card_index = card_index | plus: 1 %}
+          {% endunless %}
         {% endfor %}
       {% endcapture %}
 
@@ -83,6 +159,23 @@
     "templates": ["collection"]
   },
   "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Collection Title"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Collection Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
     {
       "type": "select",
       "id": "layout_type",

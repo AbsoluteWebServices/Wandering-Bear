@@ -2,12 +2,15 @@
 
 {% liquid
   assign product_resource = closest.product
+  unless template.name == 'product'
+    assign product_resource = section.settings.product
+  endunless
   if request.visual_preview_mode and product_resource == blank
     assign product_resource = collections.all.products.first
   endif
 -%}
 
-{% render 'variant-main-picker-bundle', product_resource: product_resource, section: section, product: product %}
+{% render 'variant-main-picker-bundle', product_resource: product_resource, section: section, product: product, bundle_products: bundle_products %}
 
 {% schema %}
 {

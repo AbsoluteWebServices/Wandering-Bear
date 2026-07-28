@@ -8,7 +8,12 @@
   assign bundle_add_to_cart_text = section.settings.bundle_add_to_cart_text
   assign is_oos = false
 
-  unless member_only
+  assign is_member_unlocked = false
+  if member_tier == 'VIP' or member_tier == 'Elite'
+    assign is_member_unlocked = true
+  endif
+
+  unless member_only and is_member_unlocked == false
     if child_product.available == false
       assign is_oos = true
     endif
@@ -25,6 +30,7 @@
   <div class="
     min-w-[77px] w-[77px] shrink-0 self-stretch min-h-22.5 md:min-h-20 bg-sky-blue flex justify-center items-center rounded-tl-[5px] rounded-bl-[5px] relative overflow-hidden
     {% if template.suffix == 'single-serve' %} md:min-w-[83px] md:w-[83px]{% endif %}
+    {% if template.suffix == 'single-serve' or template.suffix == '32oz'%} rounded-tr-[5px]{% endif %}
   ">
     {% if image != blank %}
       {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
@@ -44,20 +50,20 @@
 
         {% if is_oos %}
           <div class="flex items-center justify-center rounded-full py-0.75 px-1 h-fit bg-espresso">
-            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap mt-0.5 text-cream">
+            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap md:mt-0.5 text-cream">
               {{ oos_badge_text }}
             </span>
           </div>
         {% elsif product_badge != blank %}
           <div class="flex items-center justify-center rounded-full py-0.75 px-1 h-fit"
             style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
-            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap mt-0.5">{{
+            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap md:mt-0.5">{{
               product_badge_text }}
             </span>
           </div>
-        {% elsif member_only %}
+        {% elsif member_only and is_member_unlocked == false %}
           {% capture member_badge_label %}
-            <span class="inline-flex gap-0.5 mt-0.5">VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only</span>
+            <span class="inline-flex gap-0.5 md:mt-0.5">VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only</span>
           {% endcapture %}
           {% render 'tooltip',
             content: settings.member_tooltip,
@@ -71,14 +77,14 @@
       <span class="text-xs/[120%] font-kurdis-semi-condensed font-semibold text-bear-black md:mt-0.75 md:text-[10px]/[120%]">{{ flavor_description }}</span>
     </div>
     <div class="min-w-20 w-fit shrink-0 self-stretch wb-flex items-center">
-      {% if member_only %}
+      {% if member_only and is_member_unlocked == false %}
           <div class="wb-flex justify-end items-center">
           <button
             @click.prevent.stop="$dispatch('modal-open', { modal: 'membership' })"
             class="group h-7.5! w-20! flex flex-nowrap justify-center items-center relative whitespace-nowrap cursor-pointer shadow-button"
           >
             <span class="relative inline-flex items-center gap-1.25 text-[12px] text-cream z-1 font-kurdis uppercase font-bold whitespace-nowrap">
-              {% render 'icons', icon: 'unlock' %} <span class="mt-0.5">Unlock</span>
+              {% render 'icons', icon: 'unlock' %} <span class="md:mt-0.5">Unlock</span>
             </span>
             <div class="absolute top-0 left-0 w-full h-full">
               <svg preserveAspectRatio="none" class="h-full w-full fill-espresso group-hover:fill-gold"
@@ -95,7 +101,7 @@
             @click.prevent.stop="$dispatch('modal-open', { modal: 'restock-notify', flavor: '{{ child_product.handle }}', variant: '{{ child_product.selected_or_first_available_variant.id }}' })"
             class="group h-10.5! smd:h-8! w-20! flex flex-nowrap justify-center px-2 items-center relative text-espresso cursor-pointer [&_svg]:stroke-espresso hover:[&_svg]:fill-gold hover:[&_svg]:stroke-gold hover:[&_span]:text-white smd:px-0 smd:whitespace-nowrap"
           >
-            <span class="relative text-sm/none md:text-[12px]/none z-1 mt-0.5 font-kurdis-condensed uppercase font-extrabold md:whitespace-nowrap transition-colors">
+            <span class="relative text-sm/none md:text-[12px]/none z-1 md:mt-0.5 font-kurdis-condensed uppercase font-extrabold md:whitespace-nowrap transition-colors">
               {{ oos_button_text }}
             </span>
             <div class="absolute top-0 left-0 w-full h-8">
@@ -117,7 +123,7 @@
             :disabled="disabled" :class="{ 'opacity-50 pointer-events-none': disabled }"
           >
             <span
-              class="relative text-sm md:text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold mt-0.5"
+              class="relative text-sm md:text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold md:mt-0.5"
             >
               + Add{% if template.suffix == 'single-serve' %} Case{% endif %}
             </span>
@@ -136,7 +142,7 @@
             @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})"
           >
             <span class="wb-flex justify-center items-center gap-1 relative text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold">
-              {% render 'icons', icon: 'checkmark', class: 'text-cream min-w-[10px] min-h-[10px]' %} <span class="inline-block mt-0.5">Selected</span>  
+              {% render 'icons', icon: 'checkmark', class: 'text-cream min-w-[10px] min-h-[10px]' %} <span class="inline-block md:mt-0.5">Selected</span>  
             </span>
 
             <div class="absolute top-0 left-0 w-full h-full">

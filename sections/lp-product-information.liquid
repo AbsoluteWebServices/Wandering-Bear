@@ -1,0 +1,599 @@
+
+
+<script type="application/ld+json">
+  {{ section.settings.product | structured_data }}
+</script>
+
+{% liquid
+  assign product = section.settings.product
+  assign bundle_collection = section.settings.bundle_collection
+  assign hide_thumbnails_desktop = section.settings.hide_thumbnails_desktop
+  assign disable_gallery_background = section.settings.disable_gallery_background
+  assign landing_page = true
+  
+  if product.selling_plan_allocations.size > 0
+    for selling_plan_allocation in product.selling_plan_allocations
+      if selling_plan_allocation.selling_plan.name contains '1 Month'
+        assign selling_plan_id = selling_plan_allocation.selling_plan.id
+      endif
+    endfor
+  else 
+    assign selling_plan_id = nil
+  endif
+  assign background_type = section.settings.background_type | default: 'gradient'
+  if background_type == 'gradient'
+      assign background = section.settings.background_gradient | default: 'linear-gradient(180deg, #F8F8F8 0%, #FFFFFF 100%)'
+  else
+    assign background = section.settings.color_scheme.settings.background | default: '#F8F8F8'
+  endif
+%}
+
+{% capture background_style %}
+  --background: {{ background }};
+{% endcapture %}
+
+{% style %}
+  .section-{{ section.id }} {
+    {% if background_type == 'gradient' %}
+      background-image: var(--background);
+    {% else %}
+      background: var(--background);
+    {% endif %}
+
+    @media screen and (max-width: 1023px) {
+      background-image: none;
+      background: section.settings.color_scheme.settings.background;
+    }
+  }
+{% endstyle %}
+
+
+{% capture media_gallery %}
+  <div x-data="mediaGalleryBundle" data-media-gallery-bundle-container>
+  {% render 'media-gallery-bundle',
+    bundle_product: product,
+    hide_thumbnails_desktop: hide_thumbnails_desktop,
+    disable_gallery_background: disable_gallery_background
+  %}
+  </div>
+{% endcapture %}
+
+{% capture product_details %}
+  {% content_for 'block',
+    type: '_product-details',
+    id: 'product-details',
+    closest.product: closest.product
+  %}
+{% endcapture %}
+
+{% capture additional_blocks %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+{% if section.settings.enable_sticky_add_to_cart %}
+  {% liquid
+    assign current_variant = product.selected_or_first_available_variant
+    # Get the initial quantity based on quantity rules
+    assign initial_quantity = current_variant.quantity_rule.min | default: 1
+  %}
+
+  <sticky-add-to-cart
+    class="sticky-add-to-cart"
+    data-variant-available="{{ current_variant.available }}"
+    data-product-id="{{ product.id }}"
+    data-current-variant-id="{{ current_variant.id }}"
+    data-initial-quantity="{{ initial_quantity }}"
+    data-default-variant-title="{{ 'products.product.default_title' | t }}"
+  >
+    <div
+      class="sticky-add-to-cart__bar color-{{ settings.popover_color_scheme }}"
+      data-stuck="false"
+      ref="stickyBar"
+      role="region"
+      aria-label="{{ 'products.product.sticky_add_to_cart' | t }}"
+    >
+      {% liquid
+        assign image_to_show = current_variant.featured_image | default: product.featured_image
+      %}
+      {% if image_to_show %}
+        <div
+          class="sticky-add-to-cart__image"
+        >
+          {% assign image_alt = image_to_show.alt | default: product.title | escape %}
+          {{
+            image_to_show
+            | image_url: width: 120
+            | image_tag:
+              loading: 'lazy',
+              alt: image_alt,
+              class: 'sticky-add-to-cart__image-img',
+              data-testid: 'sticky-product-image',
+              srcset: null,
+              sizes: null,
+              ref: 'productImage'
+          }}
+        </div>
+      {% endif %}
+
+      {% liquid
+        assign has_single_option = false
+        if product.has_only_default_variant != true and product.options.size == 1
+          assign has_single_option = true
+        endif
+
+        if image_to_show == blank
+          assign has_image = false
+        else
+          assign has_image = true
+        endif
+      %}
+      <div
+        class="sticky-add-to-cart__info"
+        data-has-image="{{ has_image }}"
+        data-singleton="{{ product.has_only_default_variant }}"
+        data-single-option="{{ has_single_option }}"
+      >
+        <p
+          class="sticky-add-to-cart__title"
+          data-testid="sticky-product-title"
+        >
+          {{ product.title | escape }}
+        </p>
+        <div
+          class="sticky-add-to-cart__variant"
+          data-testid="sticky-variant-title"
+          {% if product.has_only_default_variant %}
+            style="display: none;"
+          {% endif %}
+        >
+          {% unless product.has_only_default_variant %}
+            {% if current_variant != blank %}
+              {% assign variant_title = current_variant.title | escape %}
+            {% endif %}
+            {{ variant_title }}
+          {% endunless %}
+        </div>
+      </div>
+
+      <div
+        class="sticky-add-to-cart__price"
+        data-testid="sticky-price-display"
+      >
+        {% render 'price', product_resource: product, show_sale_price_first: true %}
+      </div>
+
+      <button
+        type="button"
+        class="sticky-add-to-cart__button add-to-cart-button button"
+        ref="addToCartButton"
+        on:click="/handleAddToCartClick"
+        {% unless current_variant.available %}
+          disabled
+        {% endunless %}
+      >
+        <span
+          class="add-to-cart-text"
+        >
+          {% if current_variant.available %}
+            <span class="svg-wrapper add-to-cart-icon">
+              {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
+            </span>
+          {% endif %}
+          <span class="add-to-cart-text__content">
+            <span>
+              {%- if current_variant.available -%}
+                {{- 'products.product.add_to_cart' | t -}}
+              {%- elsif current_variant == blank -%}
+                {{- 'products.product.unavailable' | t -}}
+              {%- else -%}
+                {{- 'products.product.sold_out' | t -}}
+              {%- endif -%}
+            </span>
+            <span
+              ref="quantityDisplay"
+              {% if current_variant.available and initial_quantity > 1 %}
+                style="display: inline;"
+              {% else %}
+                style="display: none;"
+              {% endif %}
+            >
+              {{- ' (' -}}
+              <span ref="quantityNumber">{{- initial_quantity -}}</span>
+              {{- ')' -}}
+            </span>
+          </span>
+        </span>
+        <span class="add-to-cart__added">
+          <span class="svg-wrapper add-to-cart__added-icon">
+            {{- 'icon-checkmark-burst.svg' | inline_asset_content -}}
+          </span>
+        </span>
+      </button>
+    </div>
+  </sticky-add-to-cart>
+{% endif %}
+
+<div x-data="productForm({{ product.id }},{{ product.selected_or_first_available_variant.id }},
+{% if selling_plan_id %}{{ selling_plan_id }}{% else %}null{% endif %},{{ landing_page }})"
+class="section-{{ section.id }}
+{% if landing_page %} pt-5 lg:pt-0 {% endif %}"
+style="{{ background_style }}"
+>
+{% render 'product-information-content',
+  product_media_size: closest.product.media.size,
+  section_id: section.id,
+  settings: section.settings,
+  media_gallery: media_gallery,
+  product_details: product_details,
+  additional_blocks: additional_blocks,
+  savings_badge: savings_badge
+%}
+</div>
+{% stylesheet %}
+  .sticky-add-to-cart__bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(100% + 40px));
+    z-index: calc(var(--layer-sticky) - 1); /* Below sticky header */
+    display: block;
+    width: 600px;
+    border-radius: calc(
+      var(--style-border-radius-buttons-primary) + min(var(--padding-sm), var(--style-border-radius-buttons-primary))
+    );
+    box-shadow: var(--shadow-popover);
+    padding: var(--padding-sm);
+    /* Layout styling */
+    display: flex;
+    align-items: center;
+    gap: var(--gap-md);
+
+    @starting-style {
+      opacity: 0;
+      transform: translateX(-50%) translateY(calc(100% + 40px));
+    }
+
+    &::before {
+      --border: 2px;
+      content: '';
+      position: absolute;
+      inset: calc(var(--border) * -1);
+      background: linear-gradient(var(--color-background) 0 100%), linear-gradient(hsl(0 0% 0% / 0.15) 0 100%);
+      background-clip: content-box, border-box;
+      border: var(--border) solid #0000;
+      border-radius: inherit;
+      z-index: -1;
+      backdrop-filter: blur(20px) saturate(180%) brightness(1.5);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sticky-add-to-cart__bar {
+      transition-property: transform, opacity, display;
+      transition-duration: 0.3s;
+      transition-timing-function: var(--ease-out-quad);
+      transition-behavior: allow-discrete;
+    }
+  }
+
+  .sticky-add-to-cart__bar[data-stuck='true'] {
+    transform: translateX(-50%) translateY(0%);
+    opacity: 1;
+  }
+
+  sticky-add-to-cart:not([data-variant-available='true']) .sticky-add-to-cart__bar {
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(100% + 40px));
+    display: none;
+  }
+
+  .sticky-add-to-cart__info[data-has-image='false'] {
+    padding-left: var(--padding-lg);
+  }
+
+  .sticky-add-to-cart__image {
+    flex-shrink: 0;
+    aspect-ratio: 1;
+    height: var(--height-buy-buttons);
+    overflow: hidden;
+    border-radius: var(--style-border-radius-buttons-primary);
+    background: var(--color-background-secondary);
+  }
+
+  .sticky-add-to-cart__image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sticky-add-to-cart__info {
+    flex: 1;
+    min-width: 0; /* Allow text truncation */
+  }
+
+  .sticky-add-to-cart__title {
+    font-size: var(--font-paragraph-medium--size);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--font-paragraph--line-height);
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sticky-add-to-cart__variant {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+    font-size: var(--font-paragraph-small--size);
+    margin-top: var(--margin-3xs);
+  }
+
+  .sticky-add-to-cart__price {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .sticky-add-to-cart__button {
+    height: var(--height-buy-buttons);
+    position: relative;
+  }
+
+  /* Mobile adjustments */
+  @media screen and (max-width: 749px) {
+    .sticky-add-to-cart__bar {
+      bottom: 0;
+      width: 100%;
+      max-width: none;
+      border-radius: 0;
+
+      &::before {
+        --border: 1px;
+      }
+    }
+
+    .sticky-add-to-cart__bar .add-to-cart-text__content {
+      display: none;
+    }
+
+    .sticky-add-to-cart__info[data-has-image='false'] {
+      padding-left: 0;
+    }
+
+    .sticky-add-to-cart__title {
+      font-size: var(--font-paragraph--size);
+    }
+
+    .sticky-add-to-cart__button {
+      padding: var(--padding-lg);
+    }
+
+    .sticky-add-to-cart__price {
+      font-size: var(--font-paragraph-small--size);
+    }
+
+    .sticky-add-to-cart__button {
+      width: var(--height-buy-buttons);
+    }
+
+    sticky-add-to-cart:not([data-variant-available='true']) .add-to-cart-text__content {
+      display: initial;
+    }
+
+    sticky-add-to-cart:not([data-variant-available='true']) .sticky-add-to-cart__button {
+      width: auto;
+    }
+  }
+
+  /* Small mobile - hide text content and compare price */
+  @media screen and (max-width: 389px) {
+    .sticky-add-to-cart__bar {
+      .compare-at-price {
+        display: none;
+      }
+    }
+
+    .sticky-add-to-cart__title {
+      display: none;
+    }
+
+    /* For product with only default variant show title */
+    .sticky-add-to-cart__info[data-singleton='true'] .sticky-add-to-cart__title {
+      display: block;
+    }
+
+    /* For single variant show title and variant, truncate both. variant should be identifiable with truncation */
+    .sticky-add-to-cart__info[data-single-option='true'] .sticky-add-to-cart__title {
+      display: block;
+    }
+
+    .sticky-add-to-cart__info[data-single-option='true'] .sticky-add-to-cart__variant {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "LP Product Information",
+  "blocks": [
+    {
+      "type": "@app"
+    },
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "content-center-aligned",
+          "label": "t:options.page"
+        },
+        {
+          "value": "content-full-width",
+          "label": "t:options.full"
+        }
+      ],
+      "default": "content-center-aligned"
+    },
+    {
+      "type": "select",
+      "id": "desktop_media_position",
+      "label": "t:settings.media_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.left"
+        },
+        {
+          "value": "right",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "equal_columns",
+      "label": "t:settings.equal_columns",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "limit_details_width",
+      "label": "t:settings.limit_product_details_width",
+      "default": false,
+      "visible_if": "{{ section.settings.equal_columns }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "t:settings.gap_mobile",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Product Gallery"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_thumbnails_desktop",
+      "label": "Hide thumbnails on Desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_gallery_background",
+      "label": "t:settings.hide_gallery_background",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background Type",
+      "options": [
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        }
+      ],
+      "default": "gradient"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background Gradient",
+      "default": "linear-gradient(180deg, #F8F8F8 0%, #FFFFFF 100%)",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LP Product Information"
+    }
+  ]
+}
+{% endschema %}

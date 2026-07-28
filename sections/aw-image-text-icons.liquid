@@ -33,7 +33,7 @@
     {% render 'section-background', settings: section.settings, part: 'media' %}
     <div class="grid smd:!grid-cols-2 max-w-[1092px] w-full mx-auto relative z-[1]">
         <div class="wb-flex mx-auto relative z-[2] justify-center order-2 md:!order-1 pt-[30px] md:!pt-0 px-6 md:!px-0 md:pb-14">
-            <div class="wb-flex flex-col justify-center items-start mx-auto max-w-[440px]">
+            <div class="wb-flex flex-col justify-center items-start mx-auto max-w-[440px]{% if template.suffix == '32oz' %} lg:max-w-[455px]{% endif %}">
                 {% if title_type == 'image' %}
                     {% if title_image != blank %}
                         <div class="max-w-[442px] w-full{% if template.suffix == '96oz' %} mb-0.5! md:mb-5!{% else %} mb-5!{% endif %}">

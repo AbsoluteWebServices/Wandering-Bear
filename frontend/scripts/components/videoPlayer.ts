@@ -6,7 +6,7 @@ export default (Alpine: AlpineType) => {
     Alpine.data("VideoPlayer", (
         video: any) => ({
         video: video,
-        videoMuted: false,
+        videoMuted: true,
         el: null,
         iconPlay: null,
         iconPause: null,
@@ -17,6 +17,10 @@ export default (Alpine: AlpineType) => {
 
             this.iconPlay = this.el.querySelector('.icon-play');
             this.iconPause = this.el.querySelector('.icon-pause');
+
+            if (this.video) {
+                this.videoMuted = this.video.muted;
+            }
         },
 
         toggleSound() {

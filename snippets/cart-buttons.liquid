@@ -1,0 +1,20 @@
+{% case button_type %}
+    {% when 'checkout' %}
+        <button
+            type="submit"
+            id="checkout"
+            class="group/checkout relative h-[50px] w-[330px] flex items-center justify-center cursor-pointer shadow-button"
+            name="checkout"
+            {% if cart == empty %}
+            disabled
+            {% endif %}
+            form="cart-form"
+        >
+            <span class="font-kurdis-semi-condensed font-bold text-xl text-cream uppercase relative z-1">
+            {{ 'content.checkout' | t }}
+            </span>
+            <svg class="absolute inset-0 w-full h-full object-cover text-gold group-hover/checkout:!text-espresso transition-colors duration-300" xmlns="http://www.w3.org/2000/svg" width="330" height="50" viewBox="0 0 330 50" fill="none">
+                <path d="M3.05449 5.19922C0.460073 8.09938 0.356077 11.5172 0.31229 14.7935C0.208294 22.5905 0.109772 30.3843 0.00577657 38.1813C-0.0215907 40.3002 -0.0161172 42.5059 1.57666 44.4061C5.41354 48.9749 10.2575 49.9717 24.587 49.9717C120.701 49.9717 216.82 50.1421 312.939 49.6469C316.349 49.6309 320.093 49.7337 322.89 48.5859C330.471 45.4767 329.644 39.7954 329.414 35.5802C328.987 27.7317 330 21.2819 330 13.4303C330 7.93862 328.955 5.73295 325.857 3.55944C321.888 0.771812 313.623 0.890776 307.433 0.816826C266.732 0.324891 226.01 0.070886 185.293 0.0130114C144.313 -0.0480785 103.334 0.106254 62.3538 0.469578C50.7939 0.572466 39.2395 0.691431 27.685 0.829687C18.9603 0.932575 7.89302 -0.199196 3.05449 5.19922Z" fill="currentColor"/>
+            </svg>
+  </button>
+{% endcase %}
