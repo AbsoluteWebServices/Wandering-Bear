@@ -52,6 +52,14 @@
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='1805' preserveAspectRatio='none' viewBox='0 0 1280 1805'%3E%3Cpath d='M0 70C220 20 420 110 640 70C860 30 1060 120 1280 60V1805H0Z' fill='%23000'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='1805' preserveAspectRatio='none' viewBox='0 0 1280 1805'%3E%3Cpath d='M0 70C220 20 420 110 640 70C860 30 1060 120 1280 60V1805H0Z' fill='%23000'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   }
+
+  /* Several About Us sections are intentionally shifted/bled sideways (e.g. premium's
+     translate(80px)). Clip horizontal overflow on the page container so those shifts never add a
+     sideways scrollbar. overflow-x: clip (not hidden) doesn't create a scroll container, so it
+     leaves vertical scrolling and sticky/absolute children untouched. */
+  #MainContent {
+    overflow-x: clip;
+  }
 {% endstyle %}
 
 {% schema %}

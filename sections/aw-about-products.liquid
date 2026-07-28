@@ -48,7 +48,7 @@
               {% endif %}
             </div>
             {% if block.settings.label != blank %}
-              <span class="wb-about-products__label font-kurdis-condensed font-extrabold" style="color: var(--label-color);">
+              <span class="wb-about-products__label font-kurdis font-extrabold" style="color: var(--label-color);">
                 {{ block.settings.label }}
               </span>
             {% endif %}
@@ -71,7 +71,7 @@
             </h2>
           {% endif %}
           {% if s.promise_subheading != blank %}
-            <p class="wb-about-products__paw-sub font-kurdis-condensed font-bold" style="color: {{ s.promise_subheading_color | default: '#F2E6DC' }};">
+            <p class="wb-about-products__paw-sub font-kurdis font-extrabold" style="color: {{ s.promise_subheading_color | default: '#F2E6DC' }};">
               {{ s.promise_subheading }}
             </p>
           {% endif %}
@@ -82,8 +82,8 @@
           <ol class="wb-about-products__promises">
             {% for block in promises %}
               <li class="wb-about-products__promise" style="background-color: {{ s.card_bg | default: '#F2E6DC' }};" {{ block.shopify_attributes }}>
-                <span class="wb-about-products__promise-num font-kurdis-condensed font-extrabold" style="background-color: {{ s.number_bg | default: '#1B1B1B' }}; color: {{ s.number_color | default: '#F2E6DC' }};">{{ forloop.index }}</span>
-                <span class="wb-about-products__promise-text body font-bold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
+                <span class="wb-about-products__promise-num font-gothic_condensed font-extrabold" style="background-color: {{ s.number_bg | default: '#1B1B1B' }}; color: {{ s.number_color | default: '#F2E6DC' }};">{{ forloop.index }}</span>
+                <span class="wb-about-products__promise-text font-kurdis font-semibold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
               </li>
             {% endfor %}
           </ol>
@@ -120,7 +120,32 @@
   </div>
 </div>
 
+{%- comment -%}
+  Optional wrapper margin-top. The previous section (started banner) is absolute / out of flow, so
+  this reserves the space it visually occupies and keeps the products grid from riding up under it.
+{%- endcomment -%}
+{%- if s.section_margin_top != blank -%}
+  {% style %}
+    #shopify-section-{{ section.id }} {
+      margin-top: {{ s.section_margin_top }}px;
+    }
+  {% endstyle %}
+{%- endif -%}
+
 {% stylesheet %}
+  /* Fonts per Figma: regular Kurdis for labels/subheading/promise text, Gothic Condensed for the
+     numbered badges, Parslay for the script. Enforced here (not only via Tailwind utilities) so the
+     section stays correct independent of the bundle. */
+  .wb-about-products__label,
+  .wb-about-products__paw-sub,
+  .wb-about-products__promise-text {
+    font-family: "Kurdis", sans-serif;
+  }
+
+  .wb-about-products__promise-num {
+    font-family: "Gothic Condensed", sans-serif;
+  }
+
   .wb-about-products__script {
     font-size: var(--script-size) !important;
     text-align: center;
@@ -143,22 +168,23 @@
     row-gap: 32px;
   }
 
+  /* Figma card = a cream plate (#F2E6DC) with the photo inset inside it and the label sitting on
+     the same plate below the photo (node 1783:142). The photo does not go edge to edge. */
   .wb-about-products__cell {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    background-color: #f2e6dc;
+    border-radius: 14px;
+    padding: 18px 18px 16px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
   }
 
-  /* Card sizing lives here (not Tailwind aspect-[..]/rounded-[..]) so the section renders
-     correctly regardless of whether the Tailwind bundle was rebuilt for this file. Figma also
-     lifts each photo off the gradient with a soft shadow. */
   .wb-about-products__card {
     width: 100%;
-    aspect-ratio: 295 / 313;
-    border-radius: 12px;
+    aspect-ratio: 252 / 296;
+    border-radius: 8px;
     overflow: hidden;
-    background-color: #f2e6dc;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   }
 
   .wb-about-products__card-img,
@@ -524,6 +550,11 @@
       "id": "background_image",
       "label": "Background image",
       "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "number",
+      "id": "section_margin_top",
+      "label": "Section margin-top px (reserve space for the absolute banner above)"
     },
     {
       "type": "header",

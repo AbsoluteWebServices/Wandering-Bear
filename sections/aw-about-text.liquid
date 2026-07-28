@@ -206,8 +206,9 @@
         </div>
       {% endif %}
 
+      {% comment %} Plate stickers (default). on_section stickers render at section level instead. {% endcomment %}
       {% for block in section.blocks %}
-        {% if block.type == 'sticker' %}
+        {% if block.type == 'sticker' and block.settings.on_section != true %}
           {% render 'aw-sticker', block: block %}
         {% endif %}
       {% endfor %}
@@ -259,7 +260,7 @@
       </div>
 
       {% for block in section.blocks %}
-        {% if block.type == 'sticker' %}
+        {% if block.type == 'sticker' and block.settings.on_section != true %}
           {% render 'aw-sticker', block: block %}
         {% endif %}
       {% endfor %}
@@ -289,13 +290,61 @@
            style="width: {{ s.side_img_w | default: 516 }}px; height: {{ s.side_img_h | default: 689 }}px; max-width: none; object-fit: cover; margin-left: -{{ s.side_crop_x | default: 152 }}px; margin-top: -{{ s.side_crop_y | default: 317 }}px;">
     </div>
   {% endif %}
+
+  {%- comment -%}
+    Stickers flagged "on_section" render here (not inside the plate) so they can sit on the side
+    image, which lives outside the plate. Positioned as % of the section box, not clipped by the plate.
+  {%- endcomment -%}
+  {% for block in section.blocks %}
+    {% if block.type == 'sticker' and block.settings.on_section == true %}
+      {% render 'aw-sticker', block: block %}
+    {% endif %}
+  {% endfor %}
 </div>
+
+{%- comment -%}
+  Wrapper-level stacking + spacing on the section's own .shopify-section wrapper. z-index needs
+  !important because the theme locks #MainContent > .shopify-section { z-index: 1 } (specificity
+  110). margin-top/bottom go on the wrapper (not the inner div) so they actually move the section
+  in flow — the inner block padding would otherwise block margin-collapse.
+{%- endcomment -%}
+{%- if s.wrapper_z != blank or s.section_margin_top != blank or s.section_margin_bottom != blank -%}
+  {% style %}
+    #shopify-section-{{ section.id }} {
+      position: relative;
+      {% if s.wrapper_z != blank %}z-index: {{ s.wrapper_z }} !important;{% endif %}
+      {% if s.section_margin_top != blank %}margin-top: {{ s.section_margin_top }}px;{% endif %}
+      {% if s.section_margin_bottom != blank %}margin-bottom: {{ s.section_margin_bottom }}px;{% endif %}
+    }
+  {% endstyle %}
+{%- endif -%}
 
 {% stylesheet %}
   /* Stacking for the About Us plate overlap: hero (aw-z-2) stays above the plate of the next
      section (aw-z-1), so a plate tucked up under the hero sits behind the photo, not over it. */
   .aw-z-2 { position: relative; z-index: 2; }
   .aw-z-1 { position: relative; z-index: 1; }
+
+  /* Figma sets this page in regular Kurdis, not the theme's default Condensed display face.
+     Override here (these aw-about-* sections are About-Us-only) rather than touching the shared
+     display-md/display-lg/body classes site-wide. */
+  .wb-about-text__title {
+    font-family: "Kurdis", sans-serif !important;
+  }
+
+  .wb-about-text__body,
+  .wb-about-text__body p,
+  .wb-about-text__body span,
+  .wb-about-text__body strong,
+  .wb-about-text__body a {
+    font-family: "Kurdis", sans-serif !important;
+  }
+
+  /* The "Fresh Taste Guarantee." pill is the one body link with a background; Figma sets it in the
+     Parslay script, not Kurdis. Higher specificity + !important wins over the rule above. */
+  .wb-about-text__body a[style*="background"] {
+    font-family: "Parslay", cursive !important;
+  }
 
   .wb-about-text__title-size {
     font-size: var(--font-size) !important;
@@ -606,6 +655,22 @@
       "id": "section_z",
       "label": "Section z-index",
       "visible_if": "{{ section.settings.section_abs }}"
+    },
+    {
+      "type": "number",
+      "id": "wrapper_z",
+      "label": "Wrapper z-index",
+      "info": "z-index on the section's own wrapper (uses !important to beat the theme's lock). Order plate overlaps, e.g. fridge 2 above the hero photo, believe 3 above fridge."
+    },
+    {
+      "type": "number",
+      "id": "section_margin_top",
+      "label": "Section margin-top px (negative = overlap section above)"
+    },
+    {
+      "type": "number",
+      "id": "section_margin_bottom",
+      "label": "Section margin-bottom px"
     },
     {
       "type": "number",
@@ -920,11 +985,12 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "preview_asset", "label": "Preview asset (dev only)" },
+        { "type": "checkbox", "id": "on_section", "label": "Attach to section (over side image, not the plate)", "default": false },
         { "type": "checkbox", "id": "desktop_only", "label": "Desktop only", "default": false },
         { "type": "checkbox", "id": "mobile_only", "label": "Mobile only", "default": false },
-        { "type": "range", "id": "left", "label": "Left %", "min": -40, "max": 140, "step": 2, "unit": "%", "default": 50 },
-        { "type": "range", "id": "top", "label": "Top %", "min": -40, "max": 140, "step": 2, "unit": "%", "default": 50 },
-        { "type": "range", "id": "width", "label": "Width %", "min": 2, "max": 60, "step": 1, "unit": "%", "default": 18 },
+        { "type": "number", "id": "left", "label": "Left %", "default": 50 },
+        { "type": "number", "id": "top", "label": "Top %", "default": 50 },
+        { "type": "number", "id": "width", "label": "Width %", "default": 18 },
         { "type": "range", "id": "rotate", "label": "Rotate", "min": -45, "max": 45, "step": 1, "unit": "deg", "default": 0 },
         { "type": "number", "id": "tx", "label": "Translate X % (anchor, default -50)" },
         { "type": "number", "id": "ty", "label": "Translate Y % (anchor, default -50)" },

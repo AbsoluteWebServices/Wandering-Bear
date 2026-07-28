@@ -99,7 +99,39 @@
   </div>
 </div>
 
+{%- comment -%}
+  Wrapper-level positioning + stacking, all on the .shopify-section wrapper (a margin on the inner
+  div won't move the section, its block padding blocks margin-collapse). z-index needs !important
+  to beat the theme's #MainContent > .shopify-section { z-index: 1 } lock.
+  · section_abs — take the banner out of flow (position:absolute, full width) and place it with
+    section_abs_top, relative to #MainContent. Following sections flow up under it.
+  · section_margin_top — in-flow overlap of the section above (negative = up).
+{%- endcomment -%}
+{%- if s.section_abs or s.wrapper_z != blank or s.section_margin_top != blank -%}
+  {% style %}
+    #shopify-section-{{ section.id }} {
+      {% if s.section_abs %}position: absolute !important; left: 0; right: 0; top: {{ s.section_abs_top | default: 0 }}px;{% else %}position: relative;{% endif %}
+      {% if s.wrapper_z != blank %}z-index: {{ s.wrapper_z }} !important;{% endif %}
+      {% if s.section_margin_top != blank and s.section_abs != true %}margin-top: {{ s.section_margin_top }}px;{% endif %}
+    }
+  {% endstyle %}
+{%- endif -%}
+
 {% stylesheet %}
+  /* About Us is set in regular Kurdis, not the theme's default Condensed display face. Override
+     locally (banner is About-Us-only) instead of touching the shared display-md/body classes. */
+  .aw-about-banner__title {
+    font-family: "Kurdis", sans-serif !important;
+  }
+
+  .aw-about-banner__body,
+  .aw-about-banner__body p,
+  .aw-about-banner__body span,
+  .aw-about-banner__body strong,
+  .aw-about-banner__body a {
+    font-family: "Kurdis", sans-serif !important;
+  }
+
   .aw-about-banner__title-size {
     font-size: var(--font-size) !important;
   }
@@ -117,6 +149,10 @@
   "settings": [
     { "type": "color", "id": "background_color", "label": "Section background", "default": "#F2E6DC" },
     { "type": "number", "id": "section_min_height", "label": "Section min height px" },
+    { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
+    { "type": "checkbox", "id": "section_abs", "label": "Absolute position (out of flow)", "default": false },
+    { "type": "number", "id": "section_abs_top", "label": "Absolute top px (from MainContent)", "visible_if": "{{ section.settings.section_abs }}" },
+    { "type": "number", "id": "wrapper_z", "label": "Wrapper z-index" },
     { "type": "number", "id": "block_width", "label": "Block width px" },
     { "type": "number", "id": "image_height", "label": "Image block height px" },
     { "type": "image_picker", "id": "image", "label": "Background image (in frame)" },
@@ -175,7 +211,7 @@
     { "type": "number", "id": "badge_width", "label": "Badge width px" },
     { "type": "number", "id": "badge_rotate", "label": "Badge rotate deg" },
     { "type": "header", "content": "t:content.padding" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.top", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 60 },
+    { "type": "number", "id": "padding_top", "label": "Padding top px", "default": 60 },
     { "type": "range", "id": "padding_bottom", "label": "t:settings.bottom", "min": 0, "max": 160, "step": 2, "unit": "px", "default": 60 },
     { "type": "range", "id": "padding_top_mobile", "label": "t:settings.top_mobile", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 32 },
     { "type": "range", "id": "padding_bottom_mobile", "label": "t:settings.bottom_mobile", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 32 }

@@ -8,7 +8,7 @@
           "settings": {
             "preview_asset": "ab-sticker-nyc.png",
             "left": 0,
-            "top": 74,
+            "top": 73,
             "width": 16,
             "rotate": 0,
             "desktop_only": true
@@ -68,7 +68,7 @@
         "preview_asset": "ab-sky.jpg",
         "blue_color": "#BFD7E9",
         "blue_top": 300,
-        "blue_height": 1875,
+        "blue_height": 2275,
         "show_sky": false
       }
     },
@@ -92,13 +92,13 @@
         "panel_left": 0,
         "panel_width": 1201,
         "panel_top": 0,
-        "panel_height": 470,
+        "panel_height": 570,
         "panel_radius": 20,
         "panel_radius_left": 0,
         "panel_radius_right": 20,
-        "panel_overlap": 0,
+        "panel_overlap": 180,
         "panel_overlap_mobile": 190,
-        "section_min_height": 470,
+        "section_min_height": 570,
         "panel_content_left": 210,
         "panel_content_right": 60,
         "panel_width_css": "58%",
@@ -108,7 +108,8 @@
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-block-start-mobile": 24,
-        "padding-block-end-mobile": 24
+        "padding-block-end-mobile": 24,
+        "wrapper_z": 2
       }
     },
     "believe": {
@@ -160,13 +161,30 @@
         "padding-block-start": 0,
         "padding-block-end": 40,
         "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 24
+        "padding-block-end-mobile": 24,
+        "wrapper_z": 3,
+        "section_margin_bottom": 50
       }
     },
     "howwedo": {
       "type": "aw-about-text",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "coffee_badge": {
+          "type": "sticker",
+          "settings": {
+            "preview_asset": "ab-sticker-coffee.png",
+            "desktop_only": true,
+            "left": 67,
+            "top": 65,
+            "width": 3,
+            "rotate": -4,
+            "on_section": true
+          }
+        }
+      },
+      "block_order": [
+        "coffee_badge"
+      ],
       "settings": {
         "title": "SO HOW DO WE DO IT?",
         "title_style": "display-md",
@@ -188,31 +206,32 @@
         "panel_radius": 20,
         "panel_radius_left": 0,
         "panel_radius_right": 20,
-        "panel_overlap": 0,
+        "panel_overlap": 40,
         "panel_overlap_mobile": 190,
-        "section_min_height": 470,
+        "section_min_height": 490,
         "panel_content_left": 210,
         "panel_content_right": 60,
-        "panel_width_css": "58%",
+        "panel_width_css": "61%",
         "panel_pad_left_css": "59%",
         "panel_pad_right_css": "7%",
         "side_image_preview": "ab-wb-aboutus-mattbeans-1.jpg",
-        "side_left": "55%",
+        "side_left": "calc(50% + 218px)",
         "side_top": 0,
-        "side_width": 313,
-        "side_height": 367,
-        "side_radius": 0,
-        "side_img_w": 516,
-        "side_img_h": 689,
-        "side_crop_x": 152,
-        "side_crop_y": 317,
+        "side_width": 275,
+        "side_height": 324,
+        "side_radius": 16,
+        "side_img_w": 455,
+        "side_img_h": 607,
+        "side_crop_x": 134,
+        "side_crop_y": 279,
         "side_z": 2,
         "side_hide_mobile": true,
         "background_type": "transparent",
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-block-start-mobile": 24,
-        "padding-block-end-mobile": 24
+        "padding-block-end-mobile": 24,
+        "wrapper_z": 4
       }
     },
     "premium": {
@@ -258,12 +277,12 @@
         "panel_color": "#BFD7E9",
         "panel_align": "left",
         "panel_width": 783,
-        "panel_left_css": "36%",
-        "panel_top_css": "40%",
+        "panel_left_css": "calc(50% - 369px)",
+        "panel_top_css": "15%",
         "panel_margin_bottom": 100,
         "panel_radius": 20,
         "panel_overlap": 0,
-        "section_min_height": 450,
+        "section_min_height": 560,
         "section_abs": false,
         "section_shift_x": 80,
         "section_shift_y": -160,
@@ -287,22 +306,22 @@
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-block-start-mobile": 24,
-        "padding-block-end-mobile": 24
+        "padding-block-end-mobile": 24,
+        "wrapper_z": 5
       }
     },
     "started": {
       "type": "aw-about-banner",
       "settings": {
-        "background_color": "#F2E6DC",
-        "section_min_height": 1080,
-        "block_width": 1024,
+        "background_color": "transparent",
+        "block_width": 987,
         "image_height": 700,
         "image_preview": "ab-started-box.png",
         "media_img_top": -490,
         "overlay_preview": "ab-started-box-cutout.png",
-        "overlay_left": -31,
-        "overlay_width": 1078,
-        "overlay_top": -538,
+        "overlay_left": -19,
+        "overlay_width": 1022,
+        "overlay_top": -521,
         "radius_left": 0,
         "radius_right": 20,
         "badge_preview": "ab-sticker-boxed-club.png",
@@ -336,10 +355,14 @@
         "body": "<p>Today, Wandering Bear makes super-premium cold brew in exciting flavors and formats, plus high protein cold brew lattes with 11 grams of protein and just 6 grams of sugar, all built on the same brew we've been perfecting since 2014. Find us nationwide at Whole Foods, Sprouts, Target, and Costco, online at Amazon and Thrive Market, and right here on our site.</p>",
         "body_size": 15,
         "body_lh": "1.38",
-        "padding_top": 60,
+        "padding_top": 210,
         "padding_bottom": 60,
         "padding_top_mobile": 32,
-        "padding_bottom_mobile": 32
+        "padding_bottom_mobile": 32,
+        "section_margin_top": -230,
+        "wrapper_z": 6,
+        "section_abs": true,
+        "section_abs_top": 1850
       }
     },
     "products": {
@@ -447,7 +470,8 @@
         "paw_blend_color": "#B27A0F",
         "card_bg": "#F2E6DC",
         "paw_sticker_preview": "ab-sticker-stay-caffeinated.png",
-        "paw_blend_top": "#BF8F38"
+        "paw_blend_top": "#BF8F38",
+        "section_margin_top": 760
       }
     }
   },
