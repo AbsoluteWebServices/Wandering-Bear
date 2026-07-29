@@ -1,0 +1,201 @@
+{% comment %}
+  About Us hero — Matt & Ben photo centred over a Sky Blue field, with tilted stickers
+  (Ben / Matt call-outs, NYC pennant) positioned as blocks.
+  Figma: WB Website, About Us 1653:20 (photo 646×632 at x=333) / mobile 1694:245.
+
+  Stickers are blocks so their image, size, position and tilt are all editable, and the same
+  block type is reused on the other About Us sections. Positions are % of the photo wrapper,
+  so they track the photo as it scales.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign color_scheme = s.color_scheme
+%}
+
+<div
+  class="wb-about-hero relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: color_scheme.settings.background %} {% render 'spacing-style', settings: s %}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  <div class="relative z-[1] mx-auto w-full max-w-[987px] px-6 smd:!px-0">
+    <div class="wb-about-hero__photo relative">
+      {% if s.image != blank %}
+        {% render 'picture',
+          source: s.image,
+          mobile_source: s.image_mobile,
+          class: 'w-full h-auto',
+          alt: s.image.alt,
+          width: 1292,
+          height: 1264,
+          preload: 'eager',
+          loading: 'eager'
+        %}
+      {% elsif s.preview_asset != blank %}
+        {%- comment -%}
+          Local preview only, until the photos are in Files. Desktop and mobile use different
+          crops (desktop is wide with the call-outs baked in; mobile is a tighter square).
+        {%- endcomment -%}
+        <img src="{{ s.preview_asset | asset_url }}" alt="" class="w-full h-auto {% if s.preview_asset_mobile != blank %}hidden smd:!block{% endif %}" loading="eager">
+        {% if s.preview_asset_mobile != blank %}
+          <img src="{{ s.preview_asset_mobile | asset_url }}" alt="" class="w-full h-auto smd:!hidden" loading="eager">
+        {% endif %}
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {% if block.type == 'sticker' %}
+          {% render 'aw-sticker', block: block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "AW About Hero",
+  "tag": "section",
+  "class": "aw-z-2",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Photo mobile"
+    },
+    {
+      "type": "text",
+      "id": "preview_asset",
+      "label": "Preview asset (dev only)",
+      "info": "Filename in assets/ used until the photo is uploaded to Files."
+    },
+    {
+      "type": "text",
+      "id": "preview_asset_mobile",
+      "label": "Preview asset mobile (dev only)"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#BFD7E9",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sticker",
+      "name": "Sticker",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "preview_asset", "label": "Preview asset (dev only)" },
+        { "type": "checkbox", "id": "desktop_only", "label": "Desktop only", "default": false },
+        { "type": "checkbox", "id": "mobile_only", "label": "Mobile only", "default": false },
+        { "type": "range", "id": "left", "label": "Left %", "min": -40, "max": 140, "step": 2, "unit": "%", "default": 50 },
+        { "type": "number", "id": "top", "label": "Top %", "default": 50 },
+        { "type": "range", "id": "width", "label": "Width %", "min": 2, "max": 60, "step": 1, "unit": "%", "default": 18 },
+        { "type": "range", "id": "rotate", "label": "Rotate", "min": -45, "max": 45, "step": 1, "unit": "deg", "default": 0 },
+        { "type": "header", "content": "Mobile (blank = same as desktop)" },
+        { "type": "text", "id": "left_mobile", "label": "Left % mobile" },
+        { "type": "text", "id": "top_mobile", "label": "Top % mobile" },
+        { "type": "text", "id": "width_mobile", "label": "Width % mobile" },
+        { "type": "text", "id": "rotate_mobile", "label": "Rotate mobile" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW About Hero",
+      "blocks": [{ "type": "sticker" }, { "type": "sticker" }, { "type": "sticker" }]
+    }
+  ]
+}
+{% endschema %}

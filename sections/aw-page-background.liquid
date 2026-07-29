@@ -1,0 +1,117 @@
+{% comment %}
+  Page-wide background for About Us. Paints the whole #MainContent cream and lays a sky image
+  behind everything, so the sections on top can stay transparent and just carry their content.
+  Figma 1653:20: cream base #F2E6DC, sky photo roughly 11%–65% of the page height.
+
+  Add this section first. It renders nothing itself — only styles the shared content wrapper.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign sky = s.sky_image
+  assign sky_src = ''
+  if sky != blank
+    assign sky_src = sky | image_url: width: 2000
+  elsif s.preview_asset != blank
+    assign sky_src = s.preview_asset | asset_url
+  endif
+%}
+
+{% style %}
+  #MainContent {
+    background-color: {{ s.base_color | default: '#F2E6DC' }};
+    position: relative;
+  }
+
+  /* Keep every section above the background layers. */
+  #MainContent > .shopify-section {
+    position: relative;
+    z-index: 1;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  Blue field with a wavy bottom edge, plus the sky photo inside it. Positioned in px from the
+  top of the page so it does not depend on total page height while sections are still being
+  built. The wave is an SVG mask so the bottom edge curves like the Figma vector.
+{%- endcomment -%}
+<div class="aw-page-bg absolute inset-x-0 z-0 pointer-events-none overflow-hidden"
+     style="top: {{ s.blue_top | default: 120 }}px; height: {{ s.blue_height | default: 1100 }}px;"
+     aria-hidden="true">
+  <div class="aw-page-bg__blue absolute inset-0" style="background: {{ s.blue_color | default: '#BFD7E9' }};">
+    {% if s.show_sky and sky_src != blank %}
+      <img src="{{ sky_src }}" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60">
+    {% endif %}
+  </div>
+</div>
+
+{% style %}
+  /* Wavy top edge (approximation of the Figma vector until the exact shape is exported).
+     The blue field's top curves through the middle of the hero photo; bottom stays straight. */
+  .aw-page-bg__blue {
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='1805' preserveAspectRatio='none' viewBox='0 0 1280 1805'%3E%3Cpath d='M0 70C220 20 420 110 640 70C860 30 1060 120 1280 60V1805H0Z' fill='%23000'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1280' height='1805' preserveAspectRatio='none' viewBox='0 0 1280 1805'%3E%3Cpath d='M0 70C220 20 420 110 640 70C860 30 1060 120 1280 60V1805H0Z' fill='%23000'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  }
+
+  /* Several About Us sections are intentionally shifted/bled sideways (e.g. premium's
+     translate(80px)). Clip horizontal overflow on the page container so those shifts never add a
+     sideways scrollbar. overflow-x: clip (not hidden) doesn't create a scroll container, so it
+     leaves vertical scrolling and sticky/absolute children untouched. */
+  #MainContent {
+    overflow-x: clip;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "AW Page Background",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Sets the cream base and the sky layer for the whole page. Place this first."
+    },
+    {
+      "type": "color",
+      "id": "base_color",
+      "label": "Base color",
+      "default": "#F2E6DC"
+    },
+    {
+      "type": "image_picker",
+      "id": "sky_image",
+      "label": "Sky image"
+    },
+    {
+      "type": "text",
+      "id": "preview_asset",
+      "label": "Preview asset (dev only)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sky",
+      "label": "Show sky in blue field",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "blue_color",
+      "label": "Blue field color",
+      "default": "#BFD7E9"
+    },
+    {
+      "type": "number",
+      "id": "blue_top",
+      "label": "Blue field top px"
+    },
+    {
+      "type": "number",
+      "id": "blue_height",
+      "label": "Blue field height px"
+    }
+  ],
+  "presets": [
+    { "name": "AW Page Background" }
+  ]
+}
+{% endschema %}

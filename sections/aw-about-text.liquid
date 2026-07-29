@@ -1,0 +1,1013 @@
+{% comment %}
+  About Us text block — heading + rich text, one column, optional cream plate + stickers.
+  Figma: WB Website 1653:20. Reused for the several copy sections on the page
+  ("A Coffee Shop In Your Fridge", "We Believe…", "So How Do We Do It?").
+
+  The column can sit left / centre / right so the same section covers blocks that hug either
+  edge of the layout. Rich text carries the gold highlights and links from the design.
+{% endcomment %}
+
+{% liquid
+  assign s = section.settings
+  assign color_scheme = s.color_scheme
+  assign text_color = s.text_color | default: '#1B1B1B'
+
+  assign align_class = 'mx-auto text-center'
+  if s.align == 'left'
+    assign align_class = 'mr-auto text-left'
+  elsif s.align == 'right'
+    assign align_class = 'ml-auto text-left'
+  endif
+
+  # Heading can align independently of the body (e.g. centred title over left-aligned copy).
+  assign title_align = s.title_align | default: 'inherit'
+%}
+
+{% capture type_styles %}
+  --font-size: {{ s.font_size | default: 40 }}px;
+  --font-size-mobile: {{ s.font_size_mobile | default: 20 }}px;
+{% endcapture %}
+
+{%- comment -%}
+  Absolute mode: lifts the whole section out of flow so it can overlap its neighbours, then
+  nudges it with a transform. left/right:0 keep it full width; section_shift_y negative = up,
+  section_shift_x positive = right. The following sections close the gap it leaves behind.
+{%- endcomment -%}
+{% capture section_pos %}
+  {%- if s.section_abs -%}position: absolute; left: 0; right: 0; top: {{ s.section_abs_top | default: '0' }};{%- endif -%}
+  {%- if s.section_z != blank -%} z-index: {{ s.section_z }};{%- endif -%}
+  {%- if s.section_shift_x != blank or s.section_shift_y != blank -%} transform: translate({{ s.section_shift_x | default: 0 }}px, {{ s.section_shift_y | default: 0 }}px);{%- endif -%}
+{% endcapture %}
+
+<div
+  class="wb-about-text wb-about-text--{{ section.id }} relative overflow-hidden spacing-style wb-section-bg"
+  style="{% render 'section-background', settings: s, part: 'style', fallback_color: color_scheme.settings.background %} {% render 'spacing-style', settings: s %} {{ type_styles }}{% if s.panel %} margin-top: -{{ s.panel_overlap | default: 0 }}px;{% if s.section_min_height != blank %} min-height: {{ s.section_min_height }}px;{% endif %}{% endif %}{{ section_pos }}"
+  {{ section.shopify_attributes }}
+>
+  {% render 'section-background', settings: s, part: 'media' %}
+
+  {%- comment -%}
+    Optional cream plate behind the copy. Absolutely positioned so it can be freely placed —
+    top / left / width / height are all editable (px, negative allowed to overshoot the edge).
+    The copy lives INSIDE the plate; the inner container keeps it in the on-screen column.
+    With no plate, the copy sits in a normal centred container instead.
+  {%- endcomment -%}
+  {% if s.panel %}
+    {%- comment -%}
+      Plate placement, chosen by panel_align:
+      · left   — absolute left/width in px; the plate can overshoot the edge and the copy gets a
+                 left inset that cancels the offset so it still lands on screen.
+      · center — mx-auto within the parent; width is a % of the parent (default 50 = half).
+      · right  — flush to the right edge (offset by panel_right px); width is a % of the parent,
+                 so a value a bit over 50 has the left edge sit just past the middle.
+      Center / right use panel_content_left / right directly for the copy padding.
+    {%- endcomment -%}
+    {% liquid
+      assign content_left = s.panel_content_left | default: 40
+      assign pad_right = s.panel_content_right | default: 40
+      assign plate_align = s.panel_align | default: 'center'
+      assign plate_width_pct = s.panel_width_pct | default: 50
+
+      # Plate width: raw override (e.g. "58%") wins; else % for center/right, px for left.
+      if s.panel_width_css != blank
+        assign width_css = s.panel_width_css
+      elsif plate_align == 'left'
+        assign plate_width = s.panel_width | default: 1201
+        assign width_css = plate_width | append: 'px'
+      else
+        assign width_css = plate_width_pct | append: '%'
+      endif
+
+      # Horizontal placement + on-screen inset for the copy.
+      if s.panel_left_css != blank
+        # Manual left override (e.g. "50%"): plain left + width, no transform.
+        assign plate_pos = 'left: ' | append: s.panel_left_css | append: '; width: ' | append: width_css | append: ';'
+        assign pad_left = content_left
+      elsif plate_align == 'center'
+        assign plate_pos = 'left: 50%; transform: translateX(-50%); width: ' | append: width_css | append: ';'
+        assign pad_left = content_left
+      elsif plate_align == 'right'
+        if s.panel_right_css != blank
+          assign right_css = s.panel_right_css
+        else
+          assign plate_right = s.panel_right | default: 0
+          assign right_css = plate_right | append: 'px'
+        endif
+        assign plate_pos = 'right: ' | append: right_css | append: '; width: ' | append: width_css | append: ';'
+        assign pad_left = content_left
+      else
+        assign plate_left = s.panel_left | default: -341
+        assign plate_left_abs = 0 | minus: plate_left
+        assign pad_left = plate_left_abs | plus: content_left
+        assign plate_pos = 'left: ' | append: plate_left | append: 'px; width: ' | append: width_css | append: ';'
+      endif
+
+      # Copy padding: raw overrides (e.g. "59%") win; else computed px values.
+      if s.panel_pad_left_css != blank
+        assign pad_left_css = s.panel_pad_left_css
+      else
+        assign pad_left_css = pad_left | append: 'px'
+      endif
+      if s.panel_pad_right_css != blank
+        assign pad_right_css = s.panel_pad_right_css
+      else
+        assign pad_right_css = pad_right | append: 'px'
+      endif
+
+      # Corner radius: single value by default, or split left / right if those are set.
+      assign radius = s.panel_radius | default: 48
+      assign radius_left = s.panel_radius_left | default: radius
+      assign radius_right = s.panel_radius_right | default: radius
+      # order: top-left top-right bottom-right bottom-left
+      assign plate_radius = radius_left | append: 'px ' | append: radius_right | append: 'px ' | append: radius_right | append: 'px ' | append: radius_left | append: 'px'
+
+      # top: raw override (e.g. "15%") wins; else px.
+      if s.panel_top_css != blank
+        assign top_css = s.panel_top_css
+      else
+        assign top_css = s.panel_top | default: 0 | append: 'px'
+      endif
+    %}
+    <div
+      class="wb-about-text__plate absolute z-0"
+      style="background: {{ s.panel_color | default: '#F2E6DC' }}; top: {{ top_css }}; {{ plate_pos }} {% if s.panel_height != blank %}height: {{ s.panel_height }}px;{% elsif s.panel_min_height != blank %}min-height: {{ s.panel_min_height }};{% else %}bottom: 0;{% endif %} border-radius: {{ plate_radius }};{% if s.panel_shadow != blank %} box-shadow: {{ s.panel_shadow }};{% endif %}{% if s.panel_margin_bottom != blank %} margin-bottom: {{ s.panel_margin_bottom }}px;{% endif %}"
+    >
+      {%- comment -%}
+        Plate content. Two layouts:
+        · two_col — a flex row: image column (side_image) + text column. Plain flow, no absolute.
+        · default — a single vertically-centred copy column (col_valign / col_abs for placement).
+      {%- endcomment -%}
+      {% capture copy_html %}
+        {% if s.title != blank %}
+          <h2 class="wb-about-text__title {{ s.title_style | default: 'display-md' }} wb-about-text__title-size leading-[1.1] uppercase mb-5" style="color: {{ text_color }};{% if title_align != 'inherit' %} text-align: {{ title_align }};{% endif %}">
+            {{ s.title | replace: '\b', '<br>' }}
+          </h2>
+        {% endif %}
+        {% if s.body != blank %}
+          <div class="wb-about-text__body body leading-[1.4]" style="color: {{ text_color }};">
+            {{ s.body }}
+          </div>
+        {% endif %}
+      {% endcapture %}
+
+      {% if s.two_col %}
+        {% liquid
+          assign tc_src = ''
+          if s.side_image != blank
+            assign tc_src = s.side_image | image_url: width: 1200
+          elsif s.side_image_preview != blank
+            assign tc_src = s.side_image_preview | asset_url
+          endif
+          assign tc_align = s.two_col_valign | default: 'center'
+          assign tc_align_css = 'center'
+          if tc_align == 'start'
+            assign tc_align_css = 'flex-start'
+          elsif tc_align == 'end'
+            assign tc_align_css = 'flex-end'
+          endif
+          assign tc_text = 'text-left'
+          if s.align == 'center'
+            assign tc_text = 'text-center'
+          elsif s.align == 'right'
+            assign tc_text = 'text-right'
+          endif
+        %}
+        <div class="wb-about-text__plate-inner relative z-[1] h-full flex flex-row"
+             style="align-items: {{ tc_align_css }}; padding-left: {{ pad_left_css }}; padding-right: {{ pad_right_css }}; gap: {{ s.two_col_gap | default: 24 }}px;">
+          {% if tc_src != blank %}
+            {%- comment -%}
+              side_fit: image column fills the plate height, its bottom flush to the plate bottom,
+              and pokes out the top by side_overflow_top px (height 100%+N, margin-top -N).
+              Otherwise it uses a fixed side_height.
+            {%- endcomment -%}
+            {% assign side_ot = s.side_overflow_top | default: 0 %}
+            <div class="wb-about-text__img-col shrink-0"
+                 style="width: {{ s.side_width | default: 289 }}px; {% if s.side_fit %}height: calc(100% + {{ side_ot }}px); margin-top: -{{ side_ot }}px;{% else %}height: {{ s.side_height | default: 358 }}px;{% endif %} background-image: url('{{ tc_src }}'); background-size: {{ s.side_bg_size | default: '100% auto' }}; background-position: {{ s.side_bg_pos | default: 'top center' }}; background-repeat: no-repeat;{% if s.side_bg != blank %} background-color: {{ s.side_bg }};{% endif %}"
+                 role="img" aria-label="{{ s.side_image.alt }}"></div>
+          {% endif %}
+          <div class="wb-about-text__col {{ tc_text }} flex-1 min-w-0" style="max-width: {{ s.column_width | default: 566 }}px;{% if s.col_pad_top != blank %} padding-top: {{ s.col_pad_top }}px;{% endif %}{% if s.col_pad_bottom != blank %} padding-bottom: {{ s.col_pad_bottom }}px;{% endif %}">
+            {{ copy_html }}
+          </div>
+        </div>
+      {% else %}
+        {% liquid
+          assign col_justify = 'justify-center'
+          if s.col_valign == 'top'
+            assign col_justify = 'justify-start'
+          elsif s.col_valign == 'bottom'
+            assign col_justify = 'justify-end'
+          endif
+        %}
+        <div class="wb-about-text__plate-inner relative z-[1] h-full flex flex-col {{ col_justify }}"
+             style="padding-left: {{ pad_left_css }}; padding-right: {{ pad_right_css }};">
+          <div class="wb-about-text__col {{ align_class }}{% unless s.col_abs %} relative w-full{% endunless %}" style="{% if s.col_abs %}position: absolute; top: {{ s.col_top | default: '50%' }}; left: {{ s.col_left | default: '0' }};{% if s.col_width != blank %} width: {{ s.col_width }};{% endif %} max-width: none;{% else %}max-width: {{ s.column_width | default: 566 }}px;{% endif %}{% if s.col_pad_bottom != blank %} padding-bottom: {{ s.col_pad_bottom }}px;{% endif %}">
+            {{ copy_html }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% comment %} Plate stickers (default). on_section stickers render at section level instead. {% endcomment %}
+      {% for block in section.blocks %}
+        {% if block.type == 'sticker' and block.settings.on_section != true %}
+          {% render 'aw-sticker', block: block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- comment -%}
+      Mobile plate overrides (< 751px). Desktop values are inline, so these need !important.
+      By default the plate centres and drops a little; all values are editable.
+    {%- endcomment -%}
+    {% style %}
+      @media screen and (max-width: 750px) {
+        {% if s.panel_overlap_mobile != blank %}
+        .wb-about-text--{{ section.id }} {
+          margin-top: -{{ s.panel_overlap_mobile }}px !important;
+        }
+        {% endif %}
+        .wb-about-text--{{ section.id }} .wb-about-text__plate {
+          left: 50% !important;
+          right: auto !important;
+          transform: translateX(-50%) !important;
+          width: {{ s.panel_width_mobile | default: '90%' }} !important;
+          top: {{ s.panel_top_mobile | default: 40 }}px !important;
+          {% if s.panel_height_mobile != blank %}height: {{ s.panel_height_mobile }}px !important;{% endif %}
+        }
+        .wb-about-text--{{ section.id }} .wb-about-text__plate-inner {
+          padding-left: {{ s.panel_pad_left_mobile | default: '7%' }} !important;
+          padding-right: {{ s.panel_pad_right_mobile | default: '7%' }} !important;
+        }
+        {% if s.col_pad_bottom_mobile != blank %}
+        .wb-about-text--{{ section.id }} .wb-about-text__col {
+          padding-bottom: {{ s.col_pad_bottom_mobile }}px !important;
+        }
+        {% endif %}
+      }
+    {% endstyle %}
+  {% else %}
+    <div class="relative z-[1] container mx-auto px-6 max-w-[1092px]">
+      <div class="wb-about-text__col relative w-full {{ align_class }}" style="max-width: {{ s.column_width | default: 566 }}px;">
+        {% if s.title != blank %}
+          <h2 class="wb-about-text__title {{ s.title_style | default: 'display-md' }} wb-about-text__title-size leading-[1.1] uppercase mb-5" style="color: {{ text_color }};{% if title_align != 'inherit' %} text-align: {{ title_align }};{% endif %}">
+            {{ s.title | replace: '\b', '<br>' }}
+          </h2>
+        {% endif %}
+        {% if s.body != blank %}
+          <div class="wb-about-text__body body leading-[1.4]" style="color: {{ text_color }};">
+            {{ s.body }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% for block in section.blocks %}
+        {% if block.type == 'sticker' and block.settings.on_section != true %}
+          {% render 'aw-sticker', block: block %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {%- comment -%}
+    Optional side image — a masked photo that sits beside the plate and slightly overlaps it.
+    The image is shown full-size (side_img_w × side_img_h) inside a smaller window
+    (side_width × side_height) offset by side_crop_x / side_crop_y, reproducing a Figma mask crop.
+    Skipped in two_col mode, where the image lives inside the plate as its own column.
+  {%- endcomment -%}
+  {% liquid
+    assign side_src = ''
+    unless s.two_col
+      if s.side_image != blank
+        assign side_src = s.side_image | image_url: width: 1200
+      elsif s.side_image_preview != blank
+        assign side_src = s.side_image_preview | asset_url
+      endif
+    endunless
+  %}
+  {% if side_src != blank %}
+    <div class="wb-about-text__side absolute overflow-hidden{% if s.side_hide_mobile %} hidden smd:!block{% endif %}"
+         style="left: {{ s.side_left | default: '55%' }}; top: {{ s.side_top | default: 0 }}px; width: {{ s.side_width | default: 313 }}px; height: {{ s.side_height | default: 367 }}px; border-radius: {{ s.side_radius | default: 0 }}px; z-index: {{ s.side_z | default: 2 }};{% if s.side_bg != blank %} background: {{ s.side_bg }};{% endif %}">
+      <img src="{{ side_src }}" alt="{{ s.side_image.alt }}"
+           style="width: {{ s.side_img_w | default: 516 }}px; height: {{ s.side_img_h | default: 689 }}px; max-width: none; object-fit: cover; margin-left: -{{ s.side_crop_x | default: 152 }}px; margin-top: -{{ s.side_crop_y | default: 317 }}px;">
+    </div>
+  {% endif %}
+
+  {%- comment -%}
+    Stickers flagged "on_section" render here (not inside the plate) so they can sit on the side
+    image, which lives outside the plate. Positioned as % of the section box, not clipped by the plate.
+  {%- endcomment -%}
+  {% for block in section.blocks %}
+    {% if block.type == 'sticker' and block.settings.on_section == true %}
+      {% render 'aw-sticker', block: block %}
+    {% endif %}
+  {% endfor %}
+</div>
+
+{%- comment -%}
+  Wrapper-level stacking + spacing on the section's own .shopify-section wrapper. z-index needs
+  !important because the theme locks #MainContent > .shopify-section { z-index: 1 } (specificity
+  110). margin-top/bottom go on the wrapper (not the inner div) so they actually move the section
+  in flow — the inner block padding would otherwise block margin-collapse.
+{%- endcomment -%}
+{%- if s.wrapper_z != blank or s.section_margin_top != blank or s.section_margin_bottom != blank -%}
+  {% style %}
+    #shopify-section-{{ section.id }} {
+      position: relative;
+      {% if s.wrapper_z != blank %}z-index: {{ s.wrapper_z }} !important;{% endif %}
+      {% if s.section_margin_top != blank %}margin-top: {{ s.section_margin_top }}px;{% endif %}
+      {% if s.section_margin_bottom != blank %}margin-bottom: {{ s.section_margin_bottom }}px;{% endif %}
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{% stylesheet %}
+  /* Stacking for the About Us plate overlap: hero (aw-z-2) stays above the plate of the next
+     section (aw-z-1), so a plate tucked up under the hero sits behind the photo, not over it. */
+  .aw-z-2 { position: relative; z-index: 2; }
+  .aw-z-1 { position: relative; z-index: 1; }
+
+  /* Figma sets this page in regular Kurdis, not the theme's default Condensed display face.
+     Override here (these aw-about-* sections are About-Us-only) rather than touching the shared
+     display-md/display-lg/body classes site-wide. */
+  .wb-about-text__title {
+    font-family: "Kurdis", sans-serif !important;
+  }
+
+  .wb-about-text__body,
+  .wb-about-text__body p,
+  .wb-about-text__body span,
+  .wb-about-text__body strong,
+  .wb-about-text__body a {
+    font-family: "Kurdis", sans-serif !important;
+  }
+
+  /* The "Fresh Taste Guarantee." pill is the one body link with a background; Figma sets it in the
+     Parslay script, not Kurdis. Higher specificity + !important wins over the rule above. */
+  .wb-about-text__body a[style*="background"] {
+    font-family: "Parslay", cursive !important;
+  }
+
+  .wb-about-text__title-size {
+    font-size: var(--font-size) !important;
+  }
+
+  @media screen and (max-width: 1023px) {
+    .wb-about-text__title-size {
+      font-size: var(--font-size-mobile) !important;
+    }
+  }
+
+  /* Gold highlights and links come from the rich text; keep links underlined, bold runs bold. */
+  .wb-about-text__body p + p {
+    margin-top: 1rem;
+  }
+
+  .wb-about-text__body a {
+    text-decoration: underline;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "AW About Text",
+  "tag": "section",
+  "class": "aw-z-1",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "Use \\b to force a line break."
+    },
+    {
+      "type": "select",
+      "id": "title_style",
+      "label": "Title style",
+      "options": [
+        { "value": "display-md", "label": "Display M (Kurdis Condensed)" },
+        { "value": "display-lg", "label": "Display L (Gothic Condensed)" },
+        { "value": "h1", "label": "H1" }
+      ],
+      "default": "display-md"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Title size mobile",
+      "min": 16,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "liquid",
+      "id": "body",
+      "label": "Body",
+      "info": "HTML allowed — gold highlights use <span class=\"text-gold\">."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1B1B1B"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Column alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "Title alignment",
+      "options": [
+        { "value": "inherit", "label": "Same as column" },
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "column_width",
+      "label": "Column width",
+      "min": 300,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "default": 570
+    },
+    {
+      "type": "select",
+      "id": "col_valign",
+      "label": "Column vertical align (in plate)",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "col_abs",
+      "label": "Position column absolutely (free placement)",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "col_top",
+      "label": "Column top (e.g. 20%, 40px)",
+      "visible_if": "{{ section.settings.col_abs }}"
+    },
+    {
+      "type": "text",
+      "id": "col_left",
+      "label": "Column left (e.g. 40%, 380px)",
+      "visible_if": "{{ section.settings.col_abs }}"
+    },
+    {
+      "type": "text",
+      "id": "col_width",
+      "label": "Column width (e.g. 400px, 40%)",
+      "visible_if": "{{ section.settings.col_abs }}"
+    },
+    {
+      "type": "number",
+      "id": "col_pad_top",
+      "label": "Column padding top px"
+    },
+    {
+      "type": "number",
+      "id": "col_pad_bottom",
+      "label": "Column padding bottom px"
+    },
+    {
+      "type": "number",
+      "id": "col_pad_bottom_mobile",
+      "label": "Column padding bottom — mobile px"
+    },
+    {
+      "type": "header",
+      "content": "Rounded plate"
+    },
+    {
+      "type": "checkbox",
+      "id": "panel",
+      "label": "Show plate behind copy",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Plate color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "select",
+      "id": "panel_align",
+      "label": "Plate alignment in parent",
+      "options": [
+        { "value": "left", "label": "Left (free px)" },
+        { "value": "center", "label": "Center (%)" },
+        { "value": "right", "label": "Right (%)" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "range",
+      "id": "panel_width_pct",
+      "label": "Plate width (% of parent)",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.panel and section.settings.panel_align != 'left' }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_right",
+      "label": "Plate right offset px",
+      "visible_if": "{{ section.settings.panel and section.settings.panel_align == 'right' }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_top",
+      "label": "Plate top px (negative = up)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_left",
+      "label": "Plate left px (negative = off-screen)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_width",
+      "label": "Plate width px",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_height",
+      "label": "Plate height px (blank = full section height)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_min_height",
+      "label": "Plate min-height (e.g. 60%) — used when height blank",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_margin_bottom",
+      "label": "Plate margin-bottom px",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_radius",
+      "label": "Plate corner radius px (all)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_radius_left",
+      "label": "Plate radius left px (overrides all)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_radius_right",
+      "label": "Plate radius right px (overrides all)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_overlap",
+      "label": "Overlap section above px",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "section_min_height",
+      "label": "Section min height px (reserve space for the plate)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "header",
+      "content": "Absolute position (overlap neighbours)"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_abs",
+      "label": "Make section absolute",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "section_abs_top",
+      "label": "Absolute top (e.g. 0, -100px)",
+      "visible_if": "{{ section.settings.section_abs }}"
+    },
+    {
+      "type": "number",
+      "id": "section_shift_x",
+      "label": "Shift right px (+)",
+      "visible_if": "{{ section.settings.section_abs }}"
+    },
+    {
+      "type": "number",
+      "id": "section_shift_y",
+      "label": "Shift up px (negative = up)",
+      "visible_if": "{{ section.settings.section_abs }}"
+    },
+    {
+      "type": "number",
+      "id": "section_z",
+      "label": "Section z-index",
+      "visible_if": "{{ section.settings.section_abs }}"
+    },
+    {
+      "type": "number",
+      "id": "wrapper_z",
+      "label": "Wrapper z-index",
+      "info": "z-index on the section's own wrapper (uses !important to beat the theme's lock). Order plate overlaps, e.g. fridge 2 above the hero photo, believe 3 above fridge."
+    },
+    {
+      "type": "number",
+      "id": "section_margin_top",
+      "label": "Section margin-top px (negative = overlap section above)"
+    },
+    {
+      "type": "number",
+      "id": "section_margin_bottom",
+      "label": "Section margin-bottom px"
+    },
+    {
+      "type": "number",
+      "id": "panel_content_left",
+      "label": "Copy inset from screen edge px",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_content_right",
+      "label": "Copy right padding px",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_width_css",
+      "label": "Plate width override (e.g. 58%)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_top_css",
+      "label": "Plate top override (e.g. 15%)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_left_css",
+      "label": "Plate left override (e.g. 50%) — wins over align",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_right_css",
+      "label": "Plate right override — right mode (e.g. 25%)",
+      "visible_if": "{{ section.settings.panel and section.settings.panel_align == 'right' }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_shadow",
+      "label": "Plate box-shadow (CSS)",
+      "info": "e.g. 0 10px 30px rgba(0,0,0,0.15)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_pad_left_css",
+      "label": "Copy padding-left override (e.g. 59%)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_pad_right_css",
+      "label": "Copy padding-right override (e.g. 7%)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "header",
+      "content": "Plate — mobile (< 751px)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_width_mobile",
+      "label": "Plate width mobile (e.g. 90%)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_overlap_mobile",
+      "label": "Overlap section above — mobile px",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_top_mobile",
+      "label": "Plate top mobile px (drop down)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "panel_height_mobile",
+      "label": "Plate height mobile px (blank = full)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_pad_left_mobile",
+      "label": "Copy padding-left mobile (e.g. 7%)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "text",
+      "id": "panel_pad_right_mobile",
+      "label": "Copy padding-right mobile (e.g. 7%)",
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "header",
+      "content": "Two columns (image + text inside plate)"
+    },
+    {
+      "type": "checkbox",
+      "id": "two_col",
+      "label": "Two-column layout (image left, text right)",
+      "default": false,
+      "visible_if": "{{ section.settings.panel }}"
+    },
+    {
+      "type": "number",
+      "id": "two_col_gap",
+      "label": "Gap between columns px",
+      "visible_if": "{{ section.settings.two_col }}"
+    },
+    {
+      "type": "select",
+      "id": "two_col_valign",
+      "label": "Columns vertical align",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "start", "label": "Top" },
+        { "value": "end", "label": "Bottom" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.two_col }}"
+    },
+    {
+      "type": "header",
+      "content": "Side image (masked, overlaps plate)"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_image_preview",
+      "label": "Side image preview asset (dev only)"
+    },
+    {
+      "type": "text",
+      "id": "side_left",
+      "label": "Side left (e.g. 55%)"
+    },
+    {
+      "type": "number",
+      "id": "side_top",
+      "label": "Side top px"
+    },
+    {
+      "type": "number",
+      "id": "side_width",
+      "label": "Window width px"
+    },
+    {
+      "type": "number",
+      "id": "side_height",
+      "label": "Window height px"
+    },
+    {
+      "type": "number",
+      "id": "side_radius",
+      "label": "Side corner radius px"
+    },
+    {
+      "type": "text",
+      "id": "side_bg",
+      "label": "Side background (needs transparent PNG)"
+    },
+    {
+      "type": "text",
+      "id": "side_bg_size",
+      "label": "Two-col image background-size (e.g. 100% auto, cover)"
+    },
+    {
+      "type": "text",
+      "id": "side_bg_pos",
+      "label": "Two-col image background-position (e.g. top center)"
+    },
+    {
+      "type": "checkbox",
+      "id": "side_fit",
+      "label": "Two-col: fit image to plate height (bottom flush)",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "side_overflow_top",
+      "label": "Two-col: image poke above top px",
+      "visible_if": "{{ section.settings.side_fit }}"
+    },
+    {
+      "type": "number",
+      "id": "side_img_w",
+      "label": "Image full width px (crop)"
+    },
+    {
+      "type": "number",
+      "id": "side_img_h",
+      "label": "Image full height px (crop)"
+    },
+    {
+      "type": "number",
+      "id": "side_crop_x",
+      "label": "Crop offset X px"
+    },
+    {
+      "type": "number",
+      "id": "side_crop_y",
+      "label": "Crop offset Y px"
+    },
+    {
+      "type": "number",
+      "id": "side_z",
+      "label": "Side z-index (2 = over plate)"
+    },
+    {
+      "type": "checkbox",
+      "id": "side_hide_mobile",
+      "label": "Hide side image on mobile",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "Background type",
+      "options": [
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "image", "label": "Image" }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "color",
+      "id": "background_solid",
+      "label": "Background color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.background_type == 'color' }}"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient",
+      "visible_if": "{{ section.settings.background_type == 'gradient' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "visible_if": "{{ section.settings.background_type == 'image' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "t:content.mobile"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sticker",
+      "name": "Sticker",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "preview_asset", "label": "Preview asset (dev only)" },
+        { "type": "checkbox", "id": "on_section", "label": "Attach to section (over side image, not the plate)", "default": false },
+        { "type": "checkbox", "id": "desktop_only", "label": "Desktop only", "default": false },
+        { "type": "checkbox", "id": "mobile_only", "label": "Mobile only", "default": false },
+        { "type": "number", "id": "left", "label": "Left %", "default": 50 },
+        { "type": "number", "id": "top", "label": "Top %", "default": 50 },
+        { "type": "number", "id": "width", "label": "Width %", "default": 18 },
+        { "type": "range", "id": "rotate", "label": "Rotate", "min": -45, "max": 45, "step": 1, "unit": "deg", "default": 0 },
+        { "type": "number", "id": "tx", "label": "Translate X % (anchor, default -50)" },
+        { "type": "number", "id": "ty", "label": "Translate Y % (anchor, default -50)" },
+        { "type": "header", "content": "Mobile (blank = same as desktop)" },
+        { "type": "text", "id": "left_mobile", "label": "Left % mobile" },
+        { "type": "text", "id": "top_mobile", "label": "Top % mobile" },
+        { "type": "text", "id": "width_mobile", "label": "Width % mobile" },
+        { "type": "text", "id": "rotate_mobile", "label": "Rotate mobile" },
+        { "type": "text", "id": "tx_mobile", "label": "Translate X % mobile" },
+        { "type": "text", "id": "ty_mobile", "label": "Translate Y % mobile" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "AW About Text"
+    }
+  ]
+}
+{% endschema %}
