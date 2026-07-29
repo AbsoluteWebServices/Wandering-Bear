@@ -181,26 +181,15 @@
     ></script>
 
     {% capture empty_cart_drawer_content %}
-      <div class="cart-drawer__header">
-        <button
-          ref="closeButton"
-          on:click="cart-drawer-component/close"
-          class="button close-button cart-drawer__close-button button-unstyled"
-          aria-label="{{ 'actions.close_dialog' | t }}"
-        >
-          <span class="svg-wrapper">
-            {% render 'icons', icon: 'close', class: 'w-4 h-4' %}
-          </span>
-        </button>
-      </div>
+      {% render 'cart-header' %}
 
       <div
         data-cart-drawer-content
-        class="cart-drawer__content"
+        class="cart-drawer__content !mt-[calc((100dvh/3)*1.5)]"
         aria-label="{{ 'accessibility.cart' | t }}"
       >
         <h2
-          class="cart-drawer__heading h4 cart-drawer__heading--empty"
+          class="cart-drawer__heading h6 !mb-4.5 !text-bear-black mx-auto text-center mb-4.5 font-gothic_condensed !uppercase text-lg"
           id="cart-drawer-heading-empty"
         >
           {{ 'content.your_cart_is_empty' | t }}
@@ -254,7 +243,7 @@
           class="cart-drawer__inner"
           data-hydration-key="cart-drawer-inner"
         >
-          <div>
+          <div class="w-full">
             {% capture cart_items_children %}
               {%- if cart.empty? -%}
                 {{ empty_cart_drawer_content }}
@@ -507,9 +496,9 @@
     min-height: auto;
   }
 
-  .cart-drawer--empty .cart-drawer__heading {
-    margin-bottom: var(--margin-md);
-  }
+  /* .cart-drawer--empty .cart-drawer__heading {
+    margin-bottom: 18px;
+  } */
 
   .cart-drawer__items .cart-items__table-row {
     padding-bottom: var(--gap-xl);
@@ -612,7 +601,7 @@
   }
 
   .cart-drawer:not(:has(.cart-form)) .cart-drawer__content {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .cart-drawer__header {

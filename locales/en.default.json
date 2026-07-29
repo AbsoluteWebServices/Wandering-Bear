@@ -190,7 +190,7 @@
     "close": "Close",
     "open": "Open",
     // Continue shopping link on the cart page which takes the user back to a collection page
-    "continue_shopping": "Continue shopping",
+    "continue_shopping": "Keep Shopping",
     "enter_password": "Enter password",
     "log_in_html": "Have an account? <a href=\"{{ link }}\">Log in</a> to check out faster.",
     "log_in": "Sign in",
@@ -411,7 +411,7 @@
     "each_abbreviation": "ea",
     "price_at": "at",
     "price_range": "Price range",
-    "your_cart_is_empty": "Your cart is empty",
+    "your_cart_is_empty": "YOUR BAG IS EMPTY!",
     "product_count": "Product count",
     "errors": "Errors",
     "wrong_password": "Wrong password",

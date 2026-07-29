@@ -79,15 +79,13 @@
         {{ 'actions.log_in_html' | t: link: routes.account_login_url }}
       </p>
     {%- endif -%}
-
-    <a
-      class="button cart-items__empty-button"
-      href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
-    >
-      <span class="button-text">
-        {{ 'actions.continue_shopping' | t }}
-      </span>
-    </a>
+      {% assign button_text = 'actions.continue_shopping' | t %}
+      {% assign button_link = settings.empty_cart_button_link | default: routes.all_products_collection_url %}
+      {% render 'wb-button', 
+      label: button_text, 
+      link: button_link, 
+      style: 'secondary',
+      class: 'cart-items__empty-button !text-base' %}
   {%- else -%}
     <span
       class="visually-hidden"
@@ -1127,7 +1125,6 @@
   }
 
   .cart-items__empty-button {
-    margin-top: var(--margin-md);
     padding-inline: var(--padding-4xl);
     padding-block: var(--padding-lg);
   }
