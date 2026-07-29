@@ -138,6 +138,10 @@
         · default — a single vertically-centred copy column (col_valign / col_abs for placement).
       {%- endcomment -%}
       {% capture copy_html %}
+        {%- comment -%} Mobile-only icon centred above the title (e.g. the crown over "Super Premium?"). {%- endcomment -%}
+        {% if s.mobile_top_icon != blank %}
+          <img src="{{ s.mobile_top_icon | asset_url }}" alt="" class="wb-about-text__mobile-icon smd:!hidden" style="width: {{ s.mobile_top_icon_width | default: 46 }}px;" loading="lazy">
+        {% endif %}
         {% if s.title != blank %}
           <h2 class="wb-about-text__title {{ s.title_style | default: 'display-md' }} wb-about-text__title-size leading-[1.1] uppercase mb-5" style="color: {{ text_color }};{% if title_align != 'inherit' %} text-align: {{ title_align }};{% endif %}">
             {{ s.title | replace: '\b', '<br>' }}
@@ -197,9 +201,21 @@
           elsif s.col_valign == 'bottom'
             assign col_justify = 'justify-end'
           endif
+          # Mobile-only photo tucked into the top of the plate (Figma mobile shows the sourcing shot
+          # full-bleed at the top of the "So how do we do it?" plate). Uses the same side image asset.
+          assign mtop_src = ''
+          if s.side_image != blank
+            assign mtop_src = s.side_image | image_url: width: 900
+          elsif s.side_image_preview != blank
+            assign mtop_src = s.side_image_preview | asset_url
+          endif
         %}
         <div class="wb-about-text__plate-inner relative z-[1] h-full flex flex-col {{ col_justify }}"
              style="padding-left: {{ pad_left_css }}; padding-right: {{ pad_right_css }};">
+          {% if s.side_show_mobile_top and mtop_src != blank %}
+            <div class="wb-about-text__mobile-photo smd:!hidden" role="img" aria-label="{{ s.side_image.alt }}"
+                 style="background-image: url('{{ mtop_src }}'); background-position: {{ s.side_mobile_pos | default: 'center 68%' }};"></div>
+          {% endif %}
           <div class="wb-about-text__col {{ align_class }}{% unless s.col_abs %} relative w-full{% endunless %}" style="{% if s.col_abs %}position: absolute; top: {{ s.col_top | default: '50%' }}; left: {{ s.col_left | default: '0' }};{% if s.col_width != blank %} width: {{ s.col_width }};{% endif %} max-width: none;{% else %}max-width: {{ s.column_width | default: 566 }}px;{% endif %}{% if s.col_pad_bottom != blank %} padding-bottom: {{ s.col_pad_bottom }}px;{% endif %}">
             {{ copy_html }}
           </div>
@@ -215,33 +231,89 @@
     </div>
 
     {%- comment -%}
-      Mobile plate overrides (< 751px). Desktop values are inline, so these need !important.
-      By default the plate centres and drops a little; all values are editable.
+      Mobile (< 750px): the plate is absolutely placed with px sizes tuned for desktop, which on a
+      narrow screen truncate the copy and overlap the neighbouring sections. Per the mobile spec,
+      drop the plate back into normal flow — full width with a small gutter, height driven by its
+      content — and clear the desktop overlap / min-height / shift so the sections simply stack.
+      For two-column plates (image + text) the columns stack vertically. Desktop (>=750px) is
+      never matched by this query, so it stays exactly as authored.
     {%- endcomment -%}
     {% style %}
-      @media screen and (max-width: 750px) {
-        {% if s.panel_overlap_mobile != blank %}
+      @media screen and (max-width: 749px) {
         .wb-about-text--{{ section.id }} {
-          margin-top: -{{ s.panel_overlap_mobile }}px !important;
+          margin-top: 0 !important;
+          min-height: 0 !important;
+          transform: none !important;
+          position: relative !important;
+          top: auto !important;
         }
-        {% endif %}
         .wb-about-text--{{ section.id }} .wb-about-text__plate {
-          left: 50% !important;
+          position: relative !important;
+          top: auto !important;
+          left: auto !important;
           right: auto !important;
-          transform: translateX(-50%) !important;
-          width: {{ s.panel_width_mobile | default: '90%' }} !important;
-          top: {{ s.panel_top_mobile | default: 40 }}px !important;
-          {% if s.panel_height_mobile != blank %}height: {{ s.panel_height_mobile }}px !important;{% endif %}
+          bottom: auto !important;
+          width: auto !important;
+          height: auto !important;
+          min-height: 0 !important;
+          transform: none !important;
+          margin: 0 {% if s.plate_hide_mobile %}0{% else %}{{ s.plate_gutter_mobile | default: 16 }}px{% endif %} {{ s.plate_margin_bottom_mobile | default: 36 }}px !important;
+          {% comment %} overflow visible when a photo pokes out of the plate top; otherwise clip to the radius. {% endcomment %}
+          overflow: {% if s.side_show_mobile_top %}visible{% else %}hidden{% endif %} !important;
+          {% comment %} plate_hide_mobile: the "blue field" sections (believe / premium) drop the plate
+             so the centred copy sits straight on the page background, per the Figma mobile design. {% endcomment %}
+          {% if s.plate_hide_mobile %}background: transparent !important; box-shadow: none !important;{% endif %}
         }
-        .wb-about-text--{{ section.id }} .wb-about-text__plate-inner {
-          padding-left: {{ s.panel_pad_left_mobile | default: '7%' }} !important;
-          padding-right: {{ s.panel_pad_right_mobile | default: '7%' }} !important;
-        }
-        {% if s.col_pad_bottom_mobile != blank %}
-        .wb-about-text--{{ section.id }} .wb-about-text__col {
-          padding-bottom: {{ s.col_pad_bottom_mobile }}px !important;
+        {% if s.side_show_mobile_top %}
+        .wb-about-text--{{ section.id }} .wb-about-text__mobile-photo {
+          display: block !important;
+          align-self: center !important;
+          {% comment %} 20% narrower than the plate, centred, and poked ~20% of its height above the plate top. {% endcomment %}
+          width: {{ s.side_mobile_width_pct | default: 92 }}% !important;
+          margin: -{{ s.side_mobile_poke | default: 80 }}px auto {{ s.side_mobile_gap | default: 34 }}px !important;
+          aspect-ratio: {{ s.side_mobile_aspect | default: '16 / 11' }} !important;
+          border-radius: {{ s.side_radius_mobile | default: 18 }}px !important;
+          background-size: {{ s.side_mobile_zoom | default: '135%' }} !important;
+          background-repeat: no-repeat !important;
         }
         {% endif %}
+        .wb-about-text--{{ section.id }} .wb-about-text__plate-inner {
+          position: relative !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          height: auto !important;
+          {% comment %} Plateless (blue-field) sections still need horizontal padding so the centred copy
+             is inset from the screen edge; the cream plates keep their full padding. {% endcomment %}
+          padding: {% if s.plate_hide_mobile %}0 {{ s.plate_pad_x_mobile | default: 26 }}px{% else %}{{ s.plate_pad_y_mobile | default: 28 }}px {{ s.plate_pad_x_mobile | default: 22 }}px{% endif %} !important;
+          gap: {{ s.plate_stack_gap_mobile | default: 18 }}px !important;
+        }
+        .wb-about-text--{{ section.id }} .wb-about-text__col {
+          position: relative !important;
+          top: auto !important;
+          left: auto !important;
+          width: 100% !important;
+          max-width: none !important;
+          padding-top: 0 !important;
+          {% unless s.text_center_mobile == false %}text-align: center !important; margin-left: auto !important; margin-right: auto !important;{% endunless %}
+          {% if s.col_pad_bottom_mobile != blank %}padding-bottom: {{ s.col_pad_bottom_mobile }}px !important;{% endif %}
+        }
+        {% comment %} Two-column text column (Super Premium): extra side padding on mobile. {% endcomment %}
+        .wb-about-text--{{ section.id }} .wb-about-text__col.flex-1 {
+          padding-left: 20px !important;
+          padding-right: 20px !important;
+        }
+        {% unless s.text_center_mobile == false %}
+        .wb-about-text--{{ section.id }} .wb-about-text__title { text-align: center !important; }
+        {% endunless %}
+        .wb-about-text--{{ section.id }} .wb-about-text__img-col {
+          width: 100% !important;
+          height: {{ s.side_height_mobile | default: 240 }}px !important;
+          margin-top: 0 !important;
+          border-radius: {{ s.side_radius_mobile | default: 12 }}px !important;
+          order: {{ s.two_col_img_order_mobile | default: 2 }};
+          {% if s.two_col_img_hide_mobile %}display: none !important;{% endif %}
+        }
       }
     {% endstyle %}
   {% else %}
@@ -319,6 +391,26 @@
   {% endstyle %}
 {%- endif -%}
 
+{%- comment -%}
+  Mobile (< 750px): clear the wrapper's desktop overlap margins / stacking so the sections stack in
+  natural order. Same #shopify-section id-specificity as the desktop rule above, emitted later, so
+  it wins on mobile only. Desktop is not matched.
+{%- endcomment -%}
+{% style %}
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} {
+      margin-top: 0 !important;
+      margin-bottom: {{ s.section_margin_bottom_mobile | default: 0 }}px !important;
+      position: relative !important;
+      top: auto !important;
+      {% comment %} Keep z-index at 1 (the theme's default for a section), NOT auto: the page-background
+         paints its blue field at z-0 inside its own z-1 section, so a copy section dropped to z:auto
+         would render behind that blue field and vanish. z:1 keeps every section above it. {% endcomment %}
+      z-index: 1 !important;
+    }
+  }
+{% endstyle %}
+
 {% stylesheet %}
   /* Stacking for the About Us plate overlap: hero (aw-z-2) stays above the plate of the next
      section (aw-z-1), so a plate tucked up under the hero sits behind the photo, not over it. */
@@ -330,6 +422,12 @@
      display-md/display-lg/body classes site-wide. */
   .wb-about-text__title {
     font-family: "Kurdis", sans-serif !important;
+  }
+
+  /* Mobile-only icon centred above the title (crown over Super Premium). Hidden on desktop via smd:!hidden. */
+  .wb-about-text__mobile-icon {
+    display: block;
+    margin: 0 auto 10px;
   }
 
   .wb-about-text__body,
@@ -420,6 +518,17 @@
       "id": "body",
       "label": "Body",
       "info": "HTML allowed — gold highlights use <span class=\"text-gold\">."
+    },
+    {
+      "type": "text",
+      "id": "mobile_top_icon",
+      "label": "Mobile icon above title (asset filename)",
+      "info": "Shown centred above the title on mobile only (e.g. ab-crown.png)."
+    },
+    {
+      "type": "number",
+      "id": "mobile_top_icon_width",
+      "label": "Mobile icon width px"
     },
     {
       "type": "color",
@@ -733,6 +842,46 @@
       "visible_if": "{{ section.settings.panel }}"
     },
     {
+      "type": "checkbox",
+      "id": "text_center_mobile",
+      "label": "Center text on mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "plate_hide_mobile",
+      "label": "Hide plate on mobile (copy on page background)",
+      "default": false,
+      "info": "For the blue-field sections (We Believe / Super Premium) the plate is dropped on mobile so the centred copy sits on the page background."
+    },
+    {
+      "type": "checkbox",
+      "id": "two_col_img_hide_mobile",
+      "label": "Hide two-column image on mobile",
+      "default": false,
+      "visible_if": "{{ section.settings.two_col }}"
+    },
+    {
+      "type": "number",
+      "id": "plate_pad_x_mobile",
+      "label": "Plate padding X — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "plate_pad_y_mobile",
+      "label": "Plate padding Y — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "plate_gutter_mobile",
+      "label": "Plate side gutter — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "side_height_mobile",
+      "label": "Two-column image height — mobile px"
+    },
+    {
       "type": "text",
       "id": "panel_width_mobile",
       "label": "Plate width mobile (e.g. 90%)",
@@ -893,6 +1042,23 @@
       "id": "side_hide_mobile",
       "label": "Hide side image on mobile",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "side_show_mobile_top",
+      "label": "Show side image full-bleed at plate top on mobile",
+      "default": false,
+      "info": "Mobile only: tuck the side image into the top of the plate (used for the sourcing shot on 'So how do we do it?')."
+    },
+    {
+      "type": "text",
+      "id": "side_mobile_pos",
+      "label": "Mobile top photo position (e.g. center 68%)"
+    },
+    {
+      "type": "text",
+      "id": "side_mobile_aspect",
+      "label": "Mobile top photo aspect (e.g. 16 / 11)"
     },
     {
       "type": "header",

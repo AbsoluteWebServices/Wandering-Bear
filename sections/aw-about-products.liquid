@@ -132,6 +132,19 @@
   {% endstyle %}
 {%- endif -%}
 
+{%- comment -%}
+  Mobile (< 750px): on desktop the margin above reserves the space of the absolute banner section.
+  On mobile that banner is back in normal flow, so the reserved gap is removed and the products
+  block simply follows it. Desktop is not matched by this query.
+{%- endcomment -%}
+{% style %}
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} {
+      margin-top: {{ s.section_margin_top_mobile | default: 0 }}px !important;
+    }
+  }
+{% endstyle %}
+
 {% stylesheet %}
   /* Fonts per Figma: regular Kurdis for labels/subheading/promise text, Gothic Condensed for the
      numbered badges, Parslay for the script. Enforced here (not only via Tailwind utilities) so the
@@ -234,15 +247,17 @@
      that matches the surroundings and the multiply box has no visible edges. */
   .wb-about-products__paw-img {
     position: relative;
-    width: 340px;
-    max-width: 100%;
-    aspect-ratio: 1024 / 540;
-    margin: 16px auto 0;
-    background-image: var(--paw-img), linear-gradient(180deg, var(--paw-blend-top, #BF8F38) 0%, var(--paw-blend-bottom, #B27A0F) 100%);
-    background-repeat: no-repeat, no-repeat;
-    background-position: 50% 44%, center;
-    background-size: cover, 100% 100%;
-    background-blend-mode: multiply, normal;
+    /* Transparent PNG cut-out (ab-bearhand.png) — shown directly, no multiply/gradient knock-out.
+       Mobile (Figma 1694:245 BearHand: 642×541 ≈ the image's native ratio, bled off the left edge). */
+    width: 642px;
+    max-width: none;
+    align-self: flex-start;
+    aspect-ratio: 1024 / 863;
+    margin: 24px 0 0 -350px;
+    background-image: var(--paw-img);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
     pointer-events: none;
   }
 
@@ -335,7 +350,8 @@
       aspect-ratio: 1024 / 500;
       /* bleed off the left edge of the content column (clipped by the section's overflow:hidden) */
       margin: 40px 0 0 -130px;
-      background-position: 50% 46%, center;
+      background-position: 50% 46%;
+      background-size: cover;
     }
 
     .wb-about-products__paw-sticker {
@@ -368,6 +384,41 @@
   @media screen and (max-width: 1023px) {
     .wb-about-products__script {
       font-size: var(--script-size-mobile) !important;
+    }
+  }
+
+  /* Mobile: bigger number badges to match the Figma mobile design (digit 25px). Scoped to < 750px
+     so the desktop badge (48px / 20px) is untouched. */
+  @media screen and (max-width: 749px) {
+    .wb-about-products__paw-heading {
+      font-size: 54px;
+      line-height: 0.82;
+      letter-spacing: -0.5px;
+    }
+    .wb-about-products__paw-left {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .wb-about-products__paw-sub {
+      font-size: 20px;
+      line-height: 1.15;
+      margin: 30px auto 0;
+      max-width: 315px;
+    }
+    .wb-about-products__promise {
+      padding: 55px 22px 24px;
+    }
+    .wb-about-products__promise-num {
+      width: 75px;
+      height: 75px;
+      top: -38px;
+      font-size: 25px;
+    }
+    .wb-about-products__promises {
+      gap: 56px;
+      max-width: 370px;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 {% endstylesheet %}

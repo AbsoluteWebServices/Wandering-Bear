@@ -117,6 +117,74 @@
   {% endstyle %}
 {%- endif -%}
 
+{%- comment -%}
+  Mobile (< 750px): the banner is authored for desktop with the section taken out of flow
+  (section_abs, top 1850px), the photo cropped by a big negative offset, a cut-out overlay breaking
+  out of the top, and the text card lifted over the photo. None of that survives a narrow screen, so
+  on mobile it collapses to a clean vertical block: section back in flow, photo shown whole in its
+  rounded frame, breakout overlay hidden, and the heading/body card sitting below the photo.
+  Desktop (>=750px) is not matched by this query.
+{%- endcomment -%}
+{% style %}
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      margin-top: {{ s.section_margin_top_mobile | default: 0 }}px !important;
+    }
+    .aw-about-banner__media {
+      height: auto !important;
+    }
+    .aw-about-banner__frame {
+      position: relative !important;
+      inset: auto !important;
+    }
+    .aw-about-banner__frame img {
+      position: relative !important;
+      top: 0 !important;
+    }
+    .aw-about-banner__overlay {
+      display: none !important;
+    }
+    .aw-about-banner__badge {
+      display: none !important;
+    }
+    .aw-about-banner__card {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      width: 100% !important;
+      margin-top: {{ s.card_margin_top_mobile | default: 20 }}px !important;
+      align-items: center !important;
+      {% comment %} Side padding lives on the card (parent) on mobile; the inner wraps are flush. {% endcomment %}
+      padding-left: {{ s.text_pad_x_mobile | default: 20 }}px !important;
+      padding-right: {{ s.text_pad_x_mobile | default: 20 }}px !important;
+    }
+    .aw-about-banner__heading-wrap {
+      width: 100% !important;
+      border-radius: 0 !important;
+      {% comment %} On mobile the heading is centred text on the page background, not the half-width cream tab. {% endcomment %}
+      background: transparent !important;
+      text-align: center !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+    .aw-about-banner__title {
+      text-align: center !important;
+    }
+    .aw-about-banner__body-wrap {
+      width: 100% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+    .aw-about-banner__body {
+      text-align: center !important;
+    }
+  }
+{% endstyle %}
+
 {% stylesheet %}
   /* About Us is set in regular Kurdis, not the theme's default Condensed display face. Override
      locally (banner is About-Us-only) instead of touching the shared display-md/body classes. */

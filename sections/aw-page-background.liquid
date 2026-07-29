@@ -60,6 +60,22 @@
   #MainContent {
     overflow-x: clip;
   }
+
+  /* Mobile (< 750px): on the Figma mobile design the whole upper region (hero → Super Premium) sits
+     on one continuous blue field, with the cream copy plates (fridge / how-we-do-it) as islands on
+     top and the plain-text sections (We Believe / Super Premium) letting the blue show through. Give
+     the field its own top/height for the taller mobile stack and drop the desktop wavy top edge for a
+     clean straight band under the header. Desktop is not matched by this query. */
+  @media screen and (max-width: 749px) {
+    .aw-page-bg {
+      top: {{ s.blue_top_mobile | default: 0 }}px !important;
+      height: {{ s.blue_height_mobile | default: 1980 }}px !important;
+    }
+    .aw-page-bg__blue {
+      -webkit-mask: none !important;
+      mask: none !important;
+    }
+  }
 {% endstyle %}
 
 {% schema %}
