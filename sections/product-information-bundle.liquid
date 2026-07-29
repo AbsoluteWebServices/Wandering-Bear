@@ -27,10 +27,11 @@
     assign is_32oz = true
   endif
 
+  #TODO: Use 100 as placeholder for bundle qty with no upper limit
   if is_32oz
     assign params = "3,'single','32oz'"
   else
-    assign params = '3,null,null'
+    assign params = '100,null,null'
   endif
 %}
 
