@@ -392,8 +392,6 @@
   @media screen and (max-width: 749px) {
     .wb-about-products__paw-heading {
       font-size: 54px;
-      line-height: 0.82;
-      letter-spacing: -0.5px;
     }
     .wb-about-products__paw-left {
       text-align: center;
@@ -420,6 +418,14 @@
       margin-left: auto;
       margin-right: auto;
     }
+    /* Figma mobile grid order: On Tap, Cartons, Kegs, Concentrate, Cans, Lattes
+       (swap the 3rd/4th cards — Concentrate <-> Kegs — mobile only; desktop grid unchanged). */
+    .wb-about-products__cell:nth-child(1) { order: 1; }
+    .wb-about-products__cell:nth-child(2) { order: 2; }
+    .wb-about-products__cell:nth-child(3) { order: 4; }
+    .wb-about-products__cell:nth-child(4) { order: 3; }
+    .wb-about-products__cell:nth-child(5) { order: 5; }
+    .wb-about-products__cell:nth-child(6) { order: 6; }
   }
 {% endstylesheet %}
 

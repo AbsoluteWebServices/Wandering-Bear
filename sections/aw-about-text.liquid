@@ -399,7 +399,9 @@
 {% style %}
   @media screen and (max-width: 749px) {
     #shopify-section-{{ section.id }} {
-      margin-top: 0 !important;
+      {% comment %} overlap_mobile (negative) lets a plate tuck up under the photo of the section
+         above — e.g. the hero photo overlaps the fridge plate, per the Figma mobile design. {% endcomment %}
+      margin-top: {{ s.overlap_mobile | default: 0 }}px !important;
       margin-bottom: {{ s.section_margin_bottom_mobile | default: 0 }}px !important;
       position: relative !important;
       top: auto !important;
@@ -780,6 +782,11 @@
       "type": "number",
       "id": "section_margin_bottom",
       "label": "Section margin-bottom px"
+    },
+    {
+      "type": "number",
+      "id": "overlap_mobile",
+      "label": "Mobile overlap into section above px (negative = tuck up)"
     },
     {
       "type": "number",
