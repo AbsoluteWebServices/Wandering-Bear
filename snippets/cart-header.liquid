@@ -19,7 +19,7 @@ id="cart-drawer-header"
     {% endif %}
     <div class="flex justify-between items-center p-5 w-full relative">
         <h2
-        class="cart-drawer__heading font-kurdis-semi-condensed font-extrabold text-espresso uppercase text-xl"
+        class="cart-drawer__heading font-kurdis-condensed font-extrabold text-espresso uppercase text-xl"
         id="cart-drawer-heading"
         >
         YOUR BAG
@@ -32,7 +32,7 @@ id="cart-drawer-header"
         aria-label="{{ 'actions.close_dialog' | t }}"
         >
         <span class="svg-wrapper">
-            {% render 'icons', icon: 'close', class: 'w-4 h-4' %}
+            {% render 'icons', icon: 'cart-close', class: 'w-4 h-4' %}
         </span>
         </button>
         <div class="absolute bottom-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
