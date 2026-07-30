@@ -133,6 +133,15 @@
     }
   }
 
+  /* Mobile: keep each \b segment on a single line — the forced <br> gives the
+     intended two-line title, so prevent the copy from wrapping any further. */
+  @media screen and (max-width: 749px) {
+    .wb-listicle__title {
+      text-wrap: nowrap;
+      white-space: nowrap;
+    }
+  }
+
   /* Body copy is rich text — paragraphs are separated, links stay underlined. */
   .wb-listicle__body p + p {
     margin-top: 1rem;
