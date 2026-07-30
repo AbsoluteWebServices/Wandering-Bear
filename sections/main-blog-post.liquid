@@ -9,7 +9,7 @@
   {% when 7, 8, 9 %}
     --title-width: 50ch;
   {% else %}
-  --title-width: 38ch;
+  --title-width: 75ch;
 {% endcase %}
 {% endcapture %}
 
@@ -30,7 +30,7 @@
     "
   >
     <header class="mb-5 md:mb-8">
-      <div class="blog-post-title-container" style="{{ title_width }}">
+      <div class="blog-post-title-container px-5 md:px-0" style="{{ title_width }}">
       {%- content_for 'block', id: 'blog-post-title', type: 'text' %}
       </div>
       <div class="mx-auto w-fit !mt-0 md:!mt-8">

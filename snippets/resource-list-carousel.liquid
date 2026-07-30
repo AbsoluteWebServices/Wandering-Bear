@@ -85,7 +85,9 @@
       );
       --fallback-slide-width: clamp(150px, var(--mobile-card-size, 60cqw), var(--slide-width-max));
       /* --slide-width: var(--section-slide-width, var(--fallback-slide-width)); */
-      --slide-width: calc(calc(100% / 3) - var(--resource-list-column-gap));
+      /* (100% - (N-1) gaps) / N so N slides + (N-1) gaps fill exactly 100% with
+         no leftover gap after the last slide. */
+      --slide-width: calc((100% - (2 * var(--resource-list-column-gap))) / 3);
     }
   }
 
