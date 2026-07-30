@@ -152,6 +152,12 @@
             {{ s.body }}
           </div>
         {% endif %}
+        {%- comment -%} Optional gold underline flourish centred under the copy (Figma). {%- endcomment -%}
+        {% if s.bottom_flourish %}
+          <span class="wb-about-text__flourish" style="color: {{ s.flourish_color | default: '#AF7404' }};" aria-hidden="true">
+            <svg width="130" height="9" viewBox="0 0 130 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 4.64498C2.09425 4.40444 4.35751 4.17337 6.45606 3.98355C25.9323 2.26982 45.4333 1.71366 64.9353 2.06405C84.4127 2.47124 103.911 3.81124 123.122 7.3586C125.244 7.75391 127.393 8.18673 129.5 8.64498C127.425 8.05738 125.302 7.50056 123.202 6.98712C104.173 2.37167 84.5378 0.470927 64.9745 0.0644352C45.3803 -0.288361 25.7913 0.81574 6.411 3.60623C4.32398 3.91552 2.07491 4.27252 0 4.64498Z" fill="currentColor"/></svg>
+          </span>
+        {% endif %}
       {% endcapture %}
 
       {% if s.two_col %}
@@ -399,7 +405,9 @@
 {% style %}
   @media screen and (max-width: 749px) {
     #shopify-section-{{ section.id }} {
-      margin-top: 0 !important;
+      {% comment %} overlap_mobile (negative) lets a plate tuck up under the photo of the section
+         above — e.g. the hero photo overlaps the fridge plate, per the Figma mobile design. {% endcomment %}
+      margin-top: {{ s.overlap_mobile | default: 0 }}px !important;
       margin-bottom: {{ s.section_margin_bottom_mobile | default: 0 }}px !important;
       position: relative !important;
       top: auto !important;
@@ -430,6 +438,19 @@
     margin: 0 auto 10px;
   }
 
+  /* Gold underline flourish centred under the copy. */
+  .wb-about-text__flourish {
+    display: block;
+    width: 130px;
+    max-width: 70%;
+    margin: 16px auto 0;
+  }
+  .wb-about-text__flourish svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   .wb-about-text__body,
   .wb-about-text__body p,
   .wb-about-text__body span,
@@ -442,6 +463,19 @@
      Parslay script, not Kurdis. Higher specificity + !important wins over the rule above. */
   .wb-about-text__body a[style*="background"] {
     font-family: "Parslay", cursive !important;
+  }
+
+  /* Mobile: the "Fresh Taste Guarantee." pill drops onto its own centred line; body copy gets a
+     little extra side padding. */
+  @media screen and (max-width: 749px) {
+    .wb-about-text__body a[style*="background"] {
+      display: table !important;
+      margin: 12px auto 0 !important;
+    }
+    .wb-about-text__body {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
   }
 
   .wb-about-text__title-size {
@@ -529,6 +563,18 @@
       "type": "number",
       "id": "mobile_top_icon_width",
       "label": "Mobile icon width px"
+    },
+    {
+      "type": "checkbox",
+      "id": "bottom_flourish",
+      "label": "Gold underline flourish under copy",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "flourish_color",
+      "label": "Flourish color",
+      "default": "#AF7404"
     },
     {
       "type": "color",
@@ -780,6 +826,11 @@
       "type": "number",
       "id": "section_margin_bottom",
       "label": "Section margin-bottom px"
+    },
+    {
+      "type": "number",
+      "id": "overlap_mobile",
+      "label": "Mobile overlap into section above px (negative = tuck up)"
     },
     {
       "type": "number",
@@ -1134,13 +1185,9 @@
       "default": 24
     },
     {
-      "type": "range",
+      "type": "number",
       "id": "padding-block-end-mobile",
-      "label": "t:settings.bottom_mobile",
-      "min": 0,
-      "max": 120,
-      "step": 2,
-      "unit": "px",
+      "label": "Padding bottom mobile px",
       "default": 24
     }
   ],
