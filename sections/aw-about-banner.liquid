@@ -172,8 +172,8 @@
       margin-top: {{ s.card_margin_top_mobile | default: 20 }}px !important;
       align-items: center !important;
       {% comment %} Side padding lives on the card (parent) on mobile; the inner wraps are flush. {% endcomment %}
-      padding-left: {{ s.text_pad_x_mobile | default: 20 }}px !important;
-      padding-right: {{ s.text_pad_x_mobile | default: 20 }}px !important;
+      padding-left: {{ s.text_pad_x_mobile | default: 40 }}px !important;
+      padding-right: {{ s.text_pad_x_mobile | default: 40 }}px !important;
     }
     .aw-about-banner__heading-wrap {
       width: 100% !important;
@@ -186,6 +186,9 @@
     }
     .aw-about-banner__title {
       text-align: center !important;
+      padding-top: {{ s.title_pad_top_mobile | default: 120 }}px !important;
+      line-height: {{ s.heading_lh | default: 1.09 }} !important;
+      color: {{ s.text_color | default: '#1B1B1B' }} !important;
     }
     .aw-about-banner__body-wrap {
       width: 100% !important;
