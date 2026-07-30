@@ -1,0 +1,35 @@
+{%- doc -%}
+  Loads assets/member-cart-refresh.js only when a logged-in member has items in
+  their cart but the automatic member order discount is NOT yet applied.
+
+  The script pokes the cart so Shopify re-evaluates and applies the discount on
+  login (see the JS file for the full rationale). Gating on the actual applied
+  state — rather than a client session flag — means it re-triggers correctly on
+  every login, including logout-then-login in the same tab, and stops loading as
+  soon as the discount is present.
+
+  Member tag mapping matches customer-membership-tier.liquid:
+    VIP  = inveterate-tier#72ccf378
+    ELITE = inveterate-tier#dc38b982 / inveterate-tier#99a431e2
+{%- enddoc -%}
+{%- liquid
+  assign is_member = false
+  for tag in customer.tags
+    if tag == 'inveterate-tier#72ccf378' or tag == 'inveterate-tier#dc38b982' or tag == 'inveterate-tier#99a431e2'
+      assign is_member = true
+      break
+    endif
+  endfor
+
+  assign member_discount_applied = false
+  for discount in cart.cart_level_discount_applications
+    assign discount_title = discount.title | downcase
+    if discount_title contains 'member'
+      assign member_discount_applied = true
+      break
+    endif
+  endfor
+-%}
+{%- if is_member and cart.item_count > 0 and member_discount_applied == false -%}
+  <script src="{{ 'member-cart-refresh.js' | asset_url }}" type="module" fetchpriority="low"></script>
+{%- endif -%}
