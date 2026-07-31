@@ -35,7 +35,15 @@
 >
   {% render 'section-background', settings: s, part: 'media' %}
 
-  <div class="relative z-[1]">
+  {%- comment -%}
+    No z-index here on purpose. The widget opens its mobile filter panel as position:fixed
+    with z-index 999999, so any z-index on this wrapper would make it a stacking context and
+    trap that panel at the wrapper's level — the sticky header (--layer-sticky, 8), the footer
+    (z-10) and aw-contact-cta (z-[1], later in the DOM) would all paint over the open panel.
+    `relative` alone is enough to sit above the section background, which is absolute z-0 and
+    comes first in the DOM.
+  {%- endcomment -%}
+  <div class="relative">
     <div
       id="{{ s.container_id | default: 'wb-store-locator' }}"
       class="wb-store-locator__frame mx-auto w-full"
