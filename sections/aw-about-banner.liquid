@@ -16,6 +16,23 @@
     assign img_src = s.image_preview | asset_url
   endif
 
+  # Desktop cover image (its own slot so it can be a clean landscape crop, separate from the
+  # mobile box photo). Falls back to the base image if no dedicated cover is set.
+  assign cover_src = img_src
+  if s.desktop_cover_image != blank
+    assign cover_src = s.desktop_cover_image | image_url: width: 1600
+  elsif s.desktop_cover_preview != blank
+    assign cover_src = s.desktop_cover_preview | asset_url
+  endif
+
+  # Mobile cover image (own crop). Falls back to the desktop cover if not set.
+  assign mobile_cover_src = cover_src
+  if s.mobile_cover_image != blank
+    assign mobile_cover_src = s.mobile_cover_image | image_url: width: 1200
+  elsif s.mobile_cover_preview != blank
+    assign mobile_cover_src = s.mobile_cover_preview | asset_url
+  endif
+
   assign radius_l = s.radius_left | default: 0
   assign radius_r = s.radius_right | default: 20
   assign block_radius = radius_l | append: 'px ' | append: radius_r | append: 'px ' | append: radius_r | append: 'px ' | append: radius_l | append: 'px'
@@ -50,7 +67,16 @@
     <div class="aw-about-banner__media relative w-full" style="height: {{ s.image_height | default: 500 }}px;">
       <div class="aw-about-banner__frame absolute inset-0 overflow-hidden" style="border-radius: {{ block_radius }};{% if img_src != blank %} --frame-img: url('{{ img_src }}');{% endif %}">
         {% if img_src != blank %}
-          <img src="{{ img_src }}" alt="{{ s.image.alt }}" class="absolute inset-x-0 w-full max-w-none" style="top: {{ s.media_img_top | default: 0 }}px;" loading="lazy">
+          <img src="{{ img_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__frame-img absolute inset-x-0 w-full max-w-none" style="top: {{ s.media_img_top | default: 0 }}px;" loading="lazy">
+          {% if s.desktop_cover %}
+            {%- comment -%}
+              One clean cover image per breakpoint, filling the rounded frame. The breakout overlay and
+              the offset frame image (above) are hidden on both breakpoints via the style blocks below.
+              Desktop uses the landscape crop; mobile its own (portrait) crop.
+            {%- endcomment -%}
+            <img src="{{ cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--desktop hidden smd:!block absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.desktop_cover_pos | default: 'center' }};" loading="lazy">
+            <img src="{{ mobile_cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--mobile smd:!hidden absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.mobile_cover_pos | default: 'center' }};" loading="lazy">
+          {% endif %}
         {% endif %}
       </div>
       {% if overlay_src != blank %}
@@ -147,7 +173,7 @@
       inset: 0 !important;
       overflow: hidden !important;
     }
-    .aw-about-banner__frame img,
+    .aw-about-banner__frame-img,
     .aw-about-banner__overlay {
       display: block !important;
       position: absolute !important;
@@ -201,6 +227,21 @@
   }
 {% endstyle %}
 
+{%- comment -%}
+  Cover mode: hide the breakout cut-out overlay and the offset frame image on BOTH breakpoints so only
+  the clean per-breakpoint cover images show. Id-scoped so it beats the mobile layered rules and leaves
+  other banners untouched.
+{%- endcomment -%}
+{%- if s.desktop_cover -%}
+  {% style %}
+    #shopify-section-{{ section.id }} .aw-about-banner__overlay,
+    #shopify-section-{{ section.id }} .aw-about-banner__frame-img,
+    #shopify-section-{{ section.id }} .aw-about-banner__badge {
+      display: none !important;
+    }
+  {% endstyle %}
+{%- endif -%}
+
 {% stylesheet %}
   /* About Us is set in regular Kurdis, not the theme's default Condensed display face. Override
      locally (banner is About-Us-only) instead of touching the shared display-md/body classes. */
@@ -214,6 +255,17 @@
   .aw-about-banner__body strong,
   .aw-about-banner__body a {
     font-family: "Kurdis", sans-serif !important;
+  }
+
+  /* Figma: body copy is Kurdis SemiCondensed SemiBold (600); the "Find us nationwide" run steps up
+     to Bold (700). Set explicitly so the weight does not fall back to the theme's default. */
+  .aw-about-banner__body,
+  .aw-about-banner__body p {
+    font-weight: 600;
+  }
+
+  .aw-about-banner__body strong {
+    font-weight: 700;
   }
 
   .aw-about-banner__title-size {
@@ -234,6 +286,13 @@
     { "type": "color", "id": "background_color", "label": "Section background", "default": "#F2E6DC" },
     { "type": "number", "id": "section_min_height", "label": "Section min height px" },
     { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
+    { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
+    { "type": "number", "id": "title_pad_top_mobile", "label": "Title padding-top — mobile px" },
+    { "type": "number", "id": "card_margin_top_mobile", "label": "Card margin-top — mobile px" },
+    { "type": "number", "id": "text_pad_x_mobile", "label": "Card padding X — mobile px" },
+    { "type": "number", "id": "media_top_mobile", "label": "Media image top — mobile px" },
+    { "type": "text", "id": "media_scale_mobile", "label": "Media image width — mobile (e.g. 125%)" },
+    { "type": "number", "id": "section_margin_top_mobile", "label": "Section margin-top — mobile px" },
     { "type": "text", "id": "media_aspect_mobile", "label": "Mobile frame aspect (e.g. 4 / 3)" },
     { "type": "text", "id": "media_zoom_mobile", "label": "Mobile frame bg-size (e.g. cover, 150%)" },
     { "type": "text", "id": "media_pos_mobile", "label": "Mobile frame bg-position (e.g. center 22%)" },
@@ -255,6 +314,13 @@
     { "type": "number", "id": "overlay_top", "label": "Overlay top px (negative = up)" },
     { "type": "number", "id": "radius_left", "label": "Radius left px" },
     { "type": "number", "id": "radius_right", "label": "Radius right px" },
+    { "type": "checkbox", "id": "desktop_cover", "label": "Desktop: single cover image (hide breakout overlay)", "default": false },
+    { "type": "image_picker", "id": "desktop_cover_image", "label": "Desktop cover image (blank = use main image)" },
+    { "type": "text", "id": "desktop_cover_preview", "label": "Desktop cover preview asset (dev only)" },
+    { "type": "text", "id": "desktop_cover_pos", "label": "Desktop cover position (e.g. center, center 60%)" },
+    { "type": "image_picker", "id": "mobile_cover_image", "label": "Mobile cover image (blank = use desktop cover)" },
+    { "type": "text", "id": "mobile_cover_preview", "label": "Mobile cover preview asset (dev only)" },
+    { "type": "text", "id": "mobile_cover_pos", "label": "Mobile cover position (e.g. center, center 55%)" },
     { "type": "header", "content": "Text block" },
     { "type": "text", "id": "text_width", "label": "Text wrapper width (e.g. 100%)" },
     { "type": "text", "id": "text_bg", "label": "Text wrapper background (blank = transparent)" },

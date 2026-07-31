@@ -22,6 +22,23 @@
   assign ty = s.ty | default: -50
   assign tx_m = s.tx_mobile | default: tx
   assign ty_m = s.ty_mobile | default: ty
+
+  # Desktop size/offset in px. A % width is a share of the parent, so a sticker shrinks along with
+  # the layout and turns illegible on a laptop; width_px pins it instead. Because translate()
+  # percentages resolve against the element's OWN size, a px width would otherwise shift the sticker
+  # as it grows — tx_px / ty_px keep the anchor independent of the size.
+  assign w_css = s.width | append: '%'
+  if s.width_px != blank
+    assign w_css = s.width_px | append: 'px'
+  endif
+  assign tx_css = tx | append: '%'
+  assign ty_css = ty | append: '%'
+  if s.tx_px != blank
+    assign tx_css = s.tx_px | append: 'px'
+  endif
+  if s.ty_px != blank
+    assign ty_css = s.ty_px | append: 'px'
+  endif
 -%}
 
 {%- liquid
@@ -47,13 +64,15 @@
       left: {{ left_m }}%;
       width: {{ width_m }}%;
       transform: translate({{ tx_m }}%, {{ ty_m }}%) rotate({{ rot_m_css }}deg);
+      {%- comment -%} Lift above neighbouring plates when a sticker straddles two sections. {%- endcomment -%}
+      {% if s.z_index != blank %}z-index: {{ s.z_index }};{% endif %}
     }
     @media screen and (min-width: 750px) {
       .aw-sticker--{{ block.id }} {
         top: {{ s.top }}%;
         left: {{ s.left }}%;
-        width: {{ s.width }}%;
-        transform: translate({{ tx }}%, {{ ty }}%) rotate({{ rot_css }}deg);
+        width: {{ w_css }};
+        transform: translate({{ tx_css }}, {{ ty_css }}) rotate({{ rot_css }}deg);
       }
     }
   {%- endstyle -%}
