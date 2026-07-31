@@ -101,7 +101,7 @@
           "type": "step",
           "settings": {
             "title": "Redeem, then repeat",
-            "description": "<p>Cash in your credit at checkout for money off your cold brew. \\nThen do it all over again.</p>",
+            "description": "<p>Cash in your credit at checkout for money off your cold brew. Then do it all over again.</p>",
             "action_type": "none",
             "join_label": "JOIN FOR FREE",
             "custom_button_label": "",
@@ -117,11 +117,14 @@
         "step_2",
         "step_3"
       ],
+      "custom_css": [
+        "@media screen and (min-width: 750px) {.aw-how-it-works__card:nth-child(3) .rte {max-width: 400px; }}"
+      ],
       "settings": {
         "subtitle": "REWARDS, MADE RIDICULOUSLY EASY",
         "subtitle_color": "#af7404",
         "subtitle_font_size": 16,
-        "subtitle_font_size_mobile": 14,
+        "subtitle_font_size_mobile": 16,
         "title_type": "text",
         "title": "How It Works",
         "title_color": "#431a03",
@@ -262,8 +265,8 @@
         "button_action": "join",
         "button_label": "JOIN FOR FREE",
         "button_link": "",
-        "background_type": "gradient",
-        "background_solid": "#431a03",
+        "background_type": "color",
+        "background_solid": "#391704",
         "background_gradient": "linear-gradient(180deg, rgba(57, 23, 4, 1), rgba(149, 83, 37, 1) 100%)",
         "background_type_mobile": "same",
         "background_solid_mobile": "",

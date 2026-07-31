@@ -33,7 +33,7 @@
         {% endif %}
 
         {% if benefit_1 != blank or benefit_2 != blank %}
-          <ul class="flex flex-col gap-1.5 mb-5 w-full max-w-[280px]">
+          <ul class="flex flex-col gap-1.5 mb-5 w-full max-w-50">
             {% if benefit_1 != blank %}
               <li class="flex items-center gap-2.5 font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.8] text-[#431A03]">
                 <span class="shrink-0 w-3.5 h-[9px] inline-flex" aria-hidden="true">
@@ -76,7 +76,7 @@
         </div>
 
         <div
-          class="flex items-start gap-2 w-full mb-5 cursor-pointer"
+          class="flex items-start gap-2 w-full mb-5 cursor-pointer max-w-[330px] mr-auto"
           x-data="{ checkboxChecked: true }"
           @click="checkboxChecked = !checkboxChecked; $refs.signupCheckbox.checked = checkboxChecked"
         >
@@ -114,20 +114,20 @@
         %}
 
         {% if form.errors %}
-          <div class="text-sunrise_orange text-sm text-center mt-3" role="alert">
-            {{ form.errors | default_errors }}
+          <div class="text-(--color-error) text-sm text-center mt-3 font-kurdis-semi-condensed [&_a]:text-(--color-error) [&_a]:[text-decoration:underline] [&_a]:font-semibold hover:[&_a]:text-dark-gold [&_a]:transition-all" role="alert">
+            {{ form.errors | default_errors | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&quot;', '"' | replace: '&#39;', "'" | replace: '&amp;', '&' }}
           </div>
         {% endif %}
       </div>
     </div>
 
     <div class="bg-[#BFD7E9] w-full px-4 py-4">
-      <p class="font-kurdis-semi-condensed text-[14px] leading-[1.6] text-center text-espresso mb-0">
+      <p class="font-kurdis-semi-condensed text-[14px] leading-[1.6] text-center text-[#4E2C1A] mb-0">
         {% if login_heading != blank %}
           <span class="font-bold">{{ login_heading }}</span>
           <br>
         {% endif %}
-        <a href="{{ routes.account_login_url }}" class="font-bold underline underline-offset-2 hover:text-dark-gold">{{ login_label }}</a>
+        <a href="{{ routes.account_login_url }}" class="font-bold underline underline-offset-2 text-[#4E2C1A] hover:text-dark-gold">{{ login_label }}</a>
         {% if login_text != blank %}
           <span>{{ login_text }}</span>
         {% endif %}

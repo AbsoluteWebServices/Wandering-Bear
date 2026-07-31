@@ -94,7 +94,7 @@
               <div class="flex flex-col items-start smd:mb-3.5{% if button_action == 'elite_add_to_cart' %} mb-7.5{% else %} mb-3.5{% endif %}">
                 {% if tier_item.settings.title != blank %}
                   <div class="relative">
-                    <h3 class="font-kurdis-condensed font-extrabold text-[25px] leading-none text-espresso">
+                    <h3 class="font-gothic_condensed font-extrabold text-[25px] leading-none text-espresso">
                       {{ tier_item.settings.title }}
                     </h3>
 
@@ -107,7 +107,7 @@
                 {% endif %}
 
                 {% if tier_item.settings.subtitle != blank %}
-                  <p class="font-kurdis-semi-condensed font-normal text-sm leading-[160%] text-espresso mb-0 max-w-[280px]{% if button_action == 'elite_add_to_cart' %} mt-2.5 smd:min-h-9.5{% else %} mt-1.5 smd:mt-0.75 smd:min-h-[45px]{% endif %}">
+                  <p class="font-normal text-sm leading-[160%] text-espresso mb-0 max-w-[280px]{% if button_action == 'elite_add_to_cart' %} mt-2.5 smd:min-h-9.5{% else %} mt-1.5 smd:mt-0.75 smd:min-h-[45px]{% endif %}">
                     {{ tier_item.settings.subtitle }}
                   </p>
                 {% endif %}
@@ -119,6 +119,7 @@
                   class="
                     rte body flex-1 mb-3.5 font-kurdis-semi-condensed
                     [&_p]:mb-0!
+                    [&_p:first-child>strong]:font-(family-name:--font-gothic_condensed)
                     [&_p:has(strong)]:mb-1.5! smd:[&_p:has(strong)]:mb-3.75!
                     [&_p>strong]:font-bold! [&_p>strong]:text-lg! [&_p>strong]:leading-[130%]! [&_p>strong]:text-espresso
                     [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2.75 [&_ul]:list-none [&_ul]:m-0! [&_ul]:p-0! smd:[&_ul]:gap-2.5
