@@ -74,7 +74,7 @@
     {% if link_url != blank %}
       {% if request.design_mode or has_profile %}
         <div
-          class="social-icons__icon-wrapper{% unless has_profile %} social-icons__icon-wrapper--disabled{% endunless %}"
+          class="group social-icons__icon-wrapper{% unless has_profile %} social-icons__icon-wrapper--disabled{% endunless %}"
         >
           <a
             href="{{ link_url }}"
@@ -91,7 +91,7 @@
             <span class="social-icons__icon-label">{{ platform | capitalize }}</span>
             {% if render_icon %}
               <svg
-                class="social-icons__icon icon-default"
+                class="social-icons__icon icon-default group-hover:!text-gold transition-colors duration-300"
                 aria-hidden="true"
                 focusable="false"
                 xmlns="http://www.w3.org/2000/svg"

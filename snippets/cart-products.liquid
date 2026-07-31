@@ -74,11 +74,6 @@
   {% endif %}
 >
   {% if cart.empty? or force_empty %}
-    {%- if shop.customer_accounts_enabled and customer == null -%}
-      <p>
-        {{ 'actions.log_in_html' | t: link: routes.account_login_url }}
-      </p>
-    {%- endif -%}
       {% assign button_text = 'actions.continue_shopping' | t %}
       {% assign button_link = settings.empty_cart_button_link | default: routes.all_products_collection_url %}
       {% render 'wb-button', 
@@ -1127,6 +1122,15 @@
   .cart-items__empty-button {
     padding-inline: var(--padding-4xl);
     padding-block: var(--padding-lg);
+    font-family: var(--font-kurdis-semi-condensed) !important;
+    font-weight: 700 !important;
+    width: 158px;
+    height: 30px;
+    white-space: nowrap;
+
+    span {
+      margin-top: 0 !important;
+    }
   }
 
   /* Error message */
