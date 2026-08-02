@@ -33,10 +33,22 @@
   nudges it with a transform. left/right:0 keep it full width; section_shift_y negative = up,
   section_shift_x positive = right. The following sections close the gap it leaves behind.
 {%- endcomment -%}
+{%- comment -%}
+  The sideways nudge is a flat px value, so on a narrower screen it keeps pushing a fixed-width
+  plate past the right edge and the copy gets cut off. section_shift_x_cap supplies a ceiling that
+  shrinks with the viewport — e.g. calc(50vw - 430px) — so the shift tapers off and eventually goes
+  negative, parking the plate against the edge instead of beyond it. No breakpoint, no jump.
+{%- endcomment -%}
+{% liquid
+  assign shift_x_css = s.section_shift_x | default: 0 | append: 'px'
+  if s.section_shift_x_cap != blank
+    assign shift_x_css = 'min(' | append: shift_x_css | append: ', ' | append: s.section_shift_x_cap | append: ')'
+  endif
+%}
 {% capture section_pos %}
   {%- if s.section_abs -%}position: absolute; left: 0; right: 0; top: {{ s.section_abs_top | default: '0' }};{%- endif -%}
   {%- if s.section_z != blank -%} z-index: {{ s.section_z }};{%- endif -%}
-  {%- if s.section_shift_x != blank or s.section_shift_y != blank -%} transform: translate({{ s.section_shift_x | default: 0 }}px, {{ s.section_shift_y | default: 0 }}px);{%- endif -%}
+  {%- if s.section_shift_x != blank or s.section_shift_y != blank -%} transform: translate({{ shift_x_css }}, {{ s.section_shift_y | default: 0 }}px);{%- endif -%}
 {% endcapture %}
 
 <div
@@ -1082,6 +1094,12 @@
       "id": "section_shift_x",
       "label": "Shift right px (+)",
       "visible_if": "{{ section.settings.section_abs }}"
+    },
+    {
+      "type": "text",
+      "id": "section_shift_x_cap",
+      "label": "Shift right — ceiling, raw CSS (e.g. calc(50vw - 430px))",
+      "info": "Caps the sideways nudge on narrow screens so a fixed-width plate parks against the edge instead of running off it."
     },
     {
       "type": "number",

@@ -365,7 +365,8 @@
         "wrapper_z": 5,
         "section_margin_top": 0,
         "plate_pad_x_mobile": 18,
-        "plate_margin_bottom_mobile": 13
+        "plate_margin_bottom_mobile": 13,
+        "section_shift_x_cap": "calc(50vw - 430px)"
       }
     },
     "started": {
