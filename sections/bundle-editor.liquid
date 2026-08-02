@@ -238,7 +238,7 @@
       <div data-bundle-editor-content class="flavor-container w-full flex flex-col gap-3 overflow-auto">
         {% paginate collection.products by 50 %}
           {% for product in collection.products %}
-            {% assign member_only = product.metafields.product.member_only | default: false %}
+            {% assign member_only = product.metafields.custom.vip | default: false %}
             {%- capture variants_json -%}
               [
               {%- for variant in product.variants -%}
