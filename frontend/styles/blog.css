@@ -199,6 +199,8 @@ main[data-template="article"] .social-icons__icon {
     width: auto !important;
 }
 
+.featured-blog-posts-card__content,
+.featured-blog-posts-card__content h5,
 .featured-blog-posts-card__content h4 > .text-block {
     text-wrap: pretty !important;
     text-transform: uppercase;
@@ -216,7 +218,7 @@ main[data-template="article"] .social-icons__icon {
     }
 
     .featured-blog-posts-title {
-        padding-bottom: 20px !important;
+        padding-bottom: 16px !important;
     }
 
     .blog-post-title {
