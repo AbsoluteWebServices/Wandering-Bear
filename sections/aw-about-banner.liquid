@@ -109,7 +109,7 @@
         {% endif %}
         {% if s.body != blank %}
           <div class="aw-about-banner__body-wrap" style="width: {{ s.body_wrap_width | default: '100%' }}; padding: {{ s.body_pad_y | default: 0 }}px {{ s.body_pad_x | default: 40 }}px;">
-            <div class="aw-about-banner__body body" style="color: {{ s.text_color | default: '#1B1B1B' }}; font-size: {{ s.body_size | default: 15 }}px; line-height: {{ s.body_lh | default: 1.38 }};">
+            <div class="aw-about-banner__body body [&_strong]:font-bold font-semibold font-(font-family:var(--font-kurdis-semi-condensed))!" style="color: {{ s.text_color | default: '#1B1B1B' }}; font-size: {{ s.body_size | default: 15 }}px; line-height: {{ s.body_lh | default: 1.38 }};">
               {{ s.body }}
             </div>
           </div>
@@ -246,15 +246,7 @@
   /* About Us is set in regular Kurdis, not the theme's default Condensed display face. Override
      locally (banner is About-Us-only) instead of touching the shared display-md/body classes. */
   .aw-about-banner__title {
-    font-family: "Kurdis", sans-serif !important;
-  }
-
-  .aw-about-banner__body,
-  .aw-about-banner__body p,
-  .aw-about-banner__body span,
-  .aw-about-banner__body strong,
-  .aw-about-banner__body a {
-    font-family: "Kurdis", sans-serif !important;
+    font-family: var(--font-kurdis-condensed) !important;
   }
 
   /* Figma: body copy is Kurdis SemiCondensed SemiBold (600); the "Find us nationwide" run steps up
