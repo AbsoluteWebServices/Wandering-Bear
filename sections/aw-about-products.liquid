@@ -48,7 +48,7 @@
               {% endif %}
             </div>
             {% if block.settings.label != blank %}
-              <span class="wb-about-products__label font-kurdis font-extrabold" style="color: var(--label-color);">
+              <span class="wb-about-products__label font-extrabold" style="color: var(--label-color);">
                 {{ block.settings.label }}
               </span>
             {% endif %}
@@ -86,7 +86,7 @@
             </h2>
           {% endif %}
           {% if s.promise_subheading != blank %}
-            <p class="wb-about-products__paw-sub font-kurdis font-extrabold" style="color: {{ s.promise_subheading_color | default: '#F2E6DC' }};">
+            <p class="wb-about-products__paw-sub font-extrabold" style="color: {{ s.promise_subheading_color | default: '#F2E6DC' }};">
               {{ s.promise_subheading }}
             </p>
           {% endif %}
@@ -98,7 +98,7 @@
             {% for block in promises %}
               <li class="wb-about-products__promise" style="background-color: {{ s.card_bg | default: '#F2E6DC' }};" {{ block.shopify_attributes }}>
                 <span class="wb-about-products__promise-num font-gothic_condensed font-extrabold" style="background-color: {{ s.number_bg | default: '#1B1B1B' }}; color: {{ s.number_color | default: '#F2E6DC' }};">{{ forloop.index }}</span>
-                <span class="wb-about-products__promise-text font-kurdis font-semibold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
+                <span class="wb-about-products__promise-text font-(font-family:var(--font-kurdis-semi-condensed))! font-semibold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
               </li>
             {% endfor %}
           </ol>
@@ -165,9 +165,12 @@
      numbered badges, Parslay for the script. Enforced here (not only via Tailwind utilities) so the
      section stays correct independent of the bundle. */
   .wb-about-products__label,
-  .wb-about-products__paw-sub,
+  .wb-about-products__paw-sub {
+    font-family: var(--font-kurdis-condensed);
+  }
+
   .wb-about-products__promise-text {
-    font-family: "Kurdis", sans-serif;
+    font-family: var(--font-kurdis-semi-condensed);
   }
 
   .wb-about-products__promise-num {
