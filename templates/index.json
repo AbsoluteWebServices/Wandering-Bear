@@ -78,9 +78,9 @@
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
             "title": "Cold Brew Boxes",
-            "subtitle": "Our famous cold brew in over 15 flavors",
-            "accent_text": "Most Popular",
-            "badge": "shopify://shop_images/BADGE_592ededb-770c-4a04-9abd-61018c639afb.svg"
+            "subtitle": "Always delicious and ready \"on tap\" in your fridge with 13 flavors to choose from.",
+            "accent_text": "",
+            "badge": "shopify://shop_images/Most_Popular_Badge.png"
           }
         },
         "collection_tile_rCwyCX": {
@@ -92,7 +92,7 @@
             "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
             "mobile_image_alt": "",
             "title": "Multi-Serve Cartons",
-            "subtitle": "Convenient carton packs in select flavors. Available for cold brew, latte, and concentrate.",
+            "subtitle": "Fridge door friendly. Cold brews, latte and cold brew concentrate.",
             "accent_text": ""
           }
         },
@@ -105,7 +105,7 @@
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
             "mobile_image_alt": "",
             "title": "Single Serves",
-            "subtitle": "Perfect for mornings on the move and afternoons out",
+            "subtitle": "Your coffee shop moment, canned. Perfect for on-the-go. Cold brew and lattes.",
             "accent_text": ""
           }
         }
@@ -122,7 +122,7 @@
         "title": "",
         "font_size": 24,
         "font_size_mobile": 24,
-        "title_alt": "Go Big. Or Go Bigger.",
+        "title_alt": "GO BIG. OR GO BIGGER.",
         "title_image": "shopify://shop_images/GO_BIG._OR_GO_BIGGER..svg",
         "badge": "shopify://shop_images/STAY_CAFFEINATED_4116e90f-9fc4-470e-82ef-dcddfd00379b.png"
       }
@@ -358,7 +358,7 @@
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589_62e3d5a1-7d02-4e2b-bbe7-4026e639b7de.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226590_164fb897-49ec-422d-88c8-0c23c0483ea0.svg",
-        "content": "<h3>Like most grad schoolers, our co-founders Matt and Ben lived off of caffeine. But instead of just drinking cold brew, they obsessed over creating it.</h3><h3>Since 2014, we have been a small team tapping into new ways of doing coffee differently.</h3>",
+        "content": "<p>Inspired by the drinks in NYC coffee shops, two friends, Matt and Ben, set out to bring that same freshness and taste to your fridge. They started brewing the coffee they wanted to drink every day and nearly 100,000,000 cups later, the mission hasn't changed. <br/><br/><strong>We take inspiration from coffee shop culture to craft beverages with uncompromising quality and great taste, good enough to drink every day.</strong></p><p></p><p>We hope you try (and enjoy) it.</p>",
         "background_image": "shopify://shop_images/Homepage.png",
         "video": "shopify://files/videos/wb-about.mp4",
         "signature_image": "shopify://shop_images/signatures_1.png",

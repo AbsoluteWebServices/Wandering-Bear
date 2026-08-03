@@ -28,7 +28,7 @@
 >
   {% render 'section-background', settings: s, part: 'media' %}
 
-  <div class="relative z-[1] max-w-[1074px] mx-auto px-6">
+  <div class="wb-about-products__container relative z-[1] max-w-[1074px] mx-auto px-6">
     {% if s.script != blank %}
       <p class="wb-about-products__script font-parslay" style="color: {{ s.script_color | default: '#AF7404' }};">
         {{ s.script | replace: '\b', '<br>' }}
@@ -48,7 +48,7 @@
               {% endif %}
             </div>
             {% if block.settings.label != blank %}
-              <span class="wb-about-products__label font-kurdis font-extrabold" style="color: var(--label-color);">
+              <span class="wb-about-products__label font-extrabold" style="color: var(--label-color);">
                 {{ block.settings.label }}
               </span>
             {% endif %}
@@ -66,12 +66,27 @@
       <div class="wb-about-products__paw mt-16 smd:!mt-24">
         <div class="wb-about-products__paw-left">
           {% if s.promise_heading != blank %}
-            <h2 class="wb-about-products__paw-heading font-gothic_condensed font-extrabold" style="color: {{ s.promise_heading_color | default: '#2A1A0F' }};">
+            {%- comment -%} Desktop: PAW PROMISE as the Figma outline wordmark (SVG). Mobile keeps the text heading untouched. {%- endcomment -%}
+            <span class="wb-about-products__paw-heading-svg hidden smd:!block" role="img" aria-label="{{ s.promise_heading }}">
+              <svg width="365" height="57" viewBox="0 0 365 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M338.949 56.1261C338.397 56.1261 337.949 55.6784 337.949 55.1261V5.74609C337.949 5.19381 338.397 4.74609 338.949 4.74609H362.009C362.562 4.74609 363.009 5.19381 363.009 5.74609V13.4061C363.009 13.9584 362.562 14.4061 362.009 14.4061H349.869C349.317 14.4061 348.869 14.8538 348.869 15.4061V24.2561C348.869 24.8084 349.317 25.2561 349.869 25.2561H360.469C361.022 25.2561 361.469 25.7038 361.469 26.2561V33.6361C361.469 34.1884 361.022 34.6361 360.469 34.6361H349.869C349.317 34.6361 348.869 35.0838 348.869 35.6361V45.4661C348.869 46.0184 349.317 46.4661 349.869 46.4661H363.269C363.822 46.4661 364.269 46.9138 364.269 47.4661V55.1261C364.269 55.6784 363.822 56.1261 363.269 56.1261H338.949Z" fill="#1B1B1B"/>
+                <path d="M319.284 56.9656C308.999 56.9656 304.083 51.9957 303.631 41.1533C303.609 40.6354 303.999 40.1936 304.514 40.1388L313.733 39.1594C314.311 39.0979 314.818 39.5424 314.852 40.1226C315.188 45.8201 316.68 47.9356 319.914 47.9356C322.224 47.9356 323.553 46.4656 323.553 43.3856C323.553 39.5356 320.894 37.6456 315.993 34.9856C307.943 30.8556 303.884 26.8656 303.884 18.8856C303.884 9.36562 309.974 3.76562 319.634 3.76562C328.696 3.76562 333.248 8.74025 333.355 19.5289C333.36 20.0381 332.97 20.4637 332.463 20.514L323.87 21.3677C323.286 21.4257 322.779 20.9706 322.757 20.3842C322.56 15.0994 321.354 13.0056 318.794 13.0056C316.414 13.0056 315.154 14.5456 315.154 16.9256C315.154 20.2156 316.764 22.0356 321.314 24.4856C326.914 27.6356 334.474 31.0656 334.474 41.2856C334.474 51.3656 328.734 56.9656 319.284 56.9656Z" fill="#1B1B1B"/>
+                <path d="M281.914 56.1261C281.362 56.1261 280.914 55.6784 280.914 55.1261V49.0061C280.914 48.4538 281.362 48.0061 281.914 48.0061H284.394C284.946 48.0061 285.394 47.5584 285.394 47.0061V13.9361C285.394 13.3838 284.946 12.9361 284.394 12.9361H281.984C281.432 12.9361 280.984 12.4884 280.984 11.9361V5.74609C280.984 5.19381 281.432 4.74609 281.984 4.74609H299.724C300.276 4.74609 300.724 5.19381 300.724 5.74609V11.9361C300.724 12.4884 300.276 12.9361 299.724 12.9361H297.314C296.762 12.9361 296.314 13.3838 296.314 13.9361V47.0061C296.314 47.5584 296.762 48.0061 297.314 48.0061H299.794C300.346 48.0061 300.794 48.4538 300.794 49.0061V55.1261C300.794 55.6784 300.346 56.1261 299.794 56.1261H281.914Z" fill="#1B1B1B"/>
+                <path d="M232.857 56.1261C232.305 56.1261 231.857 55.6784 231.857 55.1261V5.74609C231.857 5.19381 232.305 4.74609 232.857 4.74609H247.181C247.669 4.74609 248.086 5.09919 248.167 5.58111L254.38 42.7231C254.39 42.7825 254.442 42.8261 254.502 42.8261C254.563 42.8261 254.614 42.7818 254.624 42.7218L260.425 5.59172C260.501 5.10494 260.921 4.74609 261.413 4.74609H275.797C276.35 4.74609 276.797 5.19381 276.797 5.74609V55.1261C276.797 55.6784 276.35 56.1261 275.797 56.1261H267.437C266.885 56.1261 266.437 55.6784 266.437 55.1261V19.5665C266.437 19.4613 266.352 19.3761 266.247 19.3761C266.155 19.3761 266.076 19.4423 266.06 19.5333L259.724 55.3005C259.639 55.7781 259.224 56.1261 258.739 56.1261H249.982C249.499 56.1261 249.085 55.7804 248.998 55.3048L242.52 19.6414C242.507 19.5689 242.444 19.5161 242.37 19.5161C242.286 19.5161 242.217 19.5844 242.217 19.6687V55.1261C242.217 55.6784 241.77 56.1261 241.217 56.1261H232.857Z" fill="#1B1B1B"/>
+                <path d="M210.745 56.9659C198.425 56.9659 194.785 47.8659 194.785 30.5059C194.785 12.9359 199.965 3.83594 211.865 3.83594C224.395 3.83594 227.615 12.7259 227.615 29.5259C227.615 47.7259 223.065 56.9659 210.745 56.9659ZM211.235 47.9359C214.875 47.9359 216.205 43.9459 216.205 30.0159C216.205 16.9259 214.945 13.2859 211.445 13.2859C207.735 13.2859 206.265 17.2059 206.265 30.3659C206.265 44.2959 207.385 47.9359 211.235 47.9359Z" fill="#1B1B1B"/>
+                <path d="M163.404 56.1261C162.852 56.1261 162.404 55.6784 162.404 55.1261V5.74609C162.404 5.19381 162.852 4.74609 163.404 4.74609H174.864C185.854 4.74609 191.874 8.59609 191.874 19.3061C191.874 24.7461 190.428 29.6203 186.046 32.3792C185.625 32.6447 185.422 33.164 185.593 33.6318L193.342 54.7821C193.581 55.4347 193.098 56.1261 192.403 56.1261H182.876C182.44 56.1261 182.055 55.8441 181.923 55.429L175.687 35.812C175.536 35.338 175.058 35.0472 174.561 35.0547C174.467 35.0561 174.38 35.0561 174.304 35.0561C173.763 35.0561 173.324 35.4949 173.324 36.0361V55.1261C173.324 55.6784 172.877 56.1261 172.324 56.1261H163.404ZM173.324 25.1661C173.324 25.7184 173.772 26.1661 174.324 26.1661H175.004C178.714 26.1661 180.814 24.7661 180.814 20.0761C180.814 15.6661 178.714 14.4061 175.844 14.4061H174.324C173.772 14.4061 173.324 14.8538 173.324 15.4061V25.1661Z" fill="#1B1B1B"/>
+                <path d="M130.387 56.1261C129.834 56.1261 129.387 55.6784 129.387 55.1261V5.74609C129.387 5.19381 129.834 4.74609 130.387 4.74609H141.637C152.767 4.74609 158.787 8.52609 158.787 20.0061C158.787 29.1061 155.707 37.1561 142.337 37.1561H141.307C140.754 37.1561 140.307 37.6038 140.307 38.1561V55.1261C140.307 55.6784 139.859 56.1261 139.307 56.1261H130.387ZM140.307 26.7761C140.307 27.3284 140.754 27.7761 141.307 27.7761H141.847C145.907 27.7761 147.657 25.8161 147.657 20.6361C147.657 16.0161 146.047 14.4061 142.827 14.4061H141.307C140.754 14.4061 140.307 14.8538 140.307 15.4061V26.7761Z" fill="#1B1B1B"/>
+                <path d="M65.1239 53.9481C64.6376 53.9636 64.2108 53.6269 64.1126 53.1504L53.9995 4.06774C53.8743 3.46006 54.3269 2.88622 54.947 2.86645L64.68 2.55615C65.1932 2.53979 65.6354 2.91469 65.7031 3.42361L70.8085 41.7537C70.8218 41.8539 70.9088 41.9277 71.0098 41.9244C71.1083 41.9213 71.1893 41.8458 71.1993 41.7478L75.15 3.08948C75.2009 2.59132 75.6124 2.20762 76.1129 2.19166L86.8222 1.85024C87.3211 1.83433 87.7553 2.18878 87.8397 2.68077L94.3802 40.8337C94.3934 40.911 94.4617 40.9667 94.54 40.9642C94.6211 40.9616 94.6869 40.8977 94.6918 40.8167L97.0127 2.43368C97.0439 1.91803 97.4627 1.51101 97.979 1.49455L107.302 1.19732C107.916 1.17774 108.403 1.71161 108.326 2.32136L102.1 51.925C102.038 52.4131 101.631 52.7842 101.139 52.7999L88.4614 53.2041C87.958 53.2201 87.5212 52.8593 87.442 52.3619L82.0039 18.2148C81.9882 18.1166 81.9019 18.0452 81.8024 18.0484C81.7022 18.0516 81.6203 18.1294 81.6118 18.2293L78.7002 52.6309C78.6574 53.1365 78.2428 53.5299 77.7357 53.546L65.1239 53.9481Z" fill="#1B1B1B"/>
+                <path d="M24.9983 55.5187C24.3612 55.4927 23.9109 54.8853 24.0711 54.2682L36.7706 5.36494C36.8889 4.90935 37.3089 4.59794 37.7792 4.61712L50.3031 5.12773C50.77 5.14676 51.1615 5.48662 51.2459 5.94622L60.3928 55.7402C60.5086 56.3709 60.0092 56.9461 59.3685 56.92L49.8368 56.5314C49.3564 56.5118 48.9579 56.1531 48.8881 55.6775L47.484 46.1115C47.4142 45.6358 47.0158 45.2771 46.5354 45.2575L38.3301 44.923C37.8497 44.9034 37.4234 45.2285 37.3151 45.6969L35.1369 55.1168C35.0286 55.5852 34.6023 55.9103 34.1219 55.8907L24.9983 55.5187ZM39.5909 34.5596C39.4633 35.165 39.9105 35.7398 40.5286 35.765L44.8841 35.9426C45.5008 35.9677 45.9928 35.4337 45.9173 34.8211L43.714 16.9421C43.7016 16.8417 43.6184 16.7651 43.5174 16.761C43.4166 16.7568 43.3276 16.8261 43.3068 16.9248L39.5909 34.5596Z" fill="#1B1B1B"/>
+                <path d="M3.73817 52.82C3.18667 52.8494 2.71572 52.4262 2.68628 51.8747L0.0533203 2.56498C0.0238723 2.01348 0.447078 1.54253 0.998577 1.51309L12.2326 0.913233C23.3467 0.319778 29.5597 3.77341 30.1718 15.2371C30.6571 24.3241 28.0107 32.5269 14.6597 33.2398L13.6312 33.2947C13.0797 33.3242 12.6564 33.7951 12.6859 34.3466L13.5907 51.2925C13.6202 51.844 13.197 52.3149 12.6455 52.3444L3.73817 52.82ZM12.0791 22.9828C12.1086 23.5343 12.5795 23.9575 13.131 23.9281L13.6702 23.8993C17.7245 23.6828 19.3675 21.6323 19.0913 16.4596C18.8449 11.8462 17.1514 10.3243 13.936 10.496L12.4181 10.5771C11.8666 10.6065 11.4434 11.0775 11.4729 11.629L12.0791 22.9828Z" fill="#1B1B1B"/>
+              </svg>
+            </span>
+            <h2 class="wb-about-products__paw-heading font-gothic_condensed font-extrabold smd:!hidden" style="color: {{ s.promise_heading_color | default: '#2A1A0F' }};">
               {{ s.promise_heading }}
             </h2>
           {% endif %}
           {% if s.promise_subheading != blank %}
-            <p class="wb-about-products__paw-sub font-kurdis font-extrabold" style="color: {{ s.promise_subheading_color | default: '#F2E6DC' }};">
+            <p class="wb-about-products__paw-sub font-extrabold" style="color: {{ s.promise_subheading_color | default: '#F2E6DC' }};">
               {{ s.promise_subheading }}
             </p>
           {% endif %}
@@ -83,7 +98,7 @@
             {% for block in promises %}
               <li class="wb-about-products__promise" style="background-color: {{ s.card_bg | default: '#F2E6DC' }};" {{ block.shopify_attributes }}>
                 <span class="wb-about-products__promise-num font-gothic_condensed font-extrabold" style="background-color: {{ s.number_bg | default: '#1B1B1B' }}; color: {{ s.number_color | default: '#F2E6DC' }};">{{ forloop.index }}</span>
-                <span class="wb-about-products__promise-text font-kurdis font-semibold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
+                <span class="wb-about-products__promise-text font-(font-family:var(--font-kurdis-semi-condensed))! font-semibold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
               </li>
             {% endfor %}
           </ol>
@@ -150,9 +165,12 @@
      numbered badges, Parslay for the script. Enforced here (not only via Tailwind utilities) so the
      section stays correct independent of the bundle. */
   .wb-about-products__label,
-  .wb-about-products__paw-sub,
+  .wb-about-products__paw-sub {
+    font-family: var(--font-kurdis-condensed);
+  }
+
   .wb-about-products__promise-text {
-    font-family: "Kurdis", sans-serif;
+    font-family: var(--font-kurdis-semi-condensed);
   }
 
   .wb-about-products__promise-num {
@@ -169,6 +187,7 @@
   @media screen and (min-width: 750px) {
     .wb-about-products__script {
       margin-bottom: 56px;
+      transform: rotate(1.28deg);
     }
   }
 
@@ -234,6 +253,14 @@
     text-transform: uppercase;
   }
 
+  /* Desktop PAW PROMISE wordmark (SVG). Scales to the paw column, capped at its native width. */
+  .wb-about-products__paw-heading-svg svg {
+    display: block;
+    width: 100%;
+    max-width: 365px;
+    height: auto;
+  }
+
   .wb-about-products__paw-sub {
     font-size: 20px;
     line-height: 1.15;
@@ -261,7 +288,12 @@
     margin: -22px 0 0 -350px;
     background-image: var(--paw-img);
     background-repeat: no-repeat;
-    background-position: 112%;
+    {%- comment -%}
+      background-position X is a percentage of the OVERFLOW, and the artwork is wider than its box,
+      so a larger value slides the paw further LEFT. 112% sat too far right on a phone — the glass
+      almost touched the right edge — so nudge it over.
+    {%- endcomment -%}
+    background-position: 126%;
     background-size: 134%;
     pointer-events: none;
   }
@@ -373,17 +405,26 @@
     .wb-about-products__promises {
       gap: 28px;
       margin: 0;
-      padding-left: 24px;
+      padding-left: 0;
     }
 
     .wb-about-products__promise {
-      padding: 26px 30px 26px 38px;
+      padding: 32px 36px;
+    }
+
+    .wb-about-products__promise-text {
+      padding-left: 15px;
+      padding-right: 15px;
     }
 
     .wb-about-products__promise-num {
       top: 50%;
       left: -24px;
       transform: translateY(-50%);
+      /* 20% larger than the base 48px badge / 20px digit */
+      width: 58px;
+      height: 58px;
+      font-size: 24px;
     }
   }
 
@@ -396,6 +437,38 @@
   /* Mobile: bigger number badges to match the Figma mobile design (digit 25px). Scoped to < 750px
      so the desktop badge (48px / 20px) is untouched. */
   @media screen and (max-width: 749px) {
+    {%- comment -%}
+      Card labels have to sit on ONE line (Figma). In Kurdis the longest label, "Cold Brew
+      Concentrate", measures 273px at 18px — it cannot be squeezed into a half-of-375 card no matter
+      how the padding is tuned. So mobile switches the label to the condensed face (137px at 14px)
+      and the cards are widened toward the mockup: smaller page gutter, tighter column gap and less
+      card padding, which also lets the photo fill more of the card as the design shows.
+      Desktop is not matched here and keeps Kurdis at 18px.
+    {%- endcomment -%}
+    .wb-about-products__container {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    .wb-about-products__grid {
+      column-gap: 10px;
+    }
+
+    .wb-about-products__cell {
+      padding: 12px 12px 14px;
+    }
+
+    {%- comment -%}
+      Two classes deep on purpose: the element also carries the utility class .font-kurdis, which is
+      itself !important and lands later in the cascade, so a single-class rule loses even with
+      !important. .wb-about-products__cell .wb-about-products__label outranks it.
+    {%- endcomment -%}
+    .wb-about-products__cell .wb-about-products__label {
+      font-family: "Gothic Condensed", sans-serif !important;
+      font-size: 14px !important;
+      white-space: nowrap;
+    }
+
     .wb-about-products__script {
       padding-left: 28px;
       padding-right: 28px;

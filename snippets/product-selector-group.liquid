@@ -31,9 +31,11 @@
         {% liquid
           assign title = child_product.title | split: ' - ' | last
           assign image = child_product.metafields.custom.variant_selector_image
-          assign flavor_description = child_product.metafields.airf.p_flavor | default: ''
-          assign member_only = child_product.metafields.product.member_only | default: false
-
+          assign flavor_description = child_product.metafields.custom.flavor.value.description | metafield_tag
+          if flavor_description == blank
+            assign flavor_description = child_product.metafields.airf.p_flavor | default: ''
+          endif
+          assign member_only = child_product.metafields.custom.vip | default: false
           assign product_badge = child_product.metafields.product.product_badge
           assign product_badge_text = product_badge.value.badge_text
           assign product_badge_color = product_badge.value.background_color
@@ -48,7 +50,7 @@
           assign title = child_product.title | split: ' - ' | last
           assign image = child_product.metafields.custom.variant_selector_image
           assign flavor_description = child_product.metafields.airf.p_flavor | default: ''
-          assign member_only = child_product.metafields.product.member_only | default: false
+          assign member_only = child_product.metafields.custom.vip | default: false
 
           assign product_badge = child_product.metafields.product.product_badge
           assign product_badge_text = product_badge.value.badge_text

@@ -19,7 +19,8 @@
         "title_size": "display-xl",
         "description": "",
         "bullet_color": "#955325",
-        "image": "shopify://shop_images/96oz-bag-in-box.jpg",
+        "image": "shopify://shop_images/Rectangle_10486.jpg",
+        "image_mobile": "shopify://shop_images/Mask_group_b2fc1584-2fca-401e-aea9-93f7590e3f66.png",
         "button_url": "shopify://blogs/articles",
         "button_text": "Read the Latest"
       }
@@ -48,7 +49,7 @@
             "background_color": "#00000026",
             "corner_radius": 0,
             "padding-block-start": 0,
-            "padding-block-end": 60,
+            "padding-block-end": 38,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -183,7 +184,7 @@
         "gap": 12,
         "color_scheme": "",
         "padding-block-start": 80,
-        "padding-block-end": 48
+        "padding-block-end": 44
       }
     },
     "main": {

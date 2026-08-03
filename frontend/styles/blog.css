@@ -15,7 +15,7 @@
 .featured-blog-posts__load-more {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 30px;
 }
 
 .featured-blog-posts__load-more-button {
@@ -67,7 +67,28 @@
         }
     }
 
+    ul {
+        list-style: none;
+        padding-left: 32px;
 
+        li {
+            position: relative;
+            margin-bottom: 16px !important;
+
+            /* Custom square bullet. `::marker` ignores `position`/`top`, so it
+               can't be sized and vertically centered — a `::before` square can.
+               Centered on the first line (line-height is 120% = 1.2em). */
+            &::before {
+                content: "";
+                position: absolute;
+                left: -20px;
+                top: calc((1.2em - 8px) / 2);
+                width: 5px;
+                height: 5px;
+                background-color: currentColor;
+            }
+        }
+    }
 
     p, li {
         margin-bottom: 16px;
@@ -99,14 +120,36 @@
     }
 }
 
+
 .blog-author {
     text-transform: uppercase;
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
+.featured-blog-posts-card__inner {
+    gap: 24px !important;
+
+    @media screen and (max-width: 749px) {
+        gap: 0px !important;
+    }
+}
+
+.featured-blog-posts-card__image {
+    height: 220px !important;
+
+    @media screen and (max-width: 749px) {
+        height: 210px !important;
+    }
 }
 
 .blog-date {
     font-family: var(--font-kurdis-semi-condensed);
     font-size: 14px;
     line-height: 130%;
+    font-weight: 600;
 }
 
 .resource-list slideshow-slides {
@@ -121,8 +164,20 @@
 }
 
 main[data-template="article"] slideshow-slides {
-   padding-inline-start: 20px !important;
-   padding-inline-end: 20px !important;
+    padding-inline: 0 !important;
+}
+
+main[data-template="article"] .section-content-wrapper {
+    @media screen and (max-width: 749px) {
+        padding-top: 37px !important;
+    }
+}
+
+@media screen and (max-width: 1170px) {
+    main[data-template="article"] slideshow-slides {
+        padding-inline-start: 20px !important;
+        padding-inline-end: 20px !important;
+    }
 }
 
 main[data-template="article"] .divider {
@@ -144,17 +199,31 @@ main[data-template="article"] .social-icons__icon {
     width: auto !important;
 }
 
+.featured-blog-posts-card__content,
+.featured-blog-posts-card__content h5,
+.featured-blog-posts-card__content h4 > .text-block {
+    text-wrap: pretty !important;
+    text-transform: uppercase;
+    font-family: var(--font-kurdis-semi-condensed);
+    font-size: 18px;
+}
+
+.featured-blog-posts .resource-list.resource-list--grid {
+    row-gap: 64px !important;
+}
+
 @media screen and (max-width: 749px) {
     blog-posts-list .section {
         padding-top: 44px !important;
     }
 
     .featured-blog-posts-title {
-        padding-bottom: 24px !important;
+        padding-bottom: 12px !important;
     }
 
     .blog-post-title {
-        margin-bottom: 16px !important;
+        margin-bottom: 30px !important;
+        font-size: 45px !important;
     }
 
     main[data-template="article"] .section-wrapper .section {
@@ -166,4 +235,17 @@ main[data-template="article"] .social-icons__icon {
         }
     }
 
+    .featured-blog-posts-card__inner {
+        gap: 23px !important;
+    }
+
+    .featured-blog-posts .resource-list.resource-list--grid {
+        gap: 23px !important;
+    }
+
+}
+
+.featured-blog-posts-card a:focus-visible, 
+.featured-blog-posts-card a:focus {
+    outline: none !important;
 }

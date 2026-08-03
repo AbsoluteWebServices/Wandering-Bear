@@ -6,10 +6,6 @@
   @param {string} [total_savings] - The total savings for the cart.
 {%- enddoc -%}
 
-{%- comment -%} Display-only estimate of the "Elite member 5% OFF" discount (see snippet for rationale). {%- endcomment -%}
-{%- capture elite_estimated_savings -%}{%- render 'elite-discount-estimate' -%}{%- endcapture -%}
-{%- assign elite_estimated_savings = elite_estimated_savings | strip | plus: 0 -%}
-
 {% capture shipping_fee %}
     {% if member_tier == 'Elite' or member_tier == 'VIP' or is_autoship %}
         FREE
@@ -32,7 +28,7 @@
         </span>
     </div>
 
-    {% if cart.total_discounts > 0 or elite_estimated_savings > 0 %}
+    {% if cart.total_discounts > 0 %}
         <div class="flex justify-between items-center">
             <span class="cart-totals__original-label">Discounts</span>
         </div>
@@ -44,16 +40,6 @@
             </span>
           </div>
         {% endfor %}
-        {% if elite_estimated_savings > 0 %}
-          <div class="ml-3.5 text-gold font-semibold text-xs flex justify-between items-center">
-            <span class="cart-totals__original-label">
-              Elite member 5% OFF
-            </span>
-            <span class="cart-totals__original-value cart-secondary-typography">
-              -{{ elite_estimated_savings | money -}}
-            </span>
-          </div>
-        {% endif %}
     {% endif %}
 
     <div class="flex justify-between items-center">

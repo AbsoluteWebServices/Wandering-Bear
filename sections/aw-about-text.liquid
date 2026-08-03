@@ -129,7 +129,7 @@
       endif
     %}
     <div
-      class="wb-about-text__plate absolute z-0"
+      class="wb-about-text__plate [&_.wb-about-text-body_p:last-child]:font-(family-name:--font-kurdis-condensed)! [&_.wb-about-text-body_p:last-child_strong]:font-extrabold absolute z-0"
       style="background: {{ s.panel_color | default: '#F2E6DC' }}; top: {{ top_css }}; {{ plate_pos }} {% if s.panel_height != blank %}height: {{ s.panel_height }}px;{% elsif s.panel_min_height != blank %}min-height: {{ s.panel_min_height }};{% else %}bottom: 0;{% endif %} border-radius: {{ plate_radius }};{% if s.panel_shadow != blank %} box-shadow: {{ s.panel_shadow }};{% endif %}{% if s.panel_margin_bottom != blank %} margin-bottom: {{ s.panel_margin_bottom }}px;{% endif %}"
     >
       {%- comment -%}
@@ -148,7 +148,7 @@
           </h2>
         {% endif %}
         {% if s.body != blank %}
-          <div class="wb-about-text__body body leading-[1.4]" style="color: {{ text_color }};">
+          <div class="wb-about-text__body wb-about-text-body body [&_strong]:font-bold font-semibold font-(family-name:var(--font-kurdis-semi-condensed))! leading-[1.4]" style="color: {{ text_color }};">
             {{ s.body }}
           </div>
         {% endif %}
@@ -222,7 +222,7 @@
             <div class="wb-about-text__mobile-photo smd:!hidden" role="img" aria-label="{{ s.side_image.alt }}"
                  style="background-image: url('{{ mtop_src }}'); background-position: {{ s.side_mobile_pos | default: 'center 68%' }};"></div>
           {% endif %}
-          <div class="wb-about-text__col {{ align_class }}{% unless s.col_abs %} relative w-full{% endunless %}" style="{% if s.col_abs %}position: absolute; top: {{ s.col_top | default: '50%' }}; left: {{ s.col_left | default: '0' }};{% if s.col_width != blank %} width: {{ s.col_width }};{% endif %} max-width: none;{% else %}max-width: {{ s.column_width | default: 566 }}px;{% endif %}{% if s.col_pad_bottom != blank %} padding-bottom: {{ s.col_pad_bottom }}px;{% endif %}">
+          <div class="wb-about-text__col {{ align_class }}{% unless s.col_abs %} relative w-full{% endunless %}" style="{% if s.col_abs %}position: absolute; top: {{ s.col_top | default: '50%' }}; left: {{ s.col_left | default: '0' }};{% if s.col_width != blank %} width: {{ s.col_width }};{% endif %} max-width: none;{% else %}max-width: {{ s.column_width | default: 566 }}px;{% endif %}{% if s.col_pad_top != blank %} padding-top: {{ s.col_pad_top }}px;{% endif %}{% if s.col_pad_bottom != blank %} padding-bottom: {{ s.col_pad_bottom }}px;{% endif %}">
             {{ copy_html }}
           </div>
         </div>
@@ -235,6 +235,119 @@
         {% endif %}
       {% endfor %}
     </div>
+
+    {%- comment -%}
+      Fluid desktop ("fixed text, elastic filler").
+
+      The plate is authored as a % of the viewport, but the copy column used to be positioned with a
+      % padding too — so narrowing the window squeezed the column, the (fixed-size) type re-wrapped,
+      grew taller and got clipped by the plate's fixed height.
+
+      Here the copy column keeps a FIXED width and a FIXED gutter on the side it hugs, so its line
+      breaks, height and typography are identical at every width. Only the empty part of the plate
+      absorbs the shrink. min-width stops the plate from ever crushing the column.
+
+      Geometry is unchanged at the design width: e.g. fridge 1114 − 78 − 379 = 657 = the authored
+      inset. Mobile (< 750px) is not matched and keeps the stacked layout.
+    {%- endcomment -%}
+    {% if s.fluid_desktop %}
+      {% liquid
+        assign f_text = s.fluid_text_width | default: 380
+        assign f_pad = s.fluid_pad | default: 78
+        assign f_gap = s.fluid_min_filler | default: 24
+        assign f_min = f_text | plus: f_pad | plus: f_gap
+
+        # A raw CSS gutter (e.g. "calc(81.967% - 493.5px)") lets the copy line up with something
+        # outside this section — the hero photo's edge — instead of a flat px inset. Percentages here
+        # resolve against the plate, so the value is pre-solved against the plate's own width.
+        # With a dynamic gutter the plate needs no computed min-width, so it stays opt-in.
+        assign f_pad_css = f_pad | append: 'px'
+        if s.fluid_pad_css != blank
+          assign f_pad_css = s.fluid_pad_css
+          assign f_min = s.fluid_plate_min | default: 0
+        endif
+      %}
+      {% style %}
+        @media screen and (min-width: 750px) {
+          .wb-about-text--{{ section.id }} .wb-about-text__plate {
+            min-width: {{ f_min }}px;
+            {%- comment -%}
+              Re-anchor the plate to a viewport edge so that, once min-width kicks in, it grows AWAY
+              from that edge instead of pushing itself off screen (a plate placed with left: 50%
+              would otherwise widen past the right edge).
+            {%- endcomment -%}
+            {% if s.fluid_plate_edge == 'right' %}
+              left: auto !important;
+              right: 0 !important;
+              transform: none !important;
+            {% elsif s.fluid_plate_edge == 'left' %}
+              left: 0 !important;
+              right: auto !important;
+              transform: none !important;
+            {% endif %}
+          }
+          .wb-about-text--{{ section.id }} .wb-about-text__plate-inner {
+            {% if s.fluid_anchor == 'left' %}
+              padding-left: {{ f_pad_css }} !important;
+              padding-right: 0 !important;
+            {% else %}
+              padding-left: 0 !important;
+              padding-right: {{ f_pad_css }} !important;
+            {% endif %}
+          }
+          .wb-about-text--{{ section.id }} .wb-about-text__col {
+            width: {{ f_text }}px !important;
+            max-width: 100% !important;
+            {% if s.fluid_anchor == 'left' %}
+              margin-left: 0 !important;
+              margin-right: auto !important;
+            {% else %}
+              margin-left: auto !important;
+              margin-right: 0 !important;
+            {% endif %}
+          }
+          {%- comment -%}
+            Side photo glued to the plate's right edge.
+
+            It used to be placed from the viewport centre (left: calc(50% + Npx)) while the plate's
+            right edge sits at a different percentage — so the two drifted apart as the window
+            narrowed and the photo floated off to the right. Driving it from the SAME expression as
+            the plate width (min-width included) keeps the gap constant at every width.
+          {%- endcomment -%}
+          {% if s.side_track_plate %}
+            .wb-about-text--{{ section.id }} .wb-about-text__side {
+              left: calc(max({{ width_css }}, {{ f_min }}px) + {{ s.side_track_offset | default: 0 }}px) !important;
+            }
+            {%- comment -%}
+              Section-level ("on_section") stickers sit on that photo, so drive them from the same
+              expression — otherwise they slide across it as the window narrows. Offset is measured
+              from the plate's right edge to the sticker's centre.
+            {%- endcomment -%}
+            {% if s.side_badge_offset != blank %}
+              {%- comment -%}
+                Vertical anchor. side_badge_bottom measures up from the photo's BOTTOM edge, so the
+                badge keeps its corner when the photo is resized; side_badge_top is the raw
+                distance from the plate top (the photo starts there) for free placement.
+              {%- endcomment -%}
+              {% liquid
+                assign badge_top = s.side_badge_top
+                if s.side_badge_bottom != blank
+                  assign ph_top = s.side_top | default: 0
+                  assign ph_h = s.side_height | default: 367
+                  assign badge_top = ph_top | plus: ph_h | minus: s.side_badge_bottom
+                endif
+              %}
+              .wb-about-text--{{ section.id }} > .aw-sticker {
+                left: calc(max({{ width_css }}, {{ f_min }}px) + {{ s.side_badge_offset }}px) !important;
+                {% comment %} top/width in px so the badge holds its corner of the photo and stays legible. {% endcomment %}
+                {% if badge_top != blank %}top: {{ badge_top }}px !important;{% endif %}
+                {% if s.side_badge_width != blank %}width: {{ s.side_badge_width }}px !important;{% endif %}
+              }
+            {% endif %}
+          {% endif %}
+        }
+      {% endstyle %}
+    {% endif %}
 
     {%- comment -%}
       Mobile (< 750px): the plate is absolutely placed with px sizes tuned for desktop, which on a
@@ -266,6 +379,14 @@
           margin: 0 {% if s.plate_hide_mobile %}0{% else %}{{ s.plate_gutter_mobile | default: 16 }}px{% endif %} {{ s.plate_margin_bottom_mobile | default: 36 }}px !important;
           {% comment %} overflow visible when a photo pokes out of the plate top; otherwise clip to the radius. {% endcomment %}
           overflow: {% if s.side_show_mobile_top %}visible{% else %}hidden{% endif %} !important;
+          {%- comment -%}
+            On desktop the plate runs off the left edge of the screen, so its left corners are
+            authored square. On mobile it sits inset from BOTH edges, so that asymmetry looks like a
+            bug — round every corner instead. The card also lifts off the photo it overlaps, which is
+            what the drop shadow reads as.
+          {%- endcomment -%}
+          {% if s.plate_radius_mobile != blank %}border-radius: {{ s.plate_radius_mobile }}px !important;{% endif %}
+          {% if s.plate_shadow_mobile != blank %}box-shadow: {{ s.plate_shadow_mobile }} !important;{% endif %}
           {% comment %} plate_hide_mobile: the "blue field" sections (believe / premium) drop the plate
              so the centred copy sits straight on the page background, per the Figma mobile design. {% endcomment %}
           {% if s.plate_hide_mobile %}background: transparent !important; box-shadow: none !important;{% endif %}
@@ -419,6 +540,35 @@
   }
 {% endstyle %}
 
+{%- comment -%}
+  Keep the title on a single line on desktop (>=750px) for this section only. Scoped to the
+  section id so the other shared aw-about-text titles are untouched; mobile is never matched.
+{%- endcomment -%}
+{%- comment -%}
+  The section clips with overflow:hidden so bled plates cannot add a sideways scrollbar. A sticker
+  that is meant to straddle the section's edge (e.g. the "super premium" seal sitting above the
+  plate) gets cut off by that clip — no z-index can rescue it, since the sticker is simply not
+  painted outside the box. Opt this section out of clipping instead. #MainContent keeps its own
+  overflow-x: clip, so this cannot introduce horizontal scrolling.
+{%- endcomment -%}
+{%- if s.overflow_visible -%}
+  {% style %}
+    .wb-about-text--{{ section.id }} {
+      overflow: visible !important;
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- if s.title_nowrap -%}
+  {% style %}
+    @media screen and (min-width: 750px) {
+      .wb-about-text--{{ section.id }} .wb-about-text__title {
+        white-space: nowrap;
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
 {% stylesheet %}
   /* Stacking for the About Us plate overlap: hero (aw-z-2) stays above the plate of the next
      section (aw-z-1), so a plate tucked up under the hero sits behind the photo, not over it. */
@@ -429,7 +579,7 @@
      Override here (these aw-about-* sections are About-Us-only) rather than touching the shared
      display-md/display-lg/body classes site-wide. */
   .wb-about-text__title {
-    font-family: "Kurdis", sans-serif !important;
+    font-family: var(--font-kurdis-condensed) !important;
   }
 
   /* Mobile-only icon centred above the title (crown over Super Premium). Hidden on desktop via smd:!hidden. */
@@ -451,30 +601,39 @@
     height: auto;
   }
 
-  .wb-about-text__body,
-  .wb-about-text__body p,
-  .wb-about-text__body span,
-  .wb-about-text__body strong,
-  .wb-about-text__body a {
-    font-family: "Kurdis", sans-serif !important;
-  }
-
   /* The "Fresh Taste Guarantee." pill is the one body link with a background; Figma sets it in the
      Parslay script, not Kurdis. Higher specificity + !important wins over the rule above. */
   .wb-about-text__body a[style*="background"] {
     font-family: "Parslay", cursive !important;
   }
 
+  /* A paragraph marked .wb-oneline stays on a single line above the mobile breakpoint — used for
+     "Check out our <pill>", which overshoots the fixed copy column by a few px and would otherwise
+     wrap the pill onto its own line. The overflow lands on empty plate, so nothing is clipped.
+     The mobile rule below re-wraps it, so the stacked layout is unaffected. */
+  @media screen and (min-width: 750px) {
+    .wb-about-text__body p.wb-oneline {
+      white-space: nowrap;
+    }
+  }
+
   /* Mobile: the "Fresh Taste Guarantee." pill drops onto its own centred line; body copy gets a
      little extra side padding. */
   @media screen and (max-width: 749px) {
+    {%- comment -%}
+      The pill must read as one line. At its authored 24px the label needs 276px plus 20px of
+      padding, against ~267px of column — it cannot fit, so mobile steps the pill down and the body
+      gutter is trimmed to buy the rest of the room. Inline styles carry the 24px, hence !important.
+    {%- endcomment -%}
     .wb-about-text__body a[style*="background"] {
       display: table !important;
       margin: 12px auto 0 !important;
+      font-size: 20px !important;
+      white-space: nowrap;
     }
     .wb-about-text__body {
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-left: 8px;
+      padding-right: 8px;
     }
   }
 
@@ -604,6 +763,19 @@
         { "value": "right", "label": "Right" }
       ],
       "default": "inherit"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_nowrap",
+      "label": "Keep title on one line (desktop only)",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "overflow_visible",
+      "label": "Let stickers spill outside the section",
+      "default": false,
+      "info": "Turn on when a sticker is meant to sit above or below the section edge — otherwise the section's clipping cuts it off."
     },
     {
       "type": "range",
@@ -779,6 +951,110 @@
     },
     {
       "type": "header",
+      "content": "Fluid desktop (fixed copy column, elastic plate)"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid_desktop",
+      "label": "Fluid desktop layout",
+      "default": false,
+      "info": "Keeps the copy column a fixed width so type never re-wraps; only the empty part of the plate shrinks as the window narrows."
+    },
+    {
+      "type": "number",
+      "id": "fluid_text_width",
+      "label": "Copy column width px",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "number",
+      "id": "fluid_pad",
+      "label": "Gutter on anchored side px",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "select",
+      "id": "fluid_anchor",
+      "label": "Copy hugs which edge of the plate",
+      "options": [
+        { "value": "right", "label": "Right (empty space on the left)" },
+        { "value": "left", "label": "Left (empty space on the right)" }
+      ],
+      "default": "right",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "number",
+      "id": "fluid_min_filler",
+      "label": "Minimum empty space px",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "text",
+      "id": "fluid_pad_css",
+      "label": "Gutter override, raw CSS (e.g. calc(81.967% - 493.5px))",
+      "info": "Use to line the copy up with something outside this section, such as the hero photo's edge. Overrides the px gutter.",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "number",
+      "id": "fluid_plate_min",
+      "label": "Plate min-width px (used with the gutter override)",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "side_track_plate",
+      "label": "Glue side photo to the plate edge",
+      "default": false,
+      "info": "Drives the side photo from the plate's own width, so it stays attached as the window narrows instead of drifting.",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "number",
+      "id": "side_track_offset",
+      "label": "Gap from plate edge px",
+      "visible_if": "{{ section.settings.side_track_plate }}"
+    },
+    {
+      "type": "number",
+      "id": "side_badge_offset",
+      "label": "Sticker centre from plate edge px (blank = leave as authored)",
+      "visible_if": "{{ section.settings.side_track_plate }}"
+    },
+    {
+      "type": "number",
+      "id": "side_badge_top",
+      "label": "Sticker centre from plate top px",
+      "visible_if": "{{ section.settings.side_track_plate }}"
+    },
+    {
+      "type": "number",
+      "id": "side_badge_bottom",
+      "label": "Sticker centre above photo bottom px (overrides the top value)",
+      "info": "Anchors the sticker to the photo's bottom edge, so it keeps its corner when the photo is resized.",
+      "visible_if": "{{ section.settings.side_track_plate }}"
+    },
+    {
+      "type": "number",
+      "id": "side_badge_width",
+      "label": "Sticker width px",
+      "visible_if": "{{ section.settings.side_track_plate }}"
+    },
+    {
+      "type": "select",
+      "id": "fluid_plate_edge",
+      "label": "Pin plate to viewport edge",
+      "options": [
+        { "value": "none", "label": "Keep authored position" },
+        { "value": "left", "label": "Left edge" },
+        { "value": "right", "label": "Right edge" }
+      ],
+      "default": "none",
+      "visible_if": "{{ section.settings.fluid_desktop }}"
+    },
+    {
+      "type": "header",
       "content": "Absolute position (overlap neighbours)"
     },
     {
@@ -926,6 +1202,42 @@
       "type": "number",
       "id": "plate_gutter_mobile",
       "label": "Plate side gutter — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "plate_margin_bottom_mobile",
+      "label": "Plate margin-bottom — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "plate_stack_gap_mobile",
+      "label": "Gap between stacked items — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "section_margin_bottom_mobile",
+      "label": "Section margin-bottom — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "side_radius_mobile",
+      "label": "Side image radius — mobile px"
+    },
+    {
+      "type": "number",
+      "id": "two_col_img_order_mobile",
+      "label": "Two-column image order — mobile (1 = above text)"
+    },
+    {
+      "type": "number",
+      "id": "plate_radius_mobile",
+      "label": "Plate corner radius — mobile px (all corners)",
+      "info": "Desktop can round only one side because the plate bleeds off screen; on mobile it is inset from both edges, so set the radius here."
+    },
+    {
+      "type": "text",
+      "id": "plate_shadow_mobile",
+      "label": "Plate box-shadow — mobile (CSS)"
     },
     {
       "type": "number",
@@ -1204,9 +1516,13 @@
         { "type": "number", "id": "left", "label": "Left %", "default": 50 },
         { "type": "number", "id": "top", "label": "Top %", "default": 50 },
         { "type": "number", "id": "width", "label": "Width %", "default": 18 },
+        { "type": "number", "id": "width_px", "label": "Width px — desktop (overrides %, keeps size fixed)" },
         { "type": "range", "id": "rotate", "label": "Rotate", "min": -45, "max": 45, "step": 1, "unit": "deg", "default": 0 },
         { "type": "number", "id": "tx", "label": "Translate X % (anchor, default -50)" },
         { "type": "number", "id": "ty", "label": "Translate Y % (anchor, default -50)" },
+        { "type": "number", "id": "tx_px", "label": "Translate X px (use with Width px)" },
+        { "type": "number", "id": "ty_px", "label": "Translate Y px (use with Width px)" },
+        { "type": "number", "id": "z_index", "label": "z-index (raise above a neighbouring plate)" },
         { "type": "header", "content": "Mobile (blank = same as desktop)" },
         { "type": "text", "id": "left_mobile", "label": "Left % mobile" },
         { "type": "text", "id": "top_mobile", "label": "Top % mobile" },
