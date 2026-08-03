@@ -275,10 +275,14 @@ function renderSubscriptions(subs: Subscriptions | null): void {
     });
   }
 
-  // MANAGE control → per-customer Stay AI portal from the worker's portal_url (Stay AI
+  // MANAGE / REACTIVATE controls → per-customer Stay AI portal from the worker's portal_url (Stay AI
   // generate-portal-link token). Overrides the SSR base href (settings.manage_autoship_url,
   // which auto-detects the logged-in member); falls back to it when portal_url is empty.
-  if (manageLink && subs.portal_url) manageLink.href = subs.portal_url;
+  if (subs.portal_url) {
+    card
+      .querySelectorAll<HTMLAnchorElement>('[data-wb-autoship-manage] a, [data-wb-autoship-reactivate] a')
+      .forEach((a) => { a.href = subs.portal_url; });
+  }
 }
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

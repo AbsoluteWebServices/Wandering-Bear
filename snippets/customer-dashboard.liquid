@@ -178,8 +178,11 @@
       <div data-wb-autoship-manage class="mt-auto">
         {%- render 'wb-button', style: 'secondary-gold', label: t_manage, link: manage_url, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
       </div>
+      {%- comment -%} Reactivate goes to the same Stay AI portal as Manage — reactivation happens
+        there, and account.ts swaps in the per-customer portal_url for both. It must be a link, not
+        a bare <button>: there is no reactivate endpoint in the theme to submit to. {%- endcomment -%}
       <div data-wb-autoship-reactivate class="mt-auto">
-        {%- render 'customer-form-button', type: 'button', label: t_reactivate, style: 'secondary-gold', class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
+        {%- render 'wb-button', style: 'secondary-gold', label: t_reactivate, link: manage_url, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
       </div>
     </div>
 
