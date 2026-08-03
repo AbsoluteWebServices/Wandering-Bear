@@ -129,7 +129,7 @@
       endif
     %}
     <div
-      class="wb-about-text__plate [&_.wb-about-text-body_p:last-child]:font-(font-family:var(--font-kurdis-condensed))! [&_.wb-about-text-body_p:last-child strong]:font-bold absolute z-0"
+      class="wb-about-text__plate [&_.wb-about-text-body_p:last-child]:font-(family-name:--font-kurdis-condensed)! [&_.wb-about-text-body_p:last-child_strong]:font-extrabold absolute z-0"
       style="background: {{ s.panel_color | default: '#F2E6DC' }}; top: {{ top_css }}; {{ plate_pos }} {% if s.panel_height != blank %}height: {{ s.panel_height }}px;{% elsif s.panel_min_height != blank %}min-height: {{ s.panel_min_height }};{% else %}bottom: 0;{% endif %} border-radius: {{ plate_radius }};{% if s.panel_shadow != blank %} box-shadow: {{ s.panel_shadow }};{% endif %}{% if s.panel_margin_bottom != blank %} margin-bottom: {{ s.panel_margin_bottom }}px;{% endif %}"
     >
       {%- comment -%}
@@ -148,7 +148,7 @@
           </h2>
         {% endif %}
         {% if s.body != blank %}
-          <div class="wb-about-text__body wb-about-text-body body [&_strong]:font-bold font-semibold font-(font-family:var(--font-kurdis-semi-condensed))! leading-[1.4]" style="color: {{ text_color }};">
+          <div class="wb-about-text__body wb-about-text-body body [&_strong]:font-bold font-semibold font-(family-name:var(--font-kurdis-semi-condensed))! leading-[1.4]" style="color: {{ text_color }};">
             {{ s.body }}
           </div>
         {% endif %}
