@@ -31,6 +31,17 @@
   if s.width_px != blank
     assign w_css = s.width_px | append: 'px'
   endif
+  # Same story for the anchor point itself: a % left/top resolves against the sticker's positioned
+  # ancestor, and on About Us that ancestor is a plate whose width tracks the viewport — so the
+  # sticker drifts sideways on a wide screen. left_px / top_px pin it to the plate's edge instead.
+  assign left_css = s.left | append: '%'
+  assign top_css = s.top | append: '%'
+  if s.left_px != blank
+    assign left_css = s.left_px | append: 'px'
+  endif
+  if s.top_px != blank
+    assign top_css = s.top_px | append: 'px'
+  endif
   assign tx_css = tx | append: '%'
   assign ty_css = ty | append: '%'
   if s.tx_px != blank
@@ -69,8 +80,8 @@
     }
     @media screen and (min-width: 750px) {
       .aw-sticker--{{ block.id }} {
-        top: {{ s.top }}%;
-        left: {{ s.left }}%;
+        top: {{ top_css }};
+        left: {{ left_css }};
         width: {{ w_css }};
         transform: translate({{ tx_css }}, {{ ty_css }}) rotate({{ rot_css }}deg);
       }

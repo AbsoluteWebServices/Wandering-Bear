@@ -108,7 +108,7 @@
         {% endif %}
         {% if s.body != blank %}
           <div class="aw-about-banner__body-wrap" style="width: {{ s.body_wrap_width | default: '100%' }}; padding: {{ s.body_pad_y | default: 0 }}px {{ s.body_pad_x | default: 40 }}px;">
-            <div class="aw-about-banner__body body" style="color: {{ s.text_color | default: '#1B1B1B' }}; font-size: {{ s.body_size | default: 15 }}px; line-height: {{ s.body_lh | default: 1.38 }};">
+            <div class="aw-about-banner__body body" style="color: {{ s.body_color | default: s.text_color | default: '#1B1B1B' }}; font-size: {{ s.body_size | default: 15 }}px; line-height: {{ s.body_lh | default: 1.38 }};">
               {{ s.body }}
             </div>
           </div>
@@ -220,6 +220,12 @@
       text-align: center !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
+      {% comment %} The desktop vertical rhythm (text_pad_y / heading_wrap_pad_bottom / heading_gap) is
+         set inline, so it leaks into mobile. Pin the mobile values here; the defaults are what mobile
+         rendered before the desktop spacing was tightened. {% endcomment %}
+      padding-top: {{ s.text_pad_y_mobile | default: 40 }}px !important;
+      padding-bottom: {{ s.heading_wrap_pad_bottom_mobile | default: 10 }}px !important;
+      margin-bottom: {{ s.heading_gap_mobile | default: 20 }}px !important;
     }
     .aw-about-banner__title {
       text-align: center !important;
@@ -239,14 +245,35 @@
 {% endstyle %}
 
 {%- comment -%}
+  Tablet nudge for the heading tab. The card is pinned to the photo with a fixed negative top, but
+  the cover photo is a different crop at tablet widths, so the tab can sit a couple of px high
+  against the notch. Relative offset only — it does not reflow the body below it.
+{%- endcomment -%}
+{%- if s.heading_offset_tablet != blank -%}
+  {% style %}
+    @media screen and (min-width: 750px) and (max-width: 1023px) {
+      #shopify-section-{{ section.id }} .aw-about-banner__heading-wrap {
+        position: relative;
+        top: {{ s.heading_offset_tablet }}px;
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- comment -%}
   Cover mode renders neither the overlay nor the offset frame image, so only the decorative badge
   still needs hiding here.
 {%- endcomment -%}
 {%- if s.desktop_cover -%}
   {% style %}
-    #shopify-section-{{ section.id }} .aw-about-banner__badge {
-      display: none !important;
-    }
+    {%- comment -%} The decorative badge is part of the layered treatment, so cover mode drops it —
+       unless it is explicitly kept (the Figma desktop frame still shows the BOXED COLD BREW CLUB
+       sticker on the right edge of the photo). {%- endcomment -%}
+    {% unless s.badge_show_in_cover %}
+      #shopify-section-{{ section.id }} .aw-about-banner__badge {
+        display: none !important;
+      }
+    {% endunless %}
   {% endstyle %}
 {%- endif -%}
 
@@ -268,6 +295,17 @@
   }
 
   /* Mobile drops the body to 13px (Figma 1694:245). */
+  /* Mobile wants "Find us nationwide" to start a new paragraph. The copy comes from an html setting
+     that Shopify sanitises (no class attributes, so no taggable <br>), and the run is already the
+     only <strong> in the block — so inject the break with a pseudo-element. The <strong> itself
+     stays inline, which keeps "at Whole Foods..." flowing on after it. */
+  @media screen and (max-width: 749px) {
+    .aw-about-banner__body strong::before {
+      content: "\A\A";
+      white-space: pre;
+    }
+  }
+
   @media screen and (max-width: 749px) {
     .aw-about-banner__body,
     .aw-about-banner__body p,
@@ -281,6 +319,28 @@
   .aw-about-banner__body,
   .aw-about-banner__body p {
     font-weight: 600;
+  }
+
+  /* The badge hangs 31px off the right edge of the 987px block. That overhang only exists while the
+     viewport is wider than the block plus the overhang; on tablet the block fills the screen and the
+     badge gets clipped, so pull it back flush with the photo. */
+  @media screen and (min-width: 750px) and (max-width: 1049px) {
+    .aw-about-banner__badge {
+      right: 0 !important;
+    }
+  }
+
+  /* Figma 1694:518 breaks this paragraph after "exciting" and after "protein"; everything after that
+     wraps on its own inside the 603px column. Mobile centres the copy across the full width, where
+     hard breaks would read as ragged, so they only apply from the desktop breakpoint up. */
+  .aw-about-banner__body br {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .aw-about-banner__body br {
+      display: inline;
+    }
   }
 
   .aw-about-banner__body strong {
@@ -308,6 +368,9 @@
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
     { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
     { "type": "number", "id": "title_pad_top_mobile", "label": "Title padding-top — mobile px" },
+    { "type": "number", "id": "text_pad_y_mobile", "label": "Heading block padding-top — mobile px" },
+    { "type": "number", "id": "heading_wrap_pad_bottom_mobile", "label": "Heading block padding-bottom — mobile px" },
+    { "type": "number", "id": "heading_gap_mobile", "label": "Gap heading→body — mobile px" },
     { "type": "number", "id": "card_margin_top_mobile", "label": "Card margin-top — mobile px" },
     { "type": "number", "id": "text_pad_x_mobile", "label": "Card padding X — mobile px" },
     { "type": "number", "id": "media_top_mobile", "label": "Media image top — mobile px" },
@@ -358,6 +421,9 @@
     { "type": "number", "id": "text_pad_y", "label": "Card padding Y px" },
     { "type": "select", "id": "text_valign", "label": "Text vertical align", "options": [ { "value": "center", "label": "Center" }, { "value": "flex-start", "label": "Top" }, { "value": "flex-end", "label": "Bottom" } ], "default": "center" },
     { "type": "color", "id": "text_color", "label": "Text color", "default": "#1B1B1B" },
+    { "type": "color", "id": "body_color", "label": "Body text color", "default": "#431A03" },
+    { "type": "checkbox", "id": "badge_show_in_cover", "label": "Keep badge in desktop cover mode", "default": false },
+    { "type": "text", "id": "heading_offset_tablet", "label": "Heading tab offset — tablet px" },
     { "type": "header", "content": "Heading" },
     { "type": "text", "id": "heading", "label": "Heading" },
     {

@@ -350,7 +350,10 @@
                 endif
               %}
               .wb-about-text--{{ section.id }} > .aw-sticker {
-                left: calc(max({{ width_css }}, {{ f_min }}px) + {{ s.side_badge_offset }}px) !important;
+                {%- comment -%} The badge rides the plate's right edge, which on a narrow desktop
+                   window puts it past the viewport. min() caps it so it always stays on screen;
+                   at the design width the cap is inert. {%- endcomment -%}
+                left: min(calc(max({{ width_css }}, {{ f_min }}px) + {{ s.side_badge_offset }}px), calc(100% - {{ s.side_badge_cap | default: 58 }}px)) !important;
                 {% comment %} top/width in px so the badge holds its corner of the photo and stays legible. {% endcomment %}
                 {% if badge_top != blank %}top: {{ badge_top }}px !important;{% endif %}
                 {% if s.side_badge_width != blank %}width: {{ s.side_badge_width }}px !important;{% endif %}
@@ -358,6 +361,50 @@
             {% endif %}
           {% endif %}
         }
+
+        {%- comment -%}
+          Tablet (750-1023). The fluid model assumes there is room for the fixed copy column plus the
+          side photo side by side; below ~1024 the plate hits its min-width and the photo (and the
+          badge riding on it) run off the right edge. Keep the two columns — and the copy width, so
+          the line breaks never change — but let the plate fill the screen, give the copy a gutter,
+          and shrink the photo into whatever is left.
+        {%- endcomment -%}
+        {% if s.tablet_fit %}
+          @media screen and (min-width: 750px) and (max-width: 1023px) {
+            .wb-about-text--{{ section.id }} .wb-about-text__plate {
+              min-width: 0 !important;
+              width: 100% !important;
+              left: 0 !important;
+              right: auto !important;
+            }
+            .wb-about-text--{{ section.id }} .wb-about-text__plate-inner {
+              padding-left: {{ s.tablet_pad | default: 24 }}px !important;
+              padding-right: 0 !important;
+            }
+            .wb-about-text--{{ section.id }} .wb-about-text__col {
+              margin-left: 0 !important;
+              margin-right: auto !important;
+            }
+            {% if s.side_track_plate %}
+              {%- liquid
+                assign t_pad = s.tablet_pad | default: 24
+                assign t_gap = s.tablet_gap | default: 24
+                assign t_edge = s.tablet_edge | default: 16
+                assign t_text = s.fluid_text_width | default: 380
+                assign t_reserved = t_pad | plus: t_text | plus: t_gap | plus: t_edge
+              -%}
+              .wb-about-text--{{ section.id }} .wb-about-text__side {
+                left: auto !important;
+                right: {{ t_edge }}px !important;
+                width: min({{ s.side_width | default: 313 }}px, calc(100% - {{ t_reserved }}px)) !important;
+              }
+              .wb-about-text--{{ section.id }} > .aw-sticker {
+                left: auto !important;
+                right: {{ s.tablet_badge_right | default: 0 }}px !important;
+              }
+            {% endif %}
+          }
+        {% endif %}
       {% endstyle %}
     {% endif %}
 
@@ -425,8 +472,15 @@
           {% comment %} Plateless (blue-field) sections still need horizontal padding so the centred copy
              is inset from the screen edge; the cream plates keep their full padding. {% endcomment %}
           padding: {% if s.plate_hide_mobile %}0 {{ s.plate_pad_x_mobile | default: 26 }}px{% else %}{{ s.plate_pad_y_mobile | default: 28 }}px {{ s.plate_pad_x_mobile | default: 22 }}px{% endif %} !important;
+          {% comment %} plate_pad_y_mobile is a single Y value; Figma's mobile plate is asymmetric
+             (23 above the title, 15 below the copy), so allow the bottom to be set on its own. {% endcomment %}
+          {% if s.plate_pad_bottom_mobile != blank %}padding-bottom: {{ s.plate_pad_bottom_mobile }}px !important;{% endif %}
           gap: {{ s.plate_stack_gap_mobile | default: 18 }}px !important;
         }
+        {% comment %} The gold flourish under the copy is desktop-only in the mobile frame. {% endcomment %}
+        {% if s.flourish_hide_mobile %}
+          .wb-about-text--{{ section.id }} .wb-about-text__flourish { display: none !important; }
+        {% endif %}
         .wb-about-text--{{ section.id }} .wb-about-text__col {
           position: relative !important;
           top: auto !important;
@@ -437,6 +491,13 @@
           {% unless s.text_center_mobile == false %}text-align: center !important; margin-left: auto !important; margin-right: auto !important;{% endunless %}
           {% if s.col_pad_bottom_mobile != blank %}padding-bottom: {{ s.col_pad_bottom_mobile }}px !important;{% endif %}
         }
+        {% comment %} Figma's mobile frame runs the first two body paragraphs together as one block,
+           so the blank line between them is dropped (QA r42). {% endcomment %}
+        {% if s.merge_paras_mobile %}
+          .wb-about-text--{{ section.id }} .wb-about-text__body > p:nth-of-type(2) {
+            margin-top: 0 !important;
+          }
+        {% endif %}
         {% comment %} Two-column text column (Super Premium): extra side padding on mobile. {% endcomment %}
         .wb-about-text--{{ section.id }} .wb-about-text__col.flex-1 {
           padding-left: 20px !important;
@@ -571,11 +632,36 @@
   {% endstyle %}
 {%- endif -%}
 
-{%- if s.title_nowrap -%}
+{%- comment -%}
+  In the design the heading is not confined to the copy column: it sits a little further left and
+  runs as wide as it needs (e.g. fridge — copy at x221 w506, heading at x194 w560). Modelling both
+  as one fixed column is what forced the heading to wrap and pushed it out of alignment.
+
+  title_nowrap keeps it on one line; title_offset shifts it left of the copy. Desktop only — the
+  mobile block overrides the column to full width and centres it, so neither reaches mobile.
+{%- endcomment -%}
+{%- comment -%}
+  The gold call-out is its own, narrower text box in the design (fridge: copy 506 wide, call-out
+  440), so it breaks a line earlier than the paragraphs above it. Desktop only.
+{%- endcomment -%}
+{%- if s.gold_width != blank or s.gold_gap != blank -%}
+  {% style %}
+    @media screen and (min-width: 750px) {
+      .wb-about-text--{{ section.id }} .wb-about-text__body p.text-gold {
+        {% if s.gold_width != blank %}max-width: {{ s.gold_width }}px;{% endif %}
+        {%- comment -%} In the design the call-out follows the line above with no paragraph gap. {%- endcomment -%}
+        {% if s.gold_gap != blank %}margin-top: {{ s.gold_gap }}px !important;{% endif %}
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- if s.title_nowrap or s.title_offset != blank -%}
   {% style %}
     @media screen and (min-width: 750px) {
       .wb-about-text--{{ section.id }} .wb-about-text__title {
-        white-space: nowrap;
+        {% if s.title_nowrap %}white-space: nowrap;{% endif %}
+        {% if s.title_offset != blank %}margin-left: {{ s.title_offset }}px;{% endif %}
       }
     }
   {% endstyle %}
@@ -627,6 +713,22 @@
     line-height: 1.38 !important;
   }
 
+  /* Every emphasised run in the body copy is SemiCondensed Bold, not SemiBold — both the standalone
+     lead-ins ("Nearly 100,000,000 cups later…") and the inline runs inside a paragraph
+     ("super premium", "more coffee", "better coffee", …). Kept above the gold call-out rule so that
+     one, being more specific, still wins. */
+  .wb-about-text__body strong {
+    font-weight: 700 !important;
+  }
+
+  /* The gold in-copy links ("pitched a bold idea", "single greatest invention of mankind ever") carry
+     no underline in the Figma file — colour alone marks them, hover included. */
+  .wb-about-text__body a.text-gold,
+  .wb-about-text__body a.text-gold:hover,
+  .wb-about-text__body a.text-gold:focus {
+    text-decoration: none !important;
+  }
+
   /* The gold call-out run ("Take inspiration from coffee shop culture…") steps up to the condensed
      display face at a smaller size. */
   .wb-about-text__body .text-gold strong,
@@ -637,19 +739,24 @@
     line-height: 1.17 !important;
   }
 
-  /* "Nearly 100,000,000 cups later…" is the one body run set in Bold rather than SemiBold. */
-  .wb-about-text__body p > strong:only-child {
-    font-weight: 700 !important;
-  }
-
-  /* The "Fresh Taste Guarantee." pill keeps the body face but at its own larger size — it needs to
-     restate the size because the body rule above is !important and would otherwise flatten the
-     inline 24px the template sets. */
+  /* The "Fresh Taste Guarantee." pill is the one run set in the Parslay script face (Figma 1694:518
+     — Parslay Regular 24/138%). It restates the size because the body rule above is !important and
+     would otherwise flatten the inline 24px the template sets. */
   .wb-about-text__body a[style*="background"] {
-    font-family: "Kurdis SemiCondensed", sans-serif !important;
-    font-weight: 600 !important;
+    font-family: Parslay, sans-serif !important;
+    font-weight: 400 !important;
     font-size: 24px !important;
     line-height: 1.38 !important;
+    /* Figma: the pill is a fixed 328x41 plate with the label centred, not a box that hugs the text
+       (the inline padding in the block's HTML would otherwise size it). */
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 328px;
+    max-width: 100%;
+    height: 41px;
+    padding: 0 10px !important;
+    vertical-align: middle;
   }
 
   /* A paragraph marked .wb-oneline stays on a single line above the mobile breakpoint — used for
@@ -667,7 +774,15 @@
   @media screen and (max-width: 749px) {
     {%- comment -%} Mobile sizes per Figma 1694:245: body 12px, the pill 18px. {%- endcomment -%}
     .wb-about-text__body a[style*="background"] {
-      display: table !important;
+      /* Figma mobile (1694:518): the pill is a fixed 276x41 plate with the label centred in it,
+         not a box that hugs the text. */
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 276px !important;
+      max-width: 100%;
+      height: 41px !important;
+      padding: 0 10px !important;
       margin: 12px auto 0 !important;
       font-size: 18px !important;
       white-space: nowrap;
@@ -678,14 +793,16 @@
     .wb-about-text__body strong {
       font-size: 12px !important;
     }
+    .wb-about-text__body .text-gold,
+    .wb-about-text__body p.text-gold,
     .wb-about-text__body .text-gold strong,
     .wb-about-text__body p.text-gold strong {
       font-size: 13px !important;
       line-height: 1.29 !important;
     }
     .wb-about-text__body {
-      padding-left: 8px;
-      padding-right: 8px;
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
 
@@ -815,6 +932,22 @@
         { "value": "right", "label": "Right" }
       ],
       "default": "inherit"
+    },
+    {
+      "type": "number",
+      "id": "gold_gap",
+      "label": "Gap above the gold call-out px (desktop)"
+    },
+    {
+      "type": "number",
+      "id": "gold_width",
+      "label": "Gold call-out max width px (desktop)"
+    },
+    {
+      "type": "number",
+      "id": "title_offset",
+      "label": "Heading offset from the copy column px (negative = further left)",
+      "info": "Desktop only. In the design the heading sits slightly left of the paragraph and runs wider."
     },
     {
       "type": "checkbox",
@@ -1012,6 +1145,11 @@
       "default": false,
       "info": "Keeps the copy column a fixed width so type never re-wraps; only the empty part of the plate shrinks as the window narrows."
     },
+    { "type": "checkbox", "id": "tablet_fit", "label": "Fit two columns on tablet (750-1023)", "default": false },
+    { "type": "text", "id": "tablet_pad", "label": "Tablet copy gutter px" },
+    { "type": "text", "id": "tablet_gap", "label": "Tablet gap copy-to-photo px" },
+    { "type": "text", "id": "tablet_edge", "label": "Tablet photo right edge px" },
+    { "type": "text", "id": "tablet_badge_right", "label": "Tablet badge right px" },
     {
       "type": "number",
       "id": "fluid_text_width",
@@ -1074,6 +1212,7 @@
       "label": "Sticker centre from plate edge px (blank = leave as authored)",
       "visible_if": "{{ section.settings.side_track_plate }}"
     },
+    { "type": "text", "id": "side_badge_cap", "label": "Badge right-edge cap px" },
     {
       "type": "number",
       "id": "side_badge_top",
@@ -1256,6 +1395,18 @@
       "id": "plate_pad_y_mobile",
       "label": "Plate padding Y — mobile px"
     },
+    {
+      "type": "number",
+      "id": "plate_pad_bottom_mobile",
+      "label": "Plate padding-bottom — mobile px"
+    },
+    {
+      "type": "checkbox",
+      "id": "flourish_hide_mobile",
+      "label": "Hide gold flourish on mobile",
+      "default": false
+    },
+    { "type": "checkbox", "id": "merge_paras_mobile", "label": "Merge first two paragraphs on mobile", "default": false },
     {
       "type": "number",
       "id": "plate_gutter_mobile",
@@ -1481,6 +1632,10 @@
       "id": "side_mobile_aspect",
       "label": "Mobile top photo aspect (e.g. 16 / 11)"
     },
+    { "type": "text", "id": "side_mobile_width_pct", "label": "Mobile photo width % of copy column" },
+    { "type": "number", "id": "side_mobile_poke", "label": "Mobile photo poke above plate px" },
+    { "type": "number", "id": "side_mobile_gap", "label": "Mobile photo gap below px" },
+    { "type": "text", "id": "side_mobile_zoom", "label": "Mobile photo background-size" },
     {
       "type": "header",
       "content": "Background"
@@ -1578,6 +1733,8 @@
         { "type": "range", "id": "rotate", "label": "Rotate", "min": -45, "max": 45, "step": 1, "unit": "deg", "default": 0 },
         { "type": "number", "id": "tx", "label": "Translate X % (anchor, default -50)" },
         { "type": "number", "id": "ty", "label": "Translate Y % (anchor, default -50)" },
+        { "type": "text", "id": "left_px", "label": "Left px — desktop (overrides %, pins to the plate edge)" },
+        { "type": "text", "id": "top_px", "label": "Top px — desktop (overrides %)" },
         { "type": "number", "id": "tx_px", "label": "Translate X px (use with Width px)" },
         { "type": "number", "id": "ty_px", "label": "Translate Y px (use with Width px)" },
         { "type": "number", "id": "z_index", "label": "z-index (raise above a neighbouring plate)" },
