@@ -13,8 +13,12 @@
   assign membership_tier = membership_tier | strip
   assign real_tier = membership_tier | default: 'FREE'
 
-  assign credits_earned = customer.metafields.inveterate.credits_earned | default: 0
-  assign credits_formatted = credits_earned | money_without_trailing_zeros
+  # "YOUR CREDIT" = redeemable store credits (inveterate.balance) — what the member can redeem NOW,
+  # which the credit-expiry (worker) refers to. The Inveterate metafield stores a DECIMAL DOLLAR
+  # amount (e.g. 2120.0 = $2,120), but Shopify's `money` filter expects cents — so multiply by 100
+  # before formatting (the account worker does the same ×100 to build balance_formatted).
+  assign credit_balance = customer.metafields.inveterate.balance | default: 0
+  assign credits_formatted = credit_balance | times: 100 | money_without_trailing_zeros
 
   # TODO worker (/apps/wb/subscriptions): real autoship state (none|active|cancelled).
   # Mock: members have an active autoship, FREE has none.
@@ -41,7 +45,8 @@
        data-wb-loading
        data-worker-url="{{ settings.account_worker_url | default: '' }}"
        data-worker-token="{{ settings.account_worker_dev_token | default: '' }}"
-       data-customer-id="{{ customer.id }}">
+       data-customer-id="{{ customer.id }}"
+       data-wb-portal-url="{{ settings.manage_autoship_url | default: '/apps/retextion' }}">
     {%- render 'customer-dashboard', tier: real_tier, autoship_state: real_autoship, credits_formatted: credits_formatted -%}
   </div>
   {%- render 'vite-tag' with 'account.ts' -%}

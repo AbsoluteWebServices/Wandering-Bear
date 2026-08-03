@@ -11,10 +11,12 @@
    ========================================================================== */
 
 /* ---- Layout containers (single source of truth) ------------------------- */
-/* Content column: dashboard, order page, credit history, addresses. */
+/* Content column: dashboard, order page, credit history, addresses.
+   Matches the product page container width on desktop (product-information__grid
+   max-w-[1092px]); stays fluid below that. */
 .account-container {
     width: 100%;
-    max-width: 774px;
+    max-width: 1092px;
     margin-inline: auto;
     padding-inline: 1rem;
 }
@@ -25,12 +27,32 @@
     margin-inline: auto;
 }
 
-/* ---- Links: underline on hover (Tailwind hover:underline isn't compiled) - */
+/* ---- Links: account links are ALWAYS underlined (project rule) ----------- */
+/* Class name kept — it's already on every account link across the customer-* templates;
+   base now underlines (not hover-only), hover keeps it. */
 .hover-underline {
-    text-decoration: none;
+    text-decoration: underline;
+    transition: color 0.15s ease;
 }
+/* QA #6: links stay underlined, hover feedback = gold color shift. */
 .hover-underline:hover {
     text-decoration: underline;
+    color: var(--color-dark-gold);
+}
+
+/* ---- Order-history table (customer-dashboard) --------------------------- */
+/* Thick espresso frame on all four sides; bold column headers. In CSS (not Tailwind
+   !font-bold / border utilities) so it's reliable regardless of the v4 important-modifier
+   syntax and the unlayered .tag beating utilities. */
+.wb-orders-table {
+    border: 2px solid var(--color-espresso);
+}
+.wb-orders-table thead th {
+    font-weight: 700;
+}
+/* Drop the last row's thin under-line so it doesn't double up against the thick bottom frame. */
+.wb-orders-table tbody tr:last-child td {
+    border-bottom: 0;
 }
 
 /* ---- Membership card — Elite upsell panel (Figma Rectangle 10494) -------- */
@@ -49,10 +71,12 @@
 @media (min-width: 1024px) {
     .membership-upsell {
         margin-top: auto;
-        margin-left: -1.5rem;
+        /* Bleed left to the divider (gap centre, -0.75rem past the column edge) so the panel
+           background touches the line; padding-left compensates so the text stays put. */
+        margin-left: -2.25rem;
         margin-right: -1.5rem;
         margin-bottom: -1.5rem;
-        padding: 1rem 1.5rem 1.5rem;
+        padding: 1rem 1.5rem 1.5rem 2.25rem;
         border-radius: 0 0 8px 0;
     }
 }
@@ -63,11 +87,32 @@
    (CSS `border: dashed` can't hit 2/2). Progress column keeps its pl-6 offset. */
 @media (min-width: 1024px) {
     .tier-divider {
+        position: relative;
         padding-left: 1.5rem;
+    }
+    /* Full-height dashed line centered in the column gap (gap-6 = 24px → 12px inset), drawn on
+       top (z-index) so the Elite upsell panel's full-bleed background can't paint over it. */
+    .tier-divider::before {
+        content: "";
+        position: absolute;
+        /* Extend past the card's p-6 (24px = 1.5rem) padding so the line runs the FULL card
+           height, edge to edge — not just the content area. */
+        top: -1.5rem;
+        bottom: -1.5rem;
+        left: -0.75rem;
+        width: 1px;
         background-image: repeating-linear-gradient(to bottom, #706F6F 0 2px, transparent 2px 4px);
-        background-repeat: no-repeat;
-        background-size: 1px 100%;
-        background-position: left top;
+        z-index: 2;
+    }
+}
+
+/* Mobile: the tier + progress columns stack, so the vertical divider is replaced by a horizontal
+   1px #F0EDEA rule above the progress column (same colour as the autoship row lines). 10px above
+   comes from the row's mobile gap (!gap-2.5), 10px below from padding-top. */
+@media (max-width: 1023px) {
+    .tier-divider {
+        border-top: 1px dashed #f0edea;
+        padding-top: 16px;
     }
 }
 
@@ -96,6 +141,229 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
 }
+/* Skeleton for worker-driven values: they render EMPTY in SSR (no preset/mock data), so while
+   [data-wb-loading] an empty hook shows a shimmer bar. account.ts fills the text (no longer :empty)
+   and removes data-wb-loading → real value shows, skeleton gone. */
+[data-wb-account][data-wb-loading] [data-wb-autoship-bundle]:empty,
+[data-wb-account][data-wb-loading] [data-wb-autoship-date]:empty,
+[data-wb-account][data-wb-loading] [data-wb-autoship-count]:empty,
+[data-wb-account][data-wb-loading] [data-wb-progress-tier]:empty,
+[data-wb-account][data-wb-loading] [data-wb-progress-text]:empty,
+[data-wb-account][data-wb-loading] [data-wb-credit-expiry]:empty {
+    display: inline-block;
+    min-width: 8ch;
+    min-height: 0.9em;
+    border-radius: 4px;
+    background: rgba(67, 26, 3, 0.10);
+    animation: wb-pulse 1.1s ease-in-out infinite;
+}
+/* Row-1 cards (autoship + compact credit) — 15px bottom padding (space under the buttons;
+   overrides the p-5/md:p-6 bottom). Top/sides keep the card padding. */
+.wb-row1-card {
+    padding-bottom: 15px;
+}
+/* 15px above the autoship button (gap from the line-item list to the button). mt-auto still
+   pins it to the bottom when the card stretches; this is the minimum gap. */
+[data-wb-autoship-items] {
+    margin-bottom: 15px;
+}
+
+/* Pin the autoship Manage/Reactivate button to the bottom of the card so it aligns with the
+   credit card's Redeem button when the two stretch to equal height. In CSS (not the Tailwind
+   flex/mt-auto utilities) so it applies regardless of what the JIT compiled for this snippet. */
+[data-wb-autoship] {
+    display: flex;
+    flex-direction: column;
+}
+[data-wb-autoship] > [data-wb-autoship-manage],
+[data-wb-autoship] > .mt-auto {
+    margin-top: auto;
+}
+
+/* Active-autoships badge — sky-blue pill (Figma "Rectangle 10492": #BFD7E9, radius 10px).
+   Set explicitly because the theme's @theme token is `--color-sky-blue: #BFD7E9/100%`, whose
+   `/100%` suffix yields an invalid colour, so `bg-sky-blue` doesn't paint. */
+[data-wb-autoship-count] {
+    background-color: #bfd7e9;
+    border-radius: 10px;
+}
+[data-wb-autoship-count]:hover {
+    text-decoration: underline;
+}
+
+/* Cancelled-subscription state: account.ts sets data-wb-autoship-state="cancelled" when the
+   worker reports no active subscription but a cancelled one. Swaps the count badge for a
+   "Cancelled" pill and hides the next-shipment line. Figma badge: 81x20, radius 10px,
+   bg #BD2121, foam text, Kurdis SemiCondensed Bold 12px centered. */
+/* Badge visual lives on the element itself so it's fully styled whenever shown — NOT tied to the
+   parent state selector (which was why the red fill didn't paint). Hidden by default; the cancelled
+   state flips it to inline-flex and hides the count/next-shipment. */
+[data-wb-autoship-cancelled] {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 81px;
+    height: 20px;
+    padding-inline: 10px;
+    border-radius: 10px;
+    background: #BD2121;
+    color: var(--color-foam, #fff);
+    font-family: var(--font-kurdis-semi-condensed);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-count],
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-date-line] {
+    display: none;
+}
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-cancelled] {
+    display: inline-flex;
+}
+
+/* Autoship rows — 1px #F0EDEA divider + spacing (Figma "Line 13"). Applies to the head
+   row (bundle title + next shipment) and every line item incl. the last, so each row is
+   underlined. Targets the [data-wb-autoship-items] hook → works for SSR and the rows
+   account.ts rebuilds. */
+.wb-autoship-head,
+[data-wb-autoship-items] > li {
+    /* Bleed to the card edges so the divider spans full width, then re-inset the content.
+       Negative margin must match the card padding (p-5 = 20px, md:!p-6 = 24px on desktop). */
+    margin-inline: -1.25rem;
+    padding-inline: 1.25rem;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f0edea;
+}
+[data-wb-autoship-items] > li + li {
+    padding-top: 5px;
+}
+/* Space from the head divider to the first line item (matches the 5px rhythm;
+   overrides the mb-2 utility on the head row). */
+.wb-autoship-head {
+    margin-bottom: 5px;
+}
+@media (min-width: 1024px) {
+    .wb-autoship-head,
+    [data-wb-autoship-items] > li {
+        margin-inline: -1.5rem;
+        padding-inline: 1.5rem;
+    }
+}
+
+/* Worker fills the autoship line-item list; empty until then (no preset rows). */
+[data-wb-account][data-wb-loading] [data-wb-autoship-items]:empty {
+    display: block;
+    min-height: 2.5em;
+    border-radius: 6px;
+    background: rgba(67, 26, 3, 0.08);
+    animation: wb-pulse 1.1s ease-in-out infinite;
+}
+/* "What's Included" benefit rows — Kurdis SemiCondensed SemiBold, 14px / 180% line-height,
+   5px gap between the crown icon and the text (Figma). Row gap between items = !gap-y-3 in markup. */
+.wb-benefit-item {
+    gap: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* Redeem modal trigger wrapper (customer-credit-redeem): display:contents so the wrapped
+   wb-button stays the flex/grid child and its width utilities still apply. */
+.wb-redeem-root {
+    display: contents;
+}
+/* Body scroll lock used by the Alpine modals (modal.ts / creditRedemption.ts). */
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* ---- Credit redemption modal (customer-credit-redeem + creditRedemption.ts) --------
+   Self-styled (not Tailwind utilities) so it renders correctly regardless of which
+   utilities the JIT compiled for this snippet. Brand colours via theme CSS vars. */
+.wb-redeem-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.wb-redeem-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+.wb-redeem-modal__panel {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--color-foam, #fbf6ec);
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    padding: 1.5rem;
+}
+@media (min-width: 768px) {
+    .wb-redeem-modal__panel { padding: 2rem; }
+}
+.wb-redeem-modal input[type="radio"] {
+    accent-color: var(--color-dark-gold, #955325);
+    width: 1rem;
+    height: 1rem;
+}
+.wb-redeem-card {
+    border: 1px solid color-mix(in srgb, var(--color-espresso, #431a03) 20%, transparent);
+    border-radius: 10px;
+    padding: 1rem;
+}
+.wb-redeem-input {
+    width: 100%;
+    border: 1px solid color-mix(in srgb, var(--color-espresso, #431a03) 30%, transparent);
+    border-radius: 6px;
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-espresso, #431a03);
+}
+.wb-redeem-code {
+    flex: 1;
+    border: 1px dashed color-mix(in srgb, var(--color-espresso, #431a03) 40%, transparent);
+    border-radius: 6px;
+    background: #fff;
+    padding: 0.75rem;
+    letter-spacing: 0.03em;
+    word-break: break-all;
+}
+.wb-redeem-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 44px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--color-dark-gold, #955325);
+    color: var(--color-foam, #fbf6ec);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    font-weight: 700;
+}
+.wb-redeem-btn:hover { opacity: 0.92; }
+.wb-redeem-btn:disabled { opacity: 0.6; pointer-events: none; }
+.wb-redeem-btn--ghost {
+    width: auto;
+    height: auto;
+    background: transparent;
+    color: var(--color-espresso, #431a03);
+    border: 1px solid color-mix(in srgb, var(--color-espresso, #431a03) 30%, transparent);
+    box-shadow: none;
+    padding: 0.6rem 0.85rem;
+}
+
 /* MANAGE control (Stay AI portal) — account.ts wires the click / disables it. */
 [data-wb-autoship-manage] {
     cursor: pointer;
