@@ -15,7 +15,7 @@
 .featured-blog-posts__load-more {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 30px;
 }
 
 .featured-blog-posts__load-more-button {
@@ -82,7 +82,7 @@
                 content: "";
                 position: absolute;
                 left: -20px;
-                top: calc((1.2em - 5px) / 2);
+                top: calc((1.2em - 8px) / 2);
                 width: 5px;
                 height: 5px;
                 background-color: currentColor;
@@ -218,7 +218,7 @@ main[data-template="article"] .social-icons__icon {
     }
 
     .featured-blog-posts-title {
-        padding-bottom: 16px !important;
+        padding-bottom: 12px !important;
     }
 
     .blog-post-title {

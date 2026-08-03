@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -7,11 +16,11 @@
           "type": "sticker",
           "settings": {
             "preview_asset": "ab-sticker-nyc.png",
+            "desktop_only": true,
             "left": 0,
             "top": 73,
             "width": 16,
-            "rotate": 0,
-            "desktop_only": true
+            "rotate": 0
           }
         },
         "ben": {
@@ -52,13 +61,13 @@
       ],
       "settings": {
         "preview_asset": "ab-hero-photo-group.png",
+        "preview_asset_mobile": "ab-hero-photo-mobile.png",
         "background_type": "transparent",
         "background_solid": "#BFD7E9",
         "padding-block-start": 3,
         "padding-block-end": 40,
         "padding-block-start-mobile": 16,
-        "padding-block-end-mobile": 24,
-        "preview_asset_mobile": "ab-hero-photo-mobile.png"
+        "padding-block-end-mobile": 24
       }
     },
     "pagebg": {
@@ -66,24 +75,23 @@
       "settings": {
         "base_color": "#F2E6DC",
         "preview_asset": "ab-sky.jpg",
+        "show_sky": false,
         "blue_color": "#BFD7E9",
         "blue_top": 300,
         "blue_height": 2065,
         "blue_top_mobile": 0,
-        "blue_height_mobile": 2393,
-        "show_sky": false
+        "blue_height_mobile": 2393
       }
     },
     "fridge": {
       "type": "aw-about-text",
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "title": "“A COFFEE SHOP IN YOUR FRIDGE”",
         "title_style": "display-md",
         "font_size": 40,
         "font_size_mobile": 20,
         "body": "<p>In 2014, two friends, Matt and Ben, <a href=\"#\" class=\"text-gold\">pitched a bold idea</a> at a student \"Shark Tank\" competition: <strong>bring the taste and freshness of New York coffee shop cold brew into everyone's fridge.</strong></p><p>They won $7,000, invented the cold brew box (once called the <a href=\"#\" class=\"text-gold\">single greatest invention of mankind ever</a>), and started brewing in a small Queens facility. We were among the first brands in what became an entirely new category.</p><p><strong>Nearly 100,000,000 cups later, our mission hasn't changed:</strong></p><p class=\"text-gold\"><strong>Take inspiration from coffee shop culture to craft cold brew coffee good enough to drink every day.</strong></p>",
+        "bottom_flourish": true,
         "text_color": "#1B1B1B",
         "align": "left",
         "column_width": 620,
@@ -91,37 +99,36 @@
         "panel": true,
         "panel_color": "#F2E6DC",
         "panel_align": "left",
+        "panel_top": 0,
         "panel_left": 0,
         "panel_width": 1201,
-        "panel_top": 0,
         "panel_height": 570,
         "panel_radius": 20,
         "panel_radius_left": 0,
         "panel_radius_right": 20,
         "panel_overlap": 180,
-        "panel_overlap_mobile": 190,
         "section_min_height": 570,
-        "panel_content_left": 210,
-        "panel_content_right": 60,
-        "panel_width_css": "calc(50% + 217px)",
-        "panel_pad_left_css": "59%",
-        "panel_pad_right_css": "7%",
-        "overlap_mobile": -160,
-        "bottom_flourish": true,
-        "background_type": "transparent",
-        "padding-block-start": 40,
-        "padding-block-end": 40,
-        "padding-block-start-mobile": 24,
-        "padding-block-end-mobile": 24,
-        "wrapper_z": 2,
         "fluid_desktop": true,
         "fluid_text_width": 533,
         "fluid_pad": 110,
         "fluid_anchor": "right",
         "fluid_min_filler": 24,
         "fluid_plate_edge": "left",
+        "wrapper_z": 2,
+        "overlap_mobile": -160,
+        "panel_content_left": 210,
+        "panel_content_right": 60,
+        "panel_width_css": "calc(50% + 217px)",
+        "panel_pad_left_css": "59%",
+        "panel_pad_right_css": "7%",
         "plate_radius_mobile": 20,
-        "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)"
+        "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)",
+        "panel_overlap_mobile": 190,
+        "background_type": "transparent",
+        "padding-block-start": 40,
+        "padding-block-end": 40,
+        "padding-block-start-mobile": 24,
+        "padding-block-end-mobile": 24
       }
     },
     "believe": {
@@ -135,10 +142,10 @@
             "left": 20.69,
             "top": -6,
             "width": 5,
+            "width_px": 100,
             "rotate": 5,
             "tx": -345,
             "ty": -82,
-            "width_px": 100,
             "tx_px": 0,
             "ty_px": -48,
             "z_index": 10
@@ -156,6 +163,7 @@
         "body": "<p>We believe great taste and good for you can coexist. We started Wandering Bear to make the coffee we wanted to drink daily, and we still do. That means it has to taste great, taste fresh, and be healthy.</p>",
         "text_color": "#1B1B1B",
         "align": "left",
+        "overflow_visible": true,
         "column_width": 420,
         "panel": true,
         "panel_color": "#BFD7E9",
@@ -166,30 +174,29 @@
         "panel_radius_right": 0,
         "panel_overlap": 120,
         "section_min_height": 280,
-        "panel_content_left": 58,
-        "panel_content_right": 40,
-        "panel_width_css": "50%",
-        "panel_left_css": "50%",
-        "panel_top_css": "15%",
-        "panel_shadow": "0 12px 30px rgba(27,27,27,0.18)",
-        "panel_width_mobile": "90%",
-        "panel_top_mobile": 40,
-        "plate_hide_mobile": true,
-        "text_center_mobile": true,
-        "background_type": "transparent",
-        "padding-block-start": 0,
-        "padding-block-end": 40,
-        "padding-block-start-mobile": 24,
-        "padding-block-end-mobile": 24,
-        "wrapper_z": 3,
-        "section_margin_bottom": 50,
         "fluid_desktop": true,
         "fluid_text_width": 420,
         "fluid_pad": 58,
         "fluid_anchor": "left",
         "fluid_min_filler": 24,
         "fluid_plate_edge": "right",
-        "overflow_visible": true
+        "wrapper_z": 3,
+        "section_margin_bottom": 50,
+        "panel_content_left": 58,
+        "panel_content_right": 40,
+        "panel_width_css": "50%",
+        "panel_top_css": "15%",
+        "panel_left_css": "50%",
+        "panel_shadow": "0 12px 30px rgba(27,27,27,0.18)",
+        "text_center_mobile": true,
+        "plate_hide_mobile": true,
+        "panel_width_mobile": "90%",
+        "panel_top_mobile": 40,
+        "background_type": "transparent",
+        "padding-block-start": 0,
+        "padding-block-end": 40,
+        "padding-block-start-mobile": 24,
+        "padding-block-end-mobile": 24
       }
     },
     "howwedo": {
@@ -199,12 +206,12 @@
           "type": "sticker",
           "settings": {
             "preview_asset": "ab-sticker-coffee.png",
+            "on_section": true,
             "desktop_only": true,
             "left": 67,
             "top": 65,
             "width": 3,
-            "rotate": -4,
-            "on_section": true
+            "rotate": -4
           }
         }
       },
@@ -214,32 +221,51 @@
       "settings": {
         "title": "SO HOW DO WE DO IT?",
         "title_style": "display-md",
-        "title_align": "left",
         "font_size": 40,
         "font_size_mobile": 20,
         "body": "<p>We source specialty grade, 100% Arabica, USDA organic beans from small cooperatives in Central and South America (natural water processed for decaf). We brew strong, sometimes with more than double the coffee our competitors use, then cold brew and filter for a smooth, low acid cup.</p><p>Our flavors come from natural extracts and essences (hello, Banana Bread cold brew). And we package for freshness: no oxygen, nitrogen flushed where possible, light blocked out.</p><p class=\"wb-oneline\">Check out our <a href=\"#\" style=\"display:inline-block; background:#BFD7E9; border-radius:8px; padding:0 10px; font-size:24px; line-height:1.35; color:#1B1B1B; text-decoration:none;\">Fresh Taste Guarantee.</a></p>",
         "text_color": "#1B1B1B",
         "align": "left",
+        "title_align": "left",
         "column_width": 620,
+        "col_valign": "top",
+        "col_pad_top": 48,
         "col_pad_bottom_mobile": 50,
         "panel": true,
         "panel_color": "#F2E6DC",
         "panel_align": "left",
+        "panel_top": 0,
         "panel_left": 0,
         "panel_width": 1201,
-        "panel_top": 0,
         "panel_height": 510,
         "panel_radius": 20,
         "panel_radius_left": 0,
         "panel_radius_right": 20,
         "panel_overlap": 40,
-        "panel_overlap_mobile": 190,
         "section_min_height": 530,
+        "fluid_desktop": true,
+        "fluid_text_width": 398,
+        "fluid_pad": 82,
+        "fluid_anchor": "left",
+        "fluid_min_filler": 24,
+        "fluid_pad_css": "calc(81.9672% - 493.5px)",
+        "fluid_plate_min": 0,
+        "side_track_plate": true,
+        "side_track_offset": -105,
+        "side_badge_offset": 200,
+        "side_badge_bottom": 13,
+        "side_badge_width": 100,
+        "fluid_plate_edge": "left",
+        "wrapper_z": 4,
         "panel_content_left": 210,
         "panel_content_right": 60,
         "panel_width_css": "61%",
         "panel_pad_left_css": "59%",
         "panel_pad_right_css": "7%",
+        "text_center_mobile": true,
+        "plate_radius_mobile": 20,
+        "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)",
+        "panel_overlap_mobile": 190,
         "side_image_preview": "ab-wb-aboutus-mattbeans-1.jpg",
         "side_left": "calc(50% + 218px)",
         "side_top": 0,
@@ -255,30 +281,11 @@
         "side_show_mobile_top": true,
         "side_mobile_pos": "75% 85%",
         "side_mobile_aspect": "16 / 11",
-        "text_center_mobile": true,
         "background_type": "transparent",
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-block-start-mobile": 24,
-        "padding-block-end-mobile": 24,
-        "wrapper_z": 4,
-        "fluid_desktop": true,
-        "fluid_text_width": 398,
-        "fluid_pad": 82,
-        "fluid_anchor": "left",
-        "fluid_min_filler": 24,
-        "fluid_plate_edge": "left",
-        "side_track_plate": true,
-        "side_track_offset": -105,
-        "side_badge_offset": 200,
-        "fluid_pad_css": "calc(81.9672% - 493.5px)",
-        "fluid_plate_min": 0,
-        "col_valign": "top",
-        "col_pad_top": 48,
-        "side_badge_width": 100,
-        "side_badge_bottom": 13,
-        "plate_radius_mobile": 20,
-        "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)"
+        "padding-block-end-mobile": 24
       }
     },
     "premium": {
@@ -314,21 +321,21 @@
       "settings": {
         "title": "SUPER PREMIUM?",
         "title_style": "display-md",
-        "title_align": "left",
-        "title_nowrap": true,
         "font_size": 40,
         "font_size_mobile": 24,
         "body": "<p>We didn't always call our coffee “<strong>super premium</strong>”. But how else would you describe cold brew consistently made with <strong>more coffee</strong> than any other brand, <strong>better coffee</strong> than most would ever consider using, and a <strong>process designed to preserve taste and freshness?</strong></p>",
+        "mobile_top_icon": "ab-crown.png",
+        "mobile_top_icon_width": 46,
         "text_color": "#1B1B1B",
         "align": "left",
+        "title_align": "left",
+        "title_nowrap": true,
         "column_width": 400,
         "col_pad_top": 55,
         "panel": true,
         "panel_color": "#BFD7E9",
         "panel_align": "left",
         "panel_width": 783,
-        "panel_left_css": "calc(50% - 369px)",
-        "panel_top_css": "15%",
         "panel_margin_bottom": 100,
         "panel_radius": 20,
         "panel_overlap": 0,
@@ -337,50 +344,51 @@
         "section_shift_x": 80,
         "section_shift_y": -160,
         "section_z": 5,
+        "wrapper_z": 5,
+        "section_margin_top": 0,
+        "panel_top_css": "15%",
+        "panel_left_css": "calc(50% - 369px)",
+        "panel_shadow": "0 12px 30px rgba(27,27,27,0.12)",
         "panel_pad_left_css": "40px",
         "panel_pad_right_css": "40px",
-        "panel_shadow": "0 12px 30px rgba(27,27,27,0.12)",
+        "text_center_mobile": true,
+        "plate_hide_mobile": true,
+        "two_col_img_hide_mobile": true,
+        "plate_pad_x_mobile": 18,
+        "plate_margin_bottom_mobile": 13,
+        "panel_width_mobile": "90%",
+        "panel_top_mobile": 20,
         "two_col": true,
         "two_col_gap": 32,
         "two_col_valign": "start",
         "side_image_preview": "ab-cold-brew-glass.png",
         "side_width": 289,
         "side_height": 358,
-        "side_fit": true,
-        "side_overflow_top": 20,
         "side_bg_size": "300% auto",
         "side_bg_pos": "center 29%",
-        "panel_width_mobile": "90%",
-        "panel_top_mobile": 20,
-        "plate_hide_mobile": true,
-        "text_center_mobile": true,
-        "two_col_img_hide_mobile": true,
-        "mobile_top_icon": "ab-crown.png",
-        "mobile_top_icon_width": 46,
+        "side_fit": true,
+        "side_overflow_top": 20,
         "background_type": "transparent",
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-block-start-mobile": 24,
-        "padding-block-end-mobile": 46,
-        "wrapper_z": 5,
-        "section_margin_top": 0,
-        "plate_pad_x_mobile": 18,
-        "plate_margin_bottom_mobile": 13
+        "padding-block-end-mobile": 46
       }
     },
     "started": {
       "type": "aw-about-banner",
       "settings": {
         "background_color": "transparent",
+        "section_margin_top": -230,
+        "media_height_mobile": 355,
+        "title_pad_top_mobile": 24,
+        "card_margin_top_mobile": 16,
+        "section_abs": true,
+        "section_abs_top": 2013,
+        "wrapper_z": 6,
         "block_width": 987,
         "image_height": 700,
         "image_preview": "ab-started-box.png",
-        "desktop_cover": true,
-        "desktop_cover_preview": "ab-started-box-desktop.jpg",
-        "desktop_cover_pos": "center",
-        "mobile_cover_preview": "ab-started-box-mobile-crop.png",
-        "mobile_cover_pos": "center",
-        "media_height_mobile": 355,
         "media_img_top": -490,
         "overlay_preview": "ab-started-box-cutout.png",
         "overlay_left": -19,
@@ -388,10 +396,11 @@
         "overlay_top": -521,
         "radius_left": 0,
         "radius_right": 20,
-        "badge_preview": "ab-sticker-boxed-club.png",
-        "badge_right": "-40px",
-        "badge_top": "87%",
-        "badge_width": 112,
+        "desktop_cover": true,
+        "desktop_cover_preview": "ab-started-box-desktop.jpg",
+        "desktop_cover_pos": "center",
+        "mobile_cover_preview": "ab-started-box-mobile-crop.png",
+        "mobile_cover_pos": "center",
         "text_width": "100%",
         "card_width": "100%",
         "text_card_width": "50%",
@@ -403,9 +412,6 @@
         "card_z": 3,
         "text_pad_x": 40,
         "text_pad_y": 40,
-        "body_wrap_width": "75%",
-        "body_pad_x": 40,
-        "body_pad_y": 20,
         "text_valign": "flex-start",
         "text_color": "#1B1B1B",
         "heading": "STARTED WITH A BOX, NOW WE’RE HERE.",
@@ -419,16 +425,17 @@
         "body": "<p>Today, Wandering Bear makes super-premium cold brew in exciting flavors and formats, plus high protein cold brew lattes with 11 grams of protein and just 6 grams of sugar, all built on the same brew we've been perfecting since 2014. <strong>Find us nationwide</strong> at Whole Foods, Sprouts, Target, and Costco, online at Amazon and Thrive Market, and right here on our site.</p>",
         "body_size": 15,
         "body_lh": "1.38",
+        "body_wrap_width": "75%",
+        "body_pad_x": 40,
+        "body_pad_y": 20,
+        "badge_preview": "ab-sticker-boxed-club.png",
+        "badge_right": "-40px",
+        "badge_top": "87%",
+        "badge_width": 112,
         "padding_top": 0,
         "padding_bottom": 60,
         "padding_top_mobile": 0,
-        "padding_bottom_mobile": 32,
-        "section_margin_top": -230,
-        "wrapper_z": 6,
-        "section_abs": true,
-        "section_abs_top": 2013,
-        "title_pad_top_mobile": 24,
-        "card_margin_top_mobile": 16
+        "padding_bottom_mobile": 32
       }
     },
     "products": {
@@ -438,48 +445,48 @@
           "type": "product",
           "settings": {
             "image": "",
-            "label": "Cold Brew On Tap",
-            "image_preview": "ab-wb-hollywood-shot-13-1.jpg"
+            "image_preview": "ab-wb-hollywood-shot-13-1.jpg",
+            "label": "Cold Brew On Tap"
           }
         },
         "card2": {
           "type": "product",
           "settings": {
             "image": "",
-            "label": "Cold Brew Cartons",
-            "image_preview": "ab-wb-aboutus-cart-1.jpg"
+            "image_preview": "ab-wb-aboutus-cart-1.jpg",
+            "label": "Cold Brew Cartons"
           }
         },
         "card3": {
           "type": "product",
           "settings": {
             "image": "",
-            "label": "Cold Brew Concentrate",
-            "image_preview": "ab-3to1-concentrate-lp-1-1.jpg"
+            "image_preview": "ab-3to1-concentrate-lp-1-1.jpg",
+            "label": "Cold Brew Concentrate"
           }
         },
         "card4": {
           "type": "product",
           "settings": {
             "image": "",
-            "label": "Cold Brew Kegs",
-            "image_preview": "ab-wb-keg-branded-glass-1.jpg"
+            "image_preview": "ab-wb-keg-branded-glass-1.jpg",
+            "label": "Cold Brew Kegs"
           }
         },
         "card5": {
           "type": "product",
           "settings": {
             "image": "",
-            "label": "Cold Brew Cans",
-            "image_preview": "ab-wbob8oz-cans-lifestyle-pour-2-1.jpg"
+            "image_preview": "ab-wbob8oz-cans-lifestyle-pour-2-1.jpg",
+            "label": "Cold Brew Cans"
           }
         },
         "card6": {
           "type": "product",
           "settings": {
             "image": "",
-            "label": "Cold Brew Lattes",
-            "image_preview": "ab-latte-8oz-pour-kitchen-edit-bp-1.jpg"
+            "image_preview": "ab-latte-8oz-pour-kitchen-edit-bp-1.jpg",
+            "label": "Cold Brew Lattes"
           }
         },
         "promise1": {
@@ -523,21 +530,21 @@
         "promise_subheading": "This is why our customers trust Wandering Bear.",
         "promise_subheading_color": "#F2E6DC",
         "paw_image": "",
+        "paw_preview": "ab-bearhand.png",
+        "paw_blend_top": "#BF8F38",
+        "paw_blend_color": "#B27A0F",
+        "paw_sticker_preview": "ab-sticker-stay-caffeinated.png",
+        "card_bg": "#F2E6DC",
         "number_bg": "#1B1B1B",
         "number_color": "#F2E6DC",
         "promise_text_color": "#2A1A0F",
         "background_type": "gradient",
         "background_gradient": "linear-gradient(180deg, #F2E6DC 0%, #AF7404 100%)",
+        "section_margin_top": 730,
         "padding-block-start": 60,
         "padding-block-end": 80,
         "padding-block-start-mobile": 40,
-        "padding-block-end-mobile": 60,
-        "paw_preview": "ab-bearhand.png",
-        "paw_blend_color": "#B27A0F",
-        "card_bg": "#F2E6DC",
-        "paw_sticker_preview": "ab-sticker-stay-caffeinated.png",
-        "paw_blend_top": "#BF8F38",
-        "section_margin_top": 730
+        "padding-block-end-mobile": 60
       }
     }
   },
