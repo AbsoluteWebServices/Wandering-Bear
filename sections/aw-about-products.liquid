@@ -19,6 +19,12 @@
   --script-size: {{ s.script_size | default: 45 }}px;
   --script-size-mobile: {{ s.script_size_mobile | default: 32 }}px;
   --label-color: {{ s.label_color | default: '#282827' }};
+  --promise-text-color-mobile: {{ s.promise_text_color_mobile | default: '#431A03' }};
+  --prod-pad-top-desktop: {{ s['padding-block-start'] | default: 60 }}px;
+  --paw-width-mobile: {{ s.paw_width_mobile | default: 668 }}px;
+  --paw-left-mobile: {{ s.paw_left_mobile | default: -339 }}px;
+  --paw-top-mobile: {{ s.paw_top_mobile | default: -60 }}px;
+  --paw-bleed-mobile: {{ s.paw_bleed_mobile | default: -148 }}px;
 {% endcapture %}
 
 <div
@@ -63,11 +69,11 @@
         DOM order is heading → cards → paw, which is the mobile stack. On desktop a grid template
         moves the paw into the lower-left (below the heading) while the cards span the right column.
       {% endcomment %}
-      <div class="wb-about-products__paw mt-16 smd:!mt-24">
+      <div class="wb-about-products__paw mt-16">
         <div class="wb-about-products__paw-left">
           {% if s.promise_heading != blank %}
             {%- comment -%} Desktop: PAW PROMISE as the Figma outline wordmark (SVG). Mobile keeps the text heading untouched. {%- endcomment -%}
-            <span class="wb-about-products__paw-heading-svg hidden smd:!block" role="img" aria-label="{{ s.promise_heading }}">
+            <span class="wb-about-products__paw-heading-svg block" role="img" aria-label="{{ s.promise_heading }}">
               <svg width="365" height="57" viewBox="0 0 365 57" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M338.949 56.1261C338.397 56.1261 337.949 55.6784 337.949 55.1261V5.74609C337.949 5.19381 338.397 4.74609 338.949 4.74609H362.009C362.562 4.74609 363.009 5.19381 363.009 5.74609V13.4061C363.009 13.9584 362.562 14.4061 362.009 14.4061H349.869C349.317 14.4061 348.869 14.8538 348.869 15.4061V24.2561C348.869 24.8084 349.317 25.2561 349.869 25.2561H360.469C361.022 25.2561 361.469 25.7038 361.469 26.2561V33.6361C361.469 34.1884 361.022 34.6361 360.469 34.6361H349.869C349.317 34.6361 348.869 35.0838 348.869 35.6361V45.4661C348.869 46.0184 349.317 46.4661 349.869 46.4661H363.269C363.822 46.4661 364.269 46.9138 364.269 47.4661V55.1261C364.269 55.6784 363.822 56.1261 363.269 56.1261H338.949Z" fill="#1B1B1B"/>
                 <path d="M319.284 56.9656C308.999 56.9656 304.083 51.9957 303.631 41.1533C303.609 40.6354 303.999 40.1936 304.514 40.1388L313.733 39.1594C314.311 39.0979 314.818 39.5424 314.852 40.1226C315.188 45.8201 316.68 47.9356 319.914 47.9356C322.224 47.9356 323.553 46.4656 323.553 43.3856C323.553 39.5356 320.894 37.6456 315.993 34.9856C307.943 30.8556 303.884 26.8656 303.884 18.8856C303.884 9.36562 309.974 3.76562 319.634 3.76562C328.696 3.76562 333.248 8.74025 333.355 19.5289C333.36 20.0381 332.97 20.4637 332.463 20.514L323.87 21.3677C323.286 21.4257 322.779 20.9706 322.757 20.3842C322.56 15.0994 321.354 13.0056 318.794 13.0056C316.414 13.0056 315.154 14.5456 315.154 16.9256C315.154 20.2156 316.764 22.0356 321.314 24.4856C326.914 27.6356 334.474 31.0656 334.474 41.2856C334.474 51.3656 328.734 56.9656 319.284 56.9656Z" fill="#1B1B1B"/>
@@ -81,13 +87,26 @@
                 <path d="M3.73817 52.82C3.18667 52.8494 2.71572 52.4262 2.68628 51.8747L0.0533203 2.56498C0.0238723 2.01348 0.447078 1.54253 0.998577 1.51309L12.2326 0.913233C23.3467 0.319778 29.5597 3.77341 30.1718 15.2371C30.6571 24.3241 28.0107 32.5269 14.6597 33.2398L13.6312 33.2947C13.0797 33.3242 12.6564 33.7951 12.6859 34.3466L13.5907 51.2925C13.6202 51.844 13.197 52.3149 12.6455 52.3444L3.73817 52.82ZM12.0791 22.9828C12.1086 23.5343 12.5795 23.9575 13.131 23.9281L13.6702 23.8993C17.7245 23.6828 19.3675 21.6323 19.0913 16.4596C18.8449 11.8462 17.1514 10.3243 13.936 10.496L12.4181 10.5771C11.8666 10.6065 11.4434 11.0775 11.4729 11.629L12.0791 22.9828Z" fill="#1B1B1B"/>
               </svg>
             </span>
-            <h2 class="wb-about-products__paw-heading font-gothic_condensed font-extrabold smd:!hidden" style="color: {{ s.promise_heading_color | default: '#2A1A0F' }};">
+            <h2 class="wb-about-products__paw-heading font-gothic_condensed font-extrabold hidden" style="color: {{ s.promise_heading_color | default: '#2A1A0F' }};">
               {{ s.promise_heading }}
             </h2>
           {% endif %}
           {% if s.promise_subheading != blank %}
+            {%- comment -%} Optional mobile-only line break: the phrase in promise_sub_break_mobile gets a
+               <br> in front of it, hidden from the desktop breakpoint up. Done here rather than in the
+               setting because Shopify strips class attributes from authored HTML. {%- endcomment -%}
+            {%- liquid
+              assign sub_html = s.promise_subheading
+              if s.promise_sub_break_mobile != blank
+                capture sub_break
+                  echo '<br class="wb-br-mobile">'
+                  echo s.promise_sub_break_mobile
+                endcapture
+                assign sub_html = sub_html | replace: s.promise_sub_break_mobile, sub_break
+              endif
+            -%}
             <p class="wb-about-products__paw-sub font-extrabold" style="color: {{ s.promise_subheading_color | default: '#F2E6DC' }};">
-              {{ s.promise_subheading }}
+              {{ sub_html }}
             </p>
           {% endif %}
         </div>
@@ -164,13 +183,17 @@
   /* Fonts per Figma: regular Kurdis for labels/subheading/promise text, Gothic Condensed for the
      numbered badges, Parslay for the script. Enforced here (not only via Tailwind utilities) so the
      section stays correct independent of the bundle. */
+  /* Figma 1653:20 / 1694:245 — card labels and the paw subheading are Kurdis Condensed ExtraBold;
+     promise copy is Kurdis SemiCondensed SemiBold; the numerals are Tablet Gothic Condensed. */
   .wb-about-products__label,
   .wb-about-products__paw-sub {
     font-family: var(--font-kurdis-condensed);
+    font-weight: 800;
   }
 
   .wb-about-products__promise-text {
     font-family: var(--font-kurdis-semi-condensed);
+    font-weight: 600;
   }
 
   .wb-about-products__promise-num {
@@ -187,7 +210,7 @@
   @media screen and (min-width: 750px) {
     .wb-about-products__script {
       margin-bottom: 56px;
-      transform: rotate(1.28deg);
+      transform: rotate(-1.28deg);
     }
   }
 
@@ -197,7 +220,7 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 16px;
-    row-gap: 32px;
+    row-gap: 5px;
   }
 
   /* Figma card = a cream plate (#F2E6DC) with the photo inset inside it and the label sitting on
@@ -230,7 +253,7 @@
     display: block;
     margin-top: 12px;
     font-size: 18px;
-    line-height: 1.05;
+    line-height: 1.12;
     text-align: center;
     text-transform: uppercase;
   }
@@ -257,13 +280,33 @@
   .wb-about-products__paw-heading-svg svg {
     display: block;
     width: 100%;
-    max-width: 365px;
+    /* Figma: 255 wide on mobile, 365 on desktop. */
+    max-width: 265px;
     height: auto;
+    margin: 0 auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .wb-about-products__paw-heading-svg svg {
+      max-width: 365px;
+      margin: 0;
+    }
+  }
+
+  /* Mobile-only line break helper (see promise_sub_break_mobile). */
+  .wb-br-mobile {
+    display: inline;
+  }
+
+  @media screen and (min-width: 750px) {
+    .wb-br-mobile {
+      display: none;
+    }
   }
 
   .wb-about-products__paw-sub {
-    font-size: 20px;
-    line-height: 1.15;
+    font-size: 26px;
+    line-height: 1.29;
     margin: 12px auto 0;
     max-width: 300px;
   }
@@ -281,11 +324,17 @@
          margin-left  — negative value = how far it bleeds off the LEFT edge
          background-size — ZOOM: bigger % = closer/more zoom (100% = whole paw)
          background-position — PAN: e.g. center, left center, 30% 60% */
-    width: 875px;
+    width: var(--paw-width-mobile, 668px);
     max-width: none;
     align-self: flex-start;
-    aspect-ratio: 1038 / 675;
-    margin: -22px 0 0 -350px;
+    /* Native ratio of ab-bearhand.png (1024x863) — same as Figma's 642x541 — so the whole paw shows
+       without cropping. */
+    aspect-ratio: 1024 / 863;
+    /* The artwork sits in the top 71% of ab-bearhand.png; the rest is transparent, so the box keeps
+       running past the visible paw and reads as a gap above the footer. Figma clips that tail with
+       the frame edge — do the same by bleeding the box past the section, which is overflow:hidden. */
+    margin: var(--paw-top-mobile, -22px) 0 var(--paw-bleed-mobile, -148px) var(--paw-left-mobile, -339px);
+    z-index: 0;
     background-image: var(--paw-img);
     background-repeat: no-repeat;
     {%- comment -%}
@@ -293,8 +342,8 @@
       so a larger value slides the paw further LEFT. 112% sat too far right on a phone — the glass
       almost touched the right edge — so nudge it over.
     {%- endcomment -%}
-    background-position: 126%;
-    background-size: 134%;
+    background-position: center;
+    background-size: 100% 100%;
     pointer-events: none;
   }
 
@@ -303,6 +352,9 @@
   }
 
   .wb-about-products__promises {
+    /* The paw is raised into this column on mobile; the cards stay on top of it, as in Figma. */
+    position: relative;
+    z-index: 1;
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -329,33 +381,59 @@
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
-    font-size: 20px;
+    font-size: 33px;
     line-height: 1;
   }
 
   .wb-about-products__promise-text {
     display: block;
     font-size: 15px;
-    line-height: 1.4;
+    line-height: 1.29;
   }
 
   @media screen and (min-width: 750px) {
+    /* Figma 1694:518 — the grid is 892 wide: three 288 cells with a 14px gutter. The cell's 18px
+       padding leaves the photo at exactly 252x296 (the card's aspect-ratio). Capping the width here
+       rather than letting it fill the 1074 container is what keeps the photo at its design size. */
+    /* spacing-style interpolates the block padding between the mobile and desktop values, so this
+       section's top padding is 60px at 1280 but only 42px at 768 — which shifted the script heading
+       relative to the banner above. Pin it so the 30px gap holds across the whole desktop range. */
+    .wb-about-products.spacing-style {
+      padding-block-start: var(--prod-pad-top-desktop, 60px) !important;
+    }
+
     .wb-about-products__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      column-gap: 24px;
-      row-gap: 40px;
+      max-width: 892px;
+      margin-inline: auto;
+      column-gap: 14px;
+      row-gap: 19px;
+    }
+
+    /* Figma: 21px from the photo down to the label. */
+    .wb-about-products__label {
+      margin-top: 21px;
     }
 
     /* Desktop: heading top-left, paw bottom-left, cards span the right column. */
     .wb-about-products__paw {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      /* Same 892 width as the product grid above, and inside it the Figma columns fall out exactly:
+         397 heading column + 47 gutter + 448 promise card (node 1694:518). The promise column is a
+         fixed width so the cards do not get squeezed on tablet — with 1fr 1fr they shrank to ~357px
+         at 820 and the copy wrapped into a narrow ribbon (QA r33). */
+      max-width: 892px;
+      margin-inline: auto;
+      grid-template-columns: minmax(0, 1fr) 448px;
       grid-template-areas:
         "head cards"
         "paw  cards";
-      column-gap: 48px;
+      column-gap: 47px;
       row-gap: 0;
       align-items: start;
+      /* 46px below the product grid (QA r27). Set here rather than as a Tailwind utility so it does
+         not depend on the arbitrary-value class being generated at build time. */
+      margin-top: 46px !important;
     }
 
     .wb-about-products__paw-left {
@@ -365,6 +443,9 @@
 
     .wb-about-products__promises {
       grid-area: cards;
+      /* Keep the cards above the paw, which is later in the DOM and would otherwise paint over them. */
+      position: relative;
+      z-index: 1;
     }
 
     .wb-about-products__paw-img {
@@ -383,10 +464,13 @@
 
     .wb-about-products__paw-img {
       width: 617px;
-      max-width: none;
+      /* Figma lets the paw run under the promise cards; it just sits behind them (z-index below).
+         The cap only stops it overshooting the screen once the column narrows on tablet — at the
+         1280 design width (397 + 220 = 617) it is inert. */
+      max-width: calc(100% + 220px);
       aspect-ratio: 1087 / 608;
       /* bleed off the left edge of the content column (clipped by the section's overflow:hidden) */
-      margin: 40px 0 0 -130px;
+      margin: 40px 0 0 -197px;
       background-position: 86% 43%;
       /* zoom: bigger % = closer (tune here / in console). cover = minimum fill. */
       background-size: 130%;
@@ -414,17 +498,17 @@
 
     .wb-about-products__promise-text {
       padding-left: 15px;
-      padding-right: 15px;
+      padding-right: 0;
     }
 
     .wb-about-products__promise-num {
       top: 50%;
       left: -24px;
       transform: translateY(-50%);
-      /* 20% larger than the base 48px badge / 20px digit */
+      /* Badge enlarged from the original 48px; the digit is 33px per Figma 1653:20. */
       width: 58px;
       height: 58px;
-      font-size: 24px;
+      font-size: 33px;
     }
   }
 
@@ -458,14 +542,9 @@
       padding: 12px 12px 14px;
     }
 
-    {%- comment -%}
-      Two classes deep on purpose: the element also carries the utility class .font-kurdis, which is
-      itself !important and lands later in the cascade, so a single-class rule loses even with
-      !important. .wb-about-products__cell .wb-about-products__label outranks it.
-    {%- endcomment -%}
-    .wb-about-products__cell .wb-about-products__label {
-      font-family: "Gothic Condensed", sans-serif !important;
-      font-size: 14px !important;
+    {%- comment -%} Figma 1694:245: card labels drop to 13px on mobile and stay on one line. {%- endcomment -%}
+    .wb-about-products__label {
+      font-size: 13px;
       white-space: nowrap;
     }
 
@@ -478,11 +557,11 @@
     }
     .wb-about-products__paw-left {
       text-align: center;
-      margin-bottom: 50px;
+      margin-bottom: 75px;
     }
     .wb-about-products__paw-sub {
-      font-size: 20px;
-      line-height: 1.15;
+      font-size: 16px;
+      line-height: 1.29;
       margin: 30px auto 0;
       max-width: 315px;
     }
@@ -490,16 +569,32 @@
       padding: 55px 22px 24px;
     }
     .wb-about-products__promise-num {
-      width: 75px;
-      height: 75px;
-      top: -38px;
+      width: 52px;
+      height: 52px;
+      top: -26px;
       font-size: 25px;
+      line-height: 1.29;
+    }
+    /* Figma: the promise copy is #1B1B1B on desktop but #431A03 on mobile, so the inline desktop
+       colour has to be overridden here. Liquid is not evaluated inside {% stylesheet %}, so the
+       value arrives as a custom property set on the section wrapper. */
+    .wb-about-products__promise-text {
+      font-size: 13px;
+      color: var(--promise-text-color-mobile, #431A03) !important;
+      padding-left: 32px;
+      padding-right: 32px;
     }
     .wb-about-products__promises {
       gap: 56px;
       max-width: 370px;
       margin-left: auto;
       margin-right: auto;
+      /* Figma mobile: the "1" badge sits right under the subheading (QA r59). */
+      margin-top: -24px;
+    }
+    /* Figma mobile: 48 from the product grid down to the PAW PROMISE lockup (QA r59). */
+    .wb-about-products__paw {
+      margin-top: 48px !important;
     }
     /* Figma mobile grid order: On Tap, Cartons, Kegs, Concentrate, Cans, Lattes
        (swap the 3rd/4th cards — Concentrate <-> Kegs — mobile only; desktop grid unchanged). */
@@ -621,6 +716,7 @@
       "label": "Paw blend color (bottom)",
       "default": "#B27A0F"
     },
+    { "type": "text", "id": "paw_top_mobile", "label": "Paw top offset — mobile px (negative = higher)" },
     {
       "type": "image_picker",
       "id": "paw_sticker",
@@ -655,6 +751,13 @@
       "label": "Promise text color",
       "default": "#2A1A0F"
     },
+    {
+      "type": "color",
+      "id": "promise_text_color_mobile",
+      "label": "Promise text color — mobile",
+      "default": "#431A03"
+    },
+    { "type": "text", "id": "promise_sub_break_mobile", "label": "Subheading: break before this phrase on mobile" },
     {
       "type": "header",
       "content": "Background"

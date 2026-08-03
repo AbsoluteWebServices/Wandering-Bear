@@ -60,29 +60,28 @@
   <div class="aw-about-banner__block relative mx-auto w-full"
        style="max-width: {{ s.block_width | default: 1024 }}px;">
     {%- comment -%}
-      Media: a rounded frame (clips the background photo) plus a transparent cut-out overlay of
-      the same shot laid on top. The overlay isn't clipped, so its subject breaks out above the
-      frame. Both images share the same width + vertical offset so their subjects line up.
+      Two ways to fill the frame:
+
+      · desktop_cover — one finished photo dropped straight into the rounded frame. Desktop only:
+        mobile keeps the layered treatment below, so the cover image is hidden under 750px.
+
+      · the layered treatment — a photo clipped by the rounded frame plus a transparent cut-out of
+        the same shot on top, unclipped, so its subject breaks out above the frame. Both share a
+        width and vertical offset so the subjects line up. In cover mode it is hidden on desktop.
     {%- endcomment -%}
     <div class="aw-about-banner__media relative w-full" style="height: {{ s.image_height | default: 500 }}px;">
       <div class="aw-about-banner__frame absolute inset-0 overflow-hidden" style="border-radius: {{ block_radius }};{% if img_src != blank %} --frame-img: url('{{ img_src }}');{% endif %}">
+        {% if s.desktop_cover %}
+          <img src="{{ cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--desktop hidden smd:!block absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.desktop_cover_pos | default: 'center' }};" loading="lazy">
+        {% endif %}
         {% if img_src != blank %}
-          <img src="{{ img_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__frame-img absolute inset-x-0 w-full max-w-none" style="top: {{ s.media_img_top | default: 0 }}px;" loading="lazy">
-          {% if s.desktop_cover %}
-            {%- comment -%}
-              One clean cover image per breakpoint, filling the rounded frame. The breakout overlay and
-              the offset frame image (above) are hidden on both breakpoints via the style blocks below.
-              Desktop uses the landscape crop; mobile its own (portrait) crop.
-            {%- endcomment -%}
-            <img src="{{ cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--desktop hidden smd:!block absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.desktop_cover_pos | default: 'center' }};" loading="lazy">
-            <img src="{{ mobile_cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--mobile smd:!hidden absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.mobile_cover_pos | default: 'center' }};" loading="lazy">
-          {% endif %}
+          <img src="{{ img_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__frame-img absolute inset-x-0 w-full max-w-none{% if s.desktop_cover %} smd:!hidden{% endif %}" style="top: {{ s.media_img_top | default: 0 }}px;" loading="lazy">
         {% endif %}
       </div>
       {% if overlay_src != blank %}
         {% assign ov_top = s.overlay_top | default: s.media_img_top | default: 0 %}
         {% assign ov_w = s.overlay_width | default: s.block_width | default: 1024 %}
-        <img src="{{ overlay_src }}" alt="" class="aw-about-banner__overlay absolute max-w-none z-[2]" style="left: {{ s.overlay_left | default: 0 }}px; width: {{ ov_w }}px; top: {{ ov_top }}px;" loading="lazy">
+        <img src="{{ overlay_src }}" alt="" class="aw-about-banner__overlay absolute max-w-none z-[2]{% if s.desktop_cover %} smd:!hidden{% endif %}" style="left: {{ s.overlay_left | default: 0 }}px; width: {{ ov_w }}px; top: {{ ov_top }}px;" loading="lazy">
       {% endif %}
     </div>
 
@@ -109,7 +108,7 @@
         {% endif %}
         {% if s.body != blank %}
           <div class="aw-about-banner__body-wrap" style="width: {{ s.body_wrap_width | default: '100%' }}; padding: {{ s.body_pad_y | default: 0 }}px {{ s.body_pad_x | default: 40 }}px;">
-            <div class="aw-about-banner__body body [&_strong]:font-bold font-semibold font-(font-family:var(--font-kurdis-semi-condensed))!" style="color: {{ s.text_color | default: '#1B1B1B' }}; font-size: {{ s.body_size | default: 15 }}px; line-height: {{ s.body_lh | default: 1.38 }};">
+            <div class="aw-about-banner__body body [&_strong]:font-bold font-semibold font-(font-family:var(--font-kurdis-semi-condensed))!" style="color: {{ s.body_color | default: s.text_color | default: '#1B1B1B' }}; font-size: {{ s.body_size | default: 15 }}px; line-height: {{ s.body_lh | default: 1.38 }};">
               {{ s.body }}
             </div>
           </div>
@@ -172,9 +171,21 @@
       position: absolute !important;
       inset: 0 !important;
       overflow: hidden !important;
+      {%- comment -%}
+        Optional: round every corner on mobile. Off by default — the layered artwork carries its own
+        rounding, so this is only wanted when a plain rectangular photo fills the frame.
+      {%- endcomment -%}
+      {% if s.media_radius_mobile != blank %}border-radius: {{ s.media_radius_mobile }}px !important;{% endif %}
     }
-    .aw-about-banner__frame-img,
+    {%- comment -%}
+      The cut-out overlay lives OUTSIDE the clipping frame so its subject can break out on desktop.
+      At mobile sizes that breakout is 365px tall against a ~300px frame, so it escaped upwards and
+      covered the copy of the section above. Mobile shows the photo inside the frame instead.
+    {%- endcomment -%}
     .aw-about-banner__overlay {
+      display: none !important;
+    }
+    .aw-about-banner__frame-img {
       display: block !important;
       position: absolute !important;
       left: 50% !important;
@@ -209,6 +220,12 @@
       text-align: center !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
+      {% comment %} The desktop vertical rhythm (text_pad_y / heading_wrap_pad_bottom / heading_gap) is
+         set inline, so it leaks into mobile. Pin the mobile values here; the defaults are what mobile
+         rendered before the desktop spacing was tightened. {% endcomment %}
+      padding-top: {{ s.text_pad_y_mobile | default: 40 }}px !important;
+      padding-bottom: {{ s.heading_wrap_pad_bottom_mobile | default: 10 }}px !important;
+      margin-bottom: {{ s.heading_gap_mobile | default: 20 }}px !important;
     }
     .aw-about-banner__title {
       text-align: center !important;
@@ -228,25 +245,73 @@
 {% endstyle %}
 
 {%- comment -%}
-  Cover mode: hide the breakout cut-out overlay and the offset frame image on BOTH breakpoints so only
-  the clean per-breakpoint cover images show. Id-scoped so it beats the mobile layered rules and leaves
-  other banners untouched.
+  Tablet nudge for the heading tab. The card is pinned to the photo with a fixed negative top, but
+  the cover photo is a different crop at tablet widths, so the tab can sit a couple of px high
+  against the notch. Relative offset only — it does not reflow the body below it.
+{%- endcomment -%}
+{%- if s.heading_offset_tablet != blank -%}
+  {% style %}
+    @media screen and (min-width: 750px) and (max-width: 1023px) {
+      #shopify-section-{{ section.id }} .aw-about-banner__heading-wrap {
+        position: relative;
+        top: {{ s.heading_offset_tablet }}px;
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- comment -%}
+  Cover mode renders neither the overlay nor the offset frame image, so only the decorative badge
+  still needs hiding here.
 {%- endcomment -%}
 {%- if s.desktop_cover -%}
   {% style %}
-    #shopify-section-{{ section.id }} .aw-about-banner__overlay,
-    #shopify-section-{{ section.id }} .aw-about-banner__frame-img,
-    #shopify-section-{{ section.id }} .aw-about-banner__badge {
-      display: none !important;
-    }
+    {%- comment -%} The decorative badge is part of the layered treatment, so cover mode drops it —
+       unless it is explicitly kept (the Figma desktop frame still shows the BOXED COLD BREW CLUB
+       sticker on the right edge of the photo). {%- endcomment -%}
+    {% unless s.badge_show_in_cover %}
+      #shopify-section-{{ section.id }} .aw-about-banner__badge {
+        display: none !important;
+      }
+    {% endunless %}
   {% endstyle %}
 {%- endif -%}
 
 {% stylesheet %}
   /* About Us is set in regular Kurdis, not the theme's default Condensed display face. Override
      locally (banner is About-Us-only) instead of touching the shared display-md/body classes. */
+  /* Figma 1653:20 — heading is Kurdis Condensed ExtraBold at 109% leading. */
   .aw-about-banner__title {
     font-family: var(--font-kurdis-condensed) !important;
+    font-weight: 800 !important;
+  }
+
+  .aw-about-banner__body,
+  .aw-about-banner__body p,
+  .aw-about-banner__body span,
+  .aw-about-banner__body strong,
+  .aw-about-banner__body a {
+    font-family: var(--font-kurdis-semi-condensed) !important;
+  }
+
+  /* Mobile drops the body to 13px (Figma 1694:245). */
+  /* Mobile wants "Find us nationwide" to start a new paragraph. The copy comes from an html setting
+     that Shopify sanitises (no class attributes, so no taggable <br>), and the run is already the
+     only <strong> in the block — so inject the break with a pseudo-element. The <strong> itself
+     stays inline, which keeps "at Whole Foods..." flowing on after it. */
+  @media screen and (max-width: 749px) {
+    .aw-about-banner__body strong::before {
+      content: "\A\A";
+      white-space: pre;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .aw-about-banner__body,
+    .aw-about-banner__body p,
+    .aw-about-banner__body strong {
+      font-size: 13px !important;
+    }
   }
 
   /* Figma: body copy is Kurdis SemiCondensed SemiBold (600); the "Find us nationwide" run steps up
@@ -254,6 +319,28 @@
   .aw-about-banner__body,
   .aw-about-banner__body p {
     font-weight: 600;
+  }
+
+  /* The badge hangs 31px off the right edge of the 987px block. That overhang only exists while the
+     viewport is wider than the block plus the overhang; on tablet the block fills the screen and the
+     badge gets clipped, so pull it back flush with the photo. */
+  @media screen and (min-width: 750px) and (max-width: 1049px) {
+    .aw-about-banner__badge {
+      right: 0 !important;
+    }
+  }
+
+  /* Figma 1694:518 breaks this paragraph after "exciting" and after "protein"; everything after that
+     wraps on its own inside the 603px column. Mobile centres the copy across the full width, where
+     hard breaks would read as ragged, so they only apply from the desktop breakpoint up. */
+  .aw-about-banner__body br {
+    display: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .aw-about-banner__body br {
+      display: inline;
+    }
   }
 
   .aw-about-banner__body strong {
@@ -279,7 +366,11 @@
     { "type": "number", "id": "section_min_height", "label": "Section min height px" },
     { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
+    { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
     { "type": "number", "id": "title_pad_top_mobile", "label": "Title padding-top — mobile px" },
+    { "type": "number", "id": "text_pad_y_mobile", "label": "Heading block padding-top — mobile px" },
+    { "type": "number", "id": "heading_wrap_pad_bottom_mobile", "label": "Heading block padding-bottom — mobile px" },
+    { "type": "number", "id": "heading_gap_mobile", "label": "Gap heading→body — mobile px" },
     { "type": "number", "id": "card_margin_top_mobile", "label": "Card margin-top — mobile px" },
     { "type": "number", "id": "text_pad_x_mobile", "label": "Card padding X — mobile px" },
     { "type": "number", "id": "media_top_mobile", "label": "Media image top — mobile px" },
@@ -330,6 +421,9 @@
     { "type": "number", "id": "text_pad_y", "label": "Card padding Y px" },
     { "type": "select", "id": "text_valign", "label": "Text vertical align", "options": [ { "value": "center", "label": "Center" }, { "value": "flex-start", "label": "Top" }, { "value": "flex-end", "label": "Bottom" } ], "default": "center" },
     { "type": "color", "id": "text_color", "label": "Text color", "default": "#1B1B1B" },
+    { "type": "color", "id": "body_color", "label": "Body text color", "default": "#431A03" },
+    { "type": "checkbox", "id": "badge_show_in_cover", "label": "Keep badge in desktop cover mode", "default": false },
+    { "type": "text", "id": "heading_offset_tablet", "label": "Heading tab offset — tablet px" },
     { "type": "header", "content": "Heading" },
     { "type": "text", "id": "heading", "label": "Heading" },
     {

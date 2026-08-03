@@ -15,6 +15,15 @@
   elsif s.preview_asset != blank
     assign sky_src = s.preview_asset | asset_url
   endif
+
+  # Cloud band: a separate strip of sky inside the blue field. Figma 1694:518 only shows clouds in
+  # the gap between the fridge and "so how do we do it" plates, not across the whole blue.
+  assign band_src = ''
+  if s.sky_band_image != blank
+    assign band_src = s.sky_band_image | image_url: width: 2000
+  elsif s.sky_band_asset != blank
+    assign band_src = s.sky_band_asset | asset_url
+  endif
 %}
 
 {% style %}
@@ -40,7 +49,12 @@
      aria-hidden="true">
   <div class="aw-page-bg__blue absolute inset-0" style="background: {{ s.blue_color | default: '#BFD7E9' }};">
     {% if s.show_sky and sky_src != blank %}
-      <img src="{{ sky_src }}" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60">
+      <img src="{{ sky_src }}" alt="" class="absolute inset-0 w-full h-full object-cover"
+           style="opacity: {{ s.sky_opacity | default: '0.6' }}; object-position: {{ s.sky_pos | default: 'center' }};">
+    {% endif %}
+    {% if band_src != blank and s.sky_band_height != blank %}
+      <div class="aw-page-bg__sky-band absolute inset-x-0"
+           style="top: {{ s.sky_band_top | default: 0 }}px; height: {{ s.sky_band_height }}px; background-image: url('{{ band_src }}'); background-size: cover; background-position: {{ s.sky_band_pos | default: 'center' }};{% if s.sky_band_opacity != blank %} opacity: {{ s.sky_band_opacity }};{% endif %}"></div>
     {% endif %}
   </div>
 </div>
@@ -70,6 +84,10 @@
     .aw-page-bg {
       top: {{ s.blue_top_mobile | default: 0 }}px !important;
       height: {{ s.blue_height_mobile | default: 1980 }}px !important;
+    }
+    .aw-page-bg__sky-band {
+      top: {{ s.sky_band_top_mobile | default: s.sky_band_top | default: 0 }}px !important;
+      height: {{ s.sky_band_height_mobile | default: s.sky_band_height | default: 0 }}px !important;
     }
     .aw-page-bg__blue {
       -webkit-mask: none !important;
@@ -134,7 +152,18 @@
       "type": "number",
       "id": "blue_height_mobile",
       "label": "Blue field height — mobile px"
-    }
+    },
+    { "type": "text", "id": "sky_opacity", "label": "Sky image opacity (0-1)" },
+    { "type": "text", "id": "sky_pos", "label": "Sky image object-position" },
+    { "type": "header", "content": "Cloud band" },
+    { "type": "image_picker", "id": "sky_band_image", "label": "Cloud band image" },
+    { "type": "text", "id": "sky_band_asset", "label": "Cloud band asset filename" },
+    { "type": "text", "id": "sky_band_top", "label": "Cloud band top px (from blue field top)" },
+    { "type": "text", "id": "sky_band_height", "label": "Cloud band height px" },
+    { "type": "text", "id": "sky_band_pos", "label": "Cloud band background-position" },
+    { "type": "text", "id": "sky_band_opacity", "label": "Cloud band opacity (0-1)" },
+    { "type": "text", "id": "sky_band_top_mobile", "label": "Cloud band top — mobile px" },
+    { "type": "text", "id": "sky_band_height_mobile", "label": "Cloud band height — mobile px" }
   ],
   "presets": [
     { "name": "AW Page Background" }
