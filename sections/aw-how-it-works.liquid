@@ -109,7 +109,7 @@
             <div class="flex flex-col min-w-0 flex-1">
               <div class="relative z-2 flex items-center gap-3.5 smd:pr-[240px]">
                 <div
-                  class="aw-how-it-works__index relative shrink-0 size-15 -ml-2.5 rounded-full filter-[drop-shadow(0_4px_4px_rgba(0,0,0,0.25))] before:content-[''] before:absolute before:inset-1.25 before:rounded-full before:border-2 before:border-espresso bg-[#FDEDE0] flex items-center justify-center smd:-ml-2"
+                  class="aw-how-it-works__index relative shrink-0 size-15 -ml-2 rounded-full filter-[drop-shadow(0_4px_4px_rgba(0,0,0,0.25))] before:content-[''] before:absolute before:inset-1.25 before:rounded-full before:border-2 before:border-espresso bg-[#FDEDE0] flex items-center justify-center smd:-ml-2"
                   aria-hidden="true"
                 >
                   <span class="font-gothic_condensed font-extrabold text-[25px] leading-none text-espresso">
@@ -124,17 +124,17 @@
                 {% endif %}
               </div>
 
-              <div class="relative z-1 h-px w-[calc(100%+36px)] bg-[#CFBDB1]/60 -ml-4.5 -mt-1.5 smd:-ml-6 smd:w-[calc(100%+48px)]"></div>
+              <div class="relative z-1 h-px w-[calc(100%+36px)] bg-[#F0EDEA] -ml-4.5 -mt-1.5 smd:-ml-6 smd:w-[calc(100%+48px)]"></div>
 
               {% if block.settings.description != blank %}
-                <div class="rte font-kurdis-semi-condensed font-semibold text-sm leading-[1.3] w-full text-espresso pt-3.5 [&_p]:mb-0 lg:px-1.5{% if action_type == 'join' or action_type == 'custom_button' %} max-w-[286px] smd:pt-3{% else %} smd:pt-4.75{% endif %}">
+                <div class="aw-how-it-works__description rte font-kurdis-semi-condensed font-semibold text-sm leading-[1.3] w-full text-espresso pr-7.5 pt-3.5 [&_p]:mb-0 smd:pr-0 lg:px-1.5{% if action_type == 'join' or action_type == 'custom_button' %} smd:max-w-[260px] smd:pt-3 md:max-w-[286px]{% else %} smd:pt-4.75{% endif %}">
                   {{ block.settings.description | replace: '\n', '<br>' }}
                 </div>
               {% endif %}
             </div>
 
             {% if show_action %}
-              <div class="
+              <div class="aw-how-it-works__action
                 w-full mt-1 z-2 smd:absolute smd:right-6 smd:max-w-[232px] smd:-bottom-auto smd:left-auto smd:right-4.5 smd:mt-0 smd:shrink-0 smd:self-center smd:flex smd:items-center smd:justify-end
                 {% if action_type == 'join' or action_type == 'custom_button' %} absolute left-4.5 -bottom-6.5 max-w-[calc(100%-36px)] smd:bottom-auto smd:left-auto smd:right-5 smd:top-9{% endif %}
                 {% if action_type == 'link' %} smd:top-7 smd:text-right{% endif %}

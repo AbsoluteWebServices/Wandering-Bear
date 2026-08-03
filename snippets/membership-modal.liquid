@@ -9,12 +9,14 @@
     assign learn_more_button = item.learn_more_button
     assign login_text = item.login_text
     assign already_logged_in_text = item.already_logged_in_text
-
-    assign is_elite = false
-    if customer.tags contains 'inveterate-tier#dc38b982'
-        assign is_elite = true
-    endif
 %}
+
+{%- capture membership_tier -%}{%- render 'customer-membership-tier' -%}{%- endcapture -%}
+{%- assign membership_tier = membership_tier | strip -%}
+{%- assign is_elite = false -%}
+{%- if membership_tier == 'ELITE' -%}
+    {%- assign is_elite = true -%}
+{%- endif -%}
 
 {% capture elite_block %}
     <div class="bg-[#BFD7E9] p-4 wb-flex justify-center items-center relative top-0 left-0 w-full">
