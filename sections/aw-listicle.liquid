@@ -60,9 +60,20 @@
         {% endif %}
       </div>
 
-      {% comment %} Mobile side padding is 52px (Figma 1:133 puts the copy at x≈52); desktop keeps 40. {% endcomment %}
-      <div class="wb-listicle__text order-2 {% if side == 'right' %}smd:!order-1{% else %}smd:!order-2{% endif %} wb-flex items-center justify-center px-[52px] py-10 smd:!px-10 smd:!py-14">
-        <div class="w-full max-w-[390px]">
+      {% comment %}
+        Mobile copy column: Figma (1:133) sizes the text box at 318px. Capping the block there and
+        letting justify-center place it keeps the left and right insets identical at every width —
+        a fixed 52px inset instead pushed the block past the viewport on the longest title and left
+        ~11px on the right. px-6 is only the minimum gutter for screens narrower than 318+48.
+        Desktop keeps its own 40px padding and 390px block.
+
+        The 40px padding starts at 1024, not at the 750 two-column flip: just above 750 each column
+        is only ~375px wide, and 40px a side left 296px of copy — under the 298px that
+        "TASTY FLAVORS," needs, so it broke into three lines right at the breakpoint. Holding the
+        24px gutter until 1024 keeps every \b segment on one line across the tablet range.
+      {% endcomment %}
+      <div class="wb-listicle__text order-2 {% if side == 'right' %}smd:!order-1{% else %}smd:!order-2{% endif %} wb-flex items-center justify-center px-6 py-10 smd:!py-14 lg:!px-10">
+        <div class="w-full max-w-[318px] smd:!max-w-[390px]">
           {% if s.show_numbers %}
             <span class="wb-listicle__num display-md wb-listicle__title-size block leading-[1.05]" style="color: {{ text_color }};">{{ number }}.</span>
           {% endif %}
@@ -123,6 +134,18 @@
     }
   }
 
+  /* Two-column widths (750+): the copy is the taller side on tablets, and a fixed aspect-ratio
+     left the image short — up to 180px of empty background under it. Drop the ratio to a floor
+     (min-height, same 640:493 of a half-width column) so the image still sets the row height when
+     the copy is short, but stretches to the copy when the copy is taller. At 1280 the copy is
+     always shorter, so the row stays exactly 493px and desktop is unchanged. */
+  @media screen and (min-width: 750px) {
+    .wb-listicle__media {
+      aspect-ratio: auto;
+      min-height: calc(50vw * 493 / 640);
+    }
+  }
+
   .wb-listicle__title-size {
     font-size: var(--font-size) !important;
   }
@@ -133,12 +156,16 @@
     }
   }
 
-  /* Mobile: keep each \b segment on a single line — the forced <br> gives the
-     intended two-line title, so prevent the copy from wrapping any further. */
+  /* Mobile line breaks come from the Figma text-box widths, not from nowrap.
+     Figma mobile (frame 375, node 1:133) gives the title a 318px box and the body a 283px box,
+     and the copy is left to wrap inside them. At 318px every \b segment of items 1-4 fits on its
+     own line, while "100% HAPPINESS" (≈327px in the web Kurdis cut) does not — so item 5 breaks
+     to 100% / HAPPINESS / GUARANTEED exactly as the design shows. nowrap used to force it onto
+     one line and pushed the column past the viewport, which also knocked the side padding
+     off-centre. Desktop is not matched by this query. */
   @media screen and (max-width: 749px) {
-    .wb-listicle__title {
-      text-wrap: nowrap;
-      white-space: nowrap;
+    .wb-listicle__body {
+      max-width: 283px;
     }
   }
 

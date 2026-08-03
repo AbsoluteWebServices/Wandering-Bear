@@ -43,6 +43,12 @@ export default (Alpine: any) => {
         spaceBetween: parseInt(data.spaceMobile || '12', 10),
         loop: canLoop,
         watchOverflow: true,
+        // Marks the on-screen slides so the card overlap can key off what is actually visible
+        // rather than the DOM index — see the bleed rules in aw-review-carousel.liquid.
+        watchSlidesProgress: true,
+        // With fewer reviews than slidesPerView the track kept them left-aligned and left a hole
+        // on the right; centre them instead so a short list still reads as balanced.
+        centerInsufficientSlides: true,
         observer: true,
         observeParents: true,
         navigation: {
