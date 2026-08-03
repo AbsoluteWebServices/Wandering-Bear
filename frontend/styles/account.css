@@ -223,6 +223,17 @@
 [data-wb-autoship-state="cancelled"] [data-wb-autoship-cancelled] {
     display: inline-flex;
 }
+/* CTA follows the same state switch: Manage (active, default) ↔ Reactivate (cancelled). Both are
+   rendered by customer-dashboard.liquid so hydration can flip them without re-rendering the card. */
+[data-wb-autoship-reactivate] {
+    display: none;
+}
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-manage] {
+    display: none;
+}
+[data-wb-autoship-state="cancelled"] [data-wb-autoship-reactivate] {
+    display: block;
+}
 
 /* Autoship rows — 1px #F0EDEA divider + spacing (Figma "Line 13"). Applies to the head
    row (bundle title + next shipment) and every line item incl. the last, so each row is

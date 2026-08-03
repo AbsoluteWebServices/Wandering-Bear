@@ -85,7 +85,8 @@ const customerId = root?.dataset.customerId ?? '';
 const devToken = (root?.dataset.workerToken ?? '').trim();
 // Stay AI customer-portal URL (settings.manage_autoship_url) — target for the autoship
 // "+N more" link and the manage control. The worker's portal_url comes back empty.
-const portalUrl = (root?.dataset.portalUrl ?? '').trim();
+// Attribute is data-wb-portal-url → dataset key wbPortalUrl (the `wb` prefix is part of the name).
+const portalUrl = (root?.dataset.wbPortalUrl ?? '').trim();
 
 /** Build a worker URL: dev surface ({url}/dev/<path>?customerId=[&token=]) or App Proxy (/apps/wb/<path>). */
 function wbUrl(path: string, params: Record<string, string> = {}): string {
@@ -306,7 +307,9 @@ function renderCredits(d: Credits): void {
 
   tbody.textContent = '';
   txns.forEach((t) => {
-    const positive = t.type === 'EARNED' || t.type === 'ADJUSTED';
+    // EARNED always credits, REDEEMED/EXPIRED always debit; ADJUSTED goes either way, so take the
+    // sign from the numeric amount rather than assuming a gain.
+    const positive = t.type === 'ADJUSTED' ? t.amount >= 0 : t.type === 'EARNED';
     const amtColor = t.type === 'EARNED' ? 'text-dark-gold' : t.type === 'EXPIRED' ? 'text-espresso/50' : 'text-espresso';
     const tr = document.createElement('tr');
     tr.className = 'body text-espresso';
@@ -333,7 +336,8 @@ function renderCredits(d: Credits): void {
 
     const amount = document.createElement('td');
     amount.className = `p-3 border-b border-espresso/10 text-right whitespace-nowrap font-bold ${amtColor}`;
-    amount.textContent = `${positive ? '+' : '-'}${t.amount_formatted}`;
+    // The sign is ours; drop one the worker may already have baked into the formatted amount.
+    amount.textContent = `${positive ? '+' : '-'}${t.amount_formatted.replace(/^-/, '')}`;
 
     tr.append(date, activity, orderCell, amount);
     tbody.appendChild(tr);
