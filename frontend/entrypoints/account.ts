@@ -57,12 +57,36 @@ type Summary = {
   errors?: { section: string; code: string }[];
 };
 
+type CreditTxn = {
+  id: string;
+  type: 'EARNED' | 'REDEEMED' | 'EXPIRED' | 'ADJUSTED' | string;
+  amount: number;
+  amount_formatted: string;
+  date: string;
+  order_name: string | null;
+  order_url: string | null;
+  description: string;
+};
+
+type Credits = {
+  balance: number;
+  balance_formatted: string;
+  currency: string;
+  expires_at: string | null;
+  transactions: CreditTxn[];
+  pagination: { page: number; per_page: number; total: number; has_next: boolean };
+};
+
 type Envelope<T> = { ok: true; data: T } | { ok: false; error?: { code?: string; message?: string } };
 
 const root = document.querySelector<HTMLElement>('[data-wb-account]');
 const workerUrl = (root?.dataset.workerUrl ?? '').trim().replace(/\/$/, '');
 const customerId = root?.dataset.customerId ?? '';
 const devToken = (root?.dataset.workerToken ?? '').trim();
+// Stay AI customer-portal URL (settings.manage_autoship_url) — target for the autoship
+// "+N more" link and the manage control. The worker's portal_url comes back empty.
+// Attribute is data-wb-portal-url → dataset key wbPortalUrl (the `wb` prefix is part of the name).
+const portalUrl = (root?.dataset.wbPortalUrl ?? '').trim();
 
 /** Build a worker URL: dev surface ({url}/dev/<path>?customerId=[&token=]) or App Proxy (/apps/wb/<path>). */
 function wbUrl(path: string, params: Record<string, string> = {}): string {
@@ -94,6 +118,37 @@ function formatExpiry(iso: string | null): string | null {
   return m ? `${m[2]}/${m[3]}/${m[1]}` : null;
 }
 
+/** Fill the credit-expiry line. With a date → "Expires <date>". Without one → the
+ *  data-wb-no-expiry fallback (e.g. "Available to redeem") so the line isn't left blank —
+ *  an empty gap under the balance reads as broken. Hides the line only if no fallback is set. */
+function setExpiryLine(expiry: string | null): void {
+  if (!root) return;
+  root.querySelectorAll<HTMLElement>('[data-wb-expiry-line]').forEach((el) => {
+    if (expiry) {
+      const dateEl = el.querySelector<HTMLElement>('[data-wb-credit-expiry]');
+      if (dateEl) dateEl.textContent = expiry;
+      el.style.display = '';
+      return;
+    }
+    const fallback = el.getAttribute('data-wb-no-expiry');
+    if (fallback) {
+      el.textContent = fallback;
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+
+/** Clean a worker title: drop the selling-plan / pricing suffix the worker appends after an
+ *  em-dash (U+2014), e.g. "Cold Brew On Tap (96 oz) - Mocha—2 Box Discount Price" → the flavour.
+ *  Product names use a hyphen "-" or en-dash "–", so the em-dash reliably marks the suffix.
+ *  This also collapses the duplicated "A—A" bundle title (first part === the name). */
+function dedupeTitle(t: string): string {
+  const head = t.split('—')[0].trim();
+  return head || t;
+}
+
 /** Set textContent on every matching hook, skipping empty values. */
 function setText(scope: ParentNode, hook: string, value: string | null | undefined): void {
   if (value == null || value === '') return;
@@ -105,16 +160,9 @@ function setText(scope: ParentNode, hook: string, value: string | null | undefin
 function renderMembership(m: Membership | null): void {
   if (!root || !m) return;
 
-  // Credit balance + expiry from the worker (balance_formatted is the source of truth;
-  // the native metafield is only the pre-hydration fallback). Expiry label is static SSR.
-  setText(root, 'credit', m.credits.balance_formatted);
-  const expiry = formatExpiry(m.credits.expires_at);
-  setText(root, 'credit-expiry', expiry);
-  // No expiry (null → e.g. zero credits): hide the whole "Expires …" line instead of
-  // leaving the SSR fallback date showing.
-  root.querySelectorAll<HTMLElement>('[data-wb-expiry-line]').forEach((el) => {
-    el.style.display = expiry ? '' : 'none';
-  });
+  // Credit BALANCE is native SSR (Inveterate `balance` metafield) — not hydrated here.
+  // Only the expiry comes from the worker (there is no native credit-expiry metafield).
+  setExpiryLine(formatExpiry(m.credits.expires_at));
 
   // Progress column. progress === null ⇒ top tier (ELITE) — SSR already hides the column.
   if (m.progress) {
@@ -127,51 +175,98 @@ function renderMembership(m: Membership | null): void {
   // from the worker. SSR credit balance is the instant fallback until this overwrites it.
 }
 
-/** Fill a localized "{n} …" template ("{n} Active Autoships", "+ {n} more"). */
+/** Fill a localized "__N__ …" template ("__N__ Active Autoships", "+ __N__ more").
+ *  Placeholder is brace-free (__N__, not {n}) — a literal `}` inside a Liquid `{{ }}`
+ *  expression breaks the parser, which failed snippet validation on upload. */
 function fillTemplate(el: HTMLElement | null, templateAttr: string, n: number): string {
   const tpl = el?.getAttribute(templateAttr) ?? '';
-  return tpl.replace('{n}', String(n));
+  return tpl.replace('__N__', String(n));
 }
 
 function renderSubscriptions(subs: Subscriptions | null): void {
   if (!root || !subs) return;
 
-  const first = subs.subscriptions[0];
-  const hasAutoship = subs.active_count > 0 && first != null;
+  const subsList = subs.subscriptions ?? [];
+  const hasActive = subs.active_count > 0;
+  // Feature the soonest upcoming ACTIVE subscription. The worker may list a cancelled
+  // subscription before the active one, so don't blindly take subsList[0] — pick the
+  // active entry with the nearest next order date. Fall back to the first entry (for the
+  // cancelled-state card) only when there's no active subscription.
+  const activeSubs = subsList
+    .filter((s) => s.status === 'ACTIVE')
+    .sort((a, b) => (a.next_order_date ?? '9999-99-99').localeCompare(b.next_order_date ?? '9999-99-99'));
+  const first = hasActive ? (activeSubs[0] ?? subsList[0]) : subsList[0];
+  // Show the autoship card for an active autoship OR a cancelled-only one (worker returns no
+  // active but still has a cancelled subscription); the wide credit block only when there's none.
+  const isCancelled = !hasActive && first != null;
+  const showCard = (hasActive || isCancelled) && first != null;
 
-  // Row 1 layout follows the worker's autoship state, independent of tier: show the autoship
-  // card + compact credit when there's an active autoship, else the wide credit block.
-  root.querySelector('[data-wb-row-autoship]')?.toggleAttribute('data-wb-hide', !hasAutoship);
-  root.querySelector('[data-wb-row-nocard]')?.toggleAttribute('data-wb-hide', hasAutoship);
-  if (!hasAutoship || !first) return;
+  root.querySelector('[data-wb-row-autoship]')?.toggleAttribute('data-wb-hide', !showCard);
+  root.querySelector('[data-wb-row-nocard]')?.toggleAttribute('data-wb-hide', showCard);
+  if (!showCard || !first) return;
 
   const card = root.querySelector<HTMLElement>('[data-wb-autoship]');
   if (!card) return;
-  card.setAttribute('data-wb-autoship-state', 'active');
-  setText(card, 'autoship-bundle', first.bundle_title);
-  setText(card, 'autoship-date', first.next_order_date ?? undefined);
+  // State drives (via CSS) the badge (count vs "Cancelled") and the next-shipment line.
+  card.setAttribute('data-wb-autoship-state', isCancelled ? 'cancelled' : 'active');
 
-  // Active-count badge — localized "{n} Active Autoships".
-  const countEl = card.querySelector<HTMLElement>('[data-wb-autoship-count]');
-  if (countEl) countEl.textContent = fillTemplate(countEl, 'data-wb-count-template', subs.active_count);
+  // Header: "next" (active) vs "previous" (cancelled) autoship order.
+  const title = card.querySelector<HTMLElement>('[data-wb-autoship-title]');
+  if (title) {
+    const t = title.getAttribute(isCancelled ? 'data-wb-title-prev' : 'data-wb-title-next');
+    if (t) title.textContent = t;
+  }
 
-  // Line-item list (show up to 2, "+N more" links to the portal).
+  // The worker may merge several bundles' line items into one subscription and label
+  // bundle_title with the first line item (often a flavour, not a bundle). Prefer a real
+  // bundle line ("…Bundle…") for the headline; list only flavour items (drop every bundle
+  // line) so "+N more" counts flavours, not bundle rows. Surface the headline bundle's own
+  // flavour first by matching box size (e.g. "1 Box").
+  const isBundleTitle = (t: string): boolean => /bundle/i.test(t);
+  const boxSize = (t: string): string => t.match(/(\d+)\s*box/i)?.[1] ?? '';
+  const bundleLines = first.line_items.filter((li) => isBundleTitle(li.title));
+  const headlineTitle = bundleLines[0]?.title ?? first.bundle_title;
+  const headlineBox = boxSize(headlineTitle);
+  const flavourItems = first.line_items
+    .filter((li) => !isBundleTitle(li.title))
+    .sort((a, b) => {
+      const am = headlineBox && boxSize(a.title) === headlineBox ? 0 : 1;
+      const bm = headlineBox && boxSize(b.title) === headlineBox ? 0 : 1;
+      return am - bm;
+    });
+
+  setText(card, 'autoship-bundle', dedupeTitle(headlineTitle));
+  if (!isCancelled) setText(card, 'autoship-date', first.next_order_date ?? undefined);
+
+  // Active-count badge — localized "{n} Active Autoships" (active only; CSS hides it when cancelled).
+  if (!isCancelled) {
+    const countEl = card.querySelector<HTMLElement>('[data-wb-autoship-count]');
+    if (countEl) countEl.textContent = fillTemplate(countEl, 'data-wb-count-template', subs.active_count);
+  }
+
+  // "+N more" and the Manage control target the SAME Stay AI portal. Capture the manage anchor's
+  // SSR href (settings.manage_autoship_url, default /apps/retextion) as the shared fallback so
+  // "+N more" never dead-ends on '#' when the worker's portal_url is empty.
+  const manageLink = card.querySelector<HTMLAnchorElement>('[data-wb-autoship-manage] a');
+  const manageHref = manageLink?.getAttribute('href') || '#';
+
+  // Line-item list (flavours only; show up to 2, "+N more" → same target as Manage Upcoming Orders).
   const list = card.querySelector<HTMLElement>('[data-wb-autoship-items]');
-  if (list && first.line_items.length) {
-    const shown = first.line_items.slice(0, 2);
-    const more = first.items_total - shown.length;
+  if (list && flavourItems.length) {
+    const shown = flavourItems.slice(0, 2);
+    const more = Math.max(0, flavourItems.length - shown.length);
     const moreLabel = fillTemplate(list, 'data-wb-more-template', more);
     list.textContent = '';
     shown.forEach((li, i) => {
       const row = document.createElement('li');
       row.className =
         'flex items-center justify-between !gap-2 font-kurdis-semi-condensed font-bold text-[10px] leading-none text-[#955325]';
-      const title = document.createElement('span');
-      title.textContent = li.title;
-      row.appendChild(title);
+      const itemTitle = document.createElement('span');
+      itemTitle.textContent = dedupeTitle(li.title);
+      row.appendChild(itemTitle);
       if (i === shown.length - 1 && more > 0) {
         const link = document.createElement('a');
-        link.href = subs.portal_url || first.manage_url || '#';
+        link.href = subs.portal_url || portalUrl || manageHref;
         link.className = 'hover-underline shrink-0 whitespace-nowrap text-[#955325]';
         link.textContent = moreLabel;
         row.appendChild(link);
@@ -180,27 +275,140 @@ function renderSubscriptions(subs: Subscriptions | null): void {
     });
   }
 
-  // MANAGE control → Stay AI portal. Hide/disable if no portal_url yet.
-  const manage = card.querySelector<HTMLElement>('[data-wb-autoship-manage]');
-  if (manage) {
-    const href = subs.portal_url || first.manage_url;
-    if (href) manage.addEventListener('click', () => { window.location.href = href; });
-    else manage.setAttribute('data-wb-disabled', '');
+  // MANAGE / REACTIVATE controls → per-customer Stay AI portal from the worker's portal_url (Stay AI
+  // generate-portal-link token). Overrides the SSR base href (settings.manage_autoship_url,
+  // which auto-detects the logged-in member); falls back to it when portal_url is empty.
+  if (subs.portal_url) {
+    card
+      .querySelectorAll<HTMLAnchorElement>('[data-wb-autoship-manage] a, [data-wb-autoship-reactivate] a')
+      .forEach((a) => { a.href = subs.portal_url; });
   }
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** ISO date (YYYY-MM-DD) → "Aug 21, 2024" for the credit-history table. */
+function formatDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  return m ? `${MONTHS[+m[2] - 1]} ${+m[3]}, ${m[1]}` : iso;
+}
+
+/** Credit history page: fill the summary-card expiry + the transaction table (GET /credits). */
+function renderCredits(d: Credits): void {
+  if (!root) return;
+
+  setExpiryLine(formatExpiry(d.expires_at));
+
+  const tbody = root.querySelector<HTMLElement>('[data-wb-credit-rows]');
+  if (!tbody) return;
+  const txns = d.transactions ?? [];
+  if (!txns.length) {
+    root.querySelector<HTMLElement>('[data-wb-credit-empty]')?.removeAttribute('hidden');
+    return;
+  }
+
+  const label = (t: string): string =>
+    tbody.getAttribute(`data-wb-type-${t.toLowerCase()}`) || t.charAt(0) + t.slice(1).toLowerCase();
+
+  tbody.textContent = '';
+  txns.forEach((t) => {
+    // EARNED always credits, REDEEMED/EXPIRED always debit; ADJUSTED goes either way, so take the
+    // sign from the numeric amount rather than assuming a gain.
+    const positive = t.type === 'ADJUSTED' ? t.amount >= 0 : t.type === 'EARNED';
+    const amtColor = t.type === 'EARNED' ? 'text-dark-gold' : t.type === 'EXPIRED' ? 'text-espresso/50' : 'text-espresso';
+    const tr = document.createElement('tr');
+    tr.className = 'body text-espresso';
+
+    const date = document.createElement('td');
+    date.className = 'p-3 border-b border-espresso/10 whitespace-nowrap';
+    date.textContent = formatDate(t.date);
+
+    const activity = document.createElement('td');
+    activity.className = 'p-3 border-b border-espresso/10';
+    activity.textContent = label(t.type);
+
+    const orderCell = document.createElement('td');
+    orderCell.className = 'p-3 border-b border-espresso/10 hidden md:!table-cell';
+    if (t.order_name) {
+      const a = document.createElement('a');
+      a.href = t.order_url || '#';
+      a.className = 'hover-underline';
+      a.textContent = t.order_name;
+      orderCell.appendChild(a);
+    } else {
+      orderCell.textContent = '—';
+    }
+
+    const amount = document.createElement('td');
+    amount.className = `p-3 border-b border-espresso/10 text-right whitespace-nowrap font-bold ${amtColor}`;
+    // The sign is ours; drop one the worker may already have baked into the formatted amount.
+    amount.textContent = `${positive ? '+' : '-'}${t.amount_formatted.replace(/^-/, '')}`;
+
+    tr.append(date, activity, orderCell, amount);
+    tbody.appendChild(tr);
+  });
+}
+
+/** Dev-only state override for QA: `/account?wb_qa=1&wb_autoship=cancelled&wb_active_count=2&…`
+ *  builds a synthetic summary so subscription / progress / expiry can be flipped live on the real
+ *  dashboard without touching Stay AI / Inveterate. Tier + credit balance stay SSR-native (from the
+ *  Shopify tag + metafield) — use the /pages QA preview to vary those. Returns null when not in QA. */
+function qaOverride(): Summary | null {
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('wb_qa') !== '1') return null;
+  const autoship = p.get('wb_autoship') || 'none'; // none | active | cancelled
+  const active = autoship === 'active';
+  const count = active ? Math.max(1, parseInt(p.get('wb_active_count') || '1', 10) || 1) : 0;
+  const items = (p.get('wb_items') || '').split('|').filter(Boolean)
+    .map((title) => ({ title, quantity: 1, variant_id: '', image_url: null }));
+  const extra = parseInt(p.get('wb_more') || '0', 10) || 0;
+  const subscriptions = autoship === 'active' || autoship === 'cancelled'
+    ? [{
+        id: 'qa', status: active ? 'ACTIVE' : 'CANCELLED', next_order_date: p.get('wb_next_date') || null,
+        bundle_title: p.get('wb_bundle') || 'QA Autoship', frequency: { interval: 'month', interval_count: 1, label: '' },
+        line_items: items, items_total: items.length + extra,
+        price: { amount: 0, formatted: '', currency: 'USD' }, manage_url: '', can_edit: false, can_cancel: false,
+      }]
+    : [];
+  const nextTier = p.get('wb_progress_tier');
+  return {
+    membership: {
+      tier: p.get('wb_tier') || '',
+      credits: { balance: 0, balance_formatted: '', currency: 'USD', expires_at: p.get('wb_expiry') || null },
+      progress: nextTier
+        ? { next_tier: nextTier, percent: parseInt(p.get('wb_progress_percent') || '0', 10) || 0,
+            amount_to_next: 0, amount_to_next_formatted: '', message: p.get('wb_progress_text') || '' }
+        : null,
+      benefits: [],
+    },
+    subscriptions: { active_count: count, portal_url: '', subscriptions },
+  };
 }
 
 async function hydrate(): Promise<void> {
   if (!root) return;
+  const qa = qaOverride();
+  if (qa) {
+    renderMembership(qa.membership);
+    renderSubscriptions(qa.subscriptions);
+    root.removeAttribute('data-wb-loading');
+    return;
+  }
+  const isCreditHistory = root.querySelector('[data-wb-credit-history]') != null;
   try {
-    const data = await wbFetch<Summary>('summary');
-    renderMembership(data.membership);
-    renderSubscriptions(data.subscriptions);
+    if (isCreditHistory) {
+      const d = await wbFetch<Credits>('credits', { page: '1', per_page: '50' });
+      renderCredits(d);
+    } else {
+      const data = await wbFetch<Summary>('summary');
+      renderMembership(data.membership);
+      renderSubscriptions(data.subscriptions);
+    }
     root.removeAttribute('data-wb-loading');
   } catch (err) {
     root.setAttribute('data-wb-error', '');
     root.removeAttribute('data-wb-loading');
     // eslint-disable-next-line no-console
-    console.warn('[wb-account] summary fetch failed:', err);
+    console.warn('[wb-account] fetch failed:', err);
   }
 }
 

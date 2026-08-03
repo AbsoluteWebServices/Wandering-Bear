@@ -117,7 +117,7 @@
             {% for block in promises %}
               <li class="wb-about-products__promise" style="background-color: {{ s.card_bg | default: '#F2E6DC' }};" {{ block.shopify_attributes }}>
                 <span class="wb-about-products__promise-num font-gothic_condensed font-extrabold" style="background-color: {{ s.number_bg | default: '#1B1B1B' }}; color: {{ s.number_color | default: '#F2E6DC' }};">{{ forloop.index }}</span>
-                <span class="wb-about-products__promise-text font-semibold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
+                <span class="wb-about-products__promise-text font-(font-family:var(--font-kurdis-semi-condensed))! font-semibold" style="color: {{ s.promise_text_color | default: '#2A1A0F' }};">{{ block.settings.text }}</span>
               </li>
             {% endfor %}
           </ol>
@@ -187,12 +187,12 @@
      promise copy is Kurdis SemiCondensed SemiBold; the numerals are Tablet Gothic Condensed. */
   .wb-about-products__label,
   .wb-about-products__paw-sub {
-    font-family: "Kurdis Condensed", sans-serif;
+    font-family: var(--font-kurdis-condensed);
     font-weight: 800;
   }
 
   .wb-about-products__promise-text {
-    font-family: "Kurdis SemiCondensed", sans-serif;
+    font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
   }
 

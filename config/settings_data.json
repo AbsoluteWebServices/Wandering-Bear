@@ -115,6 +115,10 @@
           "return_to": "/pages/membership",
           "customer_tag": "Membership Signup"
         }
+      },
+      "customer-account-dashboard": {
+        "type": "customer-account-dashboard",
+        "settings": {}
       }
     },
     "content_for_index": [],
@@ -155,6 +159,13 @@
         "disabled": false,
         "settings": {
           "show_preview_data": true
+        }
+      },
+      "15350224971397959980": {
+        "type": "shopify://apps/stay-ai-subscription/blocks/bundle-cart-settings/896a3134-375a-4df4-8274-d37b95eafdee",
+        "disabled": false,
+        "settings": {
+          "enable_stay_bundles": false
         }
       }
     },

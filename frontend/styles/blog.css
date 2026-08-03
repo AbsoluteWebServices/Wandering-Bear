@@ -15,7 +15,7 @@
 .featured-blog-posts__load-more {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 30px;
 }
 
 .featured-blog-posts__load-more-button {
@@ -82,7 +82,7 @@
                 content: "";
                 position: absolute;
                 left: -20px;
-                top: calc((1.2em - 5px) / 2);
+                top: calc((1.2em - 8px) / 2);
                 width: 5px;
                 height: 5px;
                 background-color: currentColor;
@@ -129,10 +129,27 @@
     }
 }
 
+.featured-blog-posts-card__inner {
+    gap: 24px !important;
+
+    @media screen and (max-width: 749px) {
+        gap: 0px !important;
+    }
+}
+
+.featured-blog-posts-card__image {
+    height: 220px !important;
+
+    @media screen and (max-width: 749px) {
+        height: 210px !important;
+    }
+}
+
 .blog-date {
     font-family: var(--font-kurdis-semi-condensed);
     font-size: 14px;
     line-height: 130%;
+    font-weight: 600;
 }
 
 .resource-list slideshow-slides {
@@ -148,6 +165,12 @@
 
 main[data-template="article"] slideshow-slides {
     padding-inline: 0 !important;
+}
+
+main[data-template="article"] .section-content-wrapper {
+    @media screen and (max-width: 749px) {
+        padding-top: 37px !important;
+    }
 }
 
 @media screen and (max-width: 1170px) {
@@ -176,11 +199,17 @@ main[data-template="article"] .social-icons__icon {
     width: auto !important;
 }
 
+.featured-blog-posts-card__content,
+.featured-blog-posts-card__content h5,
 .featured-blog-posts-card__content h4 > .text-block {
     text-wrap: pretty !important;
     text-transform: uppercase;
     font-family: var(--font-kurdis-semi-condensed);
     font-size: 18px;
+}
+
+.featured-blog-posts .resource-list.resource-list--grid {
+    row-gap: 64px !important;
 }
 
 @media screen and (max-width: 749px) {
@@ -189,11 +218,11 @@ main[data-template="article"] .social-icons__icon {
     }
 
     .featured-blog-posts-title {
-        padding-bottom: 20px !important;
+        padding-bottom: 12px !important;
     }
 
     .blog-post-title {
-        margin-bottom: 16px !important;
+        margin-bottom: 30px !important;
         font-size: 45px !important;
     }
 
@@ -214,4 +243,9 @@ main[data-template="article"] .social-icons__icon {
         gap: 23px !important;
     }
 
+}
+
+.featured-blog-posts-card a:focus-visible, 
+.featured-blog-posts-card a:focus {
+    outline: none !important;
 }

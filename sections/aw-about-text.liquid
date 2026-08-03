@@ -140,6 +140,12 @@
         assign top_css = s.panel_top | default: 0 | append: 'px'
       endif
     %}
+    {%- comment -%}
+      The gold call-out is styled by .text-gold in the stylesheet below, not by a last-child rule:
+      it is only the last paragraph in the fridge block. In "so how do we do it" the last paragraph
+      is "Check out our <pill>" and in "super premium" it is the whole body, so a last-child rule
+      set those in the condensed display face by mistake.
+    {%- endcomment -%}
     <div
       class="wb-about-text__plate absolute z-0"
       style="background: {{ s.panel_color | default: '#F2E6DC' }}; top: {{ top_css }}; {{ plate_pos }} {% if s.panel_height != blank %}height: {{ s.panel_height }}px;{% elsif s.panel_min_height != blank %}min-height: {{ s.panel_min_height }};{% else %}bottom: 0;{% endif %} border-radius: {{ plate_radius }};{% if s.panel_shadow != blank %} box-shadow: {{ s.panel_shadow }};{% endif %}{% if s.panel_margin_bottom != blank %} margin-bottom: {{ s.panel_margin_bottom }}px;{% endif %}"
@@ -160,7 +166,7 @@
           </h2>
         {% endif %}
         {% if s.body != blank %}
-          <div class="wb-about-text__body body leading-[1.4]" style="color: {{ text_color }};">
+          <div class="wb-about-text__body wb-about-text-body body [&_strong]:font-bold font-semibold font-(family-name:var(--font-kurdis-semi-condensed))! leading-[1.4]" style="color: {{ text_color }};">
             {{ s.body }}
           </div>
         {% endif %}
@@ -678,7 +684,7 @@
      rather than on the shared display-md/body classes, since these aw-about-* sections are
      About-Us-only. */
   .wb-about-text__title {
-    font-family: "Kurdis Condensed", sans-serif !important;
+    font-family: var(--font-kurdis-condensed) !important;
     font-weight: 800 !important;
     line-height: 1.29 !important;
   }
@@ -707,7 +713,7 @@
   .wb-about-text__body span,
   .wb-about-text__body strong,
   .wb-about-text__body a {
-    font-family: "Kurdis SemiCondensed", sans-serif !important;
+    font-family: var(--font-kurdis-semi-condensed) !important;
     font-weight: 600 !important;
     font-size: 15px !important;
     line-height: 1.38 !important;
@@ -733,7 +739,7 @@
      display face at a smaller size. */
   .wb-about-text__body .text-gold strong,
   .wb-about-text__body p.text-gold strong {
-    font-family: "Kurdis Condensed", sans-serif !important;
+    font-family: var(--font-kurdis-condensed) !important;
     font-weight: 800 !important;
     font-size: 16px !important;
     line-height: 1.17 !important;

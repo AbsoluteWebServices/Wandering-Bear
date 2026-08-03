@@ -233,23 +233,39 @@
 
   /* Overlap only where three cards share the row. Below 1024 the track shows 2 or 1 card, and
      a bleeding neighbour would just poke into the frame with nothing to overlap.
-     Cycle of 3 matches the tails and tilts, and keeps card 4 flush with the track edge. */
+
+     The bleed has to follow what is on screen, not the DOM index. With 4 reviews the second page
+     starts at slide 2 (the last snap is clamped to one slide, not a full group), so a fixed cycle
+     of 3 leaves whichever card opens the page carrying a bleed it cannot overlap, and drops it
+     from the card that needs one — that is the gap QA saw between the 3rd and 4th card. Keying it
+     to Swiper's own state instead: every on-screen card except the one at the left edge bleeds
+     over its neighbour. The leftmost stays flush, so nothing is cut at the track's left edge, and
+     the card after the last visible one never bleeds back into the frame. */
   @media screen and (min-width: 1024px) {
+    /* Pre-init paint: Swiper adds its state classes only once it boots, so hold the first page's
+       overlap until then and the row does not visibly re-flow. */
     .wb-reviews__slide:nth-child(3n + 2) .wb-reviews__bubble,
     .wb-reviews__slide:nth-child(3n + 3) .wb-reviews__bubble {
       width: calc(100% + 18px);
       margin-left: -18px;
     }
 
+    .swiper-initialized .wb-reviews__slide .wb-reviews__bubble {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .swiper-initialized .swiper-slide-visible:not(.swiper-slide-active) .wb-reviews__bubble {
+      width: calc(100% + 18px);
+      margin-left: -18px;
+    }
   }
 
-  .wb-reviews__slide:nth-child(3n + 2) {
-    z-index: 2;
-  }
-
-  .wb-reviews__slide:nth-child(3n + 3) {
-    z-index: 3;
-  }
+  /* Stacking is left by tree order on purpose: the slides are positioned with no z-index, so each
+     one paints over the slide before it and a card's left bleed always lands on top of its
+     neighbour. An explicit cycle of 3 used to set this, but it reset on slides 4, 7, … — on the
+     second page of four reviews the rightmost card bled *under* its neighbour, which is the
+     stacking the overlap fix depends on. Tree order holds on every page and needs no cycle. */
 
   /* Figma rotations: -2.8° / +2.3° / +3.3°, Y offsets 701 / 711 / 697. */
   .wb-reviews__slide:nth-child(3n + 1) .wb-reviews__bubble {

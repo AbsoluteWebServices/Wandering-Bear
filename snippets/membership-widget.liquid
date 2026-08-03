@@ -5,9 +5,13 @@
     endif
     assign credits_earned = 1000
     if is_customer
-      assign credits_earned = customer.metafields.inveterate.credits_earned | default: 0
+      # Redeemable balance (matches the account page + Inveterate portal "Available credits");
+      # after a redemption this drops while credits_earned (lifetime) would not.
+      assign credits_earned = customer.metafields.inveterate.balance | default: 0
     endif
-    assign credits_earned_formatted = credits_earned | money_without_trailing_zeros
+    # Inveterate stores credits as a DECIMAL DOLLAR amount (e.g. 2120.0 = $2,120), but `money`
+    # expects cents — multiply by 100 first (the account worker does the same to format balance).
+    assign credits_earned_formatted = credits_earned | times: 100 | money_without_trailing_zeros
     assign membership_level = ''
     for tag in customer.tags
       if tag contains 'inveterate-tier#72ccf378'
