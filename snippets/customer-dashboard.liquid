@@ -23,25 +23,25 @@
   endif
 
   assign credits_formatted = credits_formatted | default: '$0'
-  assign credits_expiry = '01/01/2028'
   assign fname = first_name | default: customer.first_name
 
-  # ---- MOCKS (TODO worker: /apps/wb/subscriptions, /apps/wb/membership, /apps/wb/credits) ----
-  assign autoship_count = 2
-  assign autoship_bundle = '96oz Bundle—3+Boxes'
-  assign autoship_next_date = 'July 25, 2025'
-  assign autoship_more = 4
-  assign autoship_items = 'Cold Brew On Tap (96oz)—Blueberry Muffin|Cold Brew On Tap (96oz)—Banana Bread' | split: '|'
+  # ---- Worker-hydrated fields — EMPTY in the real render (account.ts fills them from the worker;
+  # a skeleton shimmer shows while [data-wb-loading]). The QA preview page passes mock values so a
+  # full state renders statically (no worker/JS) — hence `| default` instead of a bare empty. ----
+  assign preview = preview | default: false
+  assign credits_expiry = credits_expiry | default: ''
+  assign autoship_count = autoship_count | default: ''
+  assign autoship_bundle = autoship_bundle | default: ''
+  assign autoship_next_date = autoship_next_date | default: ''
+  assign autoship_more = autoship_more | default: 0
+  assign autoship_items = autoship_items | default: '' | split: '|'
+  assign next_tier_label = next_tier_label | default: ''
+  assign progress_percent = progress_percent | default: 0
+  assign progress_text = progress_text | default: ''
 
   if display_tier == 'FREE'
-    assign next_tier_label = 'VIP'
-    assign progress_percent = 55
-    assign progress_text = 'Spend $50.23 more to reach VIP status or sign up for autoship'
     assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service' | split: '|'
   elsif display_tier == 'VIP'
-    assign next_tier_label = 'ELITE'
-    assign progress_percent = 65
-    assign progress_text = 'Spend $207.15 more to reach Elite status or upgrade below'
     assign benefits = 'Earn $5 for every $50 spent|Access exclusive flavors|Autoship discount on all orders|VIP Customer Service' | split: '|'
   else
     assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service|Early access to sales and launches|VIP Anniversary rewards' | split: '|'
@@ -49,12 +49,25 @@
 
   # Figma: every dashboard card — foam #FEF8F3, 10px radius, drop-shadow 0/4/4/0 #000 25%.
   assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
-  assign membership_url = routes.root_url | append: '/pages/membership'
+  assign membership_url = '/pages/membership'
+
+  # Small credit line: shows "Expires <date>" (worker). When there's no expiry the line is hidden
+  # entirely (no "Total earned" fallback). The big number is the redeemable balance
+  # (inveterate.balance, set in the section).
+
+  # Stay AI customer portal for the "Manage Upcoming Orders" / "+N more" links. Defaults to the
+  # App Proxy path /apps/retextion (auto-detects the logged-in member) so the link always works
+  # even before the merchant fills settings.manage_autoship_url; a set value overrides it.
+  assign manage_url = settings.manage_autoship_url | default: '/apps/retextion'
 
   # t filter is not evaluated inside render arguments — translate first.
   assign t_manage = 'customer.dashboard.manage_orders' | t
   assign t_reactivate = 'customer.dashboard.reactivate' | t
   assign t_redeem = 'customer.dashboard.redeem_credits' | t
+  # Redeem → Inveterate member portal (Inveterate's documented link). The redeem modal
+  # ("Redeem for → Fully/Partially → Generate code") is part of the portal's runtime and
+  # only loads there — it can't be triggered from a custom page — so we link the member in.
+  assign redeem_url = '/community/membership?customerId=' | append: customer.id
   assign t_upgrade = 'customer.dashboard.upgrade_elite_cta' | t
   assign t_contact = 'customer.dashboard.contact_cta' | t
   assign t_shop = 'customer.dashboard.no_orders_cta' | t
@@ -63,18 +76,21 @@
 -%}
 
 {%- capture crown -%}
-  <svg class="w-[18px] h-[18px] shrink-0 text-gold" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+  {%- comment -%} QA #4: glyph spans y3..15 of the 20-box (center 9 vs 10) → sits ~1px high in items-center; nudge down. {%- endcomment -%}
+  <svg class="w-[18px] h-[18px] shrink-0 text-gold translate-y-[1px]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
     <path d="M2 6l3.5 3L10 3l4.5 6L18 6l-1.5 9h-13L2 6z"/>
   </svg>
 {%- endcapture -%}
 
 {%- comment -%} ---------- Welcome + Log Out ---------- {%- endcomment -%}
-<div class="flex flex-col smd:!flex-row smd:!items-start smd:!justify-between mb-6 !gap-1">
+{%- comment -%} QA #5: Log Out sits on the Welcome line (items-center), Kurdis 700 14px (Figma 1:337). {%- endcomment -%}
+<div class="flex flex-col items-center text-center smd:!flex-row smd:!items-center smd:!text-left smd:!justify-between mb-6 !gap-1">
   {%- comment -%} Membership tag sits above the last letter of the name, tilted (Figma). Spec: Kurdis Condensed ExtraBold 12px uppercase centered. {%- endcomment -%}
   <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[28px] md:!text-[36px] leading-none">
-    {{ 'customer.account.welcome' | t: first_name: fname }}<span class="relative inline-block -top-4 md:!-top-5 -ml-1 rotate-[-8deg] bg-gold text-cream font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
+    {%- comment -%} QA #1: Figma tag = +4° tilt (vector 1:380 rot 0.0699rad), text #E4B850 on gold. {%- endcomment -%}
+    {{ 'customer.account.welcome' | t: first_name: fname }}<span class="relative inline-block -top-4 md:!-top-5 -ml-1 rotate-[4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
   </h1>
-  <a href="{{ routes.account_logout_url }}" class="body font-bold text-espresso hover-underline">{{ 'customer.account.log_out' | t }}</a>
+  <a href="{{ routes.account_logout_url }}" class="font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
 </div>
 
 {%- comment -%} Worker load-failure note — hidden by default, shown when account.ts sets data-wb-error on the root {%- endcomment -%}
@@ -88,16 +104,33 @@
 
 {%- comment -%} Variant B — no autoship: wide credit block {%- endcomment -%}
 <div data-wb-row-nocard{% unless guess_none %} data-wb-hide{% endunless %}>
-  <div class="relative {{ card }} px-6 py-7 md:!px-10 mb-4 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
-    <a href="#" class="absolute top-5 right-6 md:!right-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
-    <div class="flex-1 pt-5 md:!pt-0">
+  <div class="relative {{ card }} px-6 py-7 md:!px-6 mb-6 md:!min-h-[120px] flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
+    {%- comment -%} View Credit History pinned to the top-right in every state (short $0 or tall). {%- endcomment -%}
+    <a href="/community/membership?customerId={{ customer.id }}" class="absolute top-5 right-6 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+    {%- comment -%} MOBILE: centered amount — matches the with-subscription (compact) card so both
+      states look identical on mobile. Hidden on desktop. {%- endcomment -%}
+    <div class="relative min-h-[110px] md:!hidden">
+      <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+      <div class="h-full flex flex-col items-center justify-center text-center translate-y-[45px]">
+        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</span>
+        <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+      </div>
+    </div>
+    {%- comment -%} DESKTOP: label + amount inline on the left. Hidden on mobile. {%- endcomment -%}
+    <div class="hidden md:!block flex-1">
       <div class="flex items-end !gap-3">
         <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
-        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold" data-wb-credit>{{ credits_formatted }}</span>
+        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
       </div>
       <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
     </div>
-    {%- render 'customer-form-button', type: 'button', label: t_redeem, style: 'secondary-gold', class: 'shrink-0 shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
+    {%- comment -%} Redeem → on-page modal. Button class is ALWAYS the standard one (never touch it);
+      the 335px desktop width lives on this wrapper, not the button. {%- endcomment -%}
+    {%- comment -%} Match the Elite button's actual desktop width (470px — its column is fixed
+      because the account container is capped at 1092px); full-width when stacked, like Elite. {%- endcomment -%}
+    <div class="w-full shrink-0 md:w-[470px]">
+      {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
+    </div>
   </div>
 </div>
 
@@ -106,81 +139,99 @@
   <div class="flex flex-col md:!flex-row !gap-4 mb-4">
 
     {%- comment -%} Autoship card — active or cancelled. Filled by account.ts from Stay AI (worker). {%- endcomment -%}
-    <div class="flex-1 {{ card }} p-5 md:!p-6" data-wb-autoship>
+    <div class="wb-row1-card flex-1 {{ card }} p-5 md:p-6 !pt-3 md:!pt-4 flex flex-col" data-wb-autoship{% if is_cancelled %} data-wb-autoship-state="cancelled"{% endif %}>
       <div class="flex items-center justify-between mb-3">
-        <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black">
-          {%- if is_cancelled -%}{{ 'customer.dashboard.previous_autoship' | t }}{%- else -%}{{ 'customer.dashboard.next_autoship' | t }}{%- endif -%}
-        </span>
-        {%- capture active_autoships_template -%}{{ 'customer.dashboard.active_autoships' | t: count: 0 }}{%- endcapture -%}
-        {%- if is_cancelled -%}
-          <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-foam bg-[#BD2121]">{{ 'customer.dashboard.cancelled' | t }}</span>
-        {%- else -%}
-          <span class="inline-flex items-center whitespace-nowrap shrink-0 h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ active_autoships_template | replace: '0', '{n}' }}">{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}</span>
-        {%- endif -%}
+        <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black"
+              data-wb-autoship-title
+              data-wb-title-next="{{ 'customer.dashboard.next_autoship' | t }}"
+              data-wb-title-prev="{{ 'customer.dashboard.previous_autoship' | t }}">{%- if is_cancelled -%}{{ 'customer.dashboard.previous_autoship' | t }}{%- else -%}{{ 'customer.dashboard.next_autoship' | t }}{%- endif -%}</span>
+        {%- comment -%} Active-count badge (default) + Cancelled badge; account.ts shows one via
+          data-wb-autoship-state. Count is empty in the real render (account.ts fills it) and
+          pre-filled when the QA preview passes autoship_count. {%- endcomment -%}
+        <span class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}">{%- if autoship_count != blank -%}{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}{%- endif -%}</span>
+        <span class="wb-autoship-cancelled" data-wb-autoship-cancelled>{{ 'customer.dashboard.cancelled' | t }}</span>
       </div>
-      <div class="flex items-baseline justify-between mb-2 !gap-2">
+      <div class="wb-autoship-head flex items-baseline justify-between !gap-2">
         <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black" data-wb-autoship-bundle>{{ autoship_bundle }}</span>
-        {%- unless is_cancelled -%}
-          <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none whitespace-nowrap text-bear-black">{{ 'customer.dashboard.next_shipment_label' | t }} <span data-wb-autoship-date>{{ autoship_next_date }}</span></span>
-        {%- endunless -%}
+        <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none whitespace-nowrap text-bear-black" data-wb-autoship-date-line>{{ 'customer.dashboard.next_shipment_label' | t }} <span data-wb-autoship-date>{{ autoship_next_date }}</span></span>
       </div>
-      {%- capture more_count_template -%}{{ 'customer.dashboard.more_count' | t: count: 0 }}{%- endcapture -%}
-      <ul class="flex flex-col !gap-1.5 mb-4" data-wb-autoship-items data-wb-more-template="{{ more_count_template | replace: '0', '{n}' }}">
+      <ul class="flex flex-col mb-2" data-wb-autoship-items data-wb-more-template="{{ 'customer.dashboard.more_count' | t: count: '__N__' }}">
         {%- for item in autoship_items -%}
+          {%- if item != blank -%}
           <li class="flex items-center justify-between !gap-2 font-kurdis-semi-condensed font-bold text-[10px] leading-none text-[#955325]">
             <span>{{ item }}</span>
             {%- if forloop.last and autoship_more > 0 -%}
-              <a href="#" class="hover-underline shrink-0 whitespace-nowrap text-[#955325]">{{ 'customer.dashboard.more_count' | t: count: autoship_more }}</a>
+              <a href="{{ manage_url }}" class="hover-underline shrink-0 whitespace-nowrap text-[#955325]">{{ 'customer.dashboard.more_count' | t: count: autoship_more }}</a>
             {%- endif -%}
           </li>
+          {%- endif -%}
         {%- endfor -%}
       </ul>
-      {%- if is_cancelled -%}
-        {%- render 'customer-form-button', type: 'button', label: t_reactivate, style: 'secondary-gold', class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
-      {%- else -%}
-        {%- comment -%} Wrapper is the click target; account.ts navigates to subscriptions.portal_url {%- endcomment -%}
-        <div data-wb-autoship-manage>
-          {%- render 'customer-form-button', type: 'button', label: t_manage, style: 'secondary-gold', class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
-        </div>
-      {%- endif -%}
+      {%- comment -%} Both CTAs are always rendered; CSS shows exactly one per data-wb-autoship-state
+        (same mechanism as the badge and the next-shipment line). SSR can only guess the state, so
+        rendering just one would leave a cancelled member — detected later by account.ts — looking at
+        "Manage Upcoming Orders" instead of "Reactivate".
+
+        Manage → Stay AI portal. SSR href = manage_url (settings.manage_autoship_url, defaulted to
+        /apps/retextion, which auto-detects the logged-in member); account.ts overrides it with the
+        worker's per-customer portal_url (Stay AI generate-portal-link token) when present. {%- endcomment -%}
+      <div data-wb-autoship-manage class="mt-auto">
+        {%- render 'wb-button', style: 'secondary-gold', label: t_manage, link: manage_url, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
+      </div>
+      {%- comment -%} Reactivate goes to the same Stay AI portal as Manage — reactivation happens
+        there, and account.ts swaps in the per-customer portal_url for both. It must be a link, not
+        a bare <button>: there is no reactivate endpoint in the theme to submit to. {%- endcomment -%}
+      <div data-wb-autoship-reactivate class="mt-auto">
+        {%- render 'wb-button', style: 'secondary-gold', label: t_reactivate, link: manage_url, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
+      </div>
     </div>
 
     {%- comment -%} Compact credit card {%- endcomment -%}
-    <div class="flex-1 {{ card }} p-5 md:!p-6 flex flex-col justify-between">
-      <div class="relative mb-4">
-        <a href="#" class="absolute right-0 top-0 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
-        <span class="absolute left-0 top-1/2 -translate-y-1/2 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
-        <div class="text-center pt-4">
-          <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold" data-wb-credit>{{ credits_formatted }}</div>
-          <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-2 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+    <div class="wb-row1-card flex-1 {{ card }} p-5 md:p-6 !pt-3 md:!pt-4 flex flex-col justify-between">
+      {%- comment -%} Layout: "Your Credit:" pinned left (vertically centered); amount centered
+        both axes; View Credit History top-right; expiry centered under the amount. {%- endcomment -%}
+      <div class="relative flex-1 min-h-[120px] mb-4">
+        <a href="/community/membership?customerId={{ customer.id }}" class="absolute right-0 top-0 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+        <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+        <div class="h-full flex flex-col items-center justify-center text-center translate-y-[45px] md:!translate-y-[5px]">
+          <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</div>
+          <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
         </div>
       </div>
-      {%- render 'customer-form-button', type: 'button', label: t_redeem, style: 'secondary-gold', class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
+      {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
     </div>
   </div>
 </div>
 
 {%- comment -%} ---------- Row 2: Membership tier (+ Progress unless Elite) ---------- {%- endcomment -%}
 <div class="{{ card }} p-5 md:!p-6 mb-4">
-  <div class="flex flex-col {% unless is_elite %}md:!flex-row{% endunless %} !gap-6">
+  <div class="flex flex-col {% unless is_elite %}md:!flex-row{% endunless %} !gap-4 md:!gap-6">
 
     {%- comment -%} Tier column {%- endcomment -%}
     <div class="md:!flex-1 {% unless is_elite %}md:!pr-6{% endunless %}">
-      <div class="flex items-start justify-between mb-3">
-        <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.membership_tier' | t }}</span>
-        <div class="flex flex-col items-end !gap-1">
+      <div class="flex items-start justify-between mb-1">
+        {%- comment -%} Left column: label + tier stacked. {%- endcomment -%}
+        <div>
+          {%- comment -%} QA #3: card headings are #1B1B1B in Figma (1:346/1:356/1:626/1:635), not espresso. {%- endcomment -%}
+          <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black">{{ 'customer.dashboard.membership_tier' | t }}</span>
+          <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mt-2">{{ display_tier }}</div>
+        </div>
+        {%- comment -%} Right column: membership action links. {%- endcomment -%}
+        <div class="flex flex-col items-end !gap-2.5">
           {%- if is_elite -%}
-            <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
-            <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
+            <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+            <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
           {%- endif -%}
           <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
         </div>
       </div>
-      <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3">{{ display_tier }}</div>
-      <div class="body font-bold text-espresso mb-2">{{ 'customer.dashboard.whats_included' | t }}</div>
-      <ul class="flex flex-col {% if is_elite %}smd:!flex-row smd:!flex-wrap{% endif %} !gap-x-6 !gap-y-2">
+      <div class="body font-bold text-bear-black mt-[15px] mb-[15px]">{{ 'customer.dashboard.whats_included' | t }}</div>
+      {%- comment -%} QA #7: Figma Elite lays the 6 benefits out in COLUMNS (col1: $5 off + Earn $5;
+        col2: Member exclusive + VIP CS; col3: Early access + Anniversary). grid-flow-col with 2 rows
+        fills column-major from the same source order, and mobile (flex-col) keeps the list order. {%- endcomment -%}
+      <ul class="flex flex-col {% if is_elite %}smd:!grid smd:!grid-flow-col smd:!grid-rows-2 smd:!grid-cols-3{% endif %} !gap-x-6 !gap-y-2.5">
         {%- for benefit in benefits -%}
-          <li class="flex items-center !gap-2 body text-espresso {% if is_elite %}smd:!w-[calc(50%-12px)]{% endif %}">{{ crown }}<span>{{ benefit }}</span></li>
+          <li class="wb-benefit-item flex items-center font-kurdis-semi-condensed text-espresso">{{ crown }}<span>{{ benefit }}</span></li>
         {%- endfor -%}
       </ul>
     </div>
@@ -189,19 +240,20 @@
     {%- unless is_elite -%}
       <div class="flex flex-col md:!flex-1 tier-divider">
         <div class="flex items-start justify-between mb-3">
-          <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
-          <a href="#" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+          <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
+          <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
         </div>
-        <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
-        <div class="w-full h-[10px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
+        <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mt-2 mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
+        <div class="w-full h-[14px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
           <div class="h-full rounded-full" style="width: {{ progress_percent }}%; background-color: var(--color-brand-gold);" data-wb-progress-bar></div>
         </div>
-        <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso" data-wb-progress-text>{{ progress_text }}</p>
+        <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso text-center"><span data-wb-progress-text>{{ progress_text }}</span>{% if display_tier == 'VIP' %} {{ 'customer.dashboard.progress_or_upgrade' | t }}{% else %} {{ 'customer.dashboard.progress_or' | t }} <a href="{{ membership_url }}" class="hover-underline">{{ 'customer.dashboard.progress_sign_up_autoship' | t }}</a>{% endif %}</p>
 
         <div class="membership-upsell">
-          <p class="body font-bold text-espresso mb-1">{{ 'customer.dashboard.upgrade_today' | t }} <span class="font-parslay text-gold">{{ 'customer.dashboard.why_wait' | t }}</span></p>
+          <p class="body font-bold text-bear-black mb-1">{{ 'customer.dashboard.upgrade_today' | t }} <span class="font-parslay text-gold">{{ 'customer.dashboard.why_wait' | t }}</span></p>
           <p class="font-kurdis-semi-condensed font-semibold text-[12px] leading-[1.2] text-center mb-3 text-bear-black">{{ 'customer.dashboard.elite_upsell_desc' | t }}</p>
-          {%- render 'wb-button', style: 'secondary-gold', label: t_upgrade, link: membership_url, class: 'shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
+          {%- comment -%} Upgrade to Elite = add the $25 Elite product to cart (settings.elite_product), reusing the shared elite add-to-cart snippet. {%- endcomment -%}
+          {%- render 'elite-atc-button', label: t_upgrade, style: 'secondary-gold', class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
         </div>
       </div>
     {%- endunless -%}
@@ -210,53 +262,62 @@
 
 {%- comment -%} ---------- Order history ---------- {%- endcomment -%}
 <div class="{{ card }} p-5 md:!p-6 mb-8">
-  <div class="flex items-center justify-between mb-4 !gap-3">
+  {%- comment -%} Header (title + timeframe) — hidden when the customer has no orders. {%- endcomment -%}
+  {%- if customer.orders.size > 0 -%}
+  <div class="flex items-center justify-between mt-2.5 mb-4 !gap-3">
     <div>
-      <div class="tag text-espresso uppercase">{{ 'customer.dashboard.order_history' | t }}</div>
-      <div class="body font-bold text-espresso">{{ 'customer.dashboard.all_orders' | t }}</div>
+      {%- comment -%} Figma: "Order History" = Kurdis SemiCondensed Bold 10px / 100%. {%- endcomment -%}
+      <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none uppercase text-espresso">{{ 'customer.dashboard.order_history' | t }}</div>
+      {%- comment -%} Figma: "All Orders" = Tablet Gothic Condensed Extrabold 16px / 100%. {%- endcomment -%}
+      <div class="font-gothic_condensed font-extrabold text-[16px] leading-none uppercase text-espresso mt-2">{{ 'customer.dashboard.all_orders' | t }}</div>
     </div>
     {%- comment -%} Timeframe filter (Figma). TODO: wire to order filtering (JS/worker). {%- endcomment -%}
     <div class="flex items-center !gap-2 shrink-0">
-      <span class="font-kurdis-semi-condensed font-bold text-[10px] text-espresso whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
-      <div class="flex items-center border border-espresso/25 rounded-[6px] h-[34px] px-3">
-        <select class="bg-transparent font-kurdis-semi-condensed font-bold text-[10px] text-espresso focus:outline-none cursor-pointer">
+      <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-espresso whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
+      {%- comment -%} Link-style timeframe (Figma): no box, blue underline + chevron. {%- endcomment -%}
+      <div class="inline-flex items-center !gap-1.5">
+        {%- comment -%} QA #11: leading-none on a <select> clips Kurdis ascenders in Chrome — give the line room. {%- endcomment -%}
+        <select class="appearance-none bg-transparent font-kurdis-semi-condensed font-bold text-[10px] leading-[1.4] text-center text-espresso focus:outline-none cursor-pointer">
           <option>Last 3 Months</option>
           <option>Last 6 Months</option>
           <option>Last Year</option>
           <option>All Time</option>
         </select>
+        <svg class="w-3 h-3 shrink-0 text-espresso pointer-events-none" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
     </div>
   </div>
+  {%- endif -%}
 
   {%- if customer.orders.size > 0 -%}
     {%- paginate customer.orders by 10 -%}
       <div class="overflow-x-auto">
-        <table class="w-full border border-espresso/20 border-collapse">
+        <table class="w-full border-collapse wb-orders-table">
+          {%- comment -%} QA #9/#10: rows = Kurdis 700 10px / 18px line (Figma 1:365), whole table #1B1B1B. {%- endcomment -%}
           <thead>
-            <tr class="text-left tag text-espresso uppercase">
-              <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_order' | t }}</th>
-              <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_date' | t }}</th>
-              <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_tracking' | t }}</th>
-              <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_payment' | t }}</th>
-              <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_fulfillment' | t }}</th>
-              <th class="p-3 border-b border-espresso/20 hidden md:!table-cell text-right">{{ 'customer.dashboard.col_total' | t }}</th>
+            <tr class="text-left tag text-bear-black uppercase">
+              <th class="px-2 py-3 md:!p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_order' | t }}</th>
+              <th class="px-2 py-3 md:!p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_date' | t }}</th>
+              <th class="px-2 py-3 md:!p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_tracking' | t }}</th>
+              <th class="px-2 py-3 md:!p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_payment' | t }}</th>
+              <th class="px-2 py-3 md:!p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_fulfillment' | t }}</th>
+              <th class="px-2 py-3 md:!p-3 border-b border-espresso/20 hidden md:!table-cell text-right">{{ 'customer.dashboard.col_total' | t }}</th>
             </tr>
           </thead>
           <tbody>
             {%- for order in customer.orders -%}
               {%- assign fulfillment = order.fulfillments.first -%}
-              <tr class="body text-espresso">
-                <td class="p-3 border-b border-espresso/10"><a href="{{ order.customer_url }}" class="font-bold hover-underline">{{ order.name }}</a></td>
-                <td class="p-3 border-b border-espresso/10 whitespace-nowrap">{{ order.created_at | date: '%B %-d, %Y' }}</td>
-                <td class="p-3 border-b border-espresso/10">
+              <tr class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.8] text-bear-black">
+                <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><a href="{{ order.customer_url }}" class="font-bold hover-underline">{{ order.name }}</a></td>
+                <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 whitespace-nowrap">{{ order.created_at | date: '%b %-d, %Y' }}</td>
+                <td class="px-2 py-3 md:!p-3 border-b border-espresso/10">
                   {%- if fulfillment.tracking_number -%}
                     {%- if fulfillment.tracking_url -%}<a href="{{ fulfillment.tracking_url }}" class="hover-underline" target="_blank" rel="noopener">{{ fulfillment.tracking_number }}</a>{%- else -%}{{ fulfillment.tracking_number }}{%- endif -%}
                   {%- else -%}&mdash;{%- endif -%}
                 </td>
-                <td class="p-3 border-b border-espresso/10 hidden md:!table-cell">{{ order.financial_status_label }}</td>
-                <td class="p-3 border-b border-espresso/10 hidden md:!table-cell">{{ order.fulfillment_status_label }}</td>
-                <td class="p-3 border-b border-espresso/10 hidden md:!table-cell text-right whitespace-nowrap">{{ order.total_price | money }}</td>
+                <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell">{{ order.financial_status_label }}</td>
+                <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell">{{ order.fulfillment_status_label }}</td>
+                <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell text-right whitespace-nowrap">{{ order.total_price | money }}</td>
               </tr>
             {%- endfor -%}
           </tbody>
@@ -271,25 +332,25 @@
     <div class="overflow-x-auto">
       <table class="w-full border border-espresso/20 border-collapse">
         <thead>
-          <tr class="text-left tag text-espresso uppercase">
-            <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_order' | t }}</th>
-            <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_date' | t }}</th>
-            <th class="p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_tracking' | t }}</th>
-            <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_payment' | t }}</th>
-            <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_fulfillment' | t }}</th>
-            <th class="p-3 border-b border-espresso/20 hidden md:!table-cell text-right">{{ 'customer.dashboard.col_total' | t }}</th>
+          <tr class="text-left tag text-bear-black uppercase">
+            <th class="px-2 py-3 md:!p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_order' | t }}</th>
+            <th class="px-2 py-3 md:!p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_date' | t }}</th>
+            <th class="px-2 py-3 md:!p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_tracking' | t }}</th>
+            <th class="px-2 py-3 md:!p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_payment' | t }}</th>
+            <th class="px-2 py-3 md:!p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.dashboard.col_fulfillment' | t }}</th>
+            <th class="px-2 py-3 md:!p-3 border-b border-espresso/20 hidden md:!table-cell text-right">{{ 'customer.dashboard.col_total' | t }}</th>
           </tr>
         </thead>
         <tbody>
           {%- for row in mock_orders -%}
             {%- assign c = row | split: '|' -%}
-            <tr class="body text-espresso">
-              <td class="p-3 border-b border-espresso/10"><span class="font-bold hover-underline">{{ c[0] }}</span></td>
-              <td class="p-3 border-b border-espresso/10 whitespace-nowrap">{{ c[1] }}</td>
-              <td class="p-3 border-b border-espresso/10"><span class="hover-underline">{{ c[2] }}</span></td>
-              <td class="p-3 border-b border-espresso/10 hidden md:!table-cell">{{ c[3] }}</td>
-              <td class="p-3 border-b border-espresso/10 hidden md:!table-cell">{{ c[4] }}</td>
-              <td class="p-3 border-b border-espresso/10 hidden md:!table-cell text-right whitespace-nowrap">{{ c[5] }}</td>
+            <tr class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.8] text-bear-black">
+              <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><span class="font-bold hover-underline">{{ c[0] }}</span></td>
+              <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 whitespace-nowrap">{{ c[1] }}</td>
+              <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><span class="hover-underline">{{ c[2] }}</span></td>
+              <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell">{{ c[3] }}</td>
+              <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell">{{ c[4] }}</td>
+              <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell text-right whitespace-nowrap">{{ c[5] }}</td>
             </tr>
           {%- endfor -%}
         </tbody>
@@ -307,11 +368,11 @@
 {%- comment -%} ---------- Contact CTA ---------- {%- endcomment -%}
 <div class="relative">
   <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="120" height="120"
-       class="absolute top-0 left-0 z-20 w-[76px] md:w-[118px] h-auto -translate-x-[20%] -translate-y-[20%] rotate-[-12deg]">
+       class="absolute top-0 z-20 w-[76px] md:w-[118px] h-auto left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-0 md:left-0 md:-translate-x-[20%] md:-translate-y-[20%] md:rotate-[-12deg]">
   <div class="relative flex flex-col items-center justify-center overflow-hidden rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] text-center px-6 py-6 smd:py-4 smd:aspect-[746/144] bg-cover bg-top bg-no-repeat bg-(--color-brand-light_cream)"
        style="background-image: url({{ 'account-contact-clouds.png' | asset_url }});">
     <h2 class="font-kurdis-condensed font-extrabold uppercase text-espresso text-[24px] md:text-[28px] mb-2">{{ 'customer.dashboard.contact_title' | t }}</h2>
     <p class="body text-espresso mb-4">{{ 'customer.dashboard.contact_subtext' | t }}</p>
-    {%- render 'wb-button', style: 'secondary-gold', label: t_contact, link: '/pages/contact', class: '!h-[40px]' -%}
+    {%- render 'wb-button', style: 'secondary-gold', label: t_contact, link: '/pages/contact', class: 'mx-auto !h-[40px]' -%}
   </div>
 </div>

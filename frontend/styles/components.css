@@ -121,6 +121,14 @@
     }
 }
 
+/* Elite add-to-cart button, once the product is in the cart: blocked + faded confirmation
+   state (Alpine toggles .wb-elite-added while eliteAtc.inCart is true). */
+.btn.wb-elite-added {
+    opacity: 0.7;
+    pointer-events: none;
+    cursor: default;
+}
+
 /* Account portal styles moved to frontend/styles/account.css (own component sheet). */
 
 [data-accordion-item] {
