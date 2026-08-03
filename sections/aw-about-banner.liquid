@@ -60,29 +60,28 @@
   <div class="aw-about-banner__block relative mx-auto w-full"
        style="max-width: {{ s.block_width | default: 1024 }}px;">
     {%- comment -%}
-      Media: a rounded frame (clips the background photo) plus a transparent cut-out overlay of
-      the same shot laid on top. The overlay isn't clipped, so its subject breaks out above the
-      frame. Both images share the same width + vertical offset so their subjects line up.
+      Two ways to fill the frame:
+
+      · desktop_cover — one finished photo dropped straight into the rounded frame. Desktop only:
+        mobile keeps the layered treatment below, so the cover image is hidden under 750px.
+
+      · the layered treatment — a photo clipped by the rounded frame plus a transparent cut-out of
+        the same shot on top, unclipped, so its subject breaks out above the frame. Both share a
+        width and vertical offset so the subjects line up. In cover mode it is hidden on desktop.
     {%- endcomment -%}
     <div class="aw-about-banner__media relative w-full" style="height: {{ s.image_height | default: 500 }}px;">
       <div class="aw-about-banner__frame absolute inset-0 overflow-hidden" style="border-radius: {{ block_radius }};{% if img_src != blank %} --frame-img: url('{{ img_src }}');{% endif %}">
+        {% if s.desktop_cover %}
+          <img src="{{ cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--desktop hidden smd:!block absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.desktop_cover_pos | default: 'center' }};" loading="lazy">
+        {% endif %}
         {% if img_src != blank %}
-          <img src="{{ img_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__frame-img absolute inset-x-0 w-full max-w-none" style="top: {{ s.media_img_top | default: 0 }}px;" loading="lazy">
-          {% if s.desktop_cover %}
-            {%- comment -%}
-              One clean cover image per breakpoint, filling the rounded frame. The breakout overlay and
-              the offset frame image (above) are hidden on both breakpoints via the style blocks below.
-              Desktop uses the landscape crop; mobile its own (portrait) crop.
-            {%- endcomment -%}
-            <img src="{{ cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--desktop hidden smd:!block absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.desktop_cover_pos | default: 'center' }};" loading="lazy">
-            <img src="{{ mobile_cover_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__cover-img aw-about-banner__cover-img--mobile smd:!hidden absolute inset-0 w-full h-full max-w-none" style="object-fit: cover; object-position: {{ s.mobile_cover_pos | default: 'center' }};" loading="lazy">
-          {% endif %}
+          <img src="{{ img_src }}" alt="{{ s.image.alt }}" class="aw-about-banner__frame-img absolute inset-x-0 w-full max-w-none{% if s.desktop_cover %} smd:!hidden{% endif %}" style="top: {{ s.media_img_top | default: 0 }}px;" loading="lazy">
         {% endif %}
       </div>
       {% if overlay_src != blank %}
         {% assign ov_top = s.overlay_top | default: s.media_img_top | default: 0 %}
         {% assign ov_w = s.overlay_width | default: s.block_width | default: 1024 %}
-        <img src="{{ overlay_src }}" alt="" class="aw-about-banner__overlay absolute max-w-none z-[2]" style="left: {{ s.overlay_left | default: 0 }}px; width: {{ ov_w }}px; top: {{ ov_top }}px;" loading="lazy">
+        <img src="{{ overlay_src }}" alt="" class="aw-about-banner__overlay absolute max-w-none z-[2]{% if s.desktop_cover %} smd:!hidden{% endif %}" style="left: {{ s.overlay_left | default: 0 }}px; width: {{ ov_w }}px; top: {{ ov_top }}px;" loading="lazy">
       {% endif %}
     </div>
 
@@ -172,9 +171,21 @@
       position: absolute !important;
       inset: 0 !important;
       overflow: hidden !important;
+      {%- comment -%}
+        Optional: round every corner on mobile. Off by default — the layered artwork carries its own
+        rounding, so this is only wanted when a plain rectangular photo fills the frame.
+      {%- endcomment -%}
+      {% if s.media_radius_mobile != blank %}border-radius: {{ s.media_radius_mobile }}px !important;{% endif %}
     }
-    .aw-about-banner__frame-img,
+    {%- comment -%}
+      The cut-out overlay lives OUTSIDE the clipping frame so its subject can break out on desktop.
+      At mobile sizes that breakout is 365px tall against a ~300px frame, so it escaped upwards and
+      covered the copy of the section above. Mobile shows the photo inside the frame instead.
+    {%- endcomment -%}
     .aw-about-banner__overlay {
+      display: none !important;
+    }
+    .aw-about-banner__frame-img {
       display: block !important;
       position: absolute !important;
       left: 50% !important;
@@ -228,14 +239,11 @@
 {% endstyle %}
 
 {%- comment -%}
-  Cover mode: hide the breakout cut-out overlay and the offset frame image on BOTH breakpoints so only
-  the clean per-breakpoint cover images show. Id-scoped so it beats the mobile layered rules and leaves
-  other banners untouched.
+  Cover mode renders neither the overlay nor the offset frame image, so only the decorative badge
+  still needs hiding here.
 {%- endcomment -%}
 {%- if s.desktop_cover -%}
   {% style %}
-    #shopify-section-{{ section.id }} .aw-about-banner__overlay,
-    #shopify-section-{{ section.id }} .aw-about-banner__frame-img,
     #shopify-section-{{ section.id }} .aw-about-banner__badge {
       display: none !important;
     }
@@ -245,8 +253,10 @@
 {% stylesheet %}
   /* About Us is set in regular Kurdis, not the theme's default Condensed display face. Override
      locally (banner is About-Us-only) instead of touching the shared display-md/body classes. */
+  /* Figma 1653:20 — heading is Kurdis Condensed ExtraBold at 109% leading. */
   .aw-about-banner__title {
-    font-family: "Kurdis", sans-serif !important;
+    font-family: "Kurdis Condensed", sans-serif !important;
+    font-weight: 800 !important;
   }
 
   .aw-about-banner__body,
@@ -254,7 +264,16 @@
   .aw-about-banner__body span,
   .aw-about-banner__body strong,
   .aw-about-banner__body a {
-    font-family: "Kurdis", sans-serif !important;
+    font-family: "Kurdis SemiCondensed", sans-serif !important;
+  }
+
+  /* Mobile drops the body to 13px (Figma 1694:245). */
+  @media screen and (max-width: 749px) {
+    .aw-about-banner__body,
+    .aw-about-banner__body p,
+    .aw-about-banner__body strong {
+      font-size: 13px !important;
+    }
   }
 
   /* Figma: body copy is Kurdis SemiCondensed SemiBold (600); the "Find us nationwide" run steps up
@@ -287,6 +306,7 @@
     { "type": "number", "id": "section_min_height", "label": "Section min height px" },
     { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
+    { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
     { "type": "number", "id": "title_pad_top_mobile", "label": "Title padding-top — mobile px" },
     { "type": "number", "id": "card_margin_top_mobile", "label": "Card margin-top — mobile px" },
     { "type": "number", "id": "text_pad_x_mobile", "label": "Card padding X — mobile px" },

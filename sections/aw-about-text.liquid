@@ -587,11 +587,14 @@
   .aw-z-2 { position: relative; z-index: 2; }
   .aw-z-1 { position: relative; z-index: 1; }
 
-  /* Figma sets this page in regular Kurdis, not the theme's default Condensed display face.
-     Override here (these aw-about-* sections are About-Us-only) rather than touching the shared
-     display-md/display-lg/body classes site-wide. */
+  /* Typography comes from the Figma file (WB Website, frames 1653:20 desktop / 1694:245 mobile):
+     headings are Kurdis Condensed ExtraBold, body copy Kurdis SemiCondensed SemiBold. Set here
+     rather than on the shared display-md/body classes, since these aw-about-* sections are
+     About-Us-only. */
   .wb-about-text__title {
-    font-family: "Kurdis", sans-serif !important;
+    font-family: "Kurdis Condensed", sans-serif !important;
+    font-weight: 800 !important;
+    line-height: 1.29 !important;
   }
 
   /* Mobile-only icon centred above the title (crown over Super Premium). Hidden on desktop via smd:!hidden. */
@@ -618,13 +621,35 @@
   .wb-about-text__body span,
   .wb-about-text__body strong,
   .wb-about-text__body a {
-    font-family: "Kurdis", sans-serif !important;
+    font-family: "Kurdis SemiCondensed", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    line-height: 1.38 !important;
   }
 
-  /* The "Fresh Taste Guarantee." pill is the one body link with a background; Figma sets it in the
-     Parslay script, not Kurdis. Higher specificity + !important wins over the rule above. */
+  /* The gold call-out run ("Take inspiration from coffee shop culture…") steps up to the condensed
+     display face at a smaller size. */
+  .wb-about-text__body .text-gold strong,
+  .wb-about-text__body p.text-gold strong {
+    font-family: "Kurdis Condensed", sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 16px !important;
+    line-height: 1.17 !important;
+  }
+
+  /* "Nearly 100,000,000 cups later…" is the one body run set in Bold rather than SemiBold. */
+  .wb-about-text__body p > strong:only-child {
+    font-weight: 700 !important;
+  }
+
+  /* The "Fresh Taste Guarantee." pill keeps the body face but at its own larger size — it needs to
+     restate the size because the body rule above is !important and would otherwise flatten the
+     inline 24px the template sets. */
   .wb-about-text__body a[style*="background"] {
-    font-family: "Parslay", cursive !important;
+    font-family: "Kurdis SemiCondensed", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 24px !important;
+    line-height: 1.38 !important;
   }
 
   /* A paragraph marked .wb-oneline stays on a single line above the mobile breakpoint — used for
@@ -640,16 +665,23 @@
   /* Mobile: the "Fresh Taste Guarantee." pill drops onto its own centred line; body copy gets a
      little extra side padding. */
   @media screen and (max-width: 749px) {
-    {%- comment -%}
-      The pill must read as one line. At its authored 24px the label needs 276px plus 20px of
-      padding, against ~267px of column — it cannot fit, so mobile steps the pill down and the body
-      gutter is trimmed to buy the rest of the room. Inline styles carry the 24px, hence !important.
-    {%- endcomment -%}
+    {%- comment -%} Mobile sizes per Figma 1694:245: body 12px, the pill 18px. {%- endcomment -%}
     .wb-about-text__body a[style*="background"] {
       display: table !important;
       margin: 12px auto 0 !important;
-      font-size: 20px !important;
+      font-size: 18px !important;
       white-space: nowrap;
+    }
+    .wb-about-text__body,
+    .wb-about-text__body p,
+    .wb-about-text__body span,
+    .wb-about-text__body strong {
+      font-size: 12px !important;
+    }
+    .wb-about-text__body .text-gold strong,
+    .wb-about-text__body p.text-gold strong {
+      font-size: 13px !important;
+      line-height: 1.29 !important;
     }
     .wb-about-text__body {
       padding-left: 8px;
