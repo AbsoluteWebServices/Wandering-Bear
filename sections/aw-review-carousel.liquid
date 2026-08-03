@@ -261,13 +261,11 @@
     }
   }
 
-  .wb-reviews__slide:nth-child(3n + 2) {
-    z-index: 2;
-  }
-
-  .wb-reviews__slide:nth-child(3n + 3) {
-    z-index: 3;
-  }
+  /* Stacking is left by tree order on purpose: the slides are positioned with no z-index, so each
+     one paints over the slide before it and a card's left bleed always lands on top of its
+     neighbour. An explicit cycle of 3 used to set this, but it reset on slides 4, 7, … — on the
+     second page of four reviews the rightmost card bled *under* its neighbour, which is the
+     stacking the overlap fix depends on. Tree order holds on every page and needs no cycle. */
 
   /* Figma rotations: -2.8° / +2.3° / +3.3°, Y offsets 701 / 711 / 697. */
   .wb-reviews__slide:nth-child(3n + 1) .wb-reviews__bubble {
