@@ -118,7 +118,8 @@
         "step_3"
       ],
       "custom_css": [
-        "@media screen and (min-width: 750px) {.aw-how-it-works__card:nth-child(3) .rte {max-width: 400px; }}"
+        "@media screen and (min-width: 750px) {.aw-how-it-works__card:nth-child(3) .rte {max-width: 400px; }}",
+        "@media screen and (max-width: 749px) {.aw-how-it-works__card:nth-child(2) .aw-how-it-works__description br {display: none;} .aw-how-it-works__card:nth-child(2) .aw-how-it-works__description, .aw-how-it-works__card:nth-child(2) .aw-how-it-works__action {padding-inline: 18px;}}"
       ],
       "settings": {
         "subtitle": "REWARDS, MADE RIDICULOUSLY EASY",
@@ -172,7 +173,7 @@
             "title": "VIP Member",
             "subtitle": "Sign up for autoship on any product or spend $250 annually to join.",
             "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
-            "background_color": "#FAF2ED",
+            "background_color": "#FDEDE0",
             "button_label": "BROWSE AUTOSHIP",
             "button_action": "link",
             "button_link": "shopify://collections"
