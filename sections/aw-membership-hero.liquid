@@ -131,7 +131,7 @@
           {% endif %}
 
           {% if join_label != blank or perks_label != blank %}
-            <div class="flex flex-col items-stretch px-5.5 gap-3 justify-start min-h-[106px] mt-3.5 smd:justify-center smd:min-h-auto smd:gap-4 smd:px-0 smd:flex-row md:mt-1 md:justify-start {{ buttons_align_mobile }} {{ buttons_align_desktop }}">
+            <div class="flex flex-col items-stretch px-5.5 gap-3 min-h-[106px] mt-3.5 smd:min-h-auto smd:gap-4 smd:px-0 smd:flex-row md:mt-1 {{ buttons_align_mobile }} {{ buttons_align_desktop }}">
               {% unless customer %}
                 {% if join_label != blank %}
                   {% capture join_modal_attrs %}@click.prevent="$dispatch('modal-open', { modal: 'membership-signup' })"{% endcapture %}
@@ -141,7 +141,7 @@
                       label: join_label,
                       link: '#',
                       attributes: join_modal_attrs,
-                      class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl',
+                      class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] mb-auto smd:mb-0 smd:min-h-[43px] !text-xl',
                       button_bg: join_button_bg,
                       button_text: join_button_text,
                       button_border: join_button_bg,
@@ -155,7 +155,7 @@
                       label: join_label,
                       link: '#',
                       attributes: join_modal_attrs,
-                      class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl'
+                      class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] mb-auto smd:mb-0 smd:min-h-[43px] !text-xl'
                     %}
                   {% endif %}
                 {% endif %}
@@ -167,7 +167,7 @@
                     style: 'custom',
                     label: perks_label,
                     link: perks_link,
-                    class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl',
+                    class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] mb-auto smd:mb-0 smd:min-h-[43px] !text-xl',
                     button_bg: perks_button_bg,
                     button_text: perks_button_text,
                     button_border: perks_button_bg,
@@ -180,7 +180,7 @@
                     style: perks_style,
                     label: perks_label,
                     link: perks_link,
-                    class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] smd:min-h-[43px] !text-xl'
+                    class: 'w-full! xs:w-auto! min-w-[205px] min-h-[47px] mb-auto smd:mb-0 smd:min-h-[43px] !text-xl'
                   %}
                 {% endif %}
               {% endif %}
