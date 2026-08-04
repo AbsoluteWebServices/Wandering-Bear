@@ -470,7 +470,7 @@
       "settings": {
         "title": "{{ collection.metafields.custom.title.value }}",
         "description": "{{ collection.metafields.custom.description.value }}",
-        "image": "shopify://shop_images/bright-blue-sky-2026-01-06-10-19-02-utc_1.png",
+        "image": "shopify://shop_images/Collections_MasterFlavor_Carousel.png",
         "layout_type": "grid",
         "product_card_size": "medium",
         "mobile_product_card_size": "small",
