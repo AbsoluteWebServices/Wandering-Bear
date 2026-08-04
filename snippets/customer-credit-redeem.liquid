@@ -90,13 +90,13 @@
 
           <p class="font-kurdis-semi-condensed text-espresso/70 text-[12px] leading-snug mb-4">{{ 'customer.dashboard.redeem_note' | t }}</p>
 
-          {%- comment -%} QA #23/#24: the result step used to show only a "Remaining balance" taken
-            straight from the redeem response. That field comes back as the PRE-redemption figure
-            (verified against the deployed worker), so it read as "nothing was deducted". Now the
-            code's own value is stated explicitly, and the balance underneath is re-read from
-            GET /credits by syncBalance() rather than trusted from the redeem call. {%- endcomment -%}
+          {%- comment -%} QA #23/#24: the result step used to show a "Remaining balance" lifted from
+            the redeem response, which reads as "nothing was deducted" — the balance genuinely does
+            not move at this point, because Inveterate deducts when the code is applied to an order,
+            not when it is generated. So state the code's value, then what the member is left with
+            AFTER using it (balance - code value). {%- endcomment -%}
           <p class="font-kurdis-semi-condensed text-espresso text-[12px] mb-1">{{ 'customer.dashboard.redeem_code_worth' | t }} <span class="font-bold text-dark-gold" x-text="result && result.amount_formatted"></span></p>
-          <p class="font-kurdis-semi-condensed text-espresso text-[12px] mb-4">{{ 'customer.dashboard.redeem_remaining' | t }} <span class="font-bold text-dark-gold" x-text="result && result.new_balance_formatted"></span></p>
+          <p class="font-kurdis-semi-condensed text-espresso text-[12px] mb-4">{{ 'customer.dashboard.redeem_remaining' | t }} <span class="font-bold text-dark-gold" x-text="result && result.remaining_after_use_formatted"></span></p>
 
           <button type="button" @click="applyToCart()" x-show="!isMock" class="wb-redeem-btn font-kurdis-condensed font-extrabold uppercase text-[15px]">
             {{ 'customer.dashboard.redeem_apply' | t }}
