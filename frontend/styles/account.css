@@ -18,24 +18,29 @@
     width: 100%;
     max-width: 1092px;
     margin-inline: auto;
-    /* QA #36: Figma mobile puts the cards at x=12 / 350 wide on a 375 frame → 12px gutters
-       (1:177, 1:466, 1:1019). Desktop keeps the 1rem gutter. */
-    padding-inline: 12px;
+    padding-inline: 1rem;
 }
-@media (min-width: 768px) {
+/* QA #36: Figma puts the mobile cards at x=12 / 350 wide on a 375 frame → 12px gutters
+   (1:177, 1:466, 1:1019). Phone only — from smd up the container is wide enough that the
+   1rem gutter is what the other account pages (login / order / credits) are drawn against. */
+@media (max-width: 749px) {
     .account-container {
-        padding-inline: 1rem;
+        padding-inline: 12px;
     }
 }
 
-/* QA #36: mobile vertical rhythm above the first card (Figma 1:177) — page top → welcome
-   glyphs = 56px, Log Out → first card = 27px. Desktop keeps the section's md:!py-12. */
-@media (max-width: 767px) {
+/* QA #36: vertical rhythm around the welcome line. Figma 1:177 — page top → welcome glyphs
+   = 56px (the section already contributes py-8 = 32px, so +24px here), Log Out → first card
+   = 27px. Scoped to .wb-welcome, which only exists on the dashboard: putting it on
+   .account-container would have moved login / register / reset / order / credit-history too.
+   Base keeps the 24px the markup used to carry as mb-6. */
+.wb-welcome {
+    margin-bottom: 24px;
+}
+@media (max-width: 1023px) {
     .wb-welcome {
+        margin-top: 24px;
         margin-bottom: 27px;
-    }
-    .account-container {
-        padding-top: 56px;
     }
 }
 /* Form column: login / register / reset / activate input width (Figma 352px). */
@@ -185,9 +190,12 @@
     padding-top: 16px;
     padding-bottom: 8px;
 }
-@media (min-width: 768px) {
+/* Breakpoint note: this theme sets --breakpoint-md to 64rem, so the markup's `md:` utilities
+   (p-5 md:p-6, md:!flex-row, md:w-[118px], …) switch at 1024px — NOT 768px. Every rule below
+   that pairs with an `md:` utility must use 1024px or the 768-1023 band renders a mix of both. */
+@media (min-width: 1024px) {
     /* Desktop (1:24): card 207-371 = 164px, badge at y219 (12px in), button 324-364 (7px above
-       the card end). Using the mobile 16/13 here left the card 11px too tall. */
+       the card end). Using the mobile 16/8 here left the card 11px too tall. */
     .wb-row1-card {
         padding-top: 12px;
         padding-bottom: 7px;
@@ -197,7 +205,7 @@
 [data-wb-autoship-items] {
     margin-bottom: 6px;
 }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
     [data-wb-autoship-items] {
         margin-bottom: 15px;
     }
@@ -300,6 +308,7 @@
     margin-bottom: 5px;
 }
 @media (min-width: 1024px) {
+    .wb-autoship-title-row,
     .wb-autoship-head,
     [data-wb-autoship-items] > li {
         margin-inline: -1.5rem;
@@ -437,7 +446,7 @@ body.no-scroll {
 }
 /* QA #32: mobile wraps the whole control in a box — Figma "Rectangle 10511", 175x36, radius 5
    (1:177 y1212). Desktop keeps the borderless link style from the desktop frames. */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
     .wb-timeframe {
         width: 175px;
         height: 36px;
@@ -452,19 +461,27 @@ body.no-scroll {
    ~36% of its own height sits above the card — not the 50% the old -translate-y-1/2 produced.
    The card then needs enough top padding for the heading to clear the 58px of badge that overlaps
    it (Figma: card top → heading glyphs = 81px). Desktop badge sits at the left, unchanged. */
-@media (max-width: 767px) {
+/* Phone only. Between smd (750px) and md (1024px) the card is already on the wide
+   smd:aspect-[746/144] ratio while the badge is still centred, so a bigger badge and a large
+   padding-top would both fight that fixed height — that band keeps the markup's w-[76px] /
+   -translate-y-1/2 exactly as before. */
+@media (max-width: 749px) {
     .wb-contact__badge {
         width: 101px;
-        transform: translate(-50%, -36%);
+        /* Tailwind v4 compiles -translate-x-1/2 / -translate-y-1/2 to the `translate` PROPERTY,
+           not `transform` — setting `transform` here would compose with it instead of replacing
+           it (the badge ended up 79px above the card instead of 33px, and offset sideways). */
+        translate: -50% -36%;
     }
     .wb-contact {
         padding-top: 81px;
     }
 }
 
-/* QA #38: mobile gap from the tier name to "What's Included:" — Figma 1:466 puts ELITE at y645
-   (25px tall) and the heading glyphs at y~710, so ~40px of air. Ours had the desktop's 15px. */
-@media (max-width: 767px) {
+/* QA #38: gap from the tier name to "What's Included:" while the tier and progress columns are
+   stacked (they go side by side at md = 1024). Figma 1:466 puts ELITE at y645 (25px tall) and
+   the heading glyphs at y~710, so ~40px of air; ours had the desktop's 15px. */
+@media (max-width: 1023px) {
     .wb-whats-included {
         margin-top: 40px;
     }
