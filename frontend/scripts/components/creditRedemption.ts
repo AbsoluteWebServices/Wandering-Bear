@@ -79,19 +79,53 @@ export default (Alpine: AlpineType) => {
       document.body.classList.remove('no-scroll')
     },
 
-    /** Worker endpoint: dev surface ({url}/dev/credits/redeem?customerId=[&token=]) or App Proxy
-     *  (/apps/wb/credits/redeem). */
-    endpoint(): string {
+    /** Build a worker URL for `path`: dev surface ({url}/dev/<path>?customerId=[&token=]) or
+     *  App Proxy (/apps/wb/<path>). */
+    workerPath(path: string): string {
       const root = this.root
       const workerUrl = (root?.dataset.workerUrl ?? '').trim().replace(/\/$/, '')
       if (workerUrl) {
-        const u = new URL(`${workerUrl}/dev/credits/redeem`)
+        const u = new URL(`${workerUrl}/dev/${path}`)
         u.searchParams.set('customerId', root?.dataset.customerId ?? '')
         const token = (root?.dataset.workerToken ?? '').trim()
         if (token) u.searchParams.set('token', token)
         return u.toString()
       }
-      return new URL('/apps/wb/credits/redeem', window.location.origin).toString()
+      return new URL(`/apps/wb/${path}`, window.location.origin).toString()
+    },
+    endpoint(): string {
+      return this.workerPath('credits/redeem')
+    },
+
+    /** Re-read the balance from the worker and repaint every [data-wb-credit-balance] on the page
+     *  — the dashboard card(s) and the header widget, which are otherwise server-rendered once and
+     *  never touched again.
+     *
+     *  Deliberately does NOT use the `balance` the redeem call returns. Verified against the
+     *  deployed worker on a test member: redeeming $1 of a $10 balance answers
+     *  { redeemed: 100, balance: 1000 }, and GET /credits still reports $10.00 afterwards, so that
+     *  field is the PRE-redemption figure. Re-reading keeps the UI honest whenever the deduction
+     *  does land, instead of painting a number we know can be stale. */
+    async syncBalance(): Promise<void> {
+      try {
+        const usesWorker = (this.root?.dataset.workerUrl ?? '').trim() !== ''
+        const res = await fetch(this.workerPath('credits'), {
+          headers: { Accept: 'application/json' },
+          credentials: usesWorker ? 'omit' : 'same-origin',
+        })
+        const json = (await res.json()) as Envelope<{ balance_formatted?: string }>
+        if (!json.ok) return
+        const formatted = json.data?.balance_formatted
+        if (!formatted) return
+        document.querySelectorAll<HTMLElement>('[data-wb-credit-balance]').forEach((el) => {
+          el.textContent = formatted
+        })
+        this.balanceFormatted = formatted
+        this.balance = parseMoney(formatted)
+        if (this.result) this.result.new_balance_formatted = formatted
+      } catch {
+        /* leave the server-rendered value in place */
+      }
     },
 
     async submit() {
@@ -108,6 +142,8 @@ export default (Alpine: AlpineType) => {
           ? await this.mockRedeem(partial ? amt : this.balance)
           : await this.realRedeem(partial ? { amount: Math.round(amt * 100) } : {})
         this.step = 'result'
+        // The code exists now, so never fail the flow on this — it only refreshes what's on screen.
+        if (!this.isMock) await this.syncBalance()
       } catch (e) {
         this.error = (e as Error).message || 'redemption_failed'
       } finally {
