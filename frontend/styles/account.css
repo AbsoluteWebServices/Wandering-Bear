@@ -43,6 +43,15 @@
         margin-bottom: 27px;
     }
 }
+/* A little more air above "Log Out" while it sits under the welcome line. The block turns into a
+   row at smd (750px), where the container's !gap-1 becomes the HORIZONTAL gap to the heading —
+   hence the 749px ceiling, so the desktop row spacing is untouched. Margin rather than a bigger
+   gap because the markup's !gap-1 carries !important. Total gap: 4px gap + 6px = 10px. */
+@media (max-width: 749px) {
+    .wb-welcome__logout {
+        margin-top: 6px;
+    }
+}
 /* Form column: login / register / reset / activate input width (Figma 352px). */
 .account-form {
     width: 100%;

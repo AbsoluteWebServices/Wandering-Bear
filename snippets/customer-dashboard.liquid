@@ -103,7 +103,7 @@
       <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 -rotate-[4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
     </span>
   </h1>
-  <a href="{{ routes.account_logout_url }}" class="font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
+  <a href="{{ routes.account_logout_url }}" class="wb-welcome__logout font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
 </div>
 
 {%- comment -%} Worker load-failure note — hidden by default, shown when account.ts sets data-wb-error on the root {%- endcomment -%}
