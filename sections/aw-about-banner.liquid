@@ -163,8 +163,17 @@
        the transparent cut-out over it breaking out — at mobile scale. BOTH images share the same
        width + top so they stay perfectly aligned as one subject. media_scale_mobile is the zoom
        (bigger = more scale), media_top_mobile the vertical framing, media_height_mobile the frame. {% endcomment %}
+    {%- comment -%}
+      media_aspect_mobile sizes the frame from the artwork's own ratio instead of a fixed height, so
+      a cut-out fits whole at any phone width. Falls back to media_height_mobile.
+    {%- endcomment -%}
     .aw-about-banner__media {
-      height: {{ s.media_height_mobile | default: 300 }}px !important;
+      {% if s.media_aspect_mobile != blank %}
+        aspect-ratio: {{ s.media_aspect_mobile }} !important;
+        height: auto !important;
+      {% else %}
+        height: {{ s.media_height_mobile | default: 300 }}px !important;
+      {% endif %}
       overflow: visible !important;
     }
     .aw-about-banner__frame {
@@ -188,8 +197,11 @@
     .aw-about-banner__frame-img {
       display: block !important;
       position: absolute !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
+      left: {{ s.media_left_pct_mobile | default: '50%' }} !important;
+      {%- comment -%} media_left_mobile nudges the artwork sideways inside the frame — a cut-out is
+         not centred on its own bounding box, so its straight edge may need pushing to the screen
+         edge. Positive = right. {%- endcomment -%}
+      transform: translateX(calc(-50% + {{ s.media_left_mobile | default: 0 }}px)) !important;
       width: {{ s.media_scale_mobile | default: '125%' }} !important;
       top: {{ s.media_top_mobile | default: -365 }}px !important;
       max-width: none !important;
@@ -367,6 +379,8 @@
     { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
     { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
+    { "type": "text", "id": "media_left_pct_mobile", "label": "Media anchor — mobile (e.g. 60%)" },
+    { "type": "text", "id": "media_left_mobile", "label": "Media horizontal nudge — mobile px" },
     { "type": "number", "id": "title_pad_top_mobile", "label": "Title padding-top — mobile px" },
     { "type": "number", "id": "text_pad_y_mobile", "label": "Heading block padding-top — mobile px" },
     { "type": "number", "id": "heading_wrap_pad_bottom_mobile", "label": "Heading block padding-bottom — mobile px" },

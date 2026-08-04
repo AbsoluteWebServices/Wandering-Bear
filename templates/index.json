@@ -266,7 +266,7 @@
         "subtitle": "<p>Start earning $5 for every $50 spent. The best part is – you can join for free.  <br/>Upgrade to VIP or Elite anytime for exclusive flavors, bigger discounts, and more perks.</p>",
         "foreground_image": "shopify://shop_images/Group_1327226595.svg",
         "foreground_image_mobile": "shopify://shop_images/Group_1327226610.svg",
-        "description": "Join XX+ members earning rewards with every order.",
+        "description": "Join 100k+ members earning rewards with every order.",
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
         "foreground_bg_image": "shopify://shop_images/WB_HOLLYWOOD_SHOT_20_e6e71f8e-6241-45ff-aea4-29f81e463f42.png"
@@ -330,7 +330,7 @@
       ],
       "name": "AW Logo Wall",
       "settings": {
-        "title_type": "text",
+        "title_type": "image",
         "title": "",
         "title_color": "",
         "font_size": 24,
