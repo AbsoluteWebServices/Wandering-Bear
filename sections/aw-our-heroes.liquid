@@ -52,7 +52,7 @@
   {{ section.shopify_attributes }}
 >
   {% if show_desktop_bg_image or show_mobile_bg_image %}
-    <div class="absolute bottom-0 left-0 right-0 z-0 overflow-visible pointer-events-none -top-[300px] smd:-top-5 md:-top-[200px] xl:-top-[310px]" aria-hidden="true">
+    <div class="absolute bottom-0 left-0 right-0 z-0 overflow-hidden h-[150%] pointer-events-none -top-[300px] smd:-top-5 smd:w-[150%] smd:-left-1/2 md:-top-[220px] lg:left-0 lg:w-full lg:-top-[260px] lg:h-[150%]" aria-hidden="true">
       {% if show_desktop_bg_image %}
         <div class="hidden smd:block [&_picture]:block [&_picture]:w-full [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:max-w-none!">
           {% render 'picture',
@@ -84,7 +84,7 @@
   {% endif %}
   <div class="w-full relative z-1 max-w-[1036px] mx-auto smd:px-6 lg:px-0">
     {% if section_settings.title != blank %}
-      <div class="our-heroes__header text-center mb-9 md:mb-[250px] lg:mb-[264px]">
+      <div class="our-heroes__header text-center mb-9 smd:mb-[250px] lg:mb-[264px]">
         <h2
           class="our-heroes__title font-parslay text-[25px] smd:text-[60px] leading-[130%] tracking-[-0.01em] mx-auto max-w-[932px]"
           style="color: {{ section_settings.title_color | default: '#F2E6DC' }}"
@@ -146,7 +146,7 @@
               </svg>
             {% endif %}
 
-            <div class="our-heroes__block-inner our-heroes-block-inner relative flex flex-col z-1 px-6 py-8 smd:text-center smd:items-center smd:px-8 smd:pb-10 md:pb-14 md:px-12.5">
+            <div class="our-heroes__block-inner our-heroes-block-inner relative flex flex-col z-1 px-6 py-8 smd:text-center smd:items-center smd:px-8 smd:pb-10 md:pb-14 md:px-11.5">
               <div class="our-heroes__block-media our-heroes-block-media w-full mb-4.5 max-w-[286px] smd:max-w-[280px] smd:mb-0 smd:absolute smd:left-1/2 smd:translate-x-[-50%] md:max-w-[388px]">
                 {% if block_image != blank %}
                   {% if use_block_image_mask %}
