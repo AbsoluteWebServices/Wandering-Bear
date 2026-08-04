@@ -20,6 +20,7 @@ import '../styles/main-product.css';
 import '../styles/products-slider.css';
 import '../styles/multi-coll-carousel.css';
 import '../styles/blog.css';
+import '../styles/collection.css';
 
 export {}
 
