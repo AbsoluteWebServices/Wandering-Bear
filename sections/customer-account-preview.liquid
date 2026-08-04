@@ -4,7 +4,10 @@
   one page — no login-per-state, no worker. NOT wrapped in [data-wb-account], so account.ts never
   hydrates/overwrites the mock values (the SSR guess_none already picks the right Row-1 variant).
 
-  Assign to a page via templates/page.account-preview.json and view at /pages/<handle>.
+  Reachable at /search?view=account-preview via templates/search.account-preview.json. It is an
+  alternate SEARCH template on purpose: a page template only resolves when a matching page resource
+  exists in the admin, and there is none, while /search always resolves. Do not re-document this as
+  a page template — that setup does not work without creating the page first.
   Internal QA only — do not link from storefront nav.
 {%- enddoc -%}
 
@@ -18,12 +21,12 @@
 
     <div class="{{ lbl }}">1 · FREE · no subscription · $0 · progress → VIP</div>
     {%- render 'customer-dashboard', preview: true, tier: 'FREE', autoship_state: 'none', first_name: 'Sam',
-        credits_formatted: '$0.00', credits_earned_formatted: '$0.00',
+        credits_formatted: '$0.00',
         next_tier_label: 'VIP', progress_percent: 0, progress_text: 'Spend $250.00 more to reach VIP status' -%}
 
-    <div class="{{ lbl }}">2 · FREE · cancelled subscription · $5 (no expiry → Total earned)</div>
+    <div class="{{ lbl }}">2 · FREE · cancelled subscription · $5 · no expiry (line hidden)</div>
     {%- render 'customer-dashboard', preview: true, tier: 'FREE', autoship_state: 'cancelled', first_name: 'Sam',
-        credits_formatted: '$5.00', credits_earned_formatted: '$5.00',
+        credits_formatted: '$5.00',
         autoship_bundle: '96oz Bundle – 2 Boxes', autoship_items: items2, autoship_more: 1,
         next_tier_label: 'VIP', progress_percent: 0, progress_text: 'Spend $250.00 more to reach VIP status' -%}
 
@@ -34,16 +37,16 @@
         autoship_items: 'Cold Brew On Tap (96 oz) - Mocha', autoship_more: 0,
         next_tier_label: 'ELITE', progress_percent: 60, progress_text: 'Spend $250.00 more to reach ELITE status' -%}
 
-    <div class="{{ lbl }}">4 · VIP · 2 active · $12 (no expiry) · “+1 more”</div>
+    <div class="{{ lbl }}">4 · VIP · 2 active · $12 · no expiry (line hidden) · “+1 more”</div>
     {%- render 'customer-dashboard', preview: true, tier: 'VIP', autoship_state: 'active', first_name: 'Alex',
-        credits_formatted: '$12.00', credits_earned_formatted: '$20.00',
+        credits_formatted: '$12.00',
         autoship_count: 2, autoship_bundle: 'Mixed Autoship', autoship_next_date: '2026-09-01',
         autoship_items: items2, autoship_more: 1,
         next_tier_label: 'ELITE', progress_percent: 80, progress_text: 'Spend $100.00 more to reach ELITE status' -%}
 
     <div class="{{ lbl }}">5 · VIP · no subscription · $10 (wide credit; Redeem/Upgrade + links aligned)</div>
     {%- render 'customer-dashboard', preview: true, tier: 'VIP', autoship_state: 'none', first_name: 'Alex',
-        credits_formatted: '$10.00', credits_earned_formatted: '$10.00',
+        credits_formatted: '$10.00',
         next_tier_label: 'ELITE', progress_percent: 50, progress_text: 'Spend $250.00 more to reach ELITE status' -%}
 
     <div class="{{ lbl }}">6 · ELITE · 1 active · $30 + expiry (no progress column / no upgrade; 6 benefits)</div>
@@ -54,7 +57,7 @@
 
     <div class="{{ lbl }}">7 · ELITE · no subscription · $0</div>
     {%- render 'customer-dashboard', preview: true, tier: 'ELITE', autoship_state: 'none', first_name: 'Jordan',
-        credits_formatted: '$0.00', credits_earned_formatted: '$0.00' -%}
+        credits_formatted: '$0.00' -%}
   </div>
 </section>
 

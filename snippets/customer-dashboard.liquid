@@ -111,7 +111,11 @@
 
 {%- comment -%} Variant B — no autoship: wide credit block {%- endcomment -%}
 <div data-wb-row-nocard{% unless guess_none %} data-wb-hide{% endunless %}>
-  <div class="relative {{ card }} px-6 py-7 md:!px-6 mb-6 md:!min-h-[120px] flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
+  {%- comment -%} QA #40: this variant kept py-7 / !gap-5 and never got .wb-row1-card, so while the
+    compact card was tightened to Figma this one stayed ~200px. Figma 1:739 draws the no-autoship
+    mobile card as the same 350x162 box: 16 top, 88 content, 6 gap, 40 button, 12 bottom. Desktop
+    keeps py-7 / gap-5 / min-h-120 — there the credit block and the button sit side by side. {%- endcomment -%}
+  <div class="relative {{ card }} px-6 pt-4 pb-3 md:!py-7 md:!px-6 mb-6 md:!min-h-[120px] flex flex-col !gap-1.5 md:!gap-5 md:!flex-row md:!items-center md:!justify-between">
     {%- comment -%} View Credit History pinned to the top-right in every state (short $0 or tall). {%- endcomment -%}
     <a href="/community/membership?customerId={{ customer.id }}" class="absolute top-5 right-6 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
     {%- comment -%} MOBILE: centered amount — matches the with-subscription (compact) card so both
