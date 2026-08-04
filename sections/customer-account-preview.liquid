@@ -33,14 +33,14 @@
     <div class="{{ lbl }}">3 · VIP · 1 active · $4.20 + expiry · progress → ELITE</div>
     {%- render 'customer-dashboard', preview: true, tier: 'VIP', autoship_state: 'active', first_name: 'Alex',
         credits_formatted: '$4.20', credits_expiry: '01/01/2028',
-        autoship_count: 1, autoship_bundle: '96oz Bundle – 2 Boxes', autoship_next_date: '2026-08-09',
+        autoship_count: 1, autoship_bundle: '96oz Bundle – 2 Boxes', autoship_next_date: '08/09/2026',
         autoship_items: 'Cold Brew On Tap (96 oz) - Mocha', autoship_more: 0,
         next_tier_label: 'ELITE', progress_percent: 60, progress_text: 'Spend $250.00 more to reach ELITE status' -%}
 
     <div class="{{ lbl }}">4 · VIP · 2 active · $12 · no expiry (line hidden) · “+1 more”</div>
     {%- render 'customer-dashboard', preview: true, tier: 'VIP', autoship_state: 'active', first_name: 'Alex',
         credits_formatted: '$12.00',
-        autoship_count: 2, autoship_bundle: 'Mixed Autoship', autoship_next_date: '2026-09-01',
+        autoship_count: 2, autoship_bundle: 'Mixed Autoship', autoship_next_date: '09/01/2026',
         autoship_items: items2, autoship_more: 1,
         next_tier_label: 'ELITE', progress_percent: 80, progress_text: 'Spend $100.00 more to reach ELITE status' -%}
 
@@ -52,7 +52,7 @@
     <div class="{{ lbl }}">6 · ELITE · 1 active · $30 + expiry (no progress column / no upgrade; 6 benefits)</div>
     {%- render 'customer-dashboard', preview: true, tier: 'ELITE', autoship_state: 'active', first_name: 'Jordan',
         credits_formatted: '$30.00', credits_expiry: '06/01/2028',
-        autoship_count: 1, autoship_bundle: 'Elite Autoship', autoship_next_date: '2026-10-01',
+        autoship_count: 1, autoship_bundle: 'Elite Autoship', autoship_next_date: '10/01/2026',
         autoship_items: items2, autoship_more: 0 -%}
 
     <div class="{{ lbl }}">7 · ELITE · no subscription · $0</div>

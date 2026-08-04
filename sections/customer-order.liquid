@@ -24,9 +24,15 @@
         QA #22 (round 2): the arrow was a flex sibling, so it ate width from the label and the text
         sat right of the button centre. Arrow is now absolutely positioned and the label centres on
         the button itself. {%- endcomment -%}
-      <a href="{{ routes.account_url }}" class="relative inline-flex items-center justify-center w-[165px] h-[43px] rounded-[10px] bg-foam shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-center text-[#4B2A18] transition-opacity hover:opacity-80">
-        {%- comment -%} Figma 1:1162: button 165x43, arrow 14px wide sitting 18px in from the left edge. {%- endcomment -%}
-        <svg class="absolute left-[18px] top-1/2 -translate-y-1/2 w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {%- comment -%} QA #22 asked for horizontal centring, and the arrow + label are centred as ONE
+        group (confirmed with the client) — not the label alone. So the arrow stays a flex sibling
+        and justify-center centres the pair; an absolutely positioned arrow would take the label to
+        the button's centre and leave the visible group sitting left of it.
+        This also lands on Figma 1:1162: a 14px arrow + 8px gap + the 107px label is 129px wide, so
+        centring it in the 165px button puts the arrow 18px in from the edge, which is exactly the
+        inset the frame specifies. {%- endcomment -%}
+      <a href="{{ routes.account_url }}" class="inline-flex items-center justify-center !gap-2 w-[165px] h-[43px] rounded-[10px] bg-foam shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-center text-[#4B2A18] transition-opacity hover:opacity-80">
+        <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>{{ 'customer.order.back_to_account' | t }}</span>
       </a>
       {%- liquid

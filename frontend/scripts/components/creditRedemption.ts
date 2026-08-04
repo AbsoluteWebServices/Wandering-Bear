@@ -18,7 +18,11 @@ type RedeemConfig = { balanceFormatted?: string; currency?: string }
 type RedeemResult = {
   code: string
   amount_formatted: string
+  /** Balance right now — unchanged by generating the code, since Inveterate deducts on use. */
   new_balance_formatted: string
+  /** What the member will be left with once this code is actually applied to an order:
+   *  current balance minus the code's value. This is the figure the modal leads with. */
+  remaining_after_use_formatted: string
   currency: string
   apply_url?: string
 }
@@ -37,6 +41,14 @@ type Envelope<T> = { ok: true; data: T } | { ok: false; error?: { code?: string;
 const parseMoney = (s: string): number => {
   const n = parseFloat((s || '').replace(/[^0-9.]/g, ''))
   return Number.isFinite(n) ? n : 0
+}
+
+/** Render `value` using the shape of an existing money string, so the currency symbol and its
+ *  placement come from whatever the worker already formatted ("$9.00", "9,00 kr") instead of being
+ *  hard-coded here. Falls back to the plain number if the sample has no digits to swap. */
+const formatLike = (sample: string, value: number): string => {
+  const amount = Math.max(0, value).toFixed(2)
+  return /[\d]/.test(sample || '') ? sample.replace(/[\d.,]+/, amount) : amount
 }
 
 export default (Alpine: AlpineType) => {
@@ -79,19 +91,60 @@ export default (Alpine: AlpineType) => {
       document.body.classList.remove('no-scroll')
     },
 
-    /** Worker endpoint: dev surface ({url}/dev/credits/redeem?customerId=[&token=]) or App Proxy
-     *  (/apps/wb/credits/redeem). */
-    endpoint(): string {
+    /** Build a worker URL for `path`: dev surface ({url}/dev/<path>?customerId=[&token=]) or
+     *  App Proxy (/apps/wb/<path>). */
+    workerPath(path: string): string {
       const root = this.root
       const workerUrl = (root?.dataset.workerUrl ?? '').trim().replace(/\/$/, '')
       if (workerUrl) {
-        const u = new URL(`${workerUrl}/dev/credits/redeem`)
+        const u = new URL(`${workerUrl}/dev/${path}`)
         u.searchParams.set('customerId', root?.dataset.customerId ?? '')
         const token = (root?.dataset.workerToken ?? '').trim()
         if (token) u.searchParams.set('token', token)
         return u.toString()
       }
-      return new URL('/apps/wb/credits/redeem', window.location.origin).toString()
+      return new URL(`/apps/wb/${path}`, window.location.origin).toString()
+    },
+    endpoint(): string {
+      return this.workerPath('credits/redeem')
+    },
+
+    /** Re-read the balance from the worker and repaint every [data-wb-credit-balance] on the page
+     *  — the dashboard card(s) and the header widget, which are otherwise server-rendered once and
+     *  never touched again.
+     *
+     *  Generating a code does not move the balance (Inveterate deducts when the code is applied to
+     *  an order), so straight after a redemption this normally repaints the same number — that is
+     *  correct, not a no-op bug. It exists so the figure on screen is the live one rather than
+     *  whatever was server-rendered on page load: a code redeemed in another tab, an expiry, or
+     *  credits earned meanwhile would otherwise leave a stale number sitting there. */
+    async syncBalance(): Promise<void> {
+      try {
+        const usesWorker = (this.root?.dataset.workerUrl ?? '').trim() !== ''
+        const res = await fetch(this.workerPath('credits'), {
+          headers: { Accept: 'application/json' },
+          credentials: usesWorker ? 'omit' : 'same-origin',
+        })
+        const json = (await res.json()) as Envelope<{ balance_formatted?: string }>
+        if (!json.ok) return
+        const formatted = json.data?.balance_formatted
+        if (!formatted) return
+        document.querySelectorAll<HTMLElement>('[data-wb-credit-balance]').forEach((el) => {
+          el.textContent = formatted
+        })
+        this.balanceFormatted = formatted
+        this.balance = parseMoney(formatted)
+        if (this.result) {
+          this.result.new_balance_formatted = formatted
+          // Keep the headline figure consistent with the balance we just read.
+          this.result.remaining_after_use_formatted = formatLike(
+            formatted,
+            parseMoney(formatted) - parseMoney(this.result.amount_formatted),
+          )
+        }
+      } catch {
+        /* leave the server-rendered value in place */
+      }
     },
 
     async submit() {
@@ -108,6 +161,8 @@ export default (Alpine: AlpineType) => {
           ? await this.mockRedeem(partial ? amt : this.balance)
           : await this.realRedeem(partial ? { amount: Math.round(amt * 100) } : {})
         this.step = 'result'
+        // The code exists now, so never fail the flow on this — it only refreshes what's on screen.
+        if (!this.isMock) await this.syncBalance()
       } catch (e) {
         this.error = (e as Error).message || 'redemption_failed'
       } finally {
@@ -126,11 +181,18 @@ export default (Alpine: AlpineType) => {
       const json = (await res.json()) as Envelope<WorkerRedeem>
       if (!json.ok) throw new Error(json.error?.code || 'redemption_failed')
       const d = json.data
-      // Map the worker shape → the UI shape (redeemed = the amount just spent; balance = remaining).
+      // Map the worker shape → the UI shape. `redeemed` is the code's value; `balance` is the
+      // member's balance, which by design does NOT move when the code is generated — Inveterate
+      // deducts when the code is applied to an order. So what the member wants to know is
+      // balance - redeemed, which is what the modal leads with.
       return {
         code: d.code || '',
         amount_formatted: d.redeemed_formatted,
         new_balance_formatted: d.balance_formatted,
+        remaining_after_use_formatted: formatLike(
+          d.balance_formatted,
+          parseMoney(d.balance_formatted) - parseMoney(d.redeemed_formatted),
+        ),
         currency: d.currency,
       }
     },
@@ -143,7 +205,9 @@ export default (Alpine: AlpineType) => {
       return {
         code: `REDEEM+MOCK${rand}`,
         amount_formatted: fmt(amount),
-        new_balance_formatted: fmt(Math.max(0, this.balance - amount)),
+        // Mirrors the real flow: the balance stays put until the code is used.
+        new_balance_formatted: fmt(this.balance),
+        remaining_after_use_formatted: fmt(Math.max(0, this.balance - amount)),
         currency: config.currency || 'USD',
       }
     },

@@ -43,6 +43,15 @@
         margin-bottom: 27px;
     }
 }
+/* A little more air above "Log Out" while it sits under the welcome line. The block turns into a
+   row at smd (750px), where the container's !gap-1 becomes the HORIZONTAL gap to the heading —
+   hence the 749px ceiling, so the desktop row spacing is untouched. Margin rather than a bigger
+   gap because the markup's !gap-1 carries !important. Total gap: 4px gap + 6px = 10px. */
+@media (max-width: 749px) {
+    .wb-welcome__logout {
+        margin-top: 6px;
+    }
+}
 /* Form column: login / register / reset / activate input width (Figma 352px). */
 .account-form {
     width: 100%;
@@ -331,6 +340,36 @@
     font-weight: 600;
     font-size: 14px;
     line-height: 1.8;
+}
+/* QA #8: give the icon a box exactly one line box tall (font-size x line-height = 1.8em) and let
+   the row align to flex-start. The icon then occupies the same vertical slot as the first line of
+   text and the SVG centres its artwork inside that box on its own — no px nudge, so it cannot
+   drift when Chrome on Windows resolves different metrics for Kurdis. A benefit that wraps to two
+   lines now keeps its crown on the first line instead of centring against both. */
+.wb-benefit-item__icon {
+    width: 18px;
+    height: 1.8em;
+}
+
+/* ---- Account CTA spacing on mobile: 6px above, 8px below ------------------ */
+/* Applies to the five .shadow-button CTAs (Redeem in both credit cards, Manage, Reactivate,
+   Upgrade to Elite). The row-1 cards already sat at 6/8; the wide credit card (12 below) and the
+   Elite upsell (12 above / 20 below) did not, so the gap is normalised on the containers rather
+   than by giving the buttons their own margins — margins would stack on top of the gaps the
+   containers already provide and push the cards past their Figma height. Desktop untouched. */
+@media (max-width: 1023px) {
+    /* Wide no-autoship credit card: 12px bottom padding → 8px. The 6px above already comes
+       from its !gap-1.5 column gap. */
+    [data-wb-row-nocard] > div {
+        padding-bottom: 8px;
+    }
+    /* Elite upsell panel: its own bottom padding and the gap under the description line. */
+    .membership-upsell {
+        padding-bottom: 8px;
+    }
+    .membership-upsell > p:last-of-type {
+        margin-bottom: 6px;
+    }
 }
 
 /* Redeem modal trigger wrapper (customer-credit-redeem): display:contents so the wrapped
