@@ -207,6 +207,7 @@
         "desktop_media_position": "left",
         "equal_columns": false,
         "limit_details_width": false,
+        "disable_gallery_background": false,
         "subscription_value_props": "<ul><li>Free VIP Membership with locked flavor access</li><li>Discount on every order</li><li>Change or modify flavors</li><li>Total flexibility, cancel anytime</li></ul>",
         "gap": 20,
         "enable_sticky_add_to_cart": true,
@@ -369,8 +370,8 @@
           "type": "diagram_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
-            "title": "BEAN QUALITY",
-            "description": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
+            "title": "BETTER BEANS",
+            "description": "We use the highest quality beans we can source: organic, specialty-grade, 100% Arabica beans to deliver a smooth, bold, coffee shop inspired cold brew you'll crave.",
             "order_mobile": 2
           }
         },
@@ -378,8 +379,8 @@
           "type": "diagram_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226583.svg",
-            "title": "More Coffee",
-            "description": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine.",
+            "title": "MORE BEANS",
+            "description": "Wandering Bear is made with MORE beans than most brews out there. We start with high quality ingredients, then we add MORE of them. More beans means you get more flavor and more caffeine.",
             "order_mobile": 1
           }
         },
@@ -387,8 +388,8 @@
           "type": "diagram_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226584.svg",
-            "title": "Cold Brew Process",
-            "description": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic",
+            "title": "COLD-BREWED FOR PEAK TASTE",
+            "description": "We've refined our cold-brewing and precision-filtering process over a decade to ensure consistent quality with every batch. This process makes Wandering Bear cold brew always smooth, never bitter or acidic.",
             "order_mobile": 3
           }
         }
@@ -720,7 +721,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-11oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -733,7 +735,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Mocha-Latte-8oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -746,7 +749,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/3-1-Concentrate-32oz_bd218ab7-f7e2-4a56-a053-4b1b50efd297.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -759,7 +763,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-32oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         }
