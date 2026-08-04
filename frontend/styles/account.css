@@ -342,6 +342,27 @@
     height: 1.8em;
 }
 
+/* ---- Account CTA spacing on mobile: 6px above, 8px below ------------------ */
+/* Applies to the five .shadow-button CTAs (Redeem in both credit cards, Manage, Reactivate,
+   Upgrade to Elite). The row-1 cards already sat at 6/8; the wide credit card (12 below) and the
+   Elite upsell (12 above / 20 below) did not, so the gap is normalised on the containers rather
+   than by giving the buttons their own margins — margins would stack on top of the gaps the
+   containers already provide and push the cards past their Figma height. Desktop untouched. */
+@media (max-width: 1023px) {
+    /* Wide no-autoship credit card: 12px bottom padding → 8px. The 6px above already comes
+       from its !gap-1.5 column gap. */
+    [data-wb-row-nocard] > div {
+        padding-bottom: 8px;
+    }
+    /* Elite upsell panel: its own bottom padding and the gap under the description line. */
+    .membership-upsell {
+        padding-bottom: 8px;
+    }
+    .membership-upsell > p:last-of-type {
+        margin-bottom: 6px;
+    }
+}
+
 /* Redeem modal trigger wrapper (customer-credit-redeem): display:contents so the wrapped
    wb-button stays the flex/grid child and its width utilities still apply. */
 .wb-redeem-root {
