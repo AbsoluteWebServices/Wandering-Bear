@@ -332,6 +332,15 @@
     font-size: 14px;
     line-height: 1.8;
 }
+/* QA #8: give the icon a box exactly one line box tall (font-size x line-height = 1.8em) and let
+   the row align to flex-start. The icon then occupies the same vertical slot as the first line of
+   text and the SVG centres its artwork inside that box on its own — no px nudge, so it cannot
+   drift when Chrome on Windows resolves different metrics for Kurdis. A benefit that wraps to two
+   lines now keeps its crown on the first line instead of centring against both. */
+.wb-benefit-item__icon {
+    width: 18px;
+    height: 1.8em;
+}
 
 /* Redeem modal trigger wrapper (customer-credit-redeem): display:contents so the wrapped
    wb-button stays the flex/grid child and its width utilities still apply. */

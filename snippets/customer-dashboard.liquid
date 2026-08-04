@@ -76,8 +76,14 @@
 -%}
 
 {%- capture crown -%}
-  {%- comment -%} QA #4: glyph spans y3..15 of the 20-box (center 9 vs 10) → sits ~1px high in items-center; nudge down. {%- endcomment -%}
-  <svg class="w-[18px] h-[18px] shrink-0 text-gold translate-y-[1px]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+  {%- comment -%} QA #8: the crown used a translate-y-[1px] nudge tuned against macOS font metrics,
+    so it drifted again on Windows/Chrome. Two causes, both removed:
+    1. The glyph spans y3..15 of the 20-box, i.e. its centre is 9 against the box centre 10 — the
+       viewBox now starts at -1 so the artwork is centred in its own box, no nudge needed.
+    2. items-center centred an 18px box inside a 25.2px line box, which also broke on a wrapped
+       two-line benefit. The icon box is now exactly one line tall (see .wb-benefit-item__icon)
+       and aligns to the first line, so the maths no longer depends on the font's metrics. {%- endcomment -%}
+  <svg class="wb-benefit-item__icon shrink-0 text-gold" viewBox="0 -1 20 20" fill="currentColor" aria-hidden="true">
     <path d="M2 6l3.5 3L10 3l4.5 6L18 6l-1.5 9h-13L2 6z"/>
   </svg>
 {%- endcapture -%}
@@ -255,7 +261,7 @@
         fills column-major from the same source order, and mobile (flex-col) keeps the list order. {%- endcomment -%}
       <ul class="flex flex-col {% if is_elite %}smd:!grid smd:!grid-flow-col smd:!grid-rows-2 smd:!grid-cols-3{% endif %} !gap-x-6 !gap-y-2.5">
         {%- for benefit in benefits -%}
-          <li class="wb-benefit-item flex items-center font-kurdis-semi-condensed text-espresso">{{ crown }}<span>{{ benefit }}</span></li>
+          <li class="wb-benefit-item flex items-start font-kurdis-semi-condensed text-espresso">{{ crown }}<span>{{ benefit }}</span></li>
         {%- endfor -%}
       </ul>
     </div>
