@@ -76,8 +76,14 @@
 -%}
 
 {%- capture crown -%}
-  {%- comment -%} QA #4: glyph spans y3..15 of the 20-box (center 9 vs 10) → sits ~1px high in items-center; nudge down. {%- endcomment -%}
-  <svg class="w-[18px] h-[18px] shrink-0 text-gold translate-y-[1px]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+  {%- comment -%} QA #8: the crown used a translate-y-[1px] nudge tuned against macOS font metrics,
+    so it drifted again on Windows/Chrome. Two causes, both removed:
+    1. The glyph spans y3..15 of the 20-box, i.e. its centre is 9 against the box centre 10 — the
+       viewBox now starts at -1 so the artwork is centred in its own box, no nudge needed.
+    2. items-center centred an 18px box inside a 25.2px line box, which also broke on a wrapped
+       two-line benefit. The icon box is now exactly one line tall (see .wb-benefit-item__icon)
+       and aligns to the first line, so the maths no longer depends on the font's metrics. {%- endcomment -%}
+  <svg class="wb-benefit-item__icon shrink-0 text-gold" viewBox="0 -1 20 20" fill="currentColor" aria-hidden="true">
     <path d="M2 6l3.5 3L10 3l4.5 6L18 6l-1.5 9h-13L2 6z"/>
   </svg>
 {%- endcapture -%}
@@ -97,7 +103,7 @@
       <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 -rotate-[4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
     </span>
   </h1>
-  <a href="{{ routes.account_logout_url }}" class="font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
+  <a href="{{ routes.account_logout_url }}" class="wb-welcome__logout font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
 </div>
 
 {%- comment -%} Worker load-failure note — hidden by default, shown when account.ts sets data-wb-error on the root {%- endcomment -%}
@@ -128,7 +134,7 @@
     <div class="relative min-h-[88px] md:!hidden">
       <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
       <div class="flex flex-col items-center text-center pt-[14px]">
-        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</span>
+        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold" data-wb-credit-balance>{{ credits_formatted }}</span>
         <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
       </div>
     </div>
@@ -136,7 +142,7 @@
     <div class="hidden md:!block flex-1">
       <div class="flex items-end !gap-3">
         <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
-        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
+        <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold" data-wb-credit-balance>{{ credits_formatted }}</span>
       </div>
       <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
     </div>
@@ -216,7 +222,7 @@
         <a href="/community/membership?customerId={{ customer.id }}" class="absolute right-0 top-0 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
         <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <div class="flex flex-col items-center text-center pt-[14px]">
-          <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold">{{ credits_formatted }}</div>
+          <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold" data-wb-credit-balance>{{ credits_formatted }}</div>
           <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
         </div>
       </div>
@@ -255,7 +261,7 @@
         fills column-major from the same source order, and mobile (flex-col) keeps the list order. {%- endcomment -%}
       <ul class="flex flex-col {% if is_elite %}smd:!grid smd:!grid-flow-col smd:!grid-rows-2 smd:!grid-cols-3{% endif %} !gap-x-6 !gap-y-2.5">
         {%- for benefit in benefits -%}
-          <li class="wb-benefit-item flex items-center font-kurdis-semi-condensed text-espresso">{{ crown }}<span>{{ benefit }}</span></li>
+          <li class="wb-benefit-item flex items-start font-kurdis-semi-condensed text-espresso">{{ crown }}<span>{{ benefit }}</span></li>
         {%- endfor -%}
       </ul>
     </div>

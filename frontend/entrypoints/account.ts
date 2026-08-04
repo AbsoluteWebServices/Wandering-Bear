@@ -111,8 +111,11 @@ async function wbFetch<T>(path: string, params?: Record<string, string>): Promis
   return json.data;
 }
 
-/** Format an ISO date (YYYY-MM-DD) as MM/DD/YYYY (Figma credit-expiry format). */
-function formatExpiry(iso: string | null): string | null {
+/** Format an ISO date (YYYY-MM-DD) as MM/DD/YYYY — the format Figma uses for every date on the
+ *  dashboard: the credit expiry ("Expires 01/01/2028") and the autoship line
+ *  ("Next shipment: 07/25/2025", frame 1:177). Anything unparseable returns null so callers can
+ *  leave the SSR fallback in place. */
+function formatUsDate(iso: string | null): string | null {
   if (!iso) return null;
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
   return m ? `${m[2]}/${m[3]}/${m[1]}` : null;
@@ -162,7 +165,7 @@ function renderMembership(m: Membership | null): void {
 
   // Credit BALANCE is native SSR (Inveterate `balance` metafield) — not hydrated here.
   // Only the expiry comes from the worker (there is no native credit-expiry metafield).
-  setExpiryLine(formatExpiry(m.credits.expires_at));
+  setExpiryLine(formatUsDate(m.credits.expires_at));
 
   // Progress column. progress === null ⇒ top tier (ELITE) — SSR already hides the column.
   if (m.progress) {
@@ -236,7 +239,9 @@ function renderSubscriptions(subs: Subscriptions | null): void {
     });
 
   setText(card, 'autoship-bundle', dedupeTitle(headlineTitle));
-  if (!isCancelled) setText(card, 'autoship-date', first.next_order_date ?? undefined);
+  // QA #26: the worker hands back an ISO date, which was written into the DOM raw
+  // ("Next shipment: 2027-04-29"). Figma shows "Next shipment: 07/25/2025" (frame 1:177).
+  if (!isCancelled) setText(card, 'autoship-date', formatUsDate(first.next_order_date) ?? undefined);
 
   // Active-count badge — localized "{n} Active Autoships" (active only; CSS hides it when cancelled).
   if (!isCancelled) {
@@ -296,7 +301,7 @@ function formatDate(iso: string): string {
 function renderCredits(d: Credits): void {
   if (!root) return;
 
-  setExpiryLine(formatExpiry(d.expires_at));
+  setExpiryLine(formatUsDate(d.expires_at));
 
   const tbody = root.querySelector<HTMLElement>('[data-wb-credit-rows]');
   if (!tbody) return;
