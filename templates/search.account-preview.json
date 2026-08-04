@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "customer-account-preview",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

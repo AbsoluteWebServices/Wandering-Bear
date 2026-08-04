@@ -20,6 +20,29 @@
     margin-inline: auto;
     padding-inline: 1rem;
 }
+/* QA #36: Figma puts the mobile cards at x=12 / 350 wide on a 375 frame → 12px gutters
+   (1:177, 1:466, 1:1019). Phone only — from smd up the container is wide enough that the
+   1rem gutter is what the other account pages (login / order / credits) are drawn against. */
+@media (max-width: 749px) {
+    .account-container {
+        padding-inline: 12px;
+    }
+}
+
+/* QA #36: vertical rhythm around the welcome line. Figma 1:177 — page top → welcome glyphs
+   = 56px (the section already contributes py-8 = 32px, so +24px here), Log Out → first card
+   = 27px. Scoped to .wb-welcome, which only exists on the dashboard: putting it on
+   .account-container would have moved login / register / reset / order / credit-history too.
+   Base keeps the 24px the markup used to carry as mb-6. */
+.wb-welcome {
+    margin-bottom: 24px;
+}
+@media (max-width: 1023px) {
+    .wb-welcome {
+        margin-top: 24px;
+        margin-bottom: 27px;
+    }
+}
 /* Form column: login / register / reset / activate input width (Figma 352px). */
 .account-form {
     width: 100%;
@@ -157,15 +180,35 @@
     background: rgba(67, 26, 3, 0.10);
     animation: wb-pulse 1.1s ease-in-out infinite;
 }
-/* Row-1 cards (autoship + compact credit) — 15px bottom padding (space under the buttons;
-   overrides the p-5/md:p-6 bottom). Top/sides keep the card padding. */
+/* Row-1 cards (autoship + compact credit). QA #40: Figma makes both cards 162-164px tall
+   (autoship 375x164, credit 375x162 — desktop 1:24, mobile 1:177); ours ran ~200px because the
+   inner spacer, the gap above the button and the bottom padding were all oversized.
+   Figma vertical budget, card top → bottom: 16 top pad + content + 40 button + 13 bottom pad. */
 .wb-row1-card {
-    padding-bottom: 15px;
+    /* Mobile (1:177): card 248-412, title row starts ~15px in, button ends 7px above the card end.
+       QA #28 asked for 6px above the button / 8px below it. */
+    padding-top: 16px;
+    padding-bottom: 8px;
 }
-/* 15px above the autoship button (gap from the line-item list to the button). mt-auto still
-   pins it to the bottom when the card stretches; this is the minimum gap. */
+/* Breakpoint note: this theme sets --breakpoint-md to 64rem, so the markup's `md:` utilities
+   (p-5 md:p-6, md:!flex-row, md:w-[118px], …) switch at 1024px — NOT 768px. Every rule below
+   that pairs with an `md:` utility must use 1024px or the 768-1023 band renders a mix of both. */
+@media (min-width: 1024px) {
+    /* Desktop (1:24): card 207-371 = 164px, badge at y219 (12px in), button 324-364 (7px above
+       the card end). Using the mobile 16/8 here left the card 11px too tall. */
+    .wb-row1-card {
+        padding-top: 12px;
+        padding-bottom: 7px;
+    }
+}
+/* QA #28: gap from the line-item list to the MANAGE/REACTIVATE button. */
 [data-wb-autoship-items] {
-    margin-bottom: 15px;
+    margin-bottom: 6px;
+}
+@media (min-width: 1024px) {
+    [data-wb-autoship-items] {
+        margin-bottom: 15px;
+    }
 }
 
 /* Pin the autoship Manage/Reactivate button to the bottom of the card so it aligns with the
@@ -238,7 +281,11 @@
 /* Autoship rows — 1px #F0EDEA divider + spacing (Figma "Line 13"). Applies to the head
    row (bundle title + next shipment) and every line item incl. the last, so each row is
    underlined. Targets the [data-wb-autoship-items] hook → works for SSR and the rows
-   account.ts rebuilds. */
+   account.ts rebuilds.
+   QA #29: the TITLE row ("Your next autoship order" + badge) gets the same divider — Figma
+   "Line 10" (1:177 y289 / 1:1019 y281) runs the full 350px card width under it, matching the
+   three rows below. It was the only row missing a rule. */
+.wb-autoship-title-row,
 .wb-autoship-head,
 [data-wb-autoship-items] > li {
     /* Bleed to the card edges so the divider spans full width, then re-inset the content.
@@ -251,12 +298,17 @@
 [data-wb-autoship-items] > li + li {
     padding-top: 5px;
 }
+/* Title row keeps the same 5px rhythm below its own divider (it used mb-3 before). */
+.wb-autoship-title-row {
+    margin-bottom: 5px;
+}
 /* Space from the head divider to the first line item (matches the 5px rhythm;
    overrides the mb-2 utility on the head row). */
 .wb-autoship-head {
     margin-bottom: 5px;
 }
 @media (min-width: 1024px) {
+    .wb-autoship-title-row,
     .wb-autoship-head,
     [data-wb-autoship-items] > li {
         margin-inline: -1.5rem;
@@ -384,5 +436,53 @@ body.no-scroll {
     pointer-events: none;
 }
 
-/* Contact CTA is styled with Tailwind utilities directly in the section markup
-   (Tailwind-first) — no component class needed here. */
+/* ---- Order-history timeframe control ------------------------------------ */
+/* QA #20: the control had no hover feedback at all. Same language as .hover-underline
+   (underline stays, colour shifts to gold) so it reads as interactive. */
+.wb-timeframe:hover .wb-timeframe__select,
+.wb-timeframe__select:hover {
+    color: var(--color-dark-gold);
+    text-decoration: underline;
+}
+/* QA #32: mobile wraps the whole control in a box — Figma "Rectangle 10511", 175x36, radius 5
+   (1:177 y1212). Desktop keeps the borderless link style from the desktop frames. */
+@media (max-width: 1023px) {
+    .wb-timeframe {
+        width: 175px;
+        height: 36px;
+        justify-content: center;
+        border: 1px solid var(--color-espresso);
+        border-radius: 5px;
+    }
+}
+
+/* ---- Contact CTA --------------------------------------------------------- */
+/* QA #34: Figma's badge ("COLD BREW 96oz" group) is 101x91 and clears the card top by 33px, i.e.
+   ~36% of its own height sits above the card — not the 50% the old -translate-y-1/2 produced.
+   The card then needs enough top padding for the heading to clear the 58px of badge that overlaps
+   it (Figma: card top → heading glyphs = 81px). Desktop badge sits at the left, unchanged. */
+/* Phone only. Between smd (750px) and md (1024px) the card is already on the wide
+   smd:aspect-[746/144] ratio while the badge is still centred, so a bigger badge and a large
+   padding-top would both fight that fixed height — that band keeps the markup's w-[76px] /
+   -translate-y-1/2 exactly as before. */
+@media (max-width: 749px) {
+    .wb-contact__badge {
+        width: 101px;
+        /* Tailwind v4 compiles -translate-x-1/2 / -translate-y-1/2 to the `translate` PROPERTY,
+           not `transform` — setting `transform` here would compose with it instead of replacing
+           it (the badge ended up 79px above the card instead of 33px, and offset sideways). */
+        translate: -50% -36%;
+    }
+    .wb-contact {
+        padding-top: 81px;
+    }
+}
+
+/* QA #38: gap from the tier name to "What's Included:" while the tier and progress columns are
+   stacked (they go side by side at md = 1024). Figma 1:466 puts ELITE at y645 (25px tall) and
+   the heading glyphs at y~710, so ~40px of air; ours had the desktop's 15px. */
+@media (max-width: 1023px) {
+    .wb-whats-included {
+        margin-top: 40px;
+    }
+}
