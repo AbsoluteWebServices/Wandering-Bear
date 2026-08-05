@@ -175,6 +175,15 @@
         height: {{ s.media_height_mobile | default: 300 }}px !important;
       {% endif %}
       overflow: visible !important;
+      {%- comment -%}
+        Figma 1694:245 insets the mobile photo from both screen edges (358 wide in a 375 frame)
+        instead of running it full-bleed, so its rounded corners are visible.
+      {%- endcomment -%}
+      {% if s.media_inset_mobile != blank %}
+        width: calc(100% - {{ s.media_inset_mobile | times: 2 }}px) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      {% endif %}
     }
     .aw-about-banner__frame {
       position: absolute !important;
@@ -393,6 +402,7 @@
     { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
     { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
+    { "type": "text", "id": "media_inset_mobile", "label": "Media side inset — mobile px" },
     { "type": "text", "id": "media_left_pct_mobile", "label": "Media anchor — mobile (e.g. 60%)" },
     { "type": "text", "id": "media_left_mobile", "label": "Media horizontal nudge — mobile px" },
     { "type": "number", "id": "title_pad_top_mobile", "label": "Title padding-top — mobile px" },
