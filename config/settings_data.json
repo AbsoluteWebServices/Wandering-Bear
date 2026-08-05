@@ -157,7 +157,7 @@
           "early_access_popup_button_background": "#8D5D07",
           "early_access_card_border_color": "#8D5D07",
           "early_access_popup_button_foreground": "#ffffff",
-          "early_access_modal_background": "#ffffff",
+          "early_access_modal_background": "#F2E6DC",
           "early_access_modal_foreground": "#000000",
           "early_access_additional_tags": "",
           "exclusive_access_enable": true,
