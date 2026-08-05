@@ -296,6 +296,11 @@
   @media screen and (min-width: 750px) and (max-width: 1023px) {
     #shopify-section-{{ section.id }} .aw-about-banner__heading-wrap {
       border-bottom-right-radius: 0 !important;
+      {%- comment -%}
+        The tab is a fixed width shared with desktop, which leaves slack to the right of the
+        heading at tablet sizes. Pull the right edge in to the copy.
+      {%- endcomment -%}
+      {% if s.heading_width_tablet != blank %}width: {{ s.heading_width_tablet }}px !important;{% endif %}
     }
   }
 {% endstyle %}
@@ -424,6 +429,7 @@
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
     { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
     { "type": "text", "id": "card_top_tablet", "label": "Text card top — tablet px" },
+    { "type": "text", "id": "heading_width_tablet", "label": "Heading tab width — tablet px" },
     { "type": "text", "id": "card_width_tablet", "label": "Text card max-width — tablet px" },
     { "type": "text", "id": "media_inset_mobile", "label": "Media side inset — mobile px" },
     { "type": "text", "id": "media_left_pct_mobile", "label": "Media anchor — mobile (e.g. 60%)" },

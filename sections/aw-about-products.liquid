@@ -352,6 +352,10 @@
      that matches the surroundings and the multiply box has no visible edges. */
   .wb-about-products__paw-img {
     position: relative;
+    /* Soft shadow under the paw (QA r75), at every width. drop-shadow follows the PNG's alpha, so
+       it hugs the fur instead of boxing the element. On mobile the paw bleeds past the left edge,
+       so only the top and right of the shadow are in view. */
+    filter: drop-shadow(0 16px 18px rgba(27, 27, 27, 0.32));
     /* Transparent PNG cut-out (ab-bearhand.png) — shown directly, no multiply/gradient knock-out.
        Mobile (Figma 1694:245 BearHand: 642×541 ≈ the image's native ratio, bled off the left edge). */
     /* Tuning knobs (edit these numbers):
@@ -498,9 +502,6 @@
     }
 
     .wb-about-products__paw-img {
-      /* Soft shadow under the paw (QA r75). drop-shadow follows the PNG's alpha, so it hugs the fur
-         instead of boxing the element. */
-      filter: drop-shadow(0 16px 18px rgba(27, 27, 27, 0.32));
       width: 617px;
       /* Figma lets the paw run under the promise cards; it just sits behind them (z-index below).
          The cap only stops it overshooting the screen once the column narrows on tablet — at the
