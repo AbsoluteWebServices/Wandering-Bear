@@ -248,9 +248,9 @@
                     >
                     <span class="variant-select__option-text">{{- product_option_value | escape -}}</span>
                    
-                    <span class="variant-select__check svg-wrapper" aria-hidden="true">
+                    {% comment %} <span class="variant-select__check svg-wrapper" aria-hidden="true">
                       {{- 'icon-checkmark.svg' | inline_asset_content -}}
-                    </span>
+                    </span> {% endcomment %}
                   </label>
                 {%- endfor -%}
               </fieldset>
@@ -283,6 +283,17 @@
   .variant-select {
     position: relative;
     width: 100%;
+  }
+
+  .variant-select__input.visually-hidden {
+    appearance: none !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    z-index: -1 !important;
   }
 
   .variant-select__trigger {

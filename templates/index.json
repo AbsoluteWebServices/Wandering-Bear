@@ -39,12 +39,12 @@
         "color_scheme": "",
         "foreground_image": "shopify://shop_images/Homepage_HeaderCoffee.png",
         "foreground_image_mobile": "shopify://shop_images/Homepage_HeaderCoffee_Mobile.png",
-        "background_image": "shopify://shop_images/Homepage_Background.png",
-        "background_image_tablet": "shopify://shop_images/Homepage_Background.png",
-        "background_image_mobile": "shopify://shop_images/Homepage_Background_Mobile.jpg",
+        "background_image": "shopify://shop_images/Latte_section.png",
+        "background_image_tablet": "shopify://shop_images/Latte_section.png",
+        "background_image_mobile": "shopify://shop_images/Latte_section.png",
         "title_type": "image",
-        "title_image": "shopify://shop_images/COFFEE_SHOP_QUALITY_DRINKS_MADE_EASY..svg",
-        "title_image_mobile": "shopify://shop_images/Group_1327226599.png",
+        "title_image": "shopify://shop_images/LIKE_A_COFFEE_SHOP_IN_YOUR_FRIDGE.svg",
+        "title_image_mobile": "shopify://shop_images/LIKE_A_COFFEE_SHOP_IN_YOUR_FRIDGE.svg",
         "title_text": "Coffee Shop Quality Drinks Made Easy",
         "font_size": 24,
         "font_size_mobile": 24,
@@ -123,7 +123,7 @@
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "GO BIG. OR GO BIGGER.",
-        "title_image": "shopify://shop_images/GO_BIG._OR_GO_BIGGER..svg",
+        "title_image": "shopify://shop_images/PICK_HOW_YOU_POUR.svg",
         "badge": "shopify://shop_images/STAY_CAFFEINATED_4116e90f-9fc4-470e-82ef-dcddfd00379b.png"
       }
     },
@@ -134,28 +134,28 @@
           "type": "bulletpoint",
           "settings": {
             "image": "shopify://shop_images/checkmark.svg",
-            "title": "11g of complete protein."
+            "title": "Rich, creamy and indulgent"
           }
         },
         "bulletpoint_bFCyBA": {
           "type": "bulletpoint",
           "settings": {
             "image": "shopify://shop_images/checkmark.svg",
-            "title": "Coffee-forward, super creamy and barista-level."
+            "title": "Only 100 calories"
           }
         },
         "bulletpoint_HpVgBz": {
           "type": "bulletpoint",
           "settings": {
             "image": "shopify://shop_images/checkmark.svg",
-            "title": "Only 5-6g of total sugar from natural sugarcane."
+            "title": "5-6g of real sugar"
           }
         },
         "bulletpoint_mEPC6C": {
           "type": "bulletpoint",
           "settings": {
             "image": "shopify://shop_images/checkmark.svg",
-            "title": "100 calories per can."
+            "title": "11g of complete protein per can"
           }
         }
       },
@@ -266,7 +266,7 @@
         "subtitle": "<p>Start earning $5 for every $50 spent. The best part is – you can join for free.  <br/>Upgrade to VIP or Elite anytime for exclusive flavors, bigger discounts, and more perks.</p>",
         "foreground_image": "shopify://shop_images/Group_1327226595.svg",
         "foreground_image_mobile": "shopify://shop_images/Group_1327226610.svg",
-        "description": "Join XX+ members earning rewards with every order.",
+        "description": "Join 100k+ members earning rewards with every order.",
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
         "foreground_bg_image": "shopify://shop_images/WB_HOLLYWOOD_SHOT_20_e6e71f8e-6241-45ff-aea4-29f81e463f42.png"
@@ -278,7 +278,7 @@
         "logo_a34R38": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/image_46_fb2e1c38-6305-4694-8f68-110c0370ae58.png",
+            "image": "shopify://shop_images/Erewhon_Gold.png",
             "hide_on_mobile": false,
             "max_width": "165",
             "max_width_mobile": "128"
@@ -287,7 +287,7 @@
         "logo_GW6Tnx": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/image_43_4ef95b0e-a72b-43f2-9f18-ead705ecf852.png",
+            "image": "shopify://shop_images/Wholefoods_Gold.png",
             "hide_on_mobile": false,
             "max_width": "101",
             "max_width_mobile": "80"
@@ -296,7 +296,7 @@
         "logo_jD4Mzy": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/image_44_7bf0291d-5776-4d28-a6b5-df54b51c9478.png",
+            "image": "shopify://shop_images/Costco_Gold.png",
             "hide_on_mobile": false,
             "max_width": "147",
             "max_width_mobile": "122"
@@ -305,7 +305,7 @@
         "logo_nYDjHb": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/image_45_d1488d12-ec91-4d52-8ba5-e7070e9cd071.png",
+            "image": "shopify://shop_images/Sprouts_Gold.png",
             "hide_on_mobile": true,
             "max_width": "137",
             "max_width_mobile": ""
@@ -314,7 +314,7 @@
         "logo_3BhRQY": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/image_52_0b4562ef-5d94-4c61-95c3-0bdf88e5623e.png",
+            "image": "shopify://shop_images/Target_Gold.png",
             "hide_on_mobile": false,
             "max_width": "198",
             "max_width_mobile": "124"
@@ -330,12 +330,14 @@
       ],
       "name": "AW Logo Wall",
       "settings": {
-        "title_type": "text",
+        "title_type": "image",
         "title": "",
         "title_color": "",
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
+        "title_image": "shopify://shop_images/PROUDLY_AVAILABLE_WHERE_YOU_SHOP.svg",
+        "title_image_mobile": "shopify://shop_images/PROUDLY_AVAILABLE_WHERE_YOU_SHOP.svg",
         "button_text": "Check us out in-store",
         "button_url": "shopify://pages/find-wandering-bear-cold-brew-in-stores",
         "button_style": "secondary",
