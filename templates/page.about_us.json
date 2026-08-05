@@ -310,7 +310,8 @@
         "side_radius_mobile": 24,
         "side_mobile_poke": 80,
         "side_mobile_gap": 2,
-        "body_pad_x_mobile": "15"
+        "body_pad_x_mobile": "15",
+        "title_gap_mobile": "11"
       }
     },
     "premium": {
