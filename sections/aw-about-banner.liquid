@@ -257,6 +257,20 @@
 {% endstyle %}
 
 {%- comment -%}
+  Tablet: the card is pulled 160px up over the photo, which on desktop lands in the notch cut out of
+  the cover image. At tablet widths that notch is cropped away, so the card sits on the photo itself
+  (QA r92). Drop it back into the flow there — the section grows instead of overlapping.
+{%- endcomment -%}
+{% style %}
+  @media screen and (min-width: 750px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} .aw-about-banner__card {
+      position: relative !important;
+      top: auto !important;
+    }
+  }
+{% endstyle %}
+
+{%- comment -%}
   Tablet nudge for the heading tab. The card is pinned to the photo with a fixed negative top, but
   the cover photo is a different crop at tablet widths, so the tab can sit a couple of px high
   against the notch. Relative offset only — it does not reflow the body below it.
