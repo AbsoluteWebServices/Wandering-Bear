@@ -16,7 +16,33 @@
   if product.selected_or_first_available_variant.featured_media.preview_image == blank
     assign product_variant_media = product.featured_media.preview_image | image_url: width: 100
   endif
+
+  assign simple_template = false
+  if template.suffix == 'misc' or template.suffix == 'simple' or template.suffix == 'gift-card'
+    assign simple_template = true
+  endif
+
+  # Gift card template defaults to no amount chosen: the button starts disabled (via
+  # gift-card-amount.js) and skips the sold-out "Get notified" swap, which never applies to a gift
+  # card and would otherwise hide the disabled button. Gated on the template suffix, not
+  # `product.gift_card?` — this "Gift Card" is a regular product, so `gift_card?` is false.
+  assign is_gift_card = false
+  if template.suffix == 'gift-card'
+    assign is_gift_card = true
+  endif
+  assign notify_swap = false
+  if simple_template and is_gift_card != true
+    assign notify_swap = true
+  endif
 -%}
+
+{%- comment -%}
+  On the simple/misc template (native wiring) a sold-out variant swaps the disabled
+  add-to-cart button for a "Get notified" trigger. Visibility is driven purely by the
+  add-to-cart button's `:disabled` state, which product-form.js toggles on variant change,
+  so the swap stays in sync without extra JS.
+{%- endcomment -%}
+{%- if notify_swap -%}<div class="atc-with-notify">{%- endif -%}
 
 <add-to-cart-component
   ref="addToCartButtonContainer"
@@ -31,7 +57,13 @@
     name="add"
     ref="addToCartButton"
     on:click="/handleClick"
-    class="button {{ class }}"
+    class="button group {{ class }} relative !h-[60px] shadow-button
+    {% if product.tags contains 'gift-card' %}
+    gvlo-trigger
+    {% else %}
+    !bg-transparent
+    {% endif %}
+    "
     {% if data_testid %}
       data-testid="{{ data_testid }}"
     {% endif %}
@@ -40,29 +72,72 @@
     {% endunless %}
   >
     <span
-      class="add-to-cart-text"
+      class="add-to-cart-text relative z-1"
     >
-      {% if can_add_to_cart %}
-        <span
-          aria-hidden="true"
-          class="svg-wrapper add-to-cart-icon"
-        >
-          {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
-        </span>
-      {% endif %}
       <span class="add-to-cart-text__content{% if icon_only_on_mobile %} is-visually-hidden-mobile{% endif %}">
         <span>
-          <span>
-            {{- add_to_cart_text | default: default_add_to_cart_text -}}
+          <span class="font-kurdis-condensed font-bold text-lg uppercase">
+            Add to Cart - <span data-price>{{ product.selected_or_first_available_variant.price | money_without_trailing_zeros }}</span>
           </span>
         </span>
       </span>
     </span>
-    {% comment %} checkmark burst markup {% endcomment %}
-    <span class="add-to-cart__added">
-      <span class="svg-wrapper add-to-cart__added-icon">
-        {{- 'icon-checkmark-burst.svg' | inline_asset_content -}}
-      </span>
+    <svg preserveAspectRatio="none" class="absolute w-full h-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 402 61" fill="none">
+      <path d="M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z"/>
+    </svg>
+
+    <span class="add-to-cart__loading absolute inset-0 z-2 items-center justify-center" aria-hidden="true">
+      <span class="animate-spin rounded-full h-4 w-4 border-2 border-dashed border-dash-offset-5 border-cream"></span>
     </span>
   </button>
 </add-to-cart-component>
+{%- if notify_swap -%}
+  <div class="restock-notify-trigger" x-data>
+    <button
+      type="button"
+      class="button group restock-notify-trigger__button relative !bg-transparent !h-[60px] shadow-button"
+      @click="$dispatch('modal-open', { modal: 'restock-notify', variant: $el.closest('product-form-component')?.querySelector('input[name=id]')?.value })"
+    >
+      <span class="add-to-cart-text relative z-2">
+        <span class="add-to-cart-text__content">
+          <span><span class="font-kurdis-condensed font-bold text-lg uppercase">Get Notified When Available</span></span>
+        </span>
+      </span>
+      <svg preserveAspectRatio="none" class="absolute w-full h-full fill-espresso group-hover:fill-gold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 402 61" fill="none">
+        <path d="M3.72092 6.34305C0.560452 9.88125 0.433767 14.051 0.380426 18.0481C0.25374 27.5605 0.133722 37.0689 0.00703692 46.5812C-0.0263014 49.1662 -0.0196337 51.8571 1.92065 54.1754C6.59468 59.7494 12.4956 60.9654 29.9515 60.9654C147.036 60.9654 264.126 61.1733 381.217 60.5693C385.371 60.5496 389.932 60.6752 393.339 59.2748C402.573 55.4816 401.567 48.5504 401.287 43.4078C400.767 33.8327 402 25.964 402 16.3849C402 9.68512 400.727 6.9942 396.953 4.34252C392.119 0.94161 382.05 1.08675 374.509 0.996527C324.929 0.396367 275.321 0.0864809 225.721 0.0158739C175.8 -0.0586558 125.879 0.12963 75.9583 0.572885C61.8762 0.698409 47.8008 0.843545 33.7254 1.01222C23.0971 1.13774 9.61513 -0.243019 3.72092 6.34305Z" />
+      </svg>
+    </button>
+  </div>
+</div>
+{%- endif -%}
+
+{% stylesheet %}
+  .add-to-cart__loading {
+    display: none;
+  }
+
+  .restock-notify-trigger {
+    display: none;
+  }
+
+  .restock-notify-trigger__button {
+    width: 100%;
+  }
+
+  .atc-with-notify:has(.add-to-cart-button:disabled) > add-to-cart-component {
+    display: none;
+  }
+
+  .atc-with-notify:has(.add-to-cart-button:disabled) .restock-notify-trigger {
+    display: block;
+  }
+
+  .button.add-to-cart--loading .add-to-cart__loading {
+    display: flex;
+  }
+
+  .button.add-to-cart--loading .add-to-cart-text,
+  .button.add-to-cart--loading .add-to-cart__added {
+    visibility: hidden;
+  }
+{% endstylesheet %}

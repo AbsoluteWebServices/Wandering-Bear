@@ -393,6 +393,10 @@ class ProductFormComponent extends Component {
 
     const fetchCfg = fetchConfig('javascript', { body: formData });
 
+    for (const container of allAddToCartContainers) {
+      container.refs.addToCartButton?.classList.add('add-to-cart--loading');
+    }
+
     fetch(Theme.routes.cart_add_url, {
       ...fetchCfg,
       headers: {
@@ -483,6 +487,9 @@ class ProductFormComponent extends Component {
         console.error(error);
       })
       .finally(() => {
+        for (const container of allAddToCartContainers) {
+          container.refs.addToCartButton?.classList.remove('add-to-cart--loading');
+        }
         if (event) {
           cartPerformance.measureFromEvent('add:user-action', event);
         }
@@ -656,7 +663,8 @@ class ProductFormComponent extends Component {
     }
 
     const { addToCartButtonContainer: currentAddToCartButtonContainer, acceleratedCheckoutButtonContainer } = this.refs;
-    const currentAddToCartButton = currentAddToCartButtonContainer?.refs.addToCartButton;
+    const gcAddToCartButton = currentAddToCartButtonContainer?.querySelector('.gvlo-gift-card-trigger');
+    const currentAddToCartButton = currentAddToCartButtonContainer?.refs.addToCartButton
 
     // Update state and text for add-to-cart button
     if (!currentAddToCartButtonContainer || (!currentAddToCartButton && !acceleratedCheckoutButtonContainer)) return;
@@ -667,6 +675,11 @@ class ProductFormComponent extends Component {
     } else {
       currentAddToCartButtonContainer.enable();
     }
+
+    // Enable the gift card add to cart button if it exists
+    if (gcAddToCartButton) {
+      gcAddToCartButton.disabled = false;
+    } 
 
     const newAddToCartButton = event.detail.data.html.querySelector('product-form-component [ref="addToCartButton"]');
     if (newAddToCartButton && currentAddToCartButton) {
