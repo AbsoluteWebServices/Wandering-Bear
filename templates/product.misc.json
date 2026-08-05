@@ -163,9 +163,6 @@
               "settings": {
                 "variant_style": "dropdowns",
                 "show_swatches": true,
-                "option_label_text_color": "",
-                "variant_style_class": "default",
-                "alignment": "left",
                 "padding-block-start": 0,
                 "padding-block-end": 8,
                 "padding-inline-start": 0,
@@ -222,13 +219,27 @@
                 }
               },
               "block_order": []
+            },
+            "cross_sell_LkUk6g": {
+              "type": "cross-sell",
+              "name": "Cross Sell Call-out",
+              "settings": {
+                "color_scheme": "scheme-40eec688-b970-4f1a-96a1-8b50c977616b",
+                "image": "shopify://shop_images/3f3d11dcd1b175853b80f970707145ec401faff7.png",
+                "title": "Looking for cold brew on‑the‑go?",
+                "subtitle": "Try our new cold brew lattes, available in 3 flavors!",
+                "button_label": "Shop Now",
+                "button_link": "/"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
             "group_DQfeg6",
             "variant_picker_simple_4t4Hpi",
             "divider_VJhene",
-            "buy_buttons_eYQEYi"
+            "buy_buttons_eYQEYi",
+            "cross_sell_LkUk6g"
           ]
         }
       },
