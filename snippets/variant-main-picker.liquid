@@ -109,6 +109,9 @@
                   {% if product_option_value.variant.id %}
                     data-variant-id="{{ product_option_value.variant.id }}"
                   {% endif %}
+                  {% if product_option_value.variant.featured_media.position %}
+                    data-featured-media-position="{{ product_option_value.variant.featured_media.position }}"
+                  {% endif %}
                   {% if product_option_value.selected %}
                     data-current-checked="true"
                     checked
@@ -172,7 +175,7 @@
               class="variant-option__label font-gothic__condensed text-bear-black text-base uppercase"
               id="{{ vs_base }}-label"
             >
-            {% if product_option.name == 'Size' or product_option.name == 'Color' %}
+            {% if product_option.name == 'Size' or product_option.name == 'Color' or product_option.name == 'Value' %}
               Select
             {% endif %}
               {{- product_option.name | escape -}}
@@ -238,6 +241,9 @@
                       {% if product_option_value.variant.id %}
                         data-variant-id="{{ product_option_value.variant.id }}"
                       {% endif %}
+                      {% if product_option_value.variant.featured_media.position %}
+                        data-featured-media-position="{{ product_option_value.variant.featured_media.position }}"
+                      {% endif %}
                       {% if product_option_value.selected %}
                         data-current-checked="true"
                         checked
@@ -246,10 +252,6 @@
                       {% endif %}
                     >
                     <span class="variant-select__option-text">{{- product_option_value | escape -}}</span>
-                   
-                    {% comment %} <span class="variant-select__check svg-wrapper" aria-hidden="true">
-                      {{- 'icon-checkmark.svg' | inline_asset_content -}}
-                    </span> {% endcomment %}
                   </label>
                 {%- endfor -%}
               </fieldset>
@@ -263,6 +265,7 @@
       </script>
     </form>
   </variant-picker>
+  <script src="{{ 'variant-media-bridge.js' | asset_url }}" type="module" fetchpriority="low"></script>
 {% endunless %}
 
 {% stylesheet %}
@@ -326,6 +329,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     text-transform: uppercase;
+  }
+
+  /* Gift card: no amount chosen yet — show the placeholder muted until the shopper picks. */
+  .variant-select__value--placeholder {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.6));
   }
 
   .variant-select__caret {

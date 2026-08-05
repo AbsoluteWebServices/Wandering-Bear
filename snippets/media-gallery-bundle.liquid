@@ -22,7 +22,12 @@
         assign product_media = bundle_product.media
     endif
 
-    if template.suffix == 'misc' or template.suffix == 'simple'
+    assign simple_template = false
+    if template.suffix == 'misc' or template.suffix == 'simple' or template.suffix == 'gift-card'
+        assign simple_template = true
+    endif
+
+    if simple_template
         assign media_fit = 'contain'
     else
         assign media_fit = 'cover'

@@ -104,7 +104,11 @@ function selectOption(root, option) {
     candidate.setAttribute('tabindex', selected ? '0' : '-1');
   });
 
-  if (value) value.textContent = option.dataset.valueText ?? (option.textContent || '').trim();
+  if (value) {
+    value.textContent = option.dataset.valueText ?? (option.textContent || '').trim();
+    // Once a real option is chosen the label is no longer a placeholder (gift card).
+    value.classList.remove('variant-select__value--placeholder');
+  }
 
   if (!input.checked) {
     input.checked = true;

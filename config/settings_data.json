@@ -167,6 +167,11 @@
         "settings": {
           "enable_stay_bundles": false
         }
+      },
+      "7586417359830130585": {
+        "type": "shopify://apps/govalo/blocks/app-embed/0261c814-5eb7-41a0-a529-3dcb870c5415",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {

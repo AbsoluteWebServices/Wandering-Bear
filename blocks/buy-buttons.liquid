@@ -33,6 +33,11 @@
       assign add_to_cart_text = 'products.product.unavailable' | t
     endif
   endif
+
+  assign simple_template = false
+  if template.suffix == 'misc' or template.suffix == 'simple' or template.suffix == 'gift-card'
+    assign simple_template = true
+  endif
 %}
 
 <span
@@ -40,6 +45,10 @@
   {{ block.shopify_attributes }}
 >
   {%- if product != blank -%}
+    {%- if template.suffix == 'gift-card' -%}
+      {%- comment -%} Keeps the submit disabled until an amount is chosen (no default selection). {%- endcomment -%}
+      <script src="{{ 'gift-card-amount.js' | asset_url }}" type="module" fetchpriority="high"></script>
+    {%- endif -%}
     {%- assign product_form_id = 'BuyButtons-ProductForm-' | append: section.id -%}
     <product-form-component
       data-section-id="{{ section.id }}"
@@ -61,7 +70,11 @@
           type="hidden"
           name="id"
           ref="variantId"
-          value="{{ product.selected_or_first_available_variant.id }}"
+          {%- comment -%}
+            Gift card template starts with no amount chosen, so submit no variant id until the
+            shopper picks one. Native product-form.js (#onVariantUpdate) fills this on selection.
+          {%- endcomment -%}
+          value="{% unless template.suffix == 'gift-card' %}{{ product.selected_or_first_available_variant.id }}{% endunless %}"
         >
         {%- if block_settings.gift_card_form and product.gift_card? -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
@@ -365,7 +378,7 @@
 {% endif %}
 
 {%- comment -%} Back-in-stock notify modal for the native/simple template (opened from the sold-out ATC swap). {%- endcomment -%}
-{%- if template.suffix == 'misc' and product != blank -%}
+{%- if simple_template and product != blank -%}
   {% render 'restock-notify-modal' %}
 {%- endif -%}
 

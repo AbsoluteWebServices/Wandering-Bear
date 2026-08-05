@@ -190,8 +190,12 @@
   # variant-main-picker → <product-form>/<variant-picker> web components) must NOT get the
   # Alpine productForm x-data wrapper, or Alpine intercepts the default variantUpdate events.
   # Every other product template (and page landing pages) still relies on productForm().
+  assign simple_template = false
+  if template.suffix == 'misc' or template.suffix == 'simple' or template.suffix == 'gift-card'
+    assign simple_template = true
+  endif
   assign uses_default_variant_wiring = false
-  if template.suffix == 'misc'
+  if simple_template
     assign uses_default_variant_wiring = true
   endif
 -%}

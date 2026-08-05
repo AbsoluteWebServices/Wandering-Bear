@@ -663,7 +663,8 @@ class ProductFormComponent extends Component {
     }
 
     const { addToCartButtonContainer: currentAddToCartButtonContainer, acceleratedCheckoutButtonContainer } = this.refs;
-    const currentAddToCartButton = currentAddToCartButtonContainer?.refs.addToCartButton;
+    const gcAddToCartButton = currentAddToCartButtonContainer?.querySelector('.gvlo-gift-card-trigger');
+    const currentAddToCartButton = currentAddToCartButtonContainer?.refs.addToCartButton
 
     // Update state and text for add-to-cart button
     if (!currentAddToCartButtonContainer || (!currentAddToCartButton && !acceleratedCheckoutButtonContainer)) return;
@@ -674,6 +675,11 @@ class ProductFormComponent extends Component {
     } else {
       currentAddToCartButtonContainer.enable();
     }
+
+    // Enable the gift card add to cart button if it exists
+    if (gcAddToCartButton) {
+      gcAddToCartButton.disabled = false;
+    } 
 
     const newAddToCartButton = event.detail.data.html.querySelector('product-form-component [ref="addToCartButton"]');
     if (newAddToCartButton && currentAddToCartButton) {
