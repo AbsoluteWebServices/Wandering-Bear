@@ -199,16 +199,9 @@
                 >
                   {{- product_option.selected_value -}}
                 </span>
-                <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  class="icon icon-caret variant-select__caret"
-                  viewBox="0 0 10 6"
-                >
-                  {%- render 'icon', icon: 'caret' -%}
-                </svg>
+                
+                  {%- render 'icons', icon: 'chevron-down' -%}
               </button>
-
               <fieldset
                 class="variant-select__listbox"
                 id="{{ vs_base }}-listbox"
@@ -254,9 +247,7 @@
                       {% endif %}
                     >
                     <span class="variant-select__option-text">{{- product_option_value | escape -}}</span>
-                    {%- if product_option_value.available == false -%}
-                      <span class="variant-select__option-status">{{ 'content.unavailable' | t }}</span>
-                    {%- endif -%}
+                   
                     <span class="variant-select__check svg-wrapper" aria-hidden="true">
                       {{- 'icon-checkmark.svg' | inline_asset_content -}}
                     </span>
@@ -306,7 +297,7 @@
     text-align: start;
     color: var(--color-foreground);
     background-color: var(--color-background);
-    border: var(--style-border-width-inputs) solid var(--color-border);
+    border: var(--style-border-width-inputs) solid #CFBDB1;
     border-radius: var(--style-border-radius-inputs);
     cursor: pointer;
   }
@@ -345,7 +336,6 @@
   .variant-select__listbox {
     /* reset <fieldset> defaults */
     margin: 0;
-    padding: calc(var(--padding-xs) / 1);
     border: 0;
     min-inline-size: 0;
 
@@ -356,7 +346,6 @@
     z-index: 5;
     display: flex;
     flex-direction: column;
-    gap: var(--gap-2xs, 2px);
     max-height: 320px;
     overflow-y: auto;
     color: var(--color-foreground);
@@ -383,8 +372,11 @@
     align-items: center;
     gap: var(--gap-sm);
     padding: var(--padding-sm) var(--padding-md);
-    border-radius: calc(var(--style-border-radius-popover) / 2);
     cursor: pointer;
+     
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #CFBDB1;
+    }
   }
 
   .variant-select__option:hover {
