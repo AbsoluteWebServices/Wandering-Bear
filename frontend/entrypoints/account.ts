@@ -417,8 +417,28 @@ async function hydrate(): Promise<void> {
   }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', hydrate, { once: true });
-} else {
+/** QA #49: the order-history timeframe control is a transparent <select> stretched over the whole
+ *  box so a tap anywhere opens the native picker. That means the visible value is our own styled
+ *  text, not the select's, so mirror the chosen option into it. Runs outside hydrate() — it is
+ *  plain DOM wiring and must work even when the worker is unreachable. */
+function wireTimeframe(): void {
+  document.querySelectorAll<HTMLSelectElement>('[data-wb-timeframe]').forEach((select) => {
+    const label = select.parentElement?.querySelector<HTMLElement>('[data-wb-timeframe-value]');
+    if (!label) return;
+    label.textContent = select.value;
+    select.addEventListener('change', () => {
+      label.textContent = select.value;
+    });
+  });
+}
+
+function init(): void {
+  wireTimeframe();
   void hydrate();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init, { once: true });
+} else {
+  init();
 }
