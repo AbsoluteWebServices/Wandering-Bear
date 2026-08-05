@@ -453,7 +453,7 @@
         "heading_lh": "1.09",
         "heading_gap": 0,
         "heading_wrap_pad_bottom": 0,
-        "title_pad_top": 0,
+        "title_pad_top": 10,
         "body": "<p>Today, Wandering Bear makes super-premium cold brew in exciting <br>flavors and formats, plus high protein cold brew lattes with 11 grams of protein <br>and just 6 grams of sugar, all built on the same brew we've been perfecting since 2014. <strong>Find us nationwide</strong> at Whole Foods, Sprouts, Target, and Costco, online at Amazon and Thrive Market, and right here on our site.</p>",
         "body_size": 15,
         "body_lh": "1.38",
