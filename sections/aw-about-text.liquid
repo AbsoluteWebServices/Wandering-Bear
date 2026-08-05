@@ -513,8 +513,22 @@
         {% comment %} Figma's mobile frame runs the first two body paragraphs together as one block,
            so the blank line between them is dropped (QA r42). {% endcomment %}
         {% if s.merge_paras_mobile %}
+          {% comment %} Closing the gap still left a line break, since the paragraphs are blocks.
+             Running them inline makes the copy continue on the same line, with ::before supplying
+             the sentence space the markup no longer provides. {% endcomment %}
+          .wb-about-text--{{ section.id }} .wb-about-text__body > p:nth-of-type(1),
           .wb-about-text--{{ section.id }} .wb-about-text__body > p:nth-of-type(2) {
+            display: inline !important;
             margin-top: 0 !important;
+          }
+          .wb-about-text--{{ section.id }} .wb-about-text__body > p:nth-of-type(2)::before {
+            content: " ";
+          }
+        {% endif %}
+        {% if s.body_pad_x_mobile != blank %}
+          .wb-about-text--{{ section.id }} .wb-about-text__body {
+            padding-left: {{ s.body_pad_x_mobile }}px !important;
+            padding-right: {{ s.body_pad_x_mobile }}px !important;
           }
         {% endif %}
         {% comment %} Two-column text column (Super Premium): extra side padding on mobile. {% endcomment %}
@@ -873,8 +887,8 @@
       line-height: 1.29 !important;
     }
     .wb-about-text__body {
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-left: 15px;
+      padding-right: 15px;
     }
   }
 
@@ -1481,6 +1495,7 @@
       "default": false
     },
     { "type": "checkbox", "id": "merge_paras_mobile", "label": "Merge first two paragraphs on mobile", "default": false },
+    { "type": "text", "id": "body_pad_x_mobile", "label": "Body side padding — mobile px" },
     { "type": "text", "id": "body_break_mobile", "label": "Body: break before this phrase on mobile" },
     {
       "type": "number",
