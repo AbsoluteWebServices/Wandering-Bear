@@ -214,11 +214,9 @@
 [data-wb-autoship-items] {
     margin-bottom: 6px;
 }
-@media (min-width: 1024px) {
-    [data-wb-autoship-items] {
-        margin-bottom: 15px;
-    }
-}
+/* QA #51: desktop kept a 15px gap from the last line item to the Manage/Reactivate button, which
+   read as too airy next to the tightened cards. Matched to the 6px the mobile layout already uses
+   (Figma's own desktop figure is ~14px, but QA asked for it smaller). */
 
 /* Pin the autoship Manage/Reactivate button to the bottom of the card so it aligns with the
    credit card's Redeem button when the two stretch to equal height. In CSS (not the Tailwind
@@ -476,10 +474,10 @@ body.no-scroll {
 }
 
 /* ---- Order-history timeframe control ------------------------------------ */
-/* QA #20: the control had no hover feedback at all. Same language as .hover-underline
-   (underline stays, colour shifts to gold) so it reads as interactive. */
-.wb-timeframe:hover .wb-timeframe__select,
-.wb-timeframe__select:hover {
+/* QA #20 (round 2): the hover belongs to the label text only — round 1 put it on the dropdown
+   value, which QA asked to undo. Same language as .hover-underline so the control still reads as
+   interactive. The whole box is the hover target because the <select> covers it (QA #49). */
+.wb-timeframe:hover .wb-timeframe__label {
     color: var(--color-dark-gold);
     text-decoration: underline;
 }

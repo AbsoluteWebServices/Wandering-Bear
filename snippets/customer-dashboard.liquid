@@ -97,10 +97,13 @@
     an inline wrapper around the name — zero layout width, so the name centres on the real text. {%- endcomment -%}
   <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[28px] md:!text-[36px] leading-none">
     <span class="relative inline-block">{{ 'customer.account.welcome' | t: first_name: fname }}
-      {%- comment -%} QA #1 (round 2): Figma vector 1:380 has rotation +0.0696rad = +4°, but Figma
-        measures rotation counter-clockwise while CSS `rotate()` goes clockwise — so the Figma tilt is
-        `-4deg` in CSS. Text #E4B850 on gold. {%- endcomment -%}
-      <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 -rotate-[4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
+      {%- comment -%} QA #50: tilt restored to Figma's direction. Figma vector 1:380 has
+        rotation +0.0696rad = +3.99°, and the mapping to CSS is same-sign here — the calibration is
+        the "YOUR CREDIT:" label (node 1:53), which Figma gives as -0.0347rad = -1.99° and which
+        this theme has always rendered as rotate-[-1.99deg] with no QA objection. Round 1 flipped
+        this to -4deg on the assumption that Figma measures counter-clockwise; that was wrong.
+        Text #E4B850 on gold. {%- endcomment -%}
+      <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 rotate-[4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
     </span>
   </h1>
   <a href="{{ routes.account_logout_url }}" class="wb-welcome__logout font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
@@ -305,20 +308,25 @@
       <div class="font-gothic_condensed font-extrabold text-[16px] leading-none uppercase text-bear-black mt-2">{{ 'customer.dashboard.all_orders' | t }}</div>
     </div>
     {%- comment -%} Timeframe filter (Figma). TODO: wire to order filtering (JS/worker).
-      QA #20: needs a hover state; QA #32: mobile gets a 175x36 r5 box (Figma "Rectangle 10511").
-      Both live on .wb-timeframe in account.css. {%- endcomment -%}
-    <div class="wb-timeframe flex items-center !gap-2 shrink-0">
-      <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-bear-black whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
+      QA #32: mobile gets a 175x36 r5 box (Figma "Rectangle 10511") — see .wb-timeframe.
+      QA #49: the whole box has to be clickable, not just the <select>. The select is stretched
+        over the entire control and made transparent, so a tap anywhere — including on the
+        "Timeframe:" label and the padding — opens the native picker. The visible value is our own
+        styled text, kept in sync by account.ts (data-wb-timeframe-value).
+      QA #20: hover belongs to the label text only, not the dropdown value — see account.css. {%- endcomment -%}
+    <div class="wb-timeframe relative flex items-center !gap-2 shrink-0">
+      <span class="wb-timeframe__label font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-bear-black whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
       <div class="inline-flex items-center !gap-1.5">
-        {%- comment -%} QA #11: leading-none on a <select> clips Kurdis ascenders in Chrome — give the line room. {%- endcomment -%}
-        <select class="wb-timeframe__select appearance-none bg-transparent font-kurdis-semi-condensed font-bold text-[10px] leading-[1.4] text-center text-bear-black focus:outline-none cursor-pointer">
-          <option>Last 3 Months</option>
-          <option>Last 6 Months</option>
-          <option>Last Year</option>
-          <option>All Time</option>
-        </select>
+        {%- comment -%} QA #11: leading-none clips Kurdis ascenders in Chrome — give the line room. {%- endcomment -%}
+        <span class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.4] text-center text-bear-black whitespace-nowrap" data-wb-timeframe-value>Last 3 Months</span>
         <svg class="w-3 h-3 shrink-0 text-bear-black pointer-events-none" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
+      <select class="wb-timeframe__select absolute inset-0 w-full h-full opacity-0 cursor-pointer appearance-none" aria-label="{{ 'customer.dashboard.timeframe' | t | strip }}" data-wb-timeframe>
+        <option>Last 3 Months</option>
+        <option>Last 6 Months</option>
+        <option>Last Year</option>
+        <option>All Time</option>
+      </select>
     </div>
   </div>
   {%- endif -%}
