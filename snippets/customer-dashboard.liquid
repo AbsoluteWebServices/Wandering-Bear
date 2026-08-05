@@ -175,7 +175,10 @@
         {%- comment -%} Active-count badge (default) + Cancelled badge; account.ts shows one via
           data-wb-autoship-state. Count is empty in the real render (account.ts fills it) and
           pre-filled when the QA preview passes autoship_count. {%- endcomment -%}
-        <span class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}">{%- if autoship_count != blank -%}{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}{%- endif -%}</span>
+        {%- comment -%} The count badge points at the same Stay AI portal as "Manage Upcoming
+          Orders" — it names the subscriptions, so it should open them too. Kept as the same element
+          account.ts already fills via data-wb-autoship-count, just as an <a>. {%- endcomment -%}
+        <a href="{{ manage_url }}" class="inline-flex items-center whitespace-nowrap shrink-0 min-w-[80px] h-[20px] px-[10px] rounded-[10px] font-kurdis-semi-condensed font-bold text-[12px] leading-none text-espresso bg-sky-blue transition-opacity hover:opacity-80" data-wb-autoship-count data-wb-count-template="{{ 'customer.dashboard.active_autoships' | t: count: '__N__' }}">{%- if autoship_count != blank -%}{{ 'customer.dashboard.active_autoships' | t: count: autoship_count }}{%- endif -%}</a>
         <span class="wb-autoship-cancelled" data-wb-autoship-cancelled>{{ 'customer.dashboard.cancelled' | t }}</span>
       </div>
       <div class="wb-autoship-head flex items-baseline justify-between !gap-2">

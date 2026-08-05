@@ -213,15 +213,17 @@ export default (Alpine: AlpineType) => {
     },
 
     /** Where to land after Shopify stores the code on the cart session.
-     *  QA #48: /cart with an empty cart bounces the member to the home page, which reads as though
-     *  applying the code did nothing. With nothing in the cart we send them to the catalogue
-     *  instead, so the code they just applied has something to be spent on. The same fallback is
-     *  used when /cart.js is unreachable — the catalogue never bounces, /cart might. */
+     *  QA #48: an empty cart sent to /cart bounces the member to the home page, which reads as
+     *  though applying the code did nothing — so with nothing in the cart we open the catalogue,
+     *  giving the code something to be spent on. When the cart already has items there is nothing
+     *  left to shop for, so we take them straight to checkout where the discount is applied.
+     *  The catalogue is also the fallback if /cart.js is unreachable: it never bounces, and it is
+     *  the safer of the two to guess wrong on. */
     async applyRedirect(): Promise<string> {
       try {
         const res = await fetch('/cart.js', { headers: { Accept: 'application/json' } })
         const cart = (await res.json()) as { item_count?: number }
-        return (cart.item_count ?? 0) > 0 ? '/cart' : '/collections/all'
+        return (cart.item_count ?? 0) > 0 ? '/checkout' : '/collections/all'
       } catch {
         return '/collections/all'
       }
