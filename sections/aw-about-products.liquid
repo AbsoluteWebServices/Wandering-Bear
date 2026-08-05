@@ -45,7 +45,17 @@
     {% if products.size > 0 %}
       <div class="wb-about-products__grid">
         {% for block in products %}
-          <div class="wb-about-products__cell" {{ block.shopify_attributes }}>
+          {%- comment -%}
+            A card with a link renders as <a> so the whole tile is the hit area; without one it
+            stays a plain <div>, so cards that lead nowhere are not announced as links.
+          {%- endcomment -%}
+          {%- liquid
+            assign cell_tag = 'div'
+            if block.settings.link != blank
+              assign cell_tag = 'a'
+            endif
+          -%}
+          <{{ cell_tag }} class="wb-about-products__cell{% if block.settings.link != blank %} wb-about-products__cell--link{% endif %}"{% if block.settings.link != blank %} href="{{ block.settings.link }}"{% endif %} {{ block.shopify_attributes }}>
             <div class="wb-about-products__card">
               {% if block.settings.image != blank %}
                 {% render 'picture', source: block.settings.image, class: 'w-full h-full object-cover', alt: block.settings.label, width: 640, height: 680, loading: 'lazy' %}
@@ -58,7 +68,7 @@
                 {{ block.settings.label }}
               </span>
             {% endif %}
-          </div>
+          </{{ cell_tag }}>
         {% endfor %}
       </div>
     {% endif %}
@@ -235,6 +245,31 @@
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
   }
 
+  /* A card with a link is an <a>, so it has to be stripped of the default link styling and keep
+     the label colour the block sets. The whole tile is the hit area. */
+  .wb-about-products__cell--link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .wb-about-products__cell--link:hover,
+  .wb-about-products__cell--link:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.16);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wb-about-products__cell--link {
+      transition: none;
+    }
+    .wb-about-products__cell--link:hover,
+    .wb-about-products__cell--link:focus-visible {
+      transform: none;
+    }
+  }
+
   .wb-about-products__card {
     width: 100%;
     aspect-ratio: 252 / 296;
@@ -317,6 +352,10 @@
      that matches the surroundings and the multiply box has no visible edges. */
   .wb-about-products__paw-img {
     position: relative;
+    /* Soft shadow under the paw (QA r75), at every width. drop-shadow follows the PNG's alpha, so
+       it hugs the fur instead of boxing the element. On mobile the paw bleeds past the left edge,
+       so only the top and right of the shadow are in view. */
+    filter: drop-shadow(0 16px 18px rgba(27, 27, 27, 0.32));
     /* Transparent PNG cut-out (ab-bearhand.png) — shown directly, no multiply/gradient knock-out.
        Mobile (Figma 1694:245 BearHand: 642×541 ≈ the image's native ratio, bled off the left edge). */
     /* Tuning knobs (edit these numbers):
@@ -337,11 +376,11 @@
     z-index: 0;
     background-image: var(--paw-img);
     background-repeat: no-repeat;
-    {%- comment -%}
+    /*
       background-position X is a percentage of the OVERFLOW, and the artwork is wider than its box,
       so a larger value slides the paw further LEFT. 112% sat too far right on a phone — the glass
       almost touched the right edge — so nudge it over.
-    {%- endcomment -%}
+    */
     background-position: center;
     background-size: 100% 100%;
     pointer-events: none;
@@ -470,7 +509,7 @@
       max-width: calc(100% + 220px);
       aspect-ratio: 1087 / 608;
       /* bleed off the left edge of the content column (clipped by the section's overflow:hidden) */
-      margin: 40px 0 0 -197px;
+      margin: 5px 0 0 -197px;
       background-position: 86% 43%;
       /* zoom: bigger % = closer (tune here / in console). cover = minimum fill. */
       background-size: 130%;
@@ -484,6 +523,14 @@
       width: 76px;
       height: auto;
       transform: rotate(-10deg);
+    }
+
+    /* Tablet: the paw is pinned at -173 so it can bleed off the left edge, which takes 28% of it
+       off screen and with it the sticker. Park the sticker just inside the viewport instead. */
+    @media screen and (max-width: 1023px) {
+      .wb-about-products__paw-sticker {
+        left: 193px;
+      }
     }
 
     .wb-about-products__promises {
@@ -515,20 +562,21 @@
   @media screen and (max-width: 1023px) {
     .wb-about-products__script {
       font-size: var(--script-size-mobile) !important;
+      margin-bottom: 20px;
     }
   }
 
   /* Mobile: bigger number badges to match the Figma mobile design (digit 25px). Scoped to < 750px
      so the desktop badge (48px / 20px) is untouched. */
   @media screen and (max-width: 749px) {
-    {%- comment -%}
+    /*
       Card labels have to sit on ONE line (Figma). In Kurdis the longest label, "Cold Brew
       Concentrate", measures 273px at 18px — it cannot be squeezed into a half-of-375 card no matter
       how the padding is tuned. So mobile switches the label to the condensed face (137px at 14px)
       and the cards are widened toward the mockup: smaller page gutter, tighter column gap and less
       card padding, which also lets the photo fill more of the card as the design shows.
       Desktop is not matched here and keeps Kurdis at 18px.
-    {%- endcomment -%}
+    */
     .wb-about-products__container {
       padding-left: 12px;
       padding-right: 12px;
@@ -538,11 +586,12 @@
       column-gap: 10px;
     }
 
+    /* Figma 1694:245: the label clears the tile's bottom edge by 11px. */
     .wb-about-products__cell {
-      padding: 12px 12px 14px;
+      padding: 12px 12px 11px;
     }
 
-    {%- comment -%} Figma 1694:245: card labels drop to 13px on mobile and stay on one line. {%- endcomment -%}
+    /* Figma 1694:245: card labels drop to 13px on mobile and stay on one line. */
     .wb-about-products__label {
       font-size: 13px;
       white-space: nowrap;
@@ -562,7 +611,8 @@
     .wb-about-products__paw-sub {
       font-size: 16px;
       line-height: 1.29;
-      margin: 30px auto 0;
+      /* Figma 1694:245: the sub-line sits 11px under the outlined PAW PROMISE glyphs. */
+      margin: 11px auto 0;
       max-width: 315px;
     }
     .wb-about-products__promise {
@@ -581,11 +631,14 @@
     .wb-about-products__promise-text {
       font-size: 13px;
       color: var(--promise-text-color-mobile, #431A03) !important;
-      padding-left: 32px;
-      padding-right: 32px;
+      /* Figma mobile: the copy runs 228 of the card's 279, i.e. ~28 either side (QA r66). */
+      padding-left: 42px;
+      padding-right: 42px;
     }
     .wb-about-products__promises {
-      gap: 56px;
+      /* Figma mobile: the badge of the next card clears the one above by 6px. The badge overhangs
+         its own card by 26, so the plates sit 32 apart (QA r67). */
+      gap: 32px;
       max-width: 370px;
       margin-left: auto;
       margin-right: auto;
@@ -851,7 +904,8 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "image_preview", "label": "Image preview asset (dev only)" },
-        { "type": "text", "id": "label", "label": "Label" }
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "url", "id": "link", "label": "Link (leave empty for a non-clickable card)" }
       ]
     },
     {

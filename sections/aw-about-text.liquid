@@ -9,6 +9,19 @@
 
 {% liquid
   assign s = section.settings
+
+  # Optional mobile-only line break: the phrase in body_break_mobile gets a <br> in front of it,
+  # hidden from the desktop breakpoint up. Injected here rather than typed into the setting because
+  # Shopify strips class attributes from authored HTML.
+  assign body_html = s.body
+  assign body_break_phrase = s.body_break_mobile | default: 'our mission'
+  if body_break_phrase != blank
+    capture body_break
+      echo '<br class="wb-br-mobile">'
+      echo body_break_phrase
+    endcapture
+    assign body_html = body_html | replace: body_break_phrase, body_break
+  endif
   assign color_scheme = s.color_scheme
   assign text_color = s.text_color | default: '#1B1B1B'
 
@@ -167,7 +180,7 @@
         {% endif %}
         {% if s.body != blank %}
           <div class="wb-about-text__body wb-about-text-body body [&_strong]:font-bold font-semibold font-(family-name:var(--font-kurdis-semi-condensed))! leading-[1.4]" style="color: {{ text_color }};">
-            {{ s.body }}
+            {{ body_html }}
           </div>
         {% endif %}
         {%- comment -%} Optional gold underline flourish centred under the copy (Figma). {%- endcomment -%}
@@ -500,14 +513,28 @@
         {% comment %} Figma's mobile frame runs the first two body paragraphs together as one block,
            so the blank line between them is dropped (QA r42). {% endcomment %}
         {% if s.merge_paras_mobile %}
+          {% comment %} Closing the gap still left a line break, since the paragraphs are blocks.
+             Running them inline makes the copy continue on the same line, with ::before supplying
+             the sentence space the markup no longer provides. {% endcomment %}
+          .wb-about-text--{{ section.id }} .wb-about-text__body > p:nth-of-type(1),
           .wb-about-text--{{ section.id }} .wb-about-text__body > p:nth-of-type(2) {
+            display: inline !important;
             margin-top: 0 !important;
+          }
+          .wb-about-text--{{ section.id }} .wb-about-text__body > p:nth-of-type(2)::before {
+            content: " ";
+          }
+        {% endif %}
+        {% if s.body_pad_x_mobile != blank %}
+          .wb-about-text--{{ section.id }} .wb-about-text__body {
+            padding-left: {{ s.body_pad_x_mobile }}px !important;
+            padding-right: {{ s.body_pad_x_mobile }}px !important;
           }
         {% endif %}
         {% comment %} Two-column text column (Super Premium): extra side padding on mobile. {% endcomment %}
         .wb-about-text--{{ section.id }} .wb-about-text__col.flex-1 {
-          padding-left: 20px !important;
-          padding-right: 20px !important;
+          padding-left: 10px !important;
+          padding-right: 10px !important;
         }
         {% unless s.text_center_mobile == false %}
         .wb-about-text--{{ section.id }} .wb-about-text__title { text-align: center !important; }
@@ -532,7 +559,7 @@
         {% endif %}
         {% if s.body != blank %}
           <div class="wb-about-text__body body leading-[1.4]" style="color: {{ text_color }};">
-            {{ s.body }}
+            {{ body_html }}
           </div>
         {% endif %}
       </div>
@@ -662,6 +689,42 @@
   {% endstyle %}
 {%- endif -%}
 
+{%- comment -%}
+  The title carries mb-5 in the markup, which is the desktop gap. Mobile sets its own distance to
+  the copy below per section (Figma 1694:245), so it needs !important to beat the utility class.
+{%- endcomment -%}
+{%- if s.title_gap_mobile != blank -%}
+  {% style %}
+    @media screen and (max-width: 749px) {
+      .wb-about-text--{{ section.id }} .wb-about-text__title {
+        margin-bottom: {{ s.title_gap_mobile }}px !important;
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- comment -%}
+  Desktop-only geometry. These are tuned against the 1280 design width, and the row still has to
+  fit a 768 tablet, so they start at 1024 rather than at the 750 breakpoint the rest of the row
+  layout uses — below that the column and the side image keep their original sizes.
+{%- endcomment -%}
+{%- if s.col_margin_left != blank or s.side_width_desktop != blank -%}
+  {% style %}
+    @media screen and (min-width: 1024px) {
+      {% if s.col_margin_left != blank %}
+        .wb-about-text--{{ section.id }} .wb-about-text__col.flex-1 {
+          margin-left: {{ s.col_margin_left }}px;
+        }
+      {% endif %}
+      {% if s.side_width_desktop != blank %}
+        .wb-about-text--{{ section.id }} .wb-about-text__img-col {
+          width: {{ s.side_width_desktop }}px !important;
+        }
+      {% endif %}
+    }
+  {% endstyle %}
+{%- endif -%}
+
 {%- if s.title_nowrap or s.title_offset != blank -%}
   {% style %}
     @media screen and (min-width: 750px) {
@@ -683,6 +746,13 @@
      headings are Kurdis Condensed ExtraBold, body copy Kurdis SemiCondensed SemiBold. Set here
      rather than on the shared display-md/body classes, since these aw-about-* sections are
      About-Us-only. */
+  /* Mobile-only line break helper (see body_break_mobile). */
+  .wb-br-mobile { display: inline; }
+
+  @media screen and (min-width: 750px) {
+    .wb-br-mobile { display: none; }
+  }
+
   .wb-about-text__title {
     font-family: var(--font-kurdis-condensed) !important;
     font-weight: 800 !important;
@@ -761,7 +831,12 @@
     width: 328px;
     max-width: 100%;
     height: 41px;
-    padding: 0 10px !important;
+    /* Parslay sits high in its em box, so the label reads as floating above the middle of the
+       plate. Nudge it down without resizing the plate: the height is border-box, so the padding
+       eats into the content box instead of growing the pill, and a centred flex line moves by
+       half the top padding. --pill-text-drop is the visual shift; the padding doubles it. */
+    box-sizing: border-box;
+    padding: calc(var(--pill-text-drop, 6px) * 2) 10px 0 !important;
     vertical-align: middle;
   }
 
@@ -788,7 +863,8 @@
       width: 276px !important;
       max-width: 100%;
       height: 41px !important;
-      padding: 0 10px !important;
+      box-sizing: border-box;
+      padding: calc(var(--pill-text-drop, 6px) * 2) 10px 0 !important;
       margin: 12px auto 0 !important;
       font-size: 18px !important;
       white-space: nowrap;
@@ -799,6 +875,10 @@
     .wb-about-text__body strong {
       font-size: 12px !important;
     }
+    {%- comment -%} Mobile pulls the gold call-out up against the line that introduces it (QA r80). {%- endcomment -%}
+    .wb-about-text__body > p.text-gold {
+      margin-top: 0 !important;
+    }
     .wb-about-text__body .text-gold,
     .wb-about-text__body p.text-gold,
     .wb-about-text__body .text-gold strong,
@@ -807,8 +887,8 @@
       line-height: 1.29 !important;
     }
     .wb-about-text__body {
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-left: 30px;
+      padding-right: 30px;
     }
   }
 
@@ -1013,6 +1093,8 @@
       "label": "Column width (e.g. 400px, 40%)",
       "visible_if": "{{ section.settings.col_abs }}"
     },
+    { "type": "text", "id": "col_margin_left", "label": "Text column margin-left px (desktop 1024+)" },
+    { "type": "text", "id": "side_width_desktop", "label": "Side image width px (desktop 1024+)" },
     {
       "type": "number",
       "id": "col_pad_top",
@@ -1413,6 +1495,8 @@
       "default": false
     },
     { "type": "checkbox", "id": "merge_paras_mobile", "label": "Merge first two paragraphs on mobile", "default": false },
+    { "type": "text", "id": "body_pad_x_mobile", "label": "Body side padding — mobile px" },
+    { "type": "text", "id": "body_break_mobile", "label": "Body: break before this phrase on mobile" },
     {
       "type": "number",
       "id": "plate_gutter_mobile",
@@ -1639,6 +1723,7 @@
       "label": "Mobile top photo aspect (e.g. 16 / 11)"
     },
     { "type": "text", "id": "side_mobile_width_pct", "label": "Mobile photo width % of copy column" },
+    { "type": "text", "id": "title_gap_mobile", "label": "Title gap below — mobile px" },
     { "type": "number", "id": "side_mobile_poke", "label": "Mobile photo poke above plate px" },
     { "type": "number", "id": "side_mobile_gap", "label": "Mobile photo gap below px" },
     { "type": "text", "id": "side_mobile_zoom", "label": "Mobile photo background-size" },
