@@ -24,7 +24,7 @@
             "width": 21,
             "rotate": -9,
             "left_mobile": "13",
-            "top_mobile": "21",
+            "top_mobile": "12.0",
             "width_mobile": "21",
             "rotate_mobile": "-9"
           }
@@ -39,7 +39,7 @@
             "width": 24,
             "rotate": 17,
             "left_mobile": "91",
-            "top_mobile": "28",
+            "top_mobile": "19.8",
             "width_mobile": "24",
             "rotate_mobile": "17"
           }
@@ -56,9 +56,9 @@
         "background_solid": "#BFD7E9",
         "padding-block-start": 3,
         "padding-block-end": 40,
-        "padding-block-start-mobile": 0,
+        "padding-block-start-mobile": 5,
         "padding-block-end-mobile": 24,
-        "preview_asset_mobile": "ab-hero-photo-mobile.png"
+        "preview_asset_mobile": "ab-hero-photo-mobile-trim.png"
       }
     },
     "pagebg": {
@@ -104,7 +104,7 @@
         "panel_radius_left": 0,
         "panel_radius_right": 20,
         "panel_overlap": 180,
-        "panel_overlap_mobile": 190,
+        "panel_overlap_mobile": 227,
         "section_min_height": 457,
         "panel_content_left": 210,
         "panel_content_right": 60,
