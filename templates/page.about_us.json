@@ -193,7 +193,7 @@
         "background_type": "transparent",
         "padding-block-start": 0,
         "padding-block-end": 40,
-        "padding-block-start-mobile": 20,
+        "padding-block-start-mobile": 48,
         "padding-block-end-mobile": 20,
         "wrapper_z": 3,
         "section_margin_bottom": 50,
@@ -206,7 +206,7 @@
         "overflow_visible": true,
         "plate_margin_bottom_mobile": 60,
         "plate_pad_y_mobile": 20,
-        "plate_pad_x_mobile": 55
+        "plate_pad_x_mobile": 75
       }
     },
     "howwedo": {
