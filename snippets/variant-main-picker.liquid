@@ -199,8 +199,7 @@
                 >
                   {{- product_option.selected_value -}}
                 </span>
-                
-                  {%- render 'icons', icon: 'chevron-down' -%}
+                  {%- render 'icons', icon: 'chevron-down', class: 'dropdown-indicator transition-transform duration-200' -%}
               </button>
               <fieldset
                 class="variant-select__listbox"
@@ -313,10 +312,6 @@
     cursor: pointer;
   }
 
-  .variant-select__trigger:hover {
-    border-color: var(--color-variant-hover-border);
-  }
-
   .variant-select__trigger:focus-visible {
     outline: var(--focus-outline-width) solid currentcolor;
     outline-offset: var(--focus-outline-offset);
@@ -351,7 +346,7 @@
     min-inline-size: 0;
 
     position: absolute;
-    top: calc(100% + var(--margin-2xs));
+    top: calc(100% - 4px);
     left: 0;
     right: 0;
     z-index: 5;
@@ -361,15 +356,18 @@
     overflow-y: auto;
     color: var(--color-foreground);
     background-color: var(--color-background);
-    border: var(--style-border-popover);
-    border-radius: var(--style-border-radius-popover);
-    box-shadow: var(--shadow-popover);
+    border: 1px solid #CFBDB1;
+    border-radius: 0px 0px 5px 5px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-4px);
     transition: opacity var(--animation-speed, 0.2s) var(--animation-easing, ease),
       transform var(--animation-speed, 0.2s) var(--animation-easing, ease),
       visibility var(--animation-speed, 0.2s) var(--animation-easing, ease);
+  }
+
+  .variant-select--open .dropdown-indicator {
+    transform: rotate(180deg);
   }
 
   .variant-select--open .variant-select__listbox {
@@ -405,6 +403,11 @@
 
   .variant-select__option-text {
     flex: 1 1 auto;
+    font-family: var(--font-gothic__condensed, 'Gothic Condensed');
+    font-weight: 800;
+    color: var(--color-bear-black);
+    font-size: 16px;
+    text-transform: uppercase;
   }
 
   .variant-select__option-status {
@@ -414,7 +417,6 @@
   }
 
   .variant-select__option--unavailable .variant-select__option-text {
-    text-decoration: line-through;
     opacity: 0.6;
   }
 

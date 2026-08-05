@@ -21,7 +21,19 @@
     else 
         assign product_media = bundle_product.media
     endif
+
+    if template.suffix == 'misc' or template.suffix == 'simple'
+        assign media_fit = 'contain'
+    else
+        assign media_fit = 'cover'
+    endif
 %}
+
+{% style %}
+    .media-fit {
+        object-fit: {{ media_fit }};
+    }
+{% endstyle %}
 
 <div data-media-gallery-bundle class="w-full overflow-hidden mx-auto md:mx-0 md:max-w-[545px]">
     <div class="flex flex-col gap-2 md:gap-4.25 md:!max-w-[545px]">
@@ -32,7 +44,7 @@
                         class="swiper-slide rounded-[5px] overflow-hidden{% if disable_gallery_background != true %} before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full before:bg-kraft/15 before:rounded-[5px] before:-z-1{% endif %}{% if media.height > media.width or media.height < media.width %}{% endif %}"
                         style="{{ slide_styles }}"
                     >
-                        {{ media | image_url: width: 600 | image_tag: class: 'w-full h-full object-cover object-center', style: 'object-position: center;', alt: media.alt }}
+                        {{ media | image_url: width: 600 | image_tag: class: 'w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt }}
                     </div>
                 {% endfor %}
             </div>
@@ -45,7 +57,7 @@
                         {% if forloop.first %} swiper-slide-thumb-active{% endif %}
                         style="{{ thumbnail_styles }}"
                     >
-                        {{ media | image_url: width: 600 | image_tag: class: 'w-full !h-full object-cover object-center scale-[1.1]', style: 'object-position: center;', alt: media.alt }}
+                        {{ media | image_url: width: 600 | image_tag: class: 'w-full !h-full media-fit object-center scale-[1.1]', style: 'object-position: center;', alt: media.alt }}
                     </div>
                 {% endfor %}
             </div>
