@@ -271,7 +271,7 @@
         "side_hide_mobile": true,
         "side_show_mobile_top": true,
         "side_mobile_pos": "75% 85%",
-        "side_mobile_aspect": "293 / 275",
+        "side_mobile_aspect": "308 / 305",
         "text_center_mobile": true,
         "background_type": "transparent",
         "padding-block-start": 40,
@@ -307,8 +307,8 @@
         "tablet_edge": "16",
         "tablet_badge_right": "0",
         "plate_pad_y_mobile": 20,
-        "side_radius_mobile": 16,
-        "side_mobile_poke": 80,
+        "side_radius_mobile": 24,
+        "side_mobile_poke": 96,
         "side_mobile_gap": 2
       }
     },
