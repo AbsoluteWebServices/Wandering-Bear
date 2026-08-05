@@ -101,6 +101,7 @@
       "redeem_partially": "Partially redeem",
       "redeem_amount_label": "Amount to redeem",
       "redeem_generate": "Generate code",
+      "redeem_generating": "Generating…",
       "redeem_your_code": "Your discount code",
       "redeem_copy": "Copy code",
       "redeem_copied": "Copied!",

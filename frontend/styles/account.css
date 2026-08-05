@@ -454,6 +454,25 @@ body.no-scroll {
 }
 .wb-redeem-btn:hover { opacity: 0.92; }
 .wb-redeem-btn:disabled { opacity: 0.6; pointer-events: none; }
+
+/* Spinner for the redeem button while the code is being generated. Sized off the button's own
+   font so it stays in proportion, and drawn in currentColor so it works on the gold button and on
+   the ghost variant alike. Honours prefers-reduced-motion. */
+.wb-spinner {
+    width: 1em;
+    height: 1em;
+    flex: none;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-top-color: currentColor;
+    animation: wb-spin 0.6s linear infinite;
+}
+@keyframes wb-spin {
+    to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .wb-spinner { animation-duration: 2.4s; }
+}
 .wb-redeem-btn--ghost {
     width: auto;
     height: auto;
