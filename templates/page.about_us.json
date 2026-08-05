@@ -134,7 +134,8 @@
         "flourish_hide_mobile": true,
         "plate_margin_bottom_mobile": 0,
         "plate_pad_y_mobile": 20,
-        "body_break_mobile": "our mission"
+        "body_break_mobile": "our mission",
+        "body_pad_x_mobile": "25"
       }
     },
     "believe": {
