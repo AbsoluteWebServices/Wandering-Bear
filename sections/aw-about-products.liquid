@@ -45,7 +45,17 @@
     {% if products.size > 0 %}
       <div class="wb-about-products__grid">
         {% for block in products %}
-          <div class="wb-about-products__cell" {{ block.shopify_attributes }}>
+          {%- comment -%}
+            A card with a link renders as <a> so the whole tile is the hit area; without one it
+            stays a plain <div>, so cards that lead nowhere are not announced as links.
+          {%- endcomment -%}
+          {%- liquid
+            assign cell_tag = 'div'
+            if block.settings.link != blank
+              assign cell_tag = 'a'
+            endif
+          -%}
+          <{{ cell_tag }} class="wb-about-products__cell{% if block.settings.link != blank %} wb-about-products__cell--link{% endif %}"{% if block.settings.link != blank %} href="{{ block.settings.link }}"{% endif %} {{ block.shopify_attributes }}>
             <div class="wb-about-products__card">
               {% if block.settings.image != blank %}
                 {% render 'picture', source: block.settings.image, class: 'w-full h-full object-cover', alt: block.settings.label, width: 640, height: 680, loading: 'lazy' %}
@@ -58,7 +68,7 @@
                 {{ block.settings.label }}
               </span>
             {% endif %}
-          </div>
+          </{{ cell_tag }}>
         {% endfor %}
       </div>
     {% endif %}
@@ -233,6 +243,31 @@
     border-radius: 14px;
     padding: 18px 18px 16px;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  /* A card with a link is an <a>, so it has to be stripped of the default link styling and keep
+     the label colour the block sets. The whole tile is the hit area. */
+  .wb-about-products__cell--link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .wb-about-products__cell--link:hover,
+  .wb-about-products__cell--link:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.16);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wb-about-products__cell--link {
+      transition: none;
+    }
+    .wb-about-products__cell--link:hover,
+    .wb-about-products__cell--link:focus-visible {
+      transform: none;
+    }
   }
 
   .wb-about-products__card {
@@ -867,7 +902,8 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "image_preview", "label": "Image preview asset (dev only)" },
-        { "type": "text", "id": "label", "label": "Label" }
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "url", "id": "link", "label": "Link (leave empty for a non-clickable card)" }
       ]
     },
     {
