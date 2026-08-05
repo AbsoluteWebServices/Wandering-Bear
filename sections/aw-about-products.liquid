@@ -592,11 +592,14 @@
     .wb-about-products__promise-text {
       font-size: 13px;
       color: var(--promise-text-color-mobile, #431A03) !important;
-      padding-left: 32px;
-      padding-right: 32px;
+      /* Figma mobile: the copy runs 228 of the card's 279, i.e. ~28 either side (QA r66). */
+      padding-left: 42px;
+      padding-right: 42px;
     }
     .wb-about-products__promises {
-      gap: 56px;
+      /* Figma mobile: the badge of the next card clears the one above by 6px. The badge overhangs
+         its own card by 26, so the plates sit 32 apart (QA r67). */
+      gap: 32px;
       max-width: 370px;
       margin-left: auto;
       margin-right: auto;
