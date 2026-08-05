@@ -377,7 +377,7 @@
         "two_col_gap": 41,
         "two_col_valign": "start",
         "side_image_preview": "ab-cold-brew-glass.png",
-        "side_width": 229,
+        "side_width": 259,
         "side_height": 358,
         "side_fit": true,
         "side_overflow_top": 13,
@@ -403,7 +403,8 @@
         "panel_height": 253,
         "plate_pad_y_mobile": 20,
         "title_gap_mobile": "5",
-        "col_margin_left": "25"
+        "col_margin_left": "25",
+        "side_width_desktop": "229"
       }
     },
     "started": {
