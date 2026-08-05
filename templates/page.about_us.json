@@ -204,7 +204,7 @@
         "fluid_min_filler": 24,
         "fluid_plate_edge": "right",
         "overflow_visible": true,
-        "plate_margin_bottom_mobile": 60,
+        "plate_margin_bottom_mobile": 20,
         "plate_pad_y_mobile": 20,
         "plate_pad_x_mobile": 75
       }
