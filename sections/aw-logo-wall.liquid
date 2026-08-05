@@ -1,6 +1,18 @@
 {% liquid
     assign button_text = section.settings.button_text
     assign button_url = section.settings.button_url
+    assign button_style = section.settings.button_style | default: 'secondary'
+    assign button_bg = section.settings.button_bg | default: '#AF7404'
+    assign button_text_color = section.settings.button_text_color | default: '#F2E6DC'
+    assign button_hover_bg = section.settings.button_hover_bg | default: button_bg
+    assign button_hover_text = section.settings.button_hover_text | default: button_text_color
+    assign button_size = section.settings.button_size | default: 'small'
+    assign title_type = section.settings.title_type
+    assign title = section.settings.title
+    assign title_color = section.settings.title_color
+    assign title_alt = section.settings.title_alt
+    assign title_image = section.settings.title_image
+    assign title_image_mobile = section.settings.title_image_mobile
 %}
 
 {%- comment -%}
@@ -15,9 +27,31 @@
     --logo-pb-mobile: {{ section.settings.padding_bottom_mobile | default: 6 }}px;
 {% endcapture %}
 
+{% capture title_styles %}
+    --font-size: {{ section.settings.font_size | default: 24 }}px;
+    --font-size-mobile: {{ section.settings.font_size_mobile | default: 24 }}px;
+{% endcapture %}
+
 <div class="relative overflow-hidden wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style' %} {{ wall_styles }}">
     {% render 'section-background', settings: section.settings, part: 'media' %}
     <div class="container aw-logo-wall__inner relative z-[1] max-w-[1132px] flex flex-col mx-auto !gap-[30px]{% if section.settings.grayscale %} aw-logo-wall--grayscale{% endif %}{% if section.settings.mobile_per_row == '3' %} aw-logo-wall--mobile-3{% endif %}">
+        {% if title_type == 'image' %}
+            {% if title_image != blank %}
+                <div class="aw-logo-wall__title-image mx-auto w-full max-w-[442px]">
+                    {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
+                </div>
+            {% endif %}
+        {% elsif title_type == 'text' %}
+            {% if title != blank %}
+                <span
+                    class="aw-logo-wall__title font-kurdis-condensed uppercase font-extrabold text-center leading-[130%] tracking-[-0.2px] smd:tracking-[-0.4px]"
+                    style="{% if title_color != blank %}color: {{ title_color }};{% endif %} {{ title_styles }}"
+                >
+                    {{ title | replace: '\n', '<br/>' }}
+                </span>
+            {% endif %}
+        {% endif %}
+
         <div class="aw-logo-wall__row max-w-[380px] sm:max-w-[450px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full gap-7 smd:!gap-0">
             {% for block in section.blocks %}          
                 <div class="aw-logo-wall__cell
@@ -40,12 +74,43 @@
         </div>
 
         {% if button_text != blank and button_url != blank %}
-            {% render 'wb-button', style: 'secondary-gold', class: 'mx-auto !w-[280px]', label: button_text, link: button_url %}
+            {% capture button_class %}mx-auto w-auto! !min-w-[280px] px-5! smd:px-7.5!{% if button_size == 'large' %} min-h-[61px]!{% endif %}{% endcapture %}
+            {% if button_style == 'custom' %}
+                {% render 'wb-button',
+                    style: 'custom',
+                    class: button_class,
+                    label: button_text,
+                    link: button_url,
+                    button_bg: button_bg,
+                    button_text: button_text_color,
+                    button_border: button_bg,
+                    button_hover_bg: button_hover_bg,
+                    button_hover_text: button_hover_text,
+                    button_hover_border: button_hover_bg
+                %}
+            {% else %}
+                {% render 'wb-button',
+                    style: button_style,
+                    class: button_class,
+                    label: button_text,
+                    link: button_url
+                %}
+            {% endif %}
         {% endif %}
     </div>
 </div>
 
 {% stylesheet %}
+    .aw-logo-wall__title {
+        font-size: var(--font-size-mobile) !important;
+    }
+
+    @media screen and (min-width: 1024px) {
+        .aw-logo-wall__title {
+            font-size: var(--font-size) !important;
+        }
+    }
+
     .aw-logo-wall__inner {
         padding-top: var(--logo-pt-mobile);
         padding-bottom: var(--logo-pb-mobile);
@@ -87,6 +152,79 @@
   "name": "AW Logo Wall",
   "settings": [
     {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_type",
+      "label": "Title Type",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "Use \\n to add a line break.",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font Size",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font Size Mobile",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.title_type == 'text' }}"
+    },
+    {
+      "type": "text",
+      "id": "title_alt",
+      "label": "Title Alt",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image",
+      "label": "Title Image",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_image_mobile",
+      "label": "Title Image Mobile",
+      "visible_if": "{{ section.settings.title_type == 'image' }}"
+    },
+    {
       "type": "text",
       "id": "button_text",
       "label": "Button Text"
@@ -95,6 +233,55 @@
       "type": "url",
       "id": "button_url",
       "label": "Button URL"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "secondary"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#AF7404",
+      "visible_if": "{{ section.settings.button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg",
+      "label": "Button hover background",
+      "default": "#431A03",
+      "visible_if": "{{ section.settings.button_style == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text",
+      "label": "Button hover text color",
+      "default": "#F2E6DC",
+      "visible_if": "{{ section.settings.button_style == 'custom' }}"
     },
     {
       "type": "checkbox",

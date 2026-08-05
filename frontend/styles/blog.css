@@ -243,6 +243,10 @@ main[data-template="article"] .social-icons__icon {
         gap: 23px !important;
     }
 
+    .featured-blog-posts-card__inner .featured-blog-posts-card__image {
+        height: 187px !important;
+    }
+
 }
 
 .featured-blog-posts-card a:focus-visible, 

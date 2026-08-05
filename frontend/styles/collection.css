@@ -1,0 +1,8 @@
+.product-card__content .image-block {
+    border-radius: 10px !important;
+    overflow: hidden !important;;
+}
+
+.collection-wrapper .product-grid {
+    row-gap: 27px !important;
+}

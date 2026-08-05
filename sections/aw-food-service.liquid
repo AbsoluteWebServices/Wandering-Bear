@@ -55,9 +55,9 @@
   {{ section.shopify_attributes }}
 >
   {% if show_desktop_bg_image or show_mobile_bg_image %}
-    <div class="absolute top-0 left-0 right-0 z-0 overflow-visible pointer-events-none" aria-hidden="true">
+    <div class="absolute top-0 left-0 right-0 z-0 overflow-visible smd:overflow-hidden md:overflow-visible pointer-events-none" aria-hidden="true">
       {% if show_desktop_bg_image %}
-        <div class="hidden smd:block [&_picture]:block [&_picture]:w-full [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:max-w-none!">
+        <div class="hidden smd:block [&_picture]:block [&_picture]:w-full [&_img]:block [&_img]:w-full [&_img]:h-auto [&_img]:max-w-none! smd:[&_img]:w-[130%] md:[&_img]:w-full">
           {% render 'picture',
             source: bg_image,
             mobile_source: bg_image,
@@ -110,7 +110,7 @@
 
           {% if section_settings.intro != blank %}
             <div
-              class="font-kurdis-condensed font-extrabold text-[0.8125rem] leading-[140%] mb-5 w-full max-w-[506px] px-3.5 smd:px-0 smd:text-base smd:mb-6"
+              class="font-kurdis-condensed font-extrabold text-[0.8125rem] leading-[140%] mb-5 w-full max-w-[327px] mx-auto px-3.5 smd:mx-0 smd:max-w-[506px] smd:px-0 smd:text-base smd:mb-6"
               style="color: {{ section_settings.intro_color | default: '#FFFFFF' }}"
             >
               {{ section_settings.intro }}
@@ -268,7 +268,7 @@
         </div>
 
         {% if is_show_button %}
-          <div class="flex justify-end mb-6.5 mt-16 smd:mt-10 smd:mb-20">
+          <div class="flex justify-end mb-6.5 mt-16 smd:my-10">
             <a
               href="{{ section_button_url }}"
               class="group relative flex w-full items-center justify-center shadow-button h-[61px] uppercase disabled:pointer-events-none smd:max-w-[402px]"

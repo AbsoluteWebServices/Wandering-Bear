@@ -173,7 +173,7 @@
         "post_limit": 6,
         "columns": 3,
         "mobile_columns": "1",
-        "mobile_card_size": "60cqw",
+        "mobile_card_size": "80cqw",
         "columns_gap": 25,
         "rows_gap": 40,
         "enable_load_more": true,
