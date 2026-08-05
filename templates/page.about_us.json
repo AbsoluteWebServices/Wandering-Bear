@@ -478,7 +478,8 @@
         "media_left_mobile": "0",
         "media_left_pct_mobile": "60%",
         "media_radius_mobile": 12,
-        "media_inset_mobile": "8"
+        "media_inset_mobile": "8",
+        "heading_width_tablet": "434"
       }
     },
     "products": {
