@@ -128,7 +128,7 @@
         "plate_radius_mobile": 10,
         "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)",
         "title_nowrap": true,
-        "title_offset": -17,
+        "title_offset": -18,
         "gold_width": 440,
         "gold_gap": 0,
         "flourish_hide_mobile": true,
@@ -307,7 +307,7 @@
         "tablet_edge": "16",
         "tablet_badge_right": "0",
         "plate_pad_y_mobile": 20,
-        "side_radius_mobile": 10,
+        "side_radius_mobile": 16,
         "side_mobile_poke": 48,
         "side_mobile_gap": 2
       }
@@ -324,8 +324,8 @@
             "top": 8,
             "width": 6,
             "rotate": 0,
-            "left_px": "520",
-            "top_px": "26"
+            "left_px": "512",
+            "top_px": "30"
           }
         },
         "wbtag": {
@@ -377,12 +377,12 @@
         "two_col_gap": 41,
         "two_col_valign": "start",
         "side_image_preview": "ab-cold-brew-glass.png",
-        "side_width": 259,
+        "side_width": 229,
         "side_height": 358,
         "side_fit": true,
         "side_overflow_top": 13,
         "side_bg_size": "300% auto",
-        "side_bg_pos": "center 25%",
+        "side_bg_pos": "center 31%",
         "panel_width_mobile": "90%",
         "panel_top_mobile": 20,
         "plate_hide_mobile": true,
@@ -402,7 +402,8 @@
         "section_shift_x_cap": "calc(50vw - 445px)",
         "panel_height": 253,
         "plate_pad_y_mobile": 20,
-        "title_gap_mobile": "5"
+        "title_gap_mobile": "5",
+        "col_margin_left": "25"
       }
     },
     "started": {

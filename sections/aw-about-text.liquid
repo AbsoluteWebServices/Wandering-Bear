@@ -226,7 +226,7 @@
                  style="width: {{ s.side_width | default: 289 }}px; {% if s.side_fit %}height: calc(100% + {{ side_ot }}px); margin-top: -{{ side_ot }}px;{% else %}height: {{ s.side_height | default: 358 }}px;{% endif %} background-image: url('{{ tc_src }}'); background-size: {{ s.side_bg_size | default: '100% auto' }}; background-position: {{ s.side_bg_pos | default: 'top center' }}; background-repeat: no-repeat;{% if s.side_bg != blank %} background-color: {{ s.side_bg }};{% endif %}"
                  role="img" aria-label="{{ s.side_image.alt }}"></div>
           {% endif %}
-          <div class="wb-about-text__col {{ tc_text }} flex-1 min-w-0" style="max-width: {{ s.column_width | default: 566 }}px;{% if s.col_pad_top != blank %} padding-top: {{ s.col_pad_top }}px;{% endif %}{% if s.col_pad_bottom != blank %} padding-bottom: {{ s.col_pad_bottom }}px;{% endif %}">
+          <div class="wb-about-text__col {{ tc_text }} flex-1 min-w-0" style="max-width: {{ s.column_width | default: 566 }}px;{% if s.col_pad_top != blank %} padding-top: {{ s.col_pad_top }}px;{% endif %}{% if s.col_pad_bottom != blank %} padding-bottom: {{ s.col_pad_bottom }}px;{% endif %}{% if s.col_margin_left != blank %} margin-left: {{ s.col_margin_left }}px;{% endif %}">
             {{ copy_html }}
           </div>
         </div>
@@ -1057,6 +1057,7 @@
       "label": "Column width (e.g. 400px, 40%)",
       "visible_if": "{{ section.settings.col_abs }}"
     },
+    { "type": "text", "id": "col_margin_left", "label": "Text column margin-left px" },
     {
       "type": "number",
       "id": "col_pad_top",
