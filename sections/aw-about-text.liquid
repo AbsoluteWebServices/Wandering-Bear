@@ -689,6 +689,28 @@
   {% endstyle %}
 {%- endif -%}
 
+{%- comment -%}
+  Desktop-only geometry. These are tuned against the 1280 design width, and the row still has to
+  fit a 768 tablet, so they start at 1024 rather than at the 750 breakpoint the rest of the row
+  layout uses — below that the column and the side image keep their original sizes.
+{%- endcomment -%}
+{%- if s.col_margin_left != blank or s.side_width_desktop != blank -%}
+  {% style %}
+    @media screen and (min-width: 1024px) {
+      {% if s.col_margin_left != blank %}
+        .wb-about-text--{{ section.id }} .wb-about-text__col.flex-1 {
+          margin-left: {{ s.col_margin_left }}px;
+        }
+      {% endif %}
+      {% if s.side_width_desktop != blank %}
+        .wb-about-text--{{ section.id }} .wb-about-text__img-col {
+          width: {{ s.side_width_desktop }}px !important;
+        }
+      {% endif %}
+    }
+  {% endstyle %}
+{%- endif -%}
+
 {%- if s.title_nowrap or s.title_offset != blank -%}
   {% style %}
     @media screen and (min-width: 750px) {
@@ -800,7 +822,7 @@
        eats into the content box instead of growing the pill, and a centred flex line moves by
        half the top padding. --pill-text-drop is the visual shift; the padding doubles it. */
     box-sizing: border-box;
-    padding: calc(var(--pill-text-drop, 10px) * 2) 10px 0 !important;
+    padding: calc(var(--pill-text-drop, 6px) * 2) 10px 0 !important;
     vertical-align: middle;
   }
 
@@ -828,7 +850,7 @@
       max-width: 100%;
       height: 41px !important;
       box-sizing: border-box;
-      padding: calc(var(--pill-text-drop, 10px) * 2) 10px 0 !important;
+      padding: calc(var(--pill-text-drop, 6px) * 2) 10px 0 !important;
       margin: 12px auto 0 !important;
       font-size: 18px !important;
       white-space: nowrap;
@@ -1057,6 +1079,8 @@
       "label": "Column width (e.g. 400px, 40%)",
       "visible_if": "{{ section.settings.col_abs }}"
     },
+    { "type": "text", "id": "col_margin_left", "label": "Text column margin-left px (desktop 1024+)" },
+    { "type": "text", "id": "side_width_desktop", "label": "Side image width px (desktop 1024+)" },
     {
       "type": "number",
       "id": "col_pad_top",
