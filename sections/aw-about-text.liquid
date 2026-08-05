@@ -9,6 +9,19 @@
 
 {% liquid
   assign s = section.settings
+
+  # Optional mobile-only line break: the phrase in body_break_mobile gets a <br> in front of it,
+  # hidden from the desktop breakpoint up. Injected here rather than typed into the setting because
+  # Shopify strips class attributes from authored HTML.
+  assign body_html = s.body
+  assign body_break_phrase = s.body_break_mobile | default: 'our mission'
+  if body_break_phrase != blank
+    capture body_break
+      echo '<br class="wb-br-mobile">'
+      echo body_break_phrase
+    endcapture
+    assign body_html = body_html | replace: body_break_phrase, body_break
+  endif
   assign color_scheme = s.color_scheme
   assign text_color = s.text_color | default: '#1B1B1B'
 
@@ -167,7 +180,7 @@
         {% endif %}
         {% if s.body != blank %}
           <div class="wb-about-text__body wb-about-text-body body [&_strong]:font-bold font-semibold font-(family-name:var(--font-kurdis-semi-condensed))! leading-[1.4]" style="color: {{ text_color }};">
-            {{ s.body }}
+            {{ body_html }}
           </div>
         {% endif %}
         {%- comment -%} Optional gold underline flourish centred under the copy (Figma). {%- endcomment -%}
@@ -532,7 +545,7 @@
         {% endif %}
         {% if s.body != blank %}
           <div class="wb-about-text__body body leading-[1.4]" style="color: {{ text_color }};">
-            {{ s.body }}
+            {{ body_html }}
           </div>
         {% endif %}
       </div>
@@ -683,6 +696,13 @@
      headings are Kurdis Condensed ExtraBold, body copy Kurdis SemiCondensed SemiBold. Set here
      rather than on the shared display-md/body classes, since these aw-about-* sections are
      About-Us-only. */
+  /* Mobile-only line break helper (see body_break_mobile). */
+  .wb-br-mobile { display: inline; }
+
+  @media screen and (min-width: 750px) {
+    .wb-br-mobile { display: none; }
+  }
+
   .wb-about-text__title {
     font-family: var(--font-kurdis-condensed) !important;
     font-weight: 800 !important;
@@ -798,6 +818,10 @@
     .wb-about-text__body span,
     .wb-about-text__body strong {
       font-size: 12px !important;
+    }
+    {%- comment -%} Mobile pulls the gold call-out up against the line that introduces it (QA r80). {%- endcomment -%}
+    .wb-about-text__body > p.text-gold {
+      margin-top: 0 !important;
     }
     .wb-about-text__body .text-gold,
     .wb-about-text__body p.text-gold,
@@ -1413,6 +1437,7 @@
       "default": false
     },
     { "type": "checkbox", "id": "merge_paras_mobile", "label": "Merge first two paragraphs on mobile", "default": false },
+    { "type": "text", "id": "body_break_mobile", "label": "Body: break before this phrase on mobile" },
     {
       "type": "number",
       "id": "plate_gutter_mobile",
