@@ -1,0 +1,14 @@
+.inveterate__popup__inner {
+    font-family: var(--font-kurdis-semi-condensed) !important;
+
+    .inveterate__popup__heading, h3, h2 {
+        font-weight: 800 !important;
+        color: var(--color-espresso) !important;
+        font-family: var(--font-kurdis-condensed) !important;
+    }
+
+    a {
+        color: var(--color-gold) !important;
+    }
+}
+
