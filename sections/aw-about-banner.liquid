@@ -270,11 +270,32 @@
   the cover image. At tablet widths that notch is cropped away, so the card sits on the photo itself
   (QA r92). Drop it back into the flow there — the section grows instead of overlapping.
 {%- endcomment -%}
+{%- comment -%}
+  The photo keeps a light, empty area down its left side that the copy is meant to sit in. Dropping
+  the card into the flow pushed the heading off that area, so tablet keeps the card pinned over the
+  photo like desktop and only shifts it into the zone. card_top_tablet is measured from the photo's
+  top, card_width_tablet caps the copy so it stays inside the light area.
+{%- endcomment -%}
+{%- if s.card_top_tablet != blank or s.card_width_tablet != blank -%}
+  {% style %}
+    @media screen and (min-width: 750px) and (max-width: 1023px) {
+      #shopify-section-{{ section.id }} .aw-about-banner__card {
+        {% if s.card_top_tablet != blank %}top: {{ s.card_top_tablet }}px !important;{% endif %}
+        {% if s.card_width_tablet != blank %}max-width: {{ s.card_width_tablet }}px !important;{% endif %}
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- comment -%}
+  On tablet the heading tab runs to the bottom of the photo's light area, so its bottom-right
+  corner should stay square — the rounded one reads as a notch against the photo. Desktop and
+  mobile keep the rounding the block sets inline.
+{%- endcomment -%}
 {% style %}
   @media screen and (min-width: 750px) and (max-width: 1023px) {
-    #shopify-section-{{ section.id }} .aw-about-banner__card {
-      position: relative !important;
-      top: auto !important;
+    #shopify-section-{{ section.id }} .aw-about-banner__heading-wrap {
+      border-bottom-right-radius: 0 !important;
     }
   }
 {% endstyle %}
@@ -402,6 +423,8 @@
     { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
     { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
+    { "type": "text", "id": "card_top_tablet", "label": "Text card top — tablet px" },
+    { "type": "text", "id": "card_width_tablet", "label": "Text card max-width — tablet px" },
     { "type": "text", "id": "media_inset_mobile", "label": "Media side inset — mobile px" },
     { "type": "text", "id": "media_left_pct_mobile", "label": "Media anchor — mobile (e.g. 60%)" },
     { "type": "text", "id": "media_left_mobile", "label": "Media horizontal nudge — mobile px" },
