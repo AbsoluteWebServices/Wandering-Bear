@@ -19,12 +19,14 @@
     endif
   %}
   <variant-picker
-    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}"
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}
+    {% if block_settings.variant_style == 'dropdowns' %} !pb-5.5 {% endif %}"
     style="--color-strikethrough-mix: {{ strikethrough_color_mix }}; {% render 'spacing-style', settings: block_settings %}"
     data-section-id="{{ section.id }}"
     data-product-id="{{ product_resource.id }}"
     data-block-id="{{ block.id }}"
     data-product-url="{{ product_resource.url }}"
+    data-native-wiring="true"
     ref="mainVariantPicker"
     {% if product.id == product_resource.id %}
       data-template-product-match="true"
@@ -156,62 +158,111 @@
             {% endif %}
           </fieldset>
         {%- elsif block_settings.variant_style == 'dropdowns' -%}
-          {%
-            # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
-            # It's too bad as it mean rebuilding baked in behaviours but I think we've already done that for the locale selectors
-            # in dawn. So it might mean more time spent in setting it up but worth it for future updates/styling.
-          %}
-          {% liquid
-            assign property_being_updated = false
-            if settings.variant_swatch_width != settings.variant_swatch_height
-              assign property_being_updated = true
-              # (original width / original height) x new height (20px at the moment) = new width
-              assign new_width = settings.variant_swatch_width | times: 1.0 | divided_by: settings.variant_swatch_height | times: 20
-            endif
-          %}
+          {%- comment -%}
+            Accessible custom dropdown (WAI-ARIA listbox). The visible trigger + role="listbox"
+            options are driven by hidden radio inputs that carry the same data attributes as the
+            "buttons" style, so the native <variant-picker> change wiring (variant-picker.js)
+            handles the actual variant update. Behaviour is enhanced by assets/variant-select.js.
+          {%- endcomment -%}
+          {%- assign fieldset_index = forloop.index0 -%}
+          {%- assign vs_base = 'VariantSelect-' | append: block.id | append: '-' | append: forloop.index0 -%}
 
           <div class="variant-option variant-option--dropdowns">
-            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ product_option.name | escape }}</label>
-            <div
-              class="variant-option__select-wrapper"
-              style="
-                {%- if property_being_updated  -%}
-                  --variant-picker-swatch-width: clamp(10px,{{ new_width }}px, 50px);
-                {%- endif -%}
-              "
+            <span
+              class="variant-option__label font-gothic__condensed text-bear-black text-base uppercase"
+              id="{{ vs_base }}-label"
             >
-              <select
-                id="Option-{{ block.id }}-{{ forloop.index0 }}"
-                name="options[{{ product_option.name | escape }}]"
-                class="variant-option__select"
+            {% if product_option.name == 'Size' or product_option.name == 'Color' %}
+              Select
+            {% endif %}
+              {{- product_option.name | escape -}}
+            </span>
+ 
+            <div
+              class="variant-select"
+              data-variant-select
+            >
+              <button
+                type="button"
+                class="variant-select__trigger"
+                id="{{ vs_base }}-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="{{ vs_base }}-listbox"
+                aria-labelledby="{{ vs_base }}-label {{ vs_base }}-value"
+                data-variant-select-trigger
               >
+                <span
+                  class="variant-select__value"
+                  id="{{ vs_base }}-value"
+                  data-variant-select-value
+                >
+                  {{- product_option.selected_value -}}
+                </span>
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="icon icon-caret variant-select__caret"
+                  viewBox="0 0 10 6"
+                >
+                  {%- render 'icon', icon: 'caret' -%}
+                </svg>
+              </button>
+
+              <fieldset
+                class="variant-select__listbox"
+                id="{{ vs_base }}-listbox"
+                role="listbox"
+                aria-labelledby="{{ vs_base }}-label"
+                ref="fieldsets[]"
+                data-fieldset-index="{{ fieldset_index }}"
+                data-variant-select-listbox
+              >
+                <legend class="visually-hidden" aria-hidden="true">{{ product_option.name | escape }}</legend>
                 {%- for product_option_value in product_option.values -%}
-                  <option
-                    value="{{ product_option_value | escape }}"
-                    data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
-                    data-option-value-id="{{ product_option_value.id }}"
-                    data-variant-id="{{ product_option_value.variant.id }}"
-                    data-connected-product-url="{{ product_option_value.product_url }}"
-                    {% if product_option_value.selected %}
-                      selected="selected"
-                    {% endif %}
+                  <label
+                    class="variant-select__option{% if product_option_value.available == false %} variant-select__option--unavailable{% endif %}"
+                    id="{{ vs_base }}-opt-{{ forloop.index0 }}"
+                    role="option"
+                    aria-selected="{% if product_option_value.selected %}true{% else %}false{% endif %}"
+                    tabindex="{% if product_option_value.selected %}0{% else %}-1{% endif %}"
+                    data-variant-select-option
+                    data-value-text="{{ product_option_value | escape }}"
                   >
-                    {% if product_option_value.available == false %}
-                      {{ product_option_value | escape }} - {{ 'content.unavailable' | t }}
-                    {% else %}
-                      {{ product_option_value | escape }}
-                    {% endif %}
-                  </option>
+                    <input
+                      type="radio"
+                      class="variant-select__input visually-hidden"
+                      aria-hidden="true"
+                      tabindex="-1"
+                      name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                      value="{{ product_option_value | escape }}"
+                      data-previous-checked="false"
+                      data-fieldset-index="{{ fieldset_index }}"
+                      data-input-index="{{ forloop.index0 }}"
+                      data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                      data-option-value-id="{{ product_option_value.id }}"
+                      data-option-available="{{ product_option_value.available }}"
+                      data-connected-product-url="{{ product_option_value.product_url }}"
+                      {% if product_option_value.variant.id %}
+                        data-variant-id="{{ product_option_value.variant.id }}"
+                      {% endif %}
+                      {% if product_option_value.selected %}
+                        data-current-checked="true"
+                        checked
+                      {% else %}
+                        data-current-checked="false"
+                      {% endif %}
+                    >
+                    <span class="variant-select__option-text">{{- product_option_value | escape -}}</span>
+                    {%- if product_option_value.available == false -%}
+                      <span class="variant-select__option-status">{{ 'content.unavailable' | t }}</span>
+                    {%- endif -%}
+                    <span class="variant-select__check svg-wrapper" aria-hidden="true">
+                      {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                    </span>
+                  </label>
                 {%- endfor -%}
-              </select>
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                class="icon icon-caret"
-                viewBox="0 0 10 6"
-              >
-                {%- render 'icon', icon: 'caret' -%}
-              </svg>
+              </fieldset>
             </div>
           </div>
         {%- endif -%}
@@ -225,6 +276,163 @@
 {% endunless %}
 
 {% stylesheet %}
+  /* Custom accessible dropdown (listbox) */
+  .variant-option--dropdowns {
+    display: flex;
+    flex-direction: column;
+    gap: var(--margin-2xs);
+  }
+
+  .variant-option__label {
+    display: block;
+    font-family: var(--font-gothic__condensed, 'Gothic Condensed');
+    font-weight: 800;
+  }
+
+  .variant-select {
+    position: relative;
+    width: 100%;
+  }
+
+  .variant-select__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+    width: 100%;
+    margin: 0;
+    padding: var(--padding-md) var(--padding-lg);
+    font: inherit;
+    text-align: start;
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    border: var(--style-border-width-inputs) solid var(--color-border);
+    border-radius: var(--style-border-radius-inputs);
+    cursor: pointer;
+  }
+
+  .variant-select__trigger:hover {
+    border-color: var(--color-variant-hover-border);
+  }
+
+  .variant-select__trigger:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .variant-select__value {
+    font-family: var(--font-gothic__condensed, 'Gothic Condensed');
+    font-weight: 800;
+    color: var(--color-bear-black);
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .variant-select__caret {
+    flex-shrink: 0;
+    width: var(--icon-size-2xs);
+    height: var(--icon-size-2xs);
+    transition: transform var(--animation-speed, 0.2s) var(--animation-easing, ease);
+  }
+
+  .variant-select__trigger[aria-expanded='true'] .variant-select__caret {
+    transform: rotate(180deg);
+  }
+
+  .variant-select__listbox {
+    /* reset <fieldset> defaults */
+    margin: 0;
+    padding: calc(var(--padding-xs) / 1);
+    border: 0;
+    min-inline-size: 0;
+
+    position: absolute;
+    top: calc(100% + var(--margin-2xs));
+    left: 0;
+    right: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-2xs, 2px);
+    max-height: 320px;
+    overflow-y: auto;
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    border: var(--style-border-popover);
+    border-radius: var(--style-border-radius-popover);
+    box-shadow: var(--shadow-popover);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity var(--animation-speed, 0.2s) var(--animation-easing, ease),
+      transform var(--animation-speed, 0.2s) var(--animation-easing, ease),
+      visibility var(--animation-speed, 0.2s) var(--animation-easing, ease);
+  }
+
+  .variant-select--open .variant-select__listbox {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .variant-select__option {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding: var(--padding-sm) var(--padding-md);
+    border-radius: calc(var(--style-border-radius-popover) / 2);
+    cursor: pointer;
+  }
+
+  .variant-select__option:hover {
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-8, 0.08));
+  }
+
+  .variant-select__option:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: calc(var(--focus-outline-offset) * -1);
+  }
+
+  .variant-select__option[aria-selected='true'] {
+    font-weight: 500;
+  }
+
+  .variant-select__option-text {
+    flex: 1 1 auto;
+  }
+
+  .variant-select__option-status {
+    flex-shrink: 0;
+    color: var(--color-foreground-muted, rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text, 0.6)));
+    font-size: var(--font-paragraph-small--size);
+  }
+
+  .variant-select__option--unavailable .variant-select__option-text {
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+
+  .variant-select__check {
+    flex-shrink: 0;
+    width: var(--icon-size-2xs);
+    height: var(--icon-size-2xs);
+    visibility: hidden;
+  }
+
+  .variant-select__option[aria-selected='true'] .variant-select__check {
+    visibility: visible;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .variant-select__caret,
+    .variant-select__listbox {
+      transition: none;
+    }
+  }
+
   /* Variant picker container styles - unique to main variant picker */
   .variant-picker {
     width: 100%;

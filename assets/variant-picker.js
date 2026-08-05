@@ -89,7 +89,14 @@ export default class VariantPicker extends Component {
       ? 'featured-product-information'
       : undefined;
 
-    // this.fetchUpdatedSection(this.buildRequestUrl(selectedOption), morphElementSelector);
+    // The simple/misc product template uses Horizon's native variant wiring (no Alpine
+    // productForm scope). For it, fetch the updated section so a VariantUpdateEvent is
+    // dispatched and <product-form-component> can sync the selected variant (id input,
+    // price, availability). Alpine-driven templates don't render this element, so they
+    // keep relying solely on the `variant-changed` bridge dispatched below.
+    if (this.dataset.nativeWiring === 'true') {
+      this.fetchUpdatedSection(this.buildRequestUrl(selectedOption), morphElementSelector);
+    }
 
     const url = new URL(window.location.href);
 

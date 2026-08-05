@@ -364,6 +364,11 @@
   </local-pickup>
 {% endif %}
 
+{%- comment -%} Back-in-stock notify modal for the native/simple template (opened from the sold-out ATC swap). {%- endcomment -%}
+{%- if template.suffix == 'misc' and product != blank -%}
+  {% render 'restock-notify-modal' %}
+{%- endif -%}
+
 {% render 'buy-buttons-styles' %}
 
 {% schema %}

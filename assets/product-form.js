@@ -393,6 +393,10 @@ class ProductFormComponent extends Component {
 
     const fetchCfg = fetchConfig('javascript', { body: formData });
 
+    for (const container of allAddToCartContainers) {
+      container.refs.addToCartButton?.classList.add('add-to-cart--loading');
+    }
+
     fetch(Theme.routes.cart_add_url, {
       ...fetchCfg,
       headers: {
@@ -483,6 +487,9 @@ class ProductFormComponent extends Component {
         console.error(error);
       })
       .finally(() => {
+        for (const container of allAddToCartContainers) {
+          container.refs.addToCartButton?.classList.remove('add-to-cart--loading');
+        }
         if (event) {
           cartPerformance.measureFromEvent('add:user-action', event);
         }
