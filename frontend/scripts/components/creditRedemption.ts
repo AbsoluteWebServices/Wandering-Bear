@@ -212,13 +212,31 @@ export default (Alpine: AlpineType) => {
       }
     },
 
-    /** Shopify discount URL — encode the code (`+` → `%2B`) and land back on the cart. */
-    applyUrl(): string {
-      return this.result?.apply_url || `/discount/${encodeURIComponent(this.result?.code || '')}?redirect=/cart`
+    /** Where to land after Shopify stores the code on the cart session.
+     *  QA #48: /cart with an empty cart bounces the member to the home page, which reads as though
+     *  applying the code did nothing. With nothing in the cart we send them to the catalogue
+     *  instead, so the code they just applied has something to be spent on. The same fallback is
+     *  used when /cart.js is unreachable — the catalogue never bounces, /cart might. */
+    async applyRedirect(): Promise<string> {
+      try {
+        const res = await fetch('/cart.js', { headers: { Accept: 'application/json' } })
+        const cart = (await res.json()) as { item_count?: number }
+        return (cart.item_count ?? 0) > 0 ? '/cart' : '/collections/all'
+      } catch {
+        return '/collections/all'
+      }
     },
-    applyToCart() {
+
+    /** Shopify discount URL — encode the code (`+` → `%2B`). Built here rather than using the
+     *  worker's apply_url, because that one hard-codes redirect=/cart and we need to choose. */
+    async applyToCart(): Promise<void> {
       if (this.isMock) return // a mock code can't be applied for real
-      window.location.href = this.applyUrl()
+      const code = this.result?.code || ''
+      if (!code) return
+      // redirect is a fixed internal literal, so it goes in raw — the documented Shopify form,
+      // and the one this flow already worked with. Only the code needs encoding (`+` → `%2B`).
+      const redirect = await this.applyRedirect()
+      window.location.href = `/discount/${encodeURIComponent(code)}?redirect=${redirect}`
     },
     async copyCode() {
       try {
