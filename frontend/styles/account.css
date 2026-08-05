@@ -214,11 +214,9 @@
 [data-wb-autoship-items] {
     margin-bottom: 6px;
 }
-@media (min-width: 1024px) {
-    [data-wb-autoship-items] {
-        margin-bottom: 15px;
-    }
-}
+/* QA #51: desktop kept a 15px gap from the last line item to the Manage/Reactivate button, which
+   read as too airy next to the tightened cards. Matched to the 6px the mobile layout already uses
+   (Figma's own desktop figure is ~14px, but QA asked for it smaller). */
 
 /* Pin the autoship Manage/Reactivate button to the bottom of the card so it aligns with the
    credit card's Redeem button when the two stretch to equal height. In CSS (not the Tailwind
@@ -351,22 +349,22 @@
     height: 1.8em;
 }
 
-/* ---- Account CTA spacing on mobile: 6px above, 8px below ------------------ */
+/* ---- Account CTA spacing on mobile: 6px above, 8px of VISIBLE gap below ---- */
 /* Applies to the five .shadow-button CTAs (Redeem in both credit cards, Manage, Reactivate,
-   Upgrade to Elite). The row-1 cards already sat at 6/8; the wide credit card (12 below) and the
-   Elite upsell (12 above / 20 below) did not, so the gap is normalised on the containers rather
-   than by giving the buttons their own margins — margins would stack on top of the gaps the
-   containers already provide and push the cards past their Figma height. Desktop untouched. */
+   Upgrade to Elite), normalised on the containers rather than by giving the buttons their own
+   margins — margins would stack on top of the gaps the containers already provide.
+   .shadow-button is filter: drop-shadow(4px 4px 4px), so the shadow paints ~8px below the button
+   box (4px offset + 4px blur). A box gap of 8px is therefore entirely shadow and reads as the
+   button touching the card edge, which is what it looked like. 16px = 8px shadow + 8px of actual
+   air. Figma itself uses 13px here (1:739: card 254-416, button 363-403), i.e. ~5px visible.
+   Desktop untouched. */
 @media (max-width: 1023px) {
-    /* Wide no-autoship credit card: 12px bottom padding → 8px. The 6px above already comes
-       from its !gap-1.5 column gap. */
-    [data-wb-row-nocard] > div {
-        padding-bottom: 8px;
-    }
-    /* Elite upsell panel: its own bottom padding and the gap under the description line. */
+    .wb-row1-card,
+    [data-wb-row-nocard] > div,
     .membership-upsell {
-        padding-bottom: 8px;
+        padding-bottom: 16px;
     }
+    /* Gap under the Elite upsell's description line, above its button. */
     .membership-upsell > p:last-of-type {
         margin-bottom: 6px;
     }
@@ -456,6 +454,25 @@ body.no-scroll {
 }
 .wb-redeem-btn:hover { opacity: 0.92; }
 .wb-redeem-btn:disabled { opacity: 0.6; pointer-events: none; }
+
+/* Spinner for the redeem button while the code is being generated. Sized off the button's own
+   font so it stays in proportion, and drawn in currentColor so it works on the gold button and on
+   the ghost variant alike. Honours prefers-reduced-motion. */
+.wb-spinner {
+    width: 1em;
+    height: 1em;
+    flex: none;
+    border-radius: 50%;
+    border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+    border-top-color: currentColor;
+    animation: wb-spin 0.6s linear infinite;
+}
+@keyframes wb-spin {
+    to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .wb-spinner { animation-duration: 2.4s; }
+}
 .wb-redeem-btn--ghost {
     width: auto;
     height: auto;
@@ -476,10 +493,10 @@ body.no-scroll {
 }
 
 /* ---- Order-history timeframe control ------------------------------------ */
-/* QA #20: the control had no hover feedback at all. Same language as .hover-underline
-   (underline stays, colour shifts to gold) so it reads as interactive. */
-.wb-timeframe:hover .wb-timeframe__select,
-.wb-timeframe__select:hover {
+/* QA #20 (round 2): the hover belongs to the label text only — round 1 put it on the dropdown
+   value, which QA asked to undo. Same language as .hover-underline so the control still reads as
+   interactive. The whole box is the hover target because the <select> covers it (QA #49). */
+.wb-timeframe:hover .wb-timeframe__label {
     color: var(--color-dark-gold);
     text-decoration: underline;
 }

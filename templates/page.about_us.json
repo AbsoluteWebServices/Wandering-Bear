@@ -24,7 +24,7 @@
             "width": 21,
             "rotate": -9,
             "left_mobile": "13",
-            "top_mobile": "21",
+            "top_mobile": "12.0",
             "width_mobile": "21",
             "rotate_mobile": "-9"
           }
@@ -39,7 +39,7 @@
             "width": 24,
             "rotate": 17,
             "left_mobile": "91",
-            "top_mobile": "28",
+            "top_mobile": "19.8",
             "width_mobile": "24",
             "rotate_mobile": "17"
           }
@@ -56,9 +56,9 @@
         "background_solid": "#BFD7E9",
         "padding-block-start": 3,
         "padding-block-end": 40,
-        "padding-block-start-mobile": 16,
+        "padding-block-start-mobile": 5,
         "padding-block-end-mobile": 24,
-        "preview_asset_mobile": "ab-hero-photo-mobile.png"
+        "preview_asset_mobile": "ab-hero-photo-mobile-trim.png"
       }
     },
     "pagebg": {
@@ -69,8 +69,8 @@
         "blue_color": "#BFD7E9",
         "blue_top": 300,
         "blue_height": 1918,
-        "blue_top_mobile": 0,
-        "blue_height_mobile": 2041,
+        "blue_top_mobile": 83,
+        "blue_height_mobile": 1798,
         "show_sky": true,
         "sky_band_asset": "ab-sky-band.jpg",
         "sky_band_top": "630",
@@ -104,7 +104,7 @@
         "panel_radius_left": 0,
         "panel_radius_right": 20,
         "panel_overlap": 180,
-        "panel_overlap_mobile": 190,
+        "panel_overlap_mobile": 227,
         "section_min_height": 457,
         "panel_content_left": 210,
         "panel_content_right": 60,
@@ -125,15 +125,17 @@
         "fluid_anchor": "right",
         "fluid_min_filler": 44,
         "fluid_plate_edge": "left",
-        "plate_radius_mobile": 20,
+        "plate_radius_mobile": 10,
         "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)",
         "title_nowrap": true,
-        "title_offset": -27,
+        "title_offset": -18,
         "gold_width": 440,
         "gold_gap": 0,
         "flourish_hide_mobile": true,
         "plate_margin_bottom_mobile": 0,
-        "plate_pad_y_mobile": 20
+        "plate_pad_y_mobile": 20,
+        "body_break_mobile": "our mission",
+        "body_pad_x_mobile": "25"
       }
     },
     "believe": {
@@ -192,7 +194,7 @@
         "background_type": "transparent",
         "padding-block-start": 0,
         "padding-block-end": 40,
-        "padding-block-start-mobile": 20,
+        "padding-block-start-mobile": 48,
         "padding-block-end-mobile": 20,
         "wrapper_z": 3,
         "section_margin_bottom": 50,
@@ -203,8 +205,11 @@
         "fluid_min_filler": 24,
         "fluid_plate_edge": "right",
         "overflow_visible": true,
-        "plate_margin_bottom_mobile": 40,
-        "plate_pad_y_mobile": 20
+        "plate_margin_bottom_mobile": 20,
+        "plate_pad_y_mobile": 20,
+        "plate_pad_x_mobile": 64,
+        "body_pad_x_mobile": "20",
+        "title_gap_mobile": "5"
       }
     },
     "howwedo": {
@@ -232,7 +237,7 @@
         "title_align": "left",
         "font_size": 40,
         "font_size_mobile": 20,
-        "body": "<p>We source <strong>specialty grade, 100% Arabica, USDA organic beans</strong> from small cooperatives in Central and South America (natural water processed for decaf). We brew strong, sometimes with more than double the coffee our competitors use, then cold brew and filter for a smooth, low acid cup.</p><p>Our flavors come from natural extracts and essences (hello, Banana Bread cold brew). And we <strong>package for freshness</strong>: no oxygen, nitrogen flushed where possible, light blocked out.</p><p class=\"wb-oneline\">Check out our <a href=\"#\" style=\"display:inline-block; background:#BFD7E9; border-radius:8px; padding:0 10px; font-size:24px; line-height:1.35; color:#1B1B1B; text-decoration:none;\">Fresh Taste Guarantee.</a></p>",
+        "body": "<p>We source <strong>specialty grade, 100% Arabica, USDA organic beans</strong> from small cooperatives in Central and South America (natural water processed for decaf). We brew strong, sometimes with more than double the coffee our competitors use, then cold brew and filter for a smooth, low acid cup.</p><p>Our flavors come from natural extracts and essences (hello, Banana Bread cold brew). And <strong>we package for freshness</strong>: no oxygen, nitrogen flushed where possible, light blocked out.</p><p class=\"wb-oneline\">Check out our <a href=\"#\" style=\"display:inline-block; background:#BFD7E9; border-radius:8px; padding:0 10px; font-size:24px; line-height:1.35; color:#1B1B1B; text-decoration:none;\">Fresh Taste Guarantee.</a></p>",
         "text_color": "#1B1B1B",
         "align": "left",
         "column_width": 620,
@@ -269,7 +274,7 @@
         "side_hide_mobile": true,
         "side_show_mobile_top": true,
         "side_mobile_pos": "75% 85%",
-        "side_mobile_aspect": "309 / 256",
+        "side_mobile_aspect": "293 / 275",
         "text_center_mobile": true,
         "background_type": "transparent",
         "padding-block-start": 40,
@@ -291,7 +296,7 @@
         "col_valign": "top",
         "col_pad_top": 75,
         "side_badge_width": 100,
-        "plate_radius_mobile": 20,
+        "plate_radius_mobile": 10,
         "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)",
         "title_offset": 0,
         "title_nowrap": true,
@@ -304,7 +309,12 @@
         "tablet_gap": "24",
         "tablet_edge": "16",
         "tablet_badge_right": "0",
-        "plate_pad_y_mobile": 20
+        "plate_pad_y_mobile": 20,
+        "side_radius_mobile": 24,
+        "side_mobile_poke": 80,
+        "side_mobile_gap": 2,
+        "body_pad_x_mobile": "20",
+        "title_gap_mobile": "11"
       }
     },
     "premium": {
@@ -319,8 +329,8 @@
             "top": 8,
             "width": 6,
             "rotate": 0,
-            "left_px": "520",
-            "top_px": "26"
+            "left_px": "512",
+            "top_px": "30"
           }
         },
         "wbtag": {
@@ -350,7 +360,7 @@
         "text_color": "#1B1B1B",
         "align": "left",
         "column_width": 390,
-        "col_pad_top": 48,
+        "col_pad_top": 58,
         "panel": true,
         "panel_color": "#BFD7E9",
         "panel_align": "left",
@@ -372,31 +382,34 @@
         "two_col_gap": 41,
         "two_col_valign": "start",
         "side_image_preview": "ab-cold-brew-glass.png",
-        "side_width": 289,
+        "side_width": 259,
         "side_height": 358,
         "side_fit": true,
         "side_overflow_top": 13,
         "side_bg_size": "300% auto",
-        "side_bg_pos": "center 29%",
+        "side_bg_pos": "center 31%",
         "panel_width_mobile": "90%",
         "panel_top_mobile": 20,
         "plate_hide_mobile": true,
         "text_center_mobile": true,
         "two_col_img_hide_mobile": true,
         "mobile_top_icon": "ab-crown.png",
-        "mobile_top_icon_width": 46,
+        "mobile_top_icon_width": 36,
         "background_type": "transparent",
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 71,
+        "padding-block-end-mobile": 17,
         "wrapper_z": 5,
         "section_margin_top": 0,
         "plate_pad_x_mobile": 18,
         "plate_margin_bottom_mobile": 13,
         "section_shift_x_cap": "calc(50vw - 445px)",
         "panel_height": 253,
-        "plate_pad_y_mobile": 20
+        "plate_pad_y_mobile": 20,
+        "title_gap_mobile": "5",
+        "col_margin_left": "25",
+        "side_width_desktop": "229"
       }
     },
     "started": {
@@ -405,7 +418,7 @@
         "background_color": "transparent",
         "block_width": 987,
         "image_height": 691,
-        "image_preview": "ab-started-box.png",
+        "image_preview": "ab-started-box-mobile-cutout.png",
         "desktop_cover": true,
         "desktop_cover_preview": "ab-started-box-desktop-v2.png",
         "desktop_cover_pos": "center",
@@ -443,7 +456,7 @@
         "heading_lh": "1.09",
         "heading_gap": 0,
         "heading_wrap_pad_bottom": 0,
-        "title_pad_top": 0,
+        "title_pad_top": 10,
         "body": "<p>Today, Wandering Bear makes super-premium cold brew in exciting <br>flavors and formats, plus high protein cold brew lattes with 11 grams of protein <br>and just 6 grams of sugar, all built on the same brew we've been perfecting since 2014. <strong>Find us nationwide</strong> at Whole Foods, Sprouts, Target, and Costco, online at Amazon and Thrive Market, and right here on our site.</p>",
         "body_size": 15,
         "body_lh": "1.38",
@@ -451,20 +464,28 @@
         "padding_bottom": 60,
         "padding_top_mobile": 0,
         "padding_bottom_mobile": 0,
-        "section_margin_top": -268,
+        "section_margin_top": -300,
         "wrapper_z": 6,
         "section_abs": false,
         "section_abs_top": 1863,
-        "title_pad_top_mobile": 24,
-        "card_margin_top_mobile": 16,
+        "title_pad_top_mobile": 10,
+        "card_margin_top_mobile": 0,
         "media_height_mobile": 380,
-        "media_top_mobile": -175,
+        "media_top_mobile": 0,
         "body_color": "#431A03",
-        "text_pad_y_mobile": 21,
+        "text_pad_y_mobile": 0,
         "heading_wrap_pad_bottom_mobile": 0,
         "heading_gap_mobile": 0,
         "badge_show_in_cover": true,
-        "heading_offset_tablet": "4"
+        "heading_offset_tablet": "4",
+        "media_aspect_mobile": "0.8919",
+        "media_scale_mobile": "130%",
+        "media_left_mobile": "0",
+        "media_left_pct_mobile": "60%",
+        "media_radius_mobile": 12,
+        "media_inset_mobile": "8",
+        "heading_width_tablet": "434",
+        "card_top_tablet": "-167"
       }
     },
     "products": {
@@ -564,7 +585,7 @@
         "promise_text_color": "#1B1B1B",
         "background_type": "gradient",
         "background_gradient": "linear-gradient(180deg, #F2E6DC 0%, #AF7404 100%)",
-        "padding-block-start": 60,
+        "padding-block-start": 26,
         "padding-block-end": 80,
         "padding-block-start-mobile": 6,
         "padding-block-end-mobile": 0,

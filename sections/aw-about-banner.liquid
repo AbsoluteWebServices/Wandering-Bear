@@ -163,9 +163,27 @@
        the transparent cut-out over it breaking out — at mobile scale. BOTH images share the same
        width + top so they stay perfectly aligned as one subject. media_scale_mobile is the zoom
        (bigger = more scale), media_top_mobile the vertical framing, media_height_mobile the frame. {% endcomment %}
+    {%- comment -%}
+      media_aspect_mobile sizes the frame from the artwork's own ratio instead of a fixed height, so
+      a cut-out fits whole at any phone width. Falls back to media_height_mobile.
+    {%- endcomment -%}
     .aw-about-banner__media {
-      height: {{ s.media_height_mobile | default: 300 }}px !important;
+      {% if s.media_aspect_mobile != blank %}
+        aspect-ratio: {{ s.media_aspect_mobile }} !important;
+        height: auto !important;
+      {% else %}
+        height: {{ s.media_height_mobile | default: 300 }}px !important;
+      {% endif %}
       overflow: visible !important;
+      {%- comment -%}
+        Figma 1694:245 insets the mobile photo from both screen edges (358 wide in a 375 frame)
+        instead of running it full-bleed, so its rounded corners are visible.
+      {%- endcomment -%}
+      {% if s.media_inset_mobile != blank %}
+        width: calc(100% - {{ s.media_inset_mobile | times: 2 }}px) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      {% endif %}
     }
     .aw-about-banner__frame {
       position: absolute !important;
@@ -188,8 +206,11 @@
     .aw-about-banner__frame-img {
       display: block !important;
       position: absolute !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
+      left: {{ s.media_left_pct_mobile | default: '50%' }} !important;
+      {%- comment -%} media_left_mobile nudges the artwork sideways inside the frame — a cut-out is
+         not centred on its own bounding box, so its straight edge may need pushing to the screen
+         edge. Positive = right. {%- endcomment -%}
+      transform: translateX(calc(-50% + {{ s.media_left_mobile | default: 0 }}px)) !important;
       width: {{ s.media_scale_mobile | default: '125%' }} !important;
       top: {{ s.media_top_mobile | default: -365 }}px !important;
       max-width: none !important;
@@ -235,11 +256,51 @@
     }
     .aw-about-banner__body-wrap {
       width: 100% !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
+      padding-left: 5px !important;
+      padding-right: 5px !important;
     }
     .aw-about-banner__body {
       text-align: center !important;
+    }
+  }
+{% endstyle %}
+
+{%- comment -%}
+  Tablet: the card is pulled 160px up over the photo, which on desktop lands in the notch cut out of
+  the cover image. At tablet widths that notch is cropped away, so the card sits on the photo itself
+  (QA r92). Drop it back into the flow there — the section grows instead of overlapping.
+{%- endcomment -%}
+{%- comment -%}
+  The photo keeps a light, empty area down its left side that the copy is meant to sit in. Dropping
+  the card into the flow pushed the heading off that area, so tablet keeps the card pinned over the
+  photo like desktop and only shifts it into the zone. card_top_tablet is measured from the photo's
+  top, card_width_tablet caps the copy so it stays inside the light area.
+{%- endcomment -%}
+{%- if s.card_top_tablet != blank or s.card_width_tablet != blank -%}
+  {% style %}
+    @media screen and (min-width: 750px) and (max-width: 1023px) {
+      #shopify-section-{{ section.id }} .aw-about-banner__card {
+        {% if s.card_top_tablet != blank %}top: {{ s.card_top_tablet }}px !important;{% endif %}
+        {% if s.card_width_tablet != blank %}max-width: {{ s.card_width_tablet }}px !important;{% endif %}
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- comment -%}
+  On tablet the heading tab runs to the bottom of the photo's light area, so its bottom-right
+  corner should stay square — the rounded one reads as a notch against the photo. Desktop and
+  mobile keep the rounding the block sets inline.
+{%- endcomment -%}
+{% style %}
+  @media screen and (min-width: 750px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} .aw-about-banner__heading-wrap {
+      border-bottom-right-radius: 0 !important;
+      {%- comment -%}
+        The tab is a fixed width shared with desktop, which leaves slack to the right of the
+        heading at tablet sizes. Pull the right edge in to the copy.
+      {%- endcomment -%}
+      {% if s.heading_width_tablet != blank %}width: {{ s.heading_width_tablet }}px !important;{% endif %}
     }
   }
 {% endstyle %}
@@ -367,6 +428,12 @@
     { "type": "number", "id": "section_margin_top", "label": "Section margin-top px (negative = overlap section above)" },
     { "type": "number", "id": "media_height_mobile", "label": "Mobile media height px" },
     { "type": "number", "id": "media_radius_mobile", "label": "Mobile media corner radius px" },
+    { "type": "text", "id": "card_top_tablet", "label": "Text card top — tablet px" },
+    { "type": "text", "id": "heading_width_tablet", "label": "Heading tab width — tablet px" },
+    { "type": "text", "id": "card_width_tablet", "label": "Text card max-width — tablet px" },
+    { "type": "text", "id": "media_inset_mobile", "label": "Media side inset — mobile px" },
+    { "type": "text", "id": "media_left_pct_mobile", "label": "Media anchor — mobile (e.g. 60%)" },
+    { "type": "text", "id": "media_left_mobile", "label": "Media horizontal nudge — mobile px" },
     { "type": "number", "id": "title_pad_top_mobile", "label": "Title padding-top — mobile px" },
     { "type": "number", "id": "text_pad_y_mobile", "label": "Heading block padding-top — mobile px" },
     { "type": "number", "id": "heading_wrap_pad_bottom_mobile", "label": "Heading block padding-bottom — mobile px" },
