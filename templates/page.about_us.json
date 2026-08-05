@@ -578,7 +578,7 @@
         "promise_text_color": "#1B1B1B",
         "background_type": "gradient",
         "background_gradient": "linear-gradient(180deg, #F2E6DC 0%, #AF7404 100%)",
-        "padding-block-start": 6,
+        "padding-block-start": 16,
         "padding-block-end": 80,
         "padding-block-start-mobile": 6,
         "padding-block-end-mobile": 0,
