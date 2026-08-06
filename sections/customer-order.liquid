@@ -7,21 +7,59 @@
 {%- enddoc -%}
 {%- liquid
   assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
-  assign fulfillment = order.fulfillments.first
-  assign tracking_number = fulfillment.tracking_number
-  assign tracking_url = fulfillment.tracking_url
+
+  # ---- QA preview -------------------------------------------------------------------------
+  # The real page needs a logged-in customer with an order, so the layout cannot be checked
+  # locally. templates/search.order-preview.liquid renders this same section with mock values,
+  # keyed off the global `template` (which carries the suffix) — no schema, no settings, and on
+  # the real page `template` is "customers/order", so nothing below changes there.
+  assign preview = false
+  if template contains 'order-preview'
+    assign preview = true
+  endif
+
+  if preview
+    assign o_name = '#743463'
+    assign o_placed_on = 'June 03, 2026'
+    assign o_payment_status = 'Paid'
+    assign o_fulfillment_status = 'Fulfilled'
+    assign tracking_number = '435435'
+    assign tracking_url = ''
+    # title|sku|price|qty|total
+    assign rows = '96OZ BUNDLE – 2 BOXES - 96OZ BUNDLE – 2 BOXES|staybundle|$0.00|1|$0.00;COLD BREW ON TAP (96 OZ) - BANANA BREAD - 2 BOX DISCOUNT PRICE|WBBB96oz|$34.99|1|$34.99;COLD BREW ON TAP (96 OZ) - ALMOND AMARETTO - 2 BOX DISCOUNT PRICE|WBAM96oz|$34.99|1|$34.99' | split: ';'
+    assign o_subtotal = '$69.98'
+    assign o_discount_title = 'TESTFreeQAAbsoluteWeb2236'
+    assign o_discount = '-$10.00'
+    assign o_shipping_label = 'Free Ground Shipping'
+    assign o_shipping = '$0.00'
+    assign o_total = '$69.98'
+    assign o_billing = '2806 Via Alta Pl|San Diego|92108|United States' | split: '|'
+    assign o_shipping_addr = '23972 Park Granada|Calabasas|91302|United States' | split: '|'
+  else
+    assign fulfillment = order.fulfillments.first
+    assign tracking_number = fulfillment.tracking_number
+    assign tracking_url = fulfillment.tracking_url
+    assign o_name = order.name
+    assign o_placed_on = order.created_at | date: '%B %d, %Y'
+    assign o_payment_status = order.financial_status_label
+    assign o_fulfillment_status = order.fulfillment_status_label
+    assign rows = order.line_items
+  endif
 -%}
 
 <section class="w-full" style="background-color: var(--color-brand-cream);">
   <div class="account-container py-8 md:!py-12">
 
     {%- comment -%} ---------- Title ---------- {%- endcomment -%}
-    <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[25px] md:!text-[32px] leading-none mb-4">{{ 'customer.order.title' | t: name: order.name }}</h1>
+    <h1 class="wb-order-title font-kurdis-condensed font-extrabold text-espresso text-[25px] md:!text-[32px] leading-none">{{ 'customer.order.title' | t: name: o_name }}</h1>
 
     {%- comment -%} ---------- Back link + Tracking Number ---------- {%- endcomment -%}
     {%- comment -%} Back link and tracking number sit on one row side by side; on mobile there is
       not enough width for that, so .wb-order-head stacks them and centres both (account.css). {%- endcomment -%}
-    <div class="wb-order-head flex items-center justify-between !gap-3 mb-6">
+    {%- comment -%} Stacked on mobile, so the gap is the space above the tracking line: 20px there,
+      12px on the desktop row. Set on the class rather than in account.css because an unlayered
+      !important cannot beat a Tailwind layered one. {%- endcomment -%}
+    <div class="wb-order-head flex items-center justify-between !gap-5 smd:!gap-3 mb-6">
       {%- comment -%} QA #14: hover feedback — same opacity pattern as .wb-redeem-btn.
         QA #22 (round 2): the arrow was a flex sibling, so it ate width from the label and the text
         sat right of the button centre. Arrow is now absolutely positioned and the label centres on
@@ -56,11 +94,10 @@
         off the frame; bumped a step by eye as agreed. {%- endcomment -%}
       {%- comment -%} font-bold is kept because .body.font-bold also carries the 16px size — dropping
         it would make this line smaller, not heavier. !font-extrabold then beats that rule's 700. {%- endcomment -%}
-      <div class="body font-bold !font-extrabold text-bear-black">{{ 'customer.order.title' | t: name: order.name }}</div>
+      <div class="body font-bold !font-extrabold text-bear-black">{{ 'customer.order.title' | t: name: o_name }}</div>
       {%- comment -%} Format the date BEFORE handing it to `t` — Liquid filters run left to right, so
         a trailing `| date` would be applied to the already-translated sentence, not to created_at. {%- endcomment -%}
-      {%- assign placed_on = order.created_at | date: '%B %d, %Y' -%}
-      <div class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black/70 mt-2 mb-6">{{ 'customer.order.placed_on' | t: date: placed_on }}</div>
+      <div class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black mt-2 mb-6">{{ 'customer.order.placed_on' | t: date: o_placed_on }}</div>
 
       <div class="overflow-x-auto">
         <table class="w-full border-collapse text-left">
@@ -74,14 +111,30 @@
             </tr>
           </thead>
           <tbody>
-            {%- for line_item in order.line_items -%}
+            {%- for row in rows -%}
+              {%- liquid
+                if preview
+                  assign f = row | split: '|'
+                  assign li_title = f[0]
+                  assign li_sku = f[1]
+                  assign li_price = f[2]
+                  assign li_qty = f[3]
+                  assign li_total = f[4]
+                else
+                  assign li_title = row.title
+                  assign li_sku = row.sku
+                  assign li_price = row.price | money
+                  assign li_qty = row.quantity
+                  assign li_total = row.final_line_price | money
+                endif
+              -%}
               <tr class="border-t border-espresso body text-bear-black align-top">
                 {%- comment -%} QA #42: product title heavier than the rest of the row. {%- endcomment -%}
-                <td class="py-4 pr-4 font-extrabold uppercase">{{ line_item.title }}</td>
-                <td class="py-4 px-4 whitespace-nowrap">{{ line_item.sku }}</td>
-                <td class="py-4 px-4 text-right whitespace-nowrap">{{ line_item.price | money }}</td>
-                <td class="py-4 px-4 text-right whitespace-nowrap">{{ line_item.quantity }}</td>
-                <td class="py-4 pl-4 text-right whitespace-nowrap">{{ line_item.final_line_price | money }}</td>
+                <td class="py-4 pr-4 font-extrabold uppercase">{{ li_title }}</td>
+                <td class="py-4 px-4 whitespace-nowrap">{{ li_sku }}</td>
+                <td class="py-4 px-4 text-right whitespace-nowrap">{{ li_price }}</td>
+                <td class="py-4 px-4 text-right whitespace-nowrap">{{ li_qty }}</td>
+                <td class="py-4 pl-4 text-right whitespace-nowrap">{{ li_total }}</td>
               </tr>
             {%- endfor -%}
           </tbody>
@@ -90,6 +143,12 @@
 
       {%- comment -%} Order summary (right-aligned) {%- endcomment -%}
       <div class="border-t border-espresso pt-5 flex flex-col items-end !gap-4 body text-bear-black">
+        {%- if preview -%}
+          <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.subtotal' | t }}</span><span>{{ o_subtotal }}</span></div>
+          <div class="flex w-full max-w-[360px] justify-between text-dark-gold"><span>{{ 'customer.order.discount' | t }} ({{ o_discount_title }})</span><span>{{ o_discount }}</span></div>
+          <div class="flex w-full max-w-[360px] justify-between"><span>{{ o_shipping_label }}</span><span>{{ o_shipping }}</span></div>
+          <div class="flex w-full max-w-[360px] justify-between font-kurdis-condensed font-extrabold"><span>{{ 'customer.order.total' | t }}</span><span>{{ o_total }}</span></div>
+        {%- else -%}
         <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.subtotal' | t }}</span><span>{{ order.line_items_subtotal_price | money }}</span></div>
         {%- for discount in order.cart_level_discount_applications -%}
           <div class="flex w-full max-w-[360px] justify-between text-dark-gold"><span>{{ 'customer.order.discount' | t }} ({{ discount.title }})</span><span>-{{ discount.total_allocated_amount | money }}</span></div>
@@ -103,6 +162,7 @@
           <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.tax' | t }} ({{ tax_line.title }})</span><span>{{ tax_line.price | money }}</span></div>
         {%- endfor -%}
         <div class="flex w-full max-w-[360px] justify-between font-kurdis-condensed font-extrabold"><span>{{ 'customer.order.total' | t }}</span><span>{{ order.total_price | money }}</span></div>
+        {%- endif -%}
       </div>
     </div>
 
@@ -110,8 +170,12 @@
     <div class="{{ card }} p-5 md:!p-8 mb-6">
       <h2 class="font-kurdis-condensed font-extrabold text-bear-black text-[18px] leading-none mb-3">{{ 'customer.order.billing_address' | t }}</h2>
       {%- comment -%} QA #13: status line had no font class (system fallback) — Kurdis like the rest of the card. {%- endcomment -%}
-      <div class="font-kurdis-semi-condensed font-bold text-bear-black text-[16px] leading-[1.3] mb-6">{{ 'customer.order.payment_status' | t }}: {{ order.financial_status_label }}</div>
-      {%- if order.billing_address -%}
+      <div class="font-kurdis-semi-condensed font-bold text-bear-black text-[16px] leading-[1.3] mb-6">{{ 'customer.order.payment_status' | t }}: {{ o_payment_status }}</div>
+      {%- if preview -%}
+        <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-bear-black not-italic">
+          {{ o_billing[0] }}<br>{{ o_billing[1] }},<br>{{ o_billing[2] }} {{ o_billing[3] }}
+        </address>
+      {%- elsif order.billing_address -%}
         <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-bear-black not-italic">
           {{ order.billing_address.address1 }}<br>
           {%- if order.billing_address.address2 != blank %}{{ order.billing_address.address2 }}<br>{% endif -%}
@@ -124,8 +188,12 @@
     {%- comment -%} ---------- Card 3: Shipping Address ---------- {%- endcomment -%}
     <div class="{{ card }} p-5 md:!p-8">
       <h2 class="font-kurdis-condensed font-extrabold text-bear-black text-[18px] leading-none mb-3">{{ 'customer.order.shipping_address' | t }}</h2>
-      <div class="font-kurdis-semi-condensed font-bold text-bear-black text-[16px] leading-[1.3] mb-6">{{ 'customer.order.fulfillment_status' | t }}: {{ order.fulfillment_status_label }}</div>
-      {%- if order.shipping_address -%}
+      <div class="font-kurdis-semi-condensed font-bold text-bear-black text-[16px] leading-[1.3] mb-6">{{ 'customer.order.fulfillment_status' | t }}: {{ o_fulfillment_status }}</div>
+      {%- if preview -%}
+        <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-bear-black not-italic">
+          {{ o_shipping_addr[0] }}<br>{{ o_shipping_addr[1] }},<br>{{ o_shipping_addr[2] }} {{ o_shipping_addr[3] }}
+        </address>
+      {%- elsif order.shipping_address -%}
         <address class="font-kurdis-semi-condensed font-bold text-[14px] leading-[1.6] text-bear-black not-italic">
           {{ order.shipping_address.address1 }}<br>
           {%- if order.shipping_address.address2 != blank %}{{ order.shipping_address.address2 }}<br>{% endif -%}

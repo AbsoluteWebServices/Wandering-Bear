@@ -122,7 +122,8 @@
     compact card was tightened to Figma this one stayed ~200px. Figma 1:739 draws the no-autoship
     mobile card as the same 350x162 box: 16 top, 88 content, 6 gap, 40 button, 12 bottom. Desktop
     keeps py-7 / gap-5 / min-h-120 — there the credit block and the button sit side by side. {%- endcomment -%}
-  <div class="relative {{ card }} px-6 pt-4 pb-3 md:!py-7 md:!px-6 mb-6 md:!min-h-[120px] flex flex-col !gap-1.5 md:!gap-5 md:!flex-row md:!items-center md:!justify-between">
+  {%- comment -%} Figma 1:602: this card is 774x104 with the button at y245-285, so 27px below it. {%- endcomment -%}
+  <div class="relative {{ card }} px-6 pt-4 pb-3 md:!pt-7 md:!pb-[27px] md:!px-5 mb-6 md:!min-h-[104px] flex flex-col !gap-1.5 md:!gap-5 md:!flex-row md:!items-center md:!justify-between">
     {%- comment -%} View Credit History pinned to the top-right in every state (short $0 or tall). {%- endcomment -%}
     <a href="/community/membership?customerId={{ customer.id }}" class="absolute top-5 right-6 z-[1] font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
     {%- comment -%} MOBILE: centered amount — matches the with-subscription (compact) card so both
@@ -149,9 +150,10 @@
     </div>
     {%- comment -%} Redeem → on-page modal. Button class is ALWAYS the standard one (never touch it);
       the 335px desktop width lives on this wrapper, not the button. {%- endcomment -%}
-    {%- comment -%} Match the Elite button's actual desktop width (470px — its column is fixed
-      because the account container is capped at 1092px); full-width when stacked, like Elite. {%- endcomment -%}
-    <div class="w-full shrink-0 md:w-[470px]">
+    {%- comment -%} Figma 1:602: the no-subscription card is 774x104 and its Redeem button is 335px
+      — the same width as the button in the compact card, not a wider one. The old 470 was sized
+      against the pre-774 container. Full-width when stacked. {%- endcomment -%}
+    <div class="w-full shrink-0 md:w-[335px] md:!self-end">
       {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shadow-button !w-full !h-[40px] !text-[15px]' -%}
     </div>
   </div>
@@ -159,7 +161,9 @@
 
 {%- comment -%} Variant A — has autoship: autoship card + compact credit {%- endcomment -%}
 <div data-wb-row-autoship{% if guess_none %} data-wb-hide{% endif %}>
-  <div class="flex flex-col md:!flex-row !gap-4 mb-4">
+  {%- comment -%} Desktop gap 24px so the two cards land on Figma's 375 each inside the 774
+    content column (774 - 24 = 750 / 2). Mobile keeps the tighter 16px stack gap. {%- endcomment -%}
+  <div class="flex flex-col md:!flex-row !gap-4 md:!gap-6 mb-4">
 
     {%- comment -%} Autoship card — active or cancelled. Filled by account.ts from Stay AI (worker). {%- endcomment -%}
     <div class="wb-row1-card flex-1 {{ card }} p-5 md:p-6 flex flex-col" data-wb-autoship{% if is_cancelled %} data-wb-autoship-state="cancelled"{% endif %}>
@@ -263,7 +267,11 @@
       {%- comment -%} QA #7: Figma Elite lays the 6 benefits out in COLUMNS (col1: $5 off + Earn $5;
         col2: Member exclusive + VIP CS; col3: Early access + Anniversary). grid-flow-col with 2 rows
         fills column-major from the same source order, and mobile (flex-col) keeps the list order. {%- endcomment -%}
-      <ul class="flex flex-col {% if is_elite %}smd:!grid smd:!grid-flow-col smd:!grid-rows-2 smd:!grid-cols-3{% endif %} !gap-x-6 !gap-y-2.5">
+      {%- comment -%} Columns are sized to their content rather than to three equal thirds. With the
+        content column at 774px, equal thirds leave 203px for the label while "Early access to sales
+        and launches" needs 215, so it wrapped. max-content columns spread by space-between fit the
+        real text (the widest column needs 215) and cannot wrap, whatever the copy. {%- endcomment -%}
+      <ul class="flex flex-col {% if is_elite %}smd:!grid smd:!grid-flow-col smd:!grid-rows-2 smd:!grid-cols-[repeat(3,max-content)] smd:!justify-between{% endif %} !gap-x-6 !gap-y-2.5">
         {%- for benefit in benefits -%}
           <li class="wb-benefit-item flex items-start font-kurdis-semi-condensed text-espresso">{{ crown }}<span>{{ benefit }}</span></li>
         {%- endfor -%}
@@ -300,7 +308,9 @@
     preview has no customer but does render a mock table, so it shows the header too. {%- endcomment -%}
   {%- if customer.orders.size > 0 or preview -%}
   <div class="flex items-center justify-between mt-2.5 mb-4 !gap-3">
-    <div>
+    {%- comment -%} shrink-0: below ~360px the fixed-width timeframe squeezed this block and both
+      headings wrapped to two lines. The timeframe compresses instead — see .wb-timeframe. {%- endcomment -%}
+    <div class="shrink-0">
       {%- comment -%} QA #14/#31: the whole Order-History header is #1B1B1B in Figma (nodes read
         #000000 on 1:24 / 1:320 and mobile 1:177) — was espresso #431A03 on both breakpoints. {%- endcomment -%}
       {%- comment -%} Figma: "Order History" = Kurdis SemiCondensed Bold 10px / 100%. {%- endcomment -%}
@@ -315,7 +325,7 @@
         "Timeframe:" label and the padding — opens the native picker. The visible value is our own
         styled text, kept in sync by account.ts (data-wb-timeframe-value).
       QA #20: hover belongs to the label text only, not the dropdown value — see account.css. {%- endcomment -%}
-    <div class="wb-timeframe relative flex items-center !gap-2 shrink-0">
+    <div class="wb-timeframe relative flex items-center !gap-2 min-w-0">
       <span class="wb-timeframe__label font-kurdis-semi-condensed font-bold text-[10px] leading-none text-center text-bear-black whitespace-nowrap">{{ 'customer.dashboard.timeframe' | t }}</span>
       <div class="inline-flex items-center !gap-1.5">
         {%- comment -%} QA #11: leading-none clips Kurdis ascenders in Chrome — give the line room. {%- endcomment -%}
