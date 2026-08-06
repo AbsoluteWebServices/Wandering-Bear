@@ -591,7 +591,7 @@
         "background_type": "gradient",
         "background_gradient": "linear-gradient(180deg, #F2E6DC 0%, #AF7404 100%)",
         "padding-block-start": 26,
-        "padding-block-end": 80,
+        "padding-block-end": 0,
         "padding-block-start-mobile": 6,
         "padding-block-end-mobile": 0,
         "paw_preview": "ab-bearhand.png",
