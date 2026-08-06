@@ -1,8 +1,8 @@
 {% assign first_variant = collection.products.first.variants.first %}
 
-<div class="wb-flex gap-0.5 flex-col w-full bg-white/50 pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase {% if template.suffix == 'single-serve' %} px-1.25{% elsif template.suffix == '96oz' %} px-1.25 md:px-6{% else %} px-4.5{% endif %}">
+<div class="flex gap-0.5 flex-col w-full bg-[#FFFFFF80] pb-2.5 pt-3.75 rounded-[5px] font-kurdis relative button-shadow uppercase {% if template.suffix == 'single-serve' %} px-1.25{% elsif template.suffix == '96oz' %} px-1.25 md:px-6{% else %} px-4.5{% endif %}">
 <div class="absolute -top-5 -right-2 rotate-[1.993deg] w-[96px]">
-  {% render 'badge', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-semi-condensed uppercase font-bold leading-[175%] mt-px', svg_class: 'text-gold'%}
+  {% render 'badge', button_class: 'h-5 flex justify-center items-center', text: 'Most Popular', text_class: 'text-white text-[12px] font-kurdis-condensed uppercase font-bold leading-[100%] h-fit', svg_class: 'text-gold'%}
 </div>
 <div class="flex items-center justify-between">
   {% for i in (1..bundle_products_count) %}
@@ -29,7 +29,7 @@
           :class="bundleSize >= {{ i }} ? '!outline-gold !bg-white' : 'outline-[#CFBDB1] bg-[#F2E6DC]'"
           {% endunless %}
           >
-            <div class="flex items-center justify-center h-3.5 w-3.5 bg-[#CFBDB1] rounded-full bg-transparent"
+            <div class="flex items-center justify-center h-4 w-4 bg-[#CFBDB1] rounded-full bg-transparent"
             {% unless cart_editor %}
               :class="bundleSize >= {{ i }} ? '!bg-gold' : 'bg-transparent'"
             {% endunless %}
@@ -37,7 +37,7 @@
             {% if cart_editor %}
                 <div
                 data-tier-dot-inner
-                class="wb-flex items-center justify-center h-3.5 w-3.5 rounded-full bg-transparent"
+                class="wb-flex items-center justify-center h-4 w-4 rounded-full bg-transparent"
               ></div>            
             {% endif %}
             </div>

@@ -112,7 +112,8 @@
           <span class="rating-count-separator">|</span>
         {%- endif -%}
         {%- if block_settings.show_number -%}
-          {{- rating_count }}
+          {% comment %} Mimic delimiter filter logic {% endcomment %}
+          {{- rating_count | times: 100 | money_without_currency | remove: ".00" | remove: ",00" }}
           {{ 'content.reviews' | t }}
         {%- endif -%}
       </p>
