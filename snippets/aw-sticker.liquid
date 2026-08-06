@@ -59,13 +59,28 @@
   elsif s.preview_asset != blank
     assign sticker_src = s.preview_asset | asset_url
   endif
+
+  # A desktop-only sticker is revealed from the smd breakpoint (750px) up. When it is also meant to
+  # stay hidden on tablet, that is the same thing as revealing it from md (1024px) instead, so raise
+  # the breakpoint rather than overriding it: Tailwind's smd:!block lives in @layer utilities, and
+  # for !important declarations the cascade reverses layer order — a layered !important beats an
+  # unlayered one at any specificity, so a display:none of ours could never win against it.
+  assign vis_class = ''
+  if s.desktop_only
+    assign vis_class = ' hidden smd:!block'
+    if s.hide_tablet
+      assign vis_class = ' hidden md:!block'
+    endif
+  elsif s.mobile_only
+    assign vis_class = ' smd:!hidden'
+  endif
 -%}
 
 {%- if sticker_src != blank -%}
   <img
     src="{{ sticker_src }}"
     alt="{{ s.image.alt }}"
-    class="aw-sticker aw-sticker--{{ block.id }} absolute pointer-events-none select-none z-[3]{% if s.desktop_only %} hidden smd:!block{% elsif s.mobile_only %} smd:!hidden{% endif %}"
+    class="aw-sticker aw-sticker--{{ block.id }} absolute pointer-events-none select-none z-[3]{{ vis_class }}"
     loading="lazy"
     {{ block.shopify_attributes }}
   >
@@ -86,5 +101,23 @@
         transform: translate({{ tx_css }}, {{ ty_css }}) rotate({{ rot_css }}deg);
       }
     }
+    {%- comment -%}
+      A desktop anchor pinned in px sits at the same distance from the left edge on a tablet, where
+      the plate is far narrower — so the sticker lands off its mark. left_tablet overrides just that
+      range; pass any CSS length or percentage.
+    {%- endcomment -%}
+    {%- if s.left_tablet != blank or s.top_tablet != blank or s.hide_tablet -%}
+      @media screen and (min-width: 750px) and (max-width: 1023px) {
+        .aw-sticker--{{ block.id }} {
+          {%- comment -%}
+            A desktop-only sticker is already kept off the tablet by its md: breakpoint class (see
+            the vis_class note above); this covers the stickers that carry no visibility class.
+          {%- endcomment -%}
+          {% unless s.desktop_only %}{% if s.hide_tablet %}display: none !important;{% endif %}{% endunless %}
+          {% if s.left_tablet != blank %}left: {{ s.left_tablet }};{% endif %}
+          {% if s.top_tablet != blank %}top: {{ s.top_tablet }};{% endif %}
+        }
+      }
+    {%- endif -%}
   {%- endstyle -%}
 {%- endif -%}

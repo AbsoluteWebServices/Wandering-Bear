@@ -818,7 +818,8 @@
   /* The "Fresh Taste Guarantee." pill is the one run set in the Parslay script face (Figma 1694:518
      — Parslay Regular 24/138%). It restates the size because the body rule above is !important and
      would otherwise flatten the inline 24px the template sets. */
-  .wb-about-text__body a[style*="background"] {
+  .wb-about-text__body a[style*="background"],
+  .wb-about-text__body span[style*="background"] {
     font-family: Parslay, sans-serif !important;
     font-weight: 400 !important;
     font-size: 24px !important;
@@ -854,7 +855,8 @@
      little extra side padding. */
   @media screen and (max-width: 749px) {
     {%- comment -%} Mobile sizes per Figma 1694:245: body 12px, the pill 18px. {%- endcomment -%}
-    .wb-about-text__body a[style*="background"] {
+    .wb-about-text__body a[style*="background"],
+    .wb-about-text__body span[style*="background"] {
       /* Figma mobile (1694:518): the pill is a fixed 276x41 plate with the label centred in it,
          not a box that hugs the text. */
       display: flex !important;
@@ -864,7 +866,7 @@
       max-width: 100%;
       height: 41px !important;
       box-sizing: border-box;
-      padding: calc(var(--pill-text-drop, 6px) * 2) 10px 0 !important;
+      padding: calc(var(--pill-text-drop-mobile, 3px) * 2) 10px 0 !important;
       margin: 12px auto 0 !important;
       font-size: 18px !important;
       white-space: nowrap;
@@ -1825,6 +1827,9 @@
         { "type": "number", "id": "tx", "label": "Translate X % (anchor, default -50)" },
         { "type": "number", "id": "ty", "label": "Translate Y % (anchor, default -50)" },
         { "type": "text", "id": "left_px", "label": "Left px — desktop (overrides %, pins to the plate edge)" },
+        { "type": "text", "id": "left_tablet", "label": "Left — tablet 750-1023 (e.g. 430px or 19%)" },
+        { "type": "checkbox", "id": "hide_tablet", "label": "Hide on tablet 750-1023", "default": false },
+        { "type": "text", "id": "top_tablet", "label": "Top — tablet 750-1023" },
         { "type": "text", "id": "top_px", "label": "Top px — desktop (overrides %)" },
         { "type": "number", "id": "tx_px", "label": "Translate X px (use with Width px)" },
         { "type": "number", "id": "ty_px", "label": "Translate Y px (use with Width px)" },
