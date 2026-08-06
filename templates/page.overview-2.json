@@ -192,7 +192,7 @@
                   "name": "t:names.text",
                   "settings": {
                     "block_class": "product-description",
-                    "text": "{{ closest.product.metafields.custom.product_group.value.description | metafield_tag }}",
+                    "text": "<ul><li><strong>About 16 cups of coffee</strong></li><li>Strong, each glass = 2 espresso shots</li><li>Store anywhere until you're ready to pour</li><li>No dairy, no sugar</li></ul>",
                     "width": "fit-content",
                     "max_width": "normal",
                     "alignment": "left",
