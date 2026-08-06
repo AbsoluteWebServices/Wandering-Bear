@@ -207,8 +207,8 @@
         "overflow_visible": true,
         "plate_margin_bottom_mobile": 20,
         "plate_pad_y_mobile": 20,
-        "plate_pad_x_mobile": 64,
-        "body_pad_x_mobile": "20",
+        "plate_pad_x_mobile": 61,
+        "body_pad_x_mobile": "0",
         "title_gap_mobile": "5"
       }
     },
