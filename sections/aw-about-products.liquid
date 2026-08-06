@@ -25,6 +25,11 @@
   --paw-left-mobile: {{ s.paw_left_mobile | default: -339 }}px;
   --paw-top-mobile: {{ s.paw_top_mobile | default: -60 }}px;
   --paw-bleed-mobile: {{ s.paw_bleed_mobile | default: -148 }}px;
+  {%- comment -%}
+    spacing-style only tiers padding as mobile (<750) and desktop (>=750), so zeroing the desktop
+    bottom padding takes the tablet with it. This third tier restores it for 750-1023 only.
+  {%- endcomment -%}
+  --padding-block-end-tablet: {{ s.padding_block_end_tablet | default: 80 }}px;
 {% endcapture %}
 
 <div
@@ -190,6 +195,16 @@
 {% endstyle %}
 
 {% stylesheet %}
+  /* The shared spacing-style helper resolves --padding-block-end from the mobile value below 750px
+     and the desktop one above it — there is no tablet tier, so a desktop value of 0 also empties the
+     tablet. The section keeps its own third tier here; --padding-block-end-tablet is set on the
+     wrapper, since Liquid does not run inside this block. */
+  @media screen and (min-width: 750px) and (max-width: 1023px) {
+    .wb-about-products {
+      --padding-block-end: var(--padding-block-end-tablet, var(--padding-block-end-desktop, 0px));
+    }
+  }
+
   /* Fonts per Figma: regular Kurdis for labels/subheading/promise text, Gothic Condensed for the
      numbered badges, Parslay for the script. Enforced here (not only via Tailwind utilities) so the
      section stays correct independent of the bundle. */
@@ -896,6 +911,17 @@
       "step": 2,
       "unit": "px",
       "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_block_end_tablet",
+      "label": "Bottom — tablet 750-1023",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "default": 80,
+      "info": "The shared spacing helper has no tablet tier, so the bottom padding above splits into desktop-only and this."
     },
     {
       "type": "range",
