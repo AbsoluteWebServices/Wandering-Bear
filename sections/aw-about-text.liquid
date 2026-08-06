@@ -723,6 +723,21 @@
 {%- endif -%}
 
 {%- comment -%}
+  Above the mobile breakpoint the gap is whatever mb-5 gives (20px). That utility sits on every
+  aw-about-text heading, so a section that wants its own distance overrides it here rather than in
+  the markup — editing the class would move every heading on the page.
+{%- endcomment -%}
+{%- if s.title_gap != blank -%}
+  {% style %}
+    @media screen and (min-width: 750px) {
+      .wb-about-text--{{ section.id }} .wb-about-text__title {
+        margin-bottom: {{ s.title_gap }}px !important;
+      }
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- comment -%}
   Desktop-only geometry. These are tuned against the 1280 design width, and the row still has to
   fit a 768 tablet, so they start at 1024 rather than at the 750 breakpoint the rest of the row
   layout uses — below that the column and the side image keep their original sizes.
@@ -1771,6 +1786,7 @@
     },
     { "type": "text", "id": "side_mobile_width_pct", "label": "Mobile photo width % of copy column" },
     { "type": "text", "id": "title_gap_mobile", "label": "Title gap below — mobile px" },
+    { "type": "text", "id": "title_gap", "label": "Title gap below — 750px and up (blank = mb-5, 20px)" },
     { "type": "number", "id": "side_mobile_poke", "label": "Mobile photo poke above plate px" },
     { "type": "number", "id": "side_mobile_gap", "label": "Mobile photo gap below px" },
     { "type": "text", "id": "side_mobile_zoom", "label": "Mobile photo background-size" },
