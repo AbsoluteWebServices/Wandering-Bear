@@ -104,7 +104,10 @@
         rendered as rotate-[-1.99deg] without objection). Do not "fix" this back to +4deg on the
         strength of the Figma value alone — it has already been flipped twice.
         Text #E4B850 on gold. {%- endcomment -%}
-      <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 -rotate-[4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
+      {%- comment -%} Written as rotate-[-4deg], not -rotate-[4deg]: both compile to
+        `rotate: -4deg`, but the explicit form is what the markup and devtools both show, so there
+        is no negative-prefix step to second-guess. Matches how "YOUR CREDIT:" is written below. {%- endcomment -%}
+      <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 rotate-[-4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
     </span>
   </h1>
   <a href="{{ routes.account_logout_url }}" class="wb-welcome__logout font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
@@ -127,7 +130,7 @@
     keeps py-7 / gap-5 / min-h-120 — there the credit block and the button sit side by side. {%- endcomment -%}
   <div class="relative {{ card }} px-6 pt-4 pb-3 md:!py-7 md:!px-6 mb-6 md:!min-h-[120px] flex flex-col !gap-1.5 md:!gap-5 md:!flex-row md:!items-center md:!justify-between">
     {%- comment -%} View Credit History pinned to the top-right in every state (short $0 or tall). {%- endcomment -%}
-    <a href="/community/membership?customerId={{ customer.id }}" class="absolute top-5 right-6 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+    <a href="/community/membership?customerId={{ customer.id }}" class="absolute top-5 right-6 z-[1] font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
     {%- comment -%} MOBILE: centered amount — matches the with-subscription (compact) card so both
       states look identical on mobile. Hidden on desktop. {%- endcomment -%}
     {%- comment -%} QA #40/#27: Figma gives the mobile credit card an identical 350x162 box in BOTH
@@ -136,7 +139,7 @@
       +45px nudge (which is what made the card ~200px tall). The ~48px QA measured between
       "YOUR CREDIT:" and the amount falls out of the label's 24px inset + the card-centred amount. {%- endcomment -%}
     <div class="relative min-h-[88px] md:!hidden">
-      <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+      <span class="absolute left-0 top-0 z-[1] rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
       <div class="flex flex-col items-center text-center pt-[14px]">
         <span class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold" data-wb-credit-balance>{{ credits_formatted }}</span>
         <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
@@ -226,8 +229,8 @@
         History top-right; expiry centred under the amount. QA #40: the old h-full/justify-center
         + translate-y hack pushed the card to ~200px against Figma's 162px. {%- endcomment -%}
       <div class="relative min-h-[88px] mb-[6px]">
-        <a href="/community/membership?customerId={{ customer.id }}" class="absolute right-0 top-0 z-10 font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
-        <span class="absolute left-0 top-0 z-10 rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+        <a href="/community/membership?customerId={{ customer.id }}" class="absolute right-0 top-0 z-[1] font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+        <span class="absolute left-0 top-0 z-[1] rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <div class="flex flex-col items-center text-center pt-[14px]">
           <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold" data-wb-credit-balance>{{ credits_formatted }}</div>
           <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-[12px] text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
@@ -415,9 +418,13 @@
 <div class="relative">
   {%- comment -%} QA #34: Figma badge ("COLD BREW 96oz" group) is 101x91 and sits 33px above the
     card top on mobile — was 76px wide and pulled up by half its height, which left the heading
-    crowded underneath. Width + offset + the card's mobile top padding live in account.css. {%- endcomment -%}
+    crowded underneath. Width + offset + the card's mobile top padding live in account.css.
+    z-[2], not z-20: the sticky header is z-index 8, and every ancestor here is position:relative
+    with z-index:auto, which does NOT open a stacking context — so a 20 competed with the header
+    directly and painted over it while scrolling. The badge only ever needed to beat its own
+    sibling card, so 2 is enough. The credit-card labels use z-[1] for the same reason. {%- endcomment -%}
   <img src="{{ 'account-contact-badge.png' | asset_url }}" alt="Wandering Bear Cold Brew" width="120" height="120"
-       class="wb-contact__badge absolute top-0 z-20 w-[76px] md:w-[118px] h-auto left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-0 md:left-0 md:-translate-x-[20%] md:-translate-y-[20%] md:rotate-[-12deg]">
+       class="wb-contact__badge absolute top-0 z-[2] w-[76px] md:w-[118px] h-auto left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-0 md:left-0 md:-translate-x-[20%] md:-translate-y-[20%] md:rotate-[-12deg]">
   <div class="wb-contact relative flex flex-col items-center justify-center overflow-hidden rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] text-center px-6 py-6 smd:py-4 smd:aspect-[746/144] bg-cover bg-top bg-no-repeat bg-(--color-brand-light_cream)"
        style="background-image: url({{ 'account-contact-clouds.png' | asset_url }});">
     {%- comment -%} QA #33: Figma heading is 25px on mobile (1:177 / 1:466). {%- endcomment -%}
