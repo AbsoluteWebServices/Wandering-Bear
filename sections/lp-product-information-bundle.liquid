@@ -52,6 +52,11 @@
     {% else %}
       background: var(--background);
     {% endif %}
+
+    @media (max-width: 768px) {
+      background-image: none !important;
+      background-color: {{ section.settings.color_scheme.settings.background }} !important;
+    }
   }
 {% endstyle %}
 

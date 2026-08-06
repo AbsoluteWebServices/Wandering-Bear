@@ -94,7 +94,8 @@
     lg:max-h-[500px]
 {% endif %}
 " style="{{ color_styles }}">
-   <div class="col-1-{{ section.id }} flex justify-center items-center px-[55px] pt-8 pb-11 md:py-[40px] order-2 md:order-1
+   <div class="col-1-{{ section.id }} flex justify-center items-center 
+   {% if is_blog %} px-[55px] {% else %} px-9.5 {% endif %} pt-8 pb-11 md:py-[40px] order-2 md:order-1
    {% if template.name == 'blog' %}
     lg:max-h-[500px]
    {% endif %}
@@ -106,7 +107,7 @@
             max-w-[420px]
         {% endif %}
         max-w-[420px]">
-            <h1 class="text-inherit !leading-[100%] {% if template.name == 'blog' %} mb-8 lg:mb-10 {% else %} mb-5 {% endif %} text-center md:text-left
+            <h1 class="text-inherit !leading-[100%] {% if template.name == 'blog' %} mb-8 lg:mb-10 {% else %} mb-5 max-w-[289px] md:max-w-none mx-auto {% endif %} text-center md:text-left
             {% case section.settings.title_size %}
                 {% when 'display-md' %}
                     display-md

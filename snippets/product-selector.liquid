@@ -33,7 +33,7 @@
     {% if template.suffix == 'single-serve' or template.suffix == '32oz'%} rounded-tr-[5px]{% endif %}
   ">
     {% if image != blank %}
-      {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover' %}
+      {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover absolute' %}
     {% else %}
       <div class="absolute inset-0 z-[2] wb-flex justify-center items-center">
         <span class="text-xs text-center">Missing Image</span>
@@ -49,15 +49,15 @@
         </span>
 
         {% if is_oos %}
-          <div class="flex items-center justify-center rounded-full py-0.75 px-1 h-fit bg-espresso">
-            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap md:mt-0.5 text-cream">
+          <div class="flex items-center justify-center rounded-full py-0.75 px-2 h-fit bg-espresso">
+            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap text-cream">
               {{ oos_badge_text }}
             </span>
           </div>
         {% elsif product_badge != blank %}
-          <div class="flex items-center justify-center rounded-full py-0.75 px-1 h-fit"
+          <div class="flex items-center justify-center rounded-full py-0.75 px-2 h-fit"
             style="background-color: {{ product_badge_color }}; color: {{ product_badge_text_color }}">
-            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap md:mt-0.5">{{
+            <span class="inline-block text-[10px]/none font-kurdis uppercase font-bold !leading-[100%] whitespace-nowrap">{{
               product_badge_text }}
             </span>
           </div>
@@ -76,7 +76,7 @@
       </div>
       <span class="text-xs/[120%] font-kurdis-semi-condensed font-semibold text-bear-black md:mt-0.75 md:text-[10px]/[120%]">{{ flavor_description }}</span>
     </div>
-    <div class="min-w-20 w-fit shrink-0 self-stretch wb-flex items-center">
+    <div class="min-w-[100px] w-fit shrink-0 self-stretch wb-flex items-center justify-end">
       {% if member_only and is_member_unlocked == false %}
           <div class="wb-flex justify-end items-center">
           <button
@@ -120,10 +120,10 @@
           <button
             class="group h-10! lg:h-7.5! w-20! flex justify-center items-center relative whitespace-nowrap cursor-pointer shadow-button"
             @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})"
-            :disabled="disabled" :class="{ 'opacity-50 pointer-events-none': disabled }"
+            :disabled="disabled" :class="{ 'opacity-50 !cursor-default': disabled }"
           >
             <span
-              class="relative text-sm md:text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold md:mt-0.5"
+              class="relative leading-1 text-sm md:text-[12px] text-cream z-1 font-kurdis-semi-condensed uppercase font-bold"
             >
               + Add{% if template.suffix == 'single-serve' %} Case{% endif %}
             </span>
@@ -179,11 +179,11 @@
           </button>
 
           <span
-            class="text-[12px] w-10 text-espresso text-center font-kurdis uppercase font-bold"
+            class="text-xl md:text-[12px] w-10 text-espresso text-center font-kurdis-condensed uppercase font-extrabold"
             x-text="getBundleProductQuantity({{ child_product.id }})"></span>
           <button
             :disabled="getBundleProductQuantity({{ child_product.id }}) >= qtyLimit"
-            :class="{ 'opacity-50 pointer-events-none': disabled }"
+            :class="{ 'opacity-50 !cursor-default': disabled }"
             class="group cursor-pointer relative shadow-button  w-7.5 h-10 smd:h-7.5"
             @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity++"
           >

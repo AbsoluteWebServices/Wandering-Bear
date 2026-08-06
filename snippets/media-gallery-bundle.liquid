@@ -43,11 +43,11 @@
 
 <div data-media-gallery-bundle class="w-full overflow-hidden mx-auto md:mx-0 md:max-w-[570px]">
     <div class="flex flex-col gap-2 md:gap-4.25 md:!max-w-[570px]">
-        <div class="swiper swiper-main product-gallery w-full md:max-h-[540px] md:max-w-[570px] lg:aspect-[570/540]" x-ref="swiper">
-            <div class="swiper-wrapper max-w-full max-h-[540px]">
+        <div class="swiper swiper-main product-gallery w-full lg:max-h-[540px] md:max-w-[570px] lg:aspect-[570/540]" x-ref="swiper">
+            <div class="swiper-wrapper max-w-full max-h-full lg:max-h-[540px]">
                 {% for media in product_media %}
                     <div
-                        class="swiper-slide rounded-[5px] max-h-[540px] overflow-hidden{% if disable_gallery_background != true %} before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full before:bg-kraft/15 before:rounded-[5px] before:-z-1{% endif %}{% if media.height > media.width or media.height < media.width %}{% endif %}"
+                        class="swiper-slide rounded-[5px] lg:max-h-[540px] overflow-hidden{% if disable_gallery_background != true %} before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full before:bg-kraft/15 before:rounded-[5px] before:-z-1{% endif %}{% if media.height > media.width or media.height < media.width %}{% endif %}"
                         style="{{ slide_styles }}"
                     >
                         {{ media | image_url: width: 600 | image_tag: class: 'w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt }}
