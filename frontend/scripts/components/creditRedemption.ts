@@ -1,4 +1,6 @@
 import { Alpine as AlpineType } from 'alpinejs'
+// Same event the theme's own cart component dispatches — it is what makes the drawer re-render.
+import { CartUpdateEvent } from '../../../assets/events'
 
 /**
  * Credit redemption modal (Inveterate). Lets a member redeem membership store credits without
@@ -212,31 +214,54 @@ export default (Alpine: AlpineType) => {
       }
     },
 
-    /** Where to land after Shopify stores the code on the cart session.
-     *  QA #48: /cart with an empty cart bounces the member to the home page, which reads as though
-     *  applying the code did nothing. With nothing in the cart we send them to the catalogue
-     *  instead, so the code they just applied has something to be spent on. The same fallback is
-     *  used when /cart.js is unreachable — the catalogue never bounces, /cart might. */
-    async applyRedirect(): Promise<string> {
-      try {
-        const res = await fetch('/cart.js', { headers: { Accept: 'application/json' } })
-        const cart = (await res.json()) as { item_count?: number }
-        return (cart.item_count ?? 0) > 0 ? '/cart' : '/collections/all'
-      } catch {
-        return '/collections/all'
-      }
-    },
-
-    /** Shopify discount URL — encode the code (`+` → `%2B`). Built here rather than using the
-     *  worker's apply_url, because that one hard-codes redirect=/cart and we need to choose. */
+    /** Apply the code to the cart session.
+     *
+     *  With items already in the cart we keep the member where they are: the code is applied with a
+     *  same-origin fetch to /discount/<code> (which is what sets it on the session), the cart is
+     *  re-read, and the theme's own CartUpdateEvent re-renders the drawer before it slides open —
+     *  the same sequence cart.ts uses after any cart mutation. No navigation at all.
+     *
+     *  With an empty cart there is nothing to show in a drawer, so we still navigate: /cart would
+     *  bounce to the home page, so the catalogue is the destination.
+     *
+     *  Anything unexpected falls back to a plain navigation, because the code being applied matters
+     *  more than staying on the page. */
     async applyToCart(): Promise<void> {
       if (this.isMock) return // a mock code can't be applied for real
       const code = this.result?.code || ''
       if (!code) return
-      // redirect is a fixed internal literal, so it goes in raw — the documented Shopify form,
-      // and the one this flow already worked with. Only the code needs encoding (`+` → `%2B`).
-      const redirect = await this.applyRedirect()
-      window.location.href = `/discount/${encodeURIComponent(code)}?redirect=${redirect}`
+      // The code is the only part that needs encoding (`+` → `%2B`); redirect targets are fixed
+      // internal literals and go in raw, which is the documented Shopify form.
+      const discountUrl = `/discount/${encodeURIComponent(code)}`
+
+      const drawer = document.querySelector<HTMLElement & { open?: () => void }>('cart-drawer-component')
+      let itemCount = 0
+      try {
+        const cart = (await (await fetch('/cart.js', { headers: { Accept: 'application/json' } })).json()) as {
+          item_count?: number
+        }
+        itemCount = cart.item_count ?? 0
+      } catch {
+        window.location.href = `${discountUrl}?redirect=/collections/all`
+        return
+      }
+
+      if (itemCount === 0) {
+        window.location.href = `${discountUrl}?redirect=/collections/all`
+        return
+      }
+
+      try {
+        // redirect=/cart.js makes the discount route hand back the updated cart instead of a page.
+        const res = await fetch(`${discountUrl}?redirect=/cart.js`, { headers: { Accept: 'application/json' } })
+        if (!res.ok) throw new Error(String(res.status))
+        const cart = await res.json()
+        document.dispatchEvent(new CartUpdateEvent(cart, 'wb-credit-redeem', { itemCount: cart.item_count, source: 'cart' }))
+        this.close()
+        drawer?.open?.()
+      } catch {
+        window.location.href = `${discountUrl}?redirect=/cart`
+      }
     },
     async copyCode() {
       try {

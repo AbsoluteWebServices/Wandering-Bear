@@ -339,7 +339,12 @@
     text-transform: uppercase;
     letter-spacing: 0 !important;
     line-height: 100% !important;
+
+    @media screen and (max-width: 890px) {
+      padding-inline: 4px;
+    }
   }
+
   [slot='overflow'] .menu-list__link-title {
     padding-inline: 0;
   }

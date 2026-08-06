@@ -112,7 +112,9 @@
         "enable_transparent_header_product": false,
         "product_color_scheme": "default",
         "enable_transparent_header_collection": false,
-        "collection_color_scheme": "default"
+        "collection_color_scheme": "default",
+        "mobile_account_link": "/account",
+        "mobile_account_link_text": "Account"
       }
     }
   },

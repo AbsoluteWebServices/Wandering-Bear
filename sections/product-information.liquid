@@ -185,7 +185,25 @@
   </sticky-add-to-cart>
 {% endif %}
 
-<div x-data="productForm({{ product.id }},{{ product.selected_or_first_available_variant.id }},{% if selling_plan_id %}{{ selling_plan_id }}{% else %}null{% endif %}, {{ landing_page }})">
+{%- liquid
+  # Templates that use Horizon's default variant-change wiring (variant-picker-simple →
+  # variant-main-picker → <product-form>/<variant-picker> web components) must NOT get the
+  # Alpine productForm x-data wrapper, or Alpine intercepts the default variantUpdate events.
+  # Every other product template (and page landing pages) still relies on productForm().
+  assign simple_template = false
+  if template.suffix == 'misc' or template.suffix == 'simple' or template.suffix == 'gift-card'
+    assign simple_template = true
+  endif
+  assign uses_default_variant_wiring = false
+  if simple_template
+    assign uses_default_variant_wiring = true
+  endif
+-%}
+<div
+{% unless uses_default_variant_wiring %}
+  x-data="productForm({{ product.id }},{{ product.selected_or_first_available_variant.id }},{% if selling_plan_id %}{{ selling_plan_id }}{% else %}null{% endif %}, {{ landing_page }})"
+{% endunless %}
+>
 {% render 'product-information-content',
   product_media_size: closest.product.media.size,
   section_id: section.id,

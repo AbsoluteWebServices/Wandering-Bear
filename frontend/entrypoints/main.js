@@ -21,6 +21,7 @@ import '../styles/products-slider.css';
 import '../styles/multi-coll-carousel.css';
 import '../styles/blog.css';
 import '../styles/collection.css';
+import '../styles/inveterate.css';
 
 export {}
 
@@ -49,7 +50,7 @@ const positionBadges = () => {
       )
   
       badge.style.left = `${anchorRect.right - parentRect.left + x}px`
-      badge.style.top = `${anchorRect.bottom - parentRect.top + y}px`
+      // badge.style.top = `${anchorRect.bottom - parentRect.top + y}px`
       badge.style.opacity = '1'
     })
   }

@@ -73,8 +73,13 @@
           <p x-show="error === 'invalid_amount'" class="font-kurdis-semi-condensed text-[12px] text-[#BD2121] mb-3" style="display:none">{{ 'customer.dashboard.redeem_err_invalid_amount' | t }}</p>
           <p x-show="error && error !== 'invalid_amount'" class="font-kurdis-semi-condensed text-[12px] text-[#BD2121] mb-3" style="display:none">{{ 'customer.dashboard.redeem_err_failed' | t }}</p>
 
-          <button type="button" @click="submit()" :disabled="loading" class="wb-redeem-btn font-kurdis-condensed font-extrabold uppercase text-[15px]">
-            <span x-text="loading ? '…' : '{{ 'customer.dashboard.redeem_generate' | t }}'"></span>
+          {%- comment -%} Generating the code is a real round trip to Inveterate and can take a
+            second or two, so the button gets a spinner rather than swapping its label for "…",
+            which read as though nothing was happening. aria-busy + aria-live announce the state;
+            the spinner itself is decorative. {%- endcomment -%}
+          <button type="button" @click="submit()" :disabled="loading" :aria-busy="loading" class="wb-redeem-btn font-kurdis-condensed font-extrabold uppercase text-[15px] !gap-2">
+            <span class="wb-spinner" x-show="loading" x-cloak aria-hidden="true"></span>
+            <span aria-live="polite" x-text="loading ? '{{ 'customer.dashboard.redeem_generating' | t }}' : '{{ 'customer.dashboard.redeem_generate' | t }}'">{{ 'customer.dashboard.redeem_generate' | t }}</span>
           </button>
         </div>
 
