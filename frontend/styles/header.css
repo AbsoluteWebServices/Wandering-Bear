@@ -1,5 +1,6 @@
 .tooltip-content a {
     text-decoration: underline !important;
+    color: --var(--color-espresso) !important;
 }
 
 /* @media screen and (min-width: 749px) {
