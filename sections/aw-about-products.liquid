@@ -409,6 +409,12 @@
     text-align: center;
   }
 
+  /* Per the comp the middle card is the only one off-axis — first and third sit level, the second
+     lifts its right edge by 4deg. The number badge is a child, so it tilts with the card. */
+  .wb-about-products__promise:nth-child(2) {
+    transform: rotate(-4deg);
+  }
+
   .wb-about-products__promise-num {
     position: absolute;
     top: -24px;
@@ -584,6 +590,18 @@
     /* Figma 1694:245: the label clears the tile's bottom edge by 11px. */
     .wb-about-products__cell {
       padding: 12px 12px 11px;
+    }
+
+    /* Mobile corners are tighter than desktop's across the page: the tiles are roughly half the
+       width here, so the desktop radius eats a visible share of a short edge and reads as soft. */
+    .wb-about-products__cell,
+    .wb-about-products__promise {
+      border-radius: 8px;
+    }
+
+    /* Kept a step below the tile so the photo's corner sits inside the frame's, not against it. */
+    .wb-about-products__card {
+      border-radius: 6px;
     }
 
     /* Figma 1694:245: card labels drop to 13px on mobile and stay on one line. */
