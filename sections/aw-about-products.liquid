@@ -884,6 +884,34 @@
       "visible_if": "{{ section.settings.background_type == 'image' }}"
     },
     {
+      "type": "header",
+      "content": "Background mobile"
+    },
+    {
+      "type": "select",
+      "id": "background_type_mobile",
+      "label": "Background type mobile",
+      "options": [
+        { "value": "same", "label": "Same as desktop" },
+        { "value": "transparent", "label": "Transparent" },
+        { "value": "color", "label": "Color" },
+        { "value": "gradient", "label": "Gradient" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient_mobile",
+      "label": "Background gradient mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'gradient' }}"
+    },
+    {
+      "type": "color",
+      "id": "background_solid_mobile",
+      "label": "Background color mobile",
+      "visible_if": "{{ section.settings.background_type_mobile == 'color' }}"
+    },
+    {
       "type": "number",
       "id": "section_margin_top",
       "label": "Section margin-top px (reserve space for the absolute banner above)"
