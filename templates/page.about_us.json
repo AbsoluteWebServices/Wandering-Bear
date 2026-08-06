@@ -11,7 +11,9 @@
             "top": 73,
             "width": 16,
             "rotate": 0,
-            "desktop_only": true
+            "desktop_only": true,
+            "top_px": "465",
+            "top_tablet": "73%"
           }
         },
         "ben": {
