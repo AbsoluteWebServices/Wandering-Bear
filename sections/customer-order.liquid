@@ -33,7 +33,9 @@
         inset the frame specifies. {%- endcomment -%}
       <a href="{{ routes.account_url }}" class="inline-flex items-center justify-center !gap-2 w-[165px] h-[43px] rounded-[10px] bg-foam shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-center text-[#4B2A18] transition-opacity hover:opacity-80">
         <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>{{ 'customer.order.back_to_account' | t }}</span>
+        {%- comment -%} QA: the label sat slightly high in Windows/Chrome. .wb-optical-center trims
+          the text box to the glyphs so items-center lands on them, not on font metrics. {%- endcomment -%}
+        <span class="wb-optical-center">{{ 'customer.order.back_to_account' | t }}</span>
       </a>
       {%- liquid
         assign tracking_class = 'font-gothic_condensed font-extrabold text-[16px] leading-none text-right underline text-espresso'

@@ -339,14 +339,34 @@
     font-size: 14px;
     line-height: 1.8;
 }
-/* QA #8: give the icon a box exactly one line box tall (font-size x line-height = 1.8em) and let
-   the row align to flex-start. The icon then occupies the same vertical slot as the first line of
-   text and the SVG centres its artwork inside that box on its own — no px nudge, so it cannot
-   drift when Chrome on Windows resolves different metrics for Kurdis. A benefit that wraps to two
-   lines now keeps its crown on the first line instead of centring against both. */
+/* QA #8: the icon gets a box exactly one line box tall (font-size x line-height = 1.8em) and the
+   SVG centres its own artwork inside it — no px nudge to drift. */
 .wb-benefit-item__icon {
     width: 18px;
     height: 1.8em;
+}
+
+/* ---- Optical centring against font metrics ------------------------------- */
+/* Centring text in a fixed box normally centres the LINE BOX, and where the glyphs sit inside
+   that line box is decided by the font's ascent/descent — which Chrome resolves from a different
+   metrics table on Windows than on macOS. Measured for Kurdis Condensed at 14px: ascent 14 +
+   descent 3 = a 17px font box inside a 14px line box at leading-none, so the glyphs are placed
+   purely by the baseline. That is why the back-link label sat high and the benefit crowns sat low
+   on Windows while both looked centred on macOS.
+   text-box trims the box to the glyphs themselves (cap height → alphabetic baseline), so
+   align-items lands on what you actually see and the result no longer depends on the platform.
+   Behind @supports: where it is unavailable, rendering is exactly as before. */
+@supports (text-box: trim-both cap alphabetic) {
+    .wb-optical-center,
+    .wb-benefit-item > span {
+        text-box: trim-both cap alphabetic;
+    }
+    /* With the label trimmed to its glyphs, centring both boxes puts the crown's artwork on the
+       text's optical centre. (A benefit long enough to wrap would centre its crown against both
+       lines; none of the current copy wraps, even at 360px.) */
+    .wb-benefit-item {
+        align-items: center;
+    }
 }
 
 /* ---- Account CTA spacing on mobile: 6px above, 8px of VISIBLE gap below ---- */
