@@ -237,7 +237,7 @@
         "title_align": "left",
         "font_size": 40,
         "font_size_mobile": 20,
-        "body": "<p>We source <strong>specialty grade, 100% Arabica, USDA organic beans</strong> from small cooperatives in Central and South America (natural water processed for decaf). We brew strong, sometimes with more than double the coffee our competitors use, then cold brew and filter for a smooth, low acid cup.</p><p>Our flavors come from natural extracts and essences (hello, Banana Bread cold brew). And <strong>we package for freshness</strong>: no oxygen, nitrogen flushed where possible, light blocked out.</p><p class=\"wb-oneline\">Check out our <a href=\"#\" style=\"display:inline-block; background:#BFD7E9; border-radius:8px; padding:0 10px; font-size:24px; line-height:1.35; color:#1B1B1B; text-decoration:none;\">Fresh Taste Guarantee.</a></p>",
+        "body": "<p>We source <strong>specialty grade, 100% Arabica, USDA organic beans</strong> from small cooperatives in Central and South America (natural water processed for decaf). We brew strong, sometimes with more than double the coffee our competitors use, then cold brew and filter for a smooth, low acid cup.</p><p>Our flavors come from natural extracts and essences (hello, Banana Bread cold brew). And <strong>we package for freshness</strong>: no oxygen, nitrogen flushed where possible, light blocked out.</p><p class=\"wb-oneline\">Check out our <span style=\"display:inline-block; background:#BFD7E9; border-radius:8px; padding:0 10px; font-size:24px; line-height:1.35; color:#1B1B1B; text-decoration:none;\">Fresh Taste Guarantee.</span></p>",
         "text_color": "#1B1B1B",
         "align": "left",
         "column_width": 620,
@@ -331,7 +331,7 @@
             "rotate": 0,
             "left_px": "424",
             "top_px": "30",
-            "left_tablet": "430px"
+            "left_tablet": "396px"
           }
         },
         "wbtag": {
@@ -343,7 +343,7 @@
             "top": 94,
             "width": 16,
             "rotate": 0,
-            "left_tablet": "19%"
+            "hide_tablet": true
           }
         }
       },
