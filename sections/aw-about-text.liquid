@@ -34,6 +34,25 @@
 
   # Heading can align independently of the body (e.g. centred title over left-aligned copy).
   assign title_align = s.title_align | default: 'inherit'
+
+  # The heading is Kurdis Condensed ExtraBold, but on a quoted title the quotation marks stay at the
+  # regular weight per the design. They are always the first and last characters, so wrap them here
+  # rather than asking an editor to author markup — Shopify strips class attributes from HTML typed
+  # into a setting, and an auto theme pull would overwrite it anyway. Sections whose title carries
+  # no curly quotes are untouched. The closing mark is handled first, while the offsets still refer
+  # to the raw string.
+  assign title_html = s.title | replace: '\b', '<br>'
+  assign last_index = title_html | size | minus: 1
+  assign last_char = title_html | slice: last_index
+  if last_char == '”'
+    assign title_head = title_html | slice: 0, last_index
+    assign title_html = title_head | append: '<span class="wb-about-text__title-quote">”</span>'
+  endif
+  assign first_char = title_html | slice: 0
+  if first_char == '“'
+    assign title_tail = title_html | slice: 1, 9999
+    assign title_html = '<span class="wb-about-text__title-quote">“</span>' | append: title_tail
+  endif
 %}
 
 {% capture type_styles %}
@@ -175,7 +194,7 @@
         {% endif %}
         {% if s.title != blank %}
           <h2 class="wb-about-text__title {{ s.title_style | default: 'display-md' }} wb-about-text__title-size leading-[1.1] uppercase mb-5" style="color: {{ text_color }};{% if title_align != 'inherit' %} text-align: {{ title_align }};{% endif %}">
-            {{ s.title | replace: '\b', '<br>' }}
+            {{ title_html }}
           </h2>
         {% endif %}
         {% if s.body != blank %}
@@ -554,7 +573,7 @@
       <div class="wb-about-text__col relative w-full {{ align_class }}" style="max-width: {{ s.column_width | default: 566 }}px;">
         {% if s.title != blank %}
           <h2 class="wb-about-text__title {{ s.title_style | default: 'display-md' }} wb-about-text__title-size leading-[1.1] uppercase mb-5" style="color: {{ text_color }};{% if title_align != 'inherit' %} text-align: {{ title_align }};{% endif %}">
-            {{ s.title | replace: '\b', '<br>' }}
+            {{ title_html }}
           </h2>
         {% endif %}
         {% if s.body != blank %}
@@ -725,7 +744,7 @@
   {% endstyle %}
 {%- endif -%}
 
-{%- if s.title_nowrap or s.title_offset != blank -%}
+{%- if s.title_nowrap or s.title_offset != blank or s.title_offset_tablet != blank -%}
   {% style %}
     @media screen and (min-width: 750px) {
       .wb-about-text--{{ section.id }} .wb-about-text__title {
@@ -733,6 +752,19 @@
         {% if s.title_offset != blank %}margin-left: {{ s.title_offset }}px;{% endif %}
       }
     }
+    {%- comment -%}
+      The desktop offset is measured against the 1280 design width. A tablet plate is ~550px
+      narrower, so the same pull to the left lands the heading differently there; this range gets
+      its own value. Nowrap is restated so the rule holds even without a desktop offset.
+    {%- endcomment -%}
+    {%- if s.title_offset_tablet != blank -%}
+      @media screen and (min-width: 750px) and (max-width: 1023px) {
+        .wb-about-text--{{ section.id }} .wb-about-text__title {
+          {% if s.title_nowrap %}white-space: nowrap;{% endif %}
+          margin-left: {{ s.title_offset_tablet }}px;
+        }
+      }
+    {%- endif -%}
   {% endstyle %}
 {%- endif -%}
 
@@ -757,6 +789,13 @@
     font-family: var(--font-kurdis-condensed) !important;
     font-weight: 800 !important;
     line-height: 1.29 !important;
+  }
+
+  /* Kurdis Condensed ships a real 400 cut, so the quotation marks land on the regular face rather
+     than a synthesised light one. The weight above is !important but sits on the h2; a value
+     declared on the span itself beats what the span would otherwise inherit. */
+  .wb-about-text__title-quote {
+    font-weight: 400;
   }
 
   /* Mobile-only icon centred above the title (crown over Super Premium). Hidden on desktop via smd:!hidden. */
@@ -1036,6 +1075,12 @@
       "id": "title_offset",
       "label": "Heading offset from the copy column px (negative = further left)",
       "info": "Desktop only. In the design the heading sits slightly left of the paragraph and runs wider."
+    },
+    {
+      "type": "number",
+      "id": "title_offset_tablet",
+      "label": "Heading offset — tablet 750-1023 px",
+      "info": "Overrides the desktop offset in the tablet range, where the plate is far narrower and the heading needs less of a pull to the left."
     },
     {
       "type": "checkbox",

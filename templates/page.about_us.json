@@ -11,7 +11,9 @@
             "top": 73,
             "width": 16,
             "rotate": 0,
-            "desktop_only": true
+            "desktop_only": true,
+            "top_px": "465",
+            "top_tablet": "73%"
           }
         },
         "ben": {
@@ -76,7 +78,7 @@
         "sky_band_top": "630",
         "sky_band_height": "",
         "sky_band_height_mobile": "",
-        "sky_opacity": "0.55"
+        "sky_opacity": "0.35"
       }
     },
     "fridge": {
@@ -129,6 +131,7 @@
         "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)",
         "title_nowrap": true,
         "title_offset": -18,
+        "title_offset_tablet": -10,
         "gold_width": 440,
         "gold_gap": 0,
         "flourish_hide_mobile": true,
@@ -366,7 +369,7 @@
         "panel": true,
         "panel_color": "#BFD7E9",
         "panel_align": "left",
-        "panel_width": 842,
+        "panel_width": 823,
         "panel_left_css": "calc(50% - 413px)",
         "panel_top_css": "15%",
         "panel_margin_bottom": 100,
@@ -407,7 +410,7 @@
         "plate_pad_x_mobile": 18,
         "plate_margin_bottom_mobile": 13,
         "section_shift_x_cap": "calc(50vw - 445px)",
-        "panel_height": 253,
+        "panel_height": 269,
         "plate_pad_y_mobile": 20,
         "title_gap_mobile": "5",
         "col_margin_left": "25",
@@ -587,8 +590,10 @@
         "promise_text_color": "#1B1B1B",
         "background_type": "gradient",
         "background_gradient": "linear-gradient(180deg, #F2E6DC 0%, #AF7404 100%)",
+        "background_type_mobile": "gradient",
+        "background_gradient_mobile": "linear-gradient(180deg, #F2E6DC 2.88%, #AF7404 39.42%)",
         "padding-block-start": 26,
-        "padding-block-end": 80,
+        "padding-block-end": 0,
         "padding-block-start-mobile": 6,
         "padding-block-end-mobile": 0,
         "paw_preview": "ab-bearhand.png",
