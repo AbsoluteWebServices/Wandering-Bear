@@ -599,10 +599,17 @@
       <div class="flex md:!hidden bg-[#F1E3D3] h-[62px] w-full fixed bottom-0 left-0 right-0 border-t border-[#431A031A]">
         <ul class="h-full w-full flex !gap-0 items-center justify-between">
         {% for link in linklist.links %}
-          <li class="h-full w-full flex justify-center items-center {% unless forloop.last %}border-r border-[#431A031A] {% endunless %}">
+          <li class="h-full w-full flex justify-center items-center
+          {% if forloop.first %} hidden md:flex {% endif %} border-r border-[#431A031A]
+          {% if forloop.last %} md:border-r-0 {% endif %}">
             <a class="font-kurdis justify-center uppercase text-sm font-bold text-bear-black text-center flex mx-auto items-center h-full w-full" href="{{ link.url }}">{{ link.title }}</a>
           </li>
         {% endfor %}
+        {% if section.settings.mobile_account_link %}
+        <li class="h-full w-full flex justify-center items-center flex md:hidden">
+          <a class="font-kurdis justify-center uppercase text-sm font-bold text-bear-black text-center flex mx-auto items-center h-full w-full" href="{{ section.settings.mobile_account_link | default: routes.account_url }}">{{ section.settings.mobile_account_link_text | default: 'Account' }}</a>
+        </li>
+        {% endif %}
         </ul>
       </div>
       <div
