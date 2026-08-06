@@ -3275,15 +3275,15 @@ fly-to-cart.fly-to-cart--sticky {
   }
 }
 
-:is(.collection-wrapper--full-width, .collection-wrapper--full-width-on-mobile)
+/* :is(.collection-wrapper--full-width, .collection-wrapper--full-width-on-mobile)
   [product-grid-view='default']
   .product-grid__card {
   @media screen and (max-width: 749px) {
     padding-inline-start: max(var(--padding-xs), var(--padding-inline-start));
     padding-inline-end: max(var(--padding-xs), var(--padding-inline-end));
   }
-}
-
+} */
+/* 
 :is(.collection-wrapper--full-width, .collection-wrapper--full-width-on-mobile)
   [product-grid-view='mobile-single']
   .product-grid__card {
@@ -3291,7 +3291,7 @@ fly-to-cart.fly-to-cart--sticky {
     padding-inline-start: max(var(--padding-xs), var(--padding-inline-start));
     padding-inline-end: max(var(--padding-xs), var(--padding-inline-end));
   }
-}
+} */
 
 /* Make product media go edge-to-edge by using negative margins */
 :is(.collection-wrapper--full-width) .card-gallery,
