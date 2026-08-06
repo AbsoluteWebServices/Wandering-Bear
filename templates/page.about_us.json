@@ -330,7 +330,8 @@
             "width": 6,
             "rotate": 0,
             "left_px": "512",
-            "top_px": "30"
+            "top_px": "30",
+            "left_tablet": "430px"
           }
         },
         "wbtag": {
@@ -341,7 +342,8 @@
             "left": 4,
             "top": 94,
             "width": 16,
-            "rotate": 0
+            "rotate": 0,
+            "left_tablet": "19%"
           }
         }
       },
