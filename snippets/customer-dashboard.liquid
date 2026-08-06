@@ -383,7 +383,9 @@
   {%- elsif preview -%}
     {%- comment -%} PREVIEW-only mock table {%- endcomment -%}
     <div class="overflow-x-auto">
-      <table class="w-full border border-espresso/20 border-collapse">
+      {%- comment -%} Same wb-orders-table class as the real table so the preview shows the real
+        frame and header weight, not a lighter stand-in. {%- endcomment -%}
+      <table class="w-full border-collapse wb-orders-table">
         <thead>
           <tr class="text-left tag text-bear-black uppercase">
             <th class="px-2 py-3 md:!p-3 border-b border-espresso/20">{{ 'customer.dashboard.col_order' | t }}</th>

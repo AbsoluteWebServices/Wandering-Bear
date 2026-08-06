@@ -82,8 +82,10 @@
 .wb-orders-table {
     border: 2px solid var(--color-espresso);
 }
+/* Column headers a step heavier than the 700 they inherited — .tag would otherwise hold them
+   at 600, and an unlayered rule is needed since .tag is unlayered too. */
 .wb-orders-table thead th {
-    font-weight: 700;
+    font-weight: 800;
 }
 /* Drop the last row's thin under-line so it doesn't double up against the thick bottom frame. */
 .wb-orders-table tbody tr:last-child td {
