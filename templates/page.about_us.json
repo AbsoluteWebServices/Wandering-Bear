@@ -413,6 +413,7 @@
         "panel_height": 269,
         "plate_pad_y_mobile": 20,
         "title_gap_mobile": "5",
+        "title_gap": "10",
         "col_margin_left": "25",
         "side_width_desktop": "229"
       }
