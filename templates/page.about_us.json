@@ -129,6 +129,7 @@
         "plate_shadow_mobile": "0 -4px 22px rgba(27,27,27,0.13)",
         "title_nowrap": true,
         "title_offset": -18,
+        "title_offset_tablet": -10,
         "gold_width": 440,
         "gold_gap": 0,
         "flourish_hide_mobile": true,

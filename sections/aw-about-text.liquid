@@ -725,7 +725,7 @@
   {% endstyle %}
 {%- endif -%}
 
-{%- if s.title_nowrap or s.title_offset != blank -%}
+{%- if s.title_nowrap or s.title_offset != blank or s.title_offset_tablet != blank -%}
   {% style %}
     @media screen and (min-width: 750px) {
       .wb-about-text--{{ section.id }} .wb-about-text__title {
@@ -733,6 +733,19 @@
         {% if s.title_offset != blank %}margin-left: {{ s.title_offset }}px;{% endif %}
       }
     }
+    {%- comment -%}
+      The desktop offset is measured against the 1280 design width. A tablet plate is ~550px
+      narrower, so the same pull to the left lands the heading differently there; this range gets
+      its own value. Nowrap is restated so the rule holds even without a desktop offset.
+    {%- endcomment -%}
+    {%- if s.title_offset_tablet != blank -%}
+      @media screen and (min-width: 750px) and (max-width: 1023px) {
+        .wb-about-text--{{ section.id }} .wb-about-text__title {
+          {% if s.title_nowrap %}white-space: nowrap;{% endif %}
+          margin-left: {{ s.title_offset_tablet }}px;
+        }
+      }
+    {%- endif -%}
   {% endstyle %}
 {%- endif -%}
 
@@ -1036,6 +1049,12 @@
       "id": "title_offset",
       "label": "Heading offset from the copy column px (negative = further left)",
       "info": "Desktop only. In the design the heading sits slightly left of the paragraph and runs wider."
+    },
+    {
+      "type": "number",
+      "id": "title_offset_tablet",
+      "label": "Heading offset — tablet 750-1023 px",
+      "info": "Overrides the desktop offset in the tablet range, where the plate is far narrower and the heading needs less of a pull to the left."
     },
     {
       "type": "checkbox",
