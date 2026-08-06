@@ -97,17 +97,11 @@
     an inline wrapper around the name — zero layout width, so the name centres on the real text. {%- endcomment -%}
   <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[28px] md:!text-[36px] leading-none">
     <span class="relative inline-block">{{ 'customer.account.welcome' | t: first_name: fname }}
-      {%- comment -%} Tilt is -4deg by the client's explicit call, confirmed against a
-        side-by-side render of both directions. This is a DELIBERATE divergence from the frame:
-        Figma vector 1:380 carries rotation +0.0696rad = +3.99°, and the sign maps straight to CSS
-        (calibration: "YOUR CREDIT:", node 1:53, is -0.0347rad = -1.99° and has always been
-        rendered as rotate-[-1.99deg] without objection). Do not "fix" this back to +4deg on the
-        strength of the Figma value alone — it has already been flipped twice.
+      {%- comment -%} Tilt is +4deg — the computed value must be `rotate: 4deg`. Written as
+        rotate-[4deg] (NOT -rotate-[4deg], which Tailwind compiles to -4deg). This also matches
+        Figma vector 1:380, which carries rotation +0.0696rad = +3.99°.
         Text #E4B850 on gold. {%- endcomment -%}
-      {%- comment -%} Written as rotate-[-4deg], not -rotate-[4deg]: both compile to
-        `rotate: -4deg`, but the explicit form is what the markup and devtools both show, so there
-        is no negative-prefix step to second-guess. Matches how "YOUR CREDIT:" is written below. {%- endcomment -%}
-      <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 rotate-[-4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
+      <span class="absolute left-full bottom-full -ml-1 -mb-2 md:!-mb-3 rotate-[4deg] bg-gold text-[#E4B850] font-kurdis-condensed font-extrabold text-[12px] leading-none uppercase text-center whitespace-nowrap px-2 py-1 rounded-[6px] shadow-[2px_3px_4px_0px_rgba(0,0,0,0.2)]">{{ display_tier }}</span>
     </span>
   </h1>
   <a href="{{ routes.account_logout_url }}" class="wb-welcome__logout font-kurdis-semi-condensed font-bold text-[14px] leading-none text-espresso hover-underline shrink-0">{{ 'customer.account.log_out' | t }}</a>
