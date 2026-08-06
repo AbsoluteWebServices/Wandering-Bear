@@ -8,6 +8,10 @@ permissions:
   contents: write
 
 on:
+  # Manual re-run from the Actions tab. Needed because a merge into main does not always
+  # produce a build — the job is skipped whenever the head commit is authored by
+  # shopify[bot], which the theme's GitHub integration does regularly.
+  workflow_dispatch:
   push:
     branches:
       - build/*
@@ -80,7 +84,8 @@ jobs:
           git commit -m "Update built assets for ${{ steps.extract_branch.outputs.BRANCH_NAME }}"
 
       - name: Push changes to build branches
-        if: ${{ github.event_name == 'push' }}
+        # workflow_dispatch has to be here too, or a manual run builds and pushes nothing.
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         run: |
           git config --global --add --bool push.autoSetupRemote true
           git push --force
