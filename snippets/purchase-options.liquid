@@ -1,6 +1,11 @@
 {% liquid
     assign subscription_value_props = settings.subscription_value_props
     assign subscription_value_props_mobile = settings.subscription_value_props_mobile | default: subscription_value_props 
+
+    assign is_lp = false
+    if template.suffix == 'overview-1' or template.suffix == 'overview-2'
+      assign is_lp = true
+    endif
 %}
 
 <div class="mb-0 mt-3 md:mb-5
@@ -53,15 +58,17 @@
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 transform scale-95"
                 x-transition:enter-end="opacity-100 transform scale-100"
-                class="subscription-value-props mt-4 col-start-1 col-end-4 row-start-3 md:mt-3.5"
+                class="subscription-value-props {% if is_lp %} is_lp {% endif %} mt-4 col-start-1 col-end-4 row-start-3 md:mt-3.5"
             >
                 {{ subscription_value_props }}
             </div>
         </label>
         </div>
+        {% unless is_lp %}
         <div class="subscription-value-props mt-3.5 pb-2 col-start-1 col-end-4 row-start-3 tracking-tight md:hidden">
             {{ subscription_value_props_mobile }}
         </div>
+        {% endunless %}
 
         <div class="purchase-option">
         <input x-model="purchaseOption" @change="onPurchaseOptionChange('one_time')" type="radio" value="one_time" name="purchase_option" id="one_time" class="purchase-option-input absolute! top-0 left-0 w-0 h-0 opacity-0">

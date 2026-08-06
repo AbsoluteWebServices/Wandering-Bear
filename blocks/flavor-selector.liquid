@@ -62,9 +62,12 @@
 {% endstyle %}
 
 <fieldset class="flavor-selector-group !my-5 lg:!my-0">
-  <legend class="font-bold font-gothic_condensed text-bear-black block uppercase mb-4 text-base">
-    Choose Your Flavor
-  </legend>
+  <div class="flex items-center gap-2 mb-4">
+    <legend class="font-bold font-gothic_condensed text-bear-black block uppercase text-base">
+        Choose Flavor
+    </legend>
+    <span class="text-sm font-kurdis-semi-condensed font-bold text-bear-black" x-text="selectedFlavor"></span>
+  </div>
 
   <div class="variant-selector wb-grid grid-cols-5 gap-4">
     {% for product_resource in collection.value.products  %}

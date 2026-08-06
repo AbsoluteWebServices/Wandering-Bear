@@ -66,7 +66,11 @@ export default (Alpine: AlpineType) => {
         },
 
         get currentSavingsAmountFormatted() {
-            return this._formatPrice(this.currentSavingsAmount);
+            return this._formatPrice(this.currentSavingsAmount, { withoutCents: true });
+        },
+
+        get selectedFlavor() {
+            return this.productObject[String(this.currentProductId)][String(this.selectedVariantId)]?.flavor_name;
         },
 
         _formatPrice(price, { withoutCents = false } = {}) {
