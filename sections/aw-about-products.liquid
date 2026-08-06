@@ -409,11 +409,6 @@
     text-align: center;
   }
 
-  /* Per the comp the middle card is the only one off-axis — first and third sit level, the second
-     lifts its right edge by 4deg. The number badge is a child, so it tilts with the card. */
-  .wb-about-products__promise:nth-child(2) {
-    transform: rotate(-4deg);
-  }
 
   .wb-about-products__promise-num {
     position: absolute;
@@ -644,6 +639,22 @@
     .wb-about-products__promise-text {
       font-size: 13px;
       color: var(--promise-text-color-mobile, #431A03) !important;
+    }
+
+    /* Comp: of the three cards only the middle one is off-axis, lifting its right edge by 2deg.
+       The tilt is the plate's alone — the copy and the numeral cancel it with the opposite
+       rotation, so they stay level while the card under them turns. The badge keeps its
+       translateX(-50%), which the shorthand would otherwise drop. */
+    .wb-about-products__promise:nth-child(2) {
+      transform: rotate(-2deg);
+    }
+
+    .wb-about-products__promise:nth-child(2) .wb-about-products__promise-text {
+      transform: rotate(2deg);
+    }
+
+    .wb-about-products__promise:nth-child(2) .wb-about-products__promise-num {
+      transform: translateX(-50%) rotate(2deg);
     }
     .wb-about-products__promises {
       /* Figma mobile: the badge of the next card clears the one above by 6px. The badge overhangs
