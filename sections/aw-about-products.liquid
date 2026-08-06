@@ -409,6 +409,7 @@
     text-align: center;
   }
 
+
   .wb-about-products__promise-num {
     position: absolute;
     top: -24px;
@@ -586,6 +587,18 @@
       padding: 12px 12px 11px;
     }
 
+    /* Mobile corners are tighter than desktop's across the page: the tiles are roughly half the
+       width here, so the desktop radius eats a visible share of a short edge and reads as soft. */
+    .wb-about-products__cell,
+    .wb-about-products__promise {
+      border-radius: 8px;
+    }
+
+    /* Kept a step below the tile so the photo's corner sits inside the frame's, not against it. */
+    .wb-about-products__card {
+      border-radius: 6px;
+    }
+
     /* Figma 1694:245: card labels drop to 13px on mobile and stay on one line. */
     .wb-about-products__label {
       font-size: 13px;
@@ -626,6 +639,22 @@
     .wb-about-products__promise-text {
       font-size: 13px;
       color: var(--promise-text-color-mobile, #431A03) !important;
+    }
+
+    /* Comp: of the three cards only the middle one is off-axis, lifting its right edge by 2deg.
+       The tilt is the plate's alone — the copy and the numeral cancel it with the opposite
+       rotation, so they stay level while the card under them turns. The badge keeps its
+       translateX(-50%), which the shorthand would otherwise drop. */
+    .wb-about-products__promise:nth-child(2) {
+      transform: rotate(-2deg);
+    }
+
+    .wb-about-products__promise:nth-child(2) .wb-about-products__promise-text {
+      transform: rotate(2deg);
+    }
+
+    .wb-about-products__promise:nth-child(2) .wb-about-products__promise-num {
+      transform: translateX(-50%) rotate(2deg);
     }
     .wb-about-products__promises {
       /* Figma mobile: the badge of the next card clears the one above by 6px. The badge overhangs
