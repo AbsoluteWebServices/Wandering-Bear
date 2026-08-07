@@ -1,0 +1,14 @@
+{%- comment -%}
+  QA preview for the individual-order page — /search?view=order-preview
+
+  The real page (templates/customers/order.liquid) needs a logged-in customer who owns an
+  order, so its layout cannot be opened locally. This renders the SAME section with mock
+  values, so what you check here is the real markup and CSS, not a copy that can drift.
+
+  The section decides which data to use from the global `template`, which carries this
+  file's suffix. An alternate SEARCH template is used because /search always resolves,
+  while a page template would need a matching page resource in the admin.
+
+  Internal QA only — do not link from storefront nav.
+{%- endcomment -%}
+{% section 'customer-order' %}
