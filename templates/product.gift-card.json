@@ -24,7 +24,7 @@
             "details_position": "flex-start",
             "gap": 0,
             "gap_tablet": 0,
-            "gap_mobile": 12,
+            "gap_mobile": 0,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
             "color_scheme": "scheme-1",
