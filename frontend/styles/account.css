@@ -106,6 +106,13 @@
    to .account-container so the collection grid and quick-order list keep the component's own
    proportions. */
 .account-container .pagination {
+    /* Resize through the component's own variables, never by setting a width on the cell: the
+       hover indicator and the current-page marker are both sized as
+       --pagination-size - 2 * --pagination-inset and offset by the inset, so a hard-coded cell
+       width leaves them a few px too large and pushed off-centre. */
+    --pagination-size: 28px;
+    --pagination-inset: 2px;
+    --pagination-radius: 4;
     /* Component default is 20px padding on top of a 20px margin, which left the control adrift
        roughly 40px below the table. It reads as part of the table, so: one gap, and a small one. */
     padding: 0;
@@ -127,18 +134,16 @@
 .account-container .pagination__list {
     isolation: isolate;
 }
-/* 36px cells around 10px digits left too much air. 28px keeps the row compact while staying
-   large enough to hit; mobile keeps a bigger target. */
-.account-container .pagination__item {
-    width: 28px;
-}
 .account-container .pagination__link svg {
     width: 6px;
     height: 9px;
 }
+/* The component jumps to 44px cells on mobile; 34px is enough around 10px digits and still a
+   comfortable target. Higher specificity than its own media query, so source order is irrelevant. */
 @media (max-width: 749px) {
-    .account-container .pagination__item {
-        width: 34px;
+    .account-container .pagination {
+        --pagination-size: 34px;
+        --pagination-inset: 3px;
     }
 }
 
