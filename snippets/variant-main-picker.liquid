@@ -313,6 +313,11 @@
     border: var(--style-border-width-inputs) solid #CFBDB1;
     border-radius: var(--style-border-radius-inputs);
     cursor: pointer;
+    transition: filter 0.2s ease;
+  }
+
+  .variant-select__trigger:hover {
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-8, 0.08));
   }
 
   .variant-select__trigger:focus-visible {
