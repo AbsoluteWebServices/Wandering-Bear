@@ -182,12 +182,6 @@ export default (Alpine: typeof AlpineType) => {
         })
       },
 
-      _restoreScroll(scrollY: number) {
-        if (Math.abs(window.scrollY - scrollY) > 1) {
-          window.scrollTo(0, scrollY)
-        }
-      },
-
       async init() {
         onProductChanged = (event: Event) => {
           this.selectedProduct = (event as CustomEvent).detail.product
@@ -239,15 +233,34 @@ export default (Alpine: typeof AlpineType) => {
 
       async renderGallery(product: { handle: string }) {
         const mediaWrapper = this._getMediaWrapper()
-        console.log('mediaWrapper', mediaWrapper);
         if (!mediaWrapper) {
           console.error('mediaWrapper not found')
           return
         }
 
-        const scrollY = window.scrollY
-        this.lockHeight(false)
+        // Prevent the media column from jumping up when the new gallery is shorter.
+        const lockTarget = this._getLockTarget() ?? mediaWrapper
+        lockingHeight = true
+        lockTarget.style.height = ''
+        const reservedHeight = lockTarget.offsetHeight
+        if (reservedHeight > 0) {
+          lockTarget.style.height = `${reservedHeight}px`
+        }
+
         mediaWrapper.classList.add('opacity-0')
+
+        const finish = () => {
+          mediaWrapper.classList.remove('opacity-0')
+
+          lockTarget.style.height = ''
+          const natural = lockTarget.offsetHeight
+          const next = Math.max(reservedHeight, natural)
+          lockTarget.style.height = next > 0 ? `${next}px` : ''
+
+          requestAnimationFrame(() => {
+            lockingHeight = false
+          })
+        }
 
         try {
           const res = await fetch(`/products/${product.handle}?view=bundle`)
@@ -260,34 +273,30 @@ export default (Alpine: typeof AlpineType) => {
           const doc = new DOMParser().parseFromString(html, 'text/html')
 
           const newMediaInner = doc.querySelector('[data-media-gallery-bundle]')
-
-          if (!newMediaInner) {
-            console.error('newMediaInner not found')
-            return
-          }
-
           const oldMediaInner = mediaWrapper.querySelector(
             '[data-media-gallery-bundle]'
           )
 
-          if (!oldMediaInner) {
-            console.error('oldMediaInner not found')
+          if (!newMediaInner || !oldMediaInner) {
+            console.error('media gallery inner not found', {
+              newMediaInner,
+              oldMediaInner,
+            })
+            finish()
             return
           }
 
+          // Height stays reserved across the swap, so nothing below moves.
           oldMediaInner.replaceWith(newMediaInner)
 
           await this.$nextTick()
           this._initSwiper()
-          await this.settleGalleryHeight(false)
 
-          mediaWrapper.classList.remove('opacity-0')
-          this._restoreScroll(scrollY)
-          requestAnimationFrame(() => this._restoreScroll(scrollY))
+          await this._waitForImages(mediaWrapper)
+          finish()
         } catch (error) {
           console.error('error', error)
-          mediaWrapper.classList.remove('opacity-0')
-          this._restoreScroll(scrollY)
+          finish()
         }
       },
     }
