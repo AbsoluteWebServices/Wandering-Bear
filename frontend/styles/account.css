@@ -81,11 +81,20 @@
    syntax and the unlayered .tag beating utilities. */
 .wb-orders-table {
     border: 2px solid var(--color-espresso);
+    background: #fff;
 }
-/* Column headers a step heavier than the 700 they inherited — .tag would otherwise hold them
-   at 600, and an unlayered rule is needed since .tag is unlayered too. */
+/* Every cell centres — the header row's text-left utility and the Total column's text-right
+   are both overridden here, since an unlayered rule beats a layered utility. */
+.wb-orders-table th,
+.wb-orders-table td {
+    text-align: center;
+}
+/* Column headers at 700, in Tablet Gothic Condensed. Both have to be set here rather than on
+   the markup: the header row carries .tag, which is unlayered and would otherwise hold the
+   headers at its own Kurdis 600. */
 .wb-orders-table thead th {
-    font-weight: 800;
+    font-family: var(--font-gothic_condensed);
+    font-weight: 700;
 }
 /* Drop the last row's thin under-line so it doesn't double up against the thick bottom frame. */
 .wb-orders-table tbody tr:last-child td {
@@ -105,6 +114,16 @@
     padding: 1rem 1.25rem 1.25rem;
     border-radius: 0 0 8px 8px;
 }
+/* The description sits on ONE line on desktop — Figma gives it a 350px box at 12px/120% (h=15,
+   i.e. a single line). The panel's own padding leaves only 327, so the paragraph reaches 12px
+   past it on each side; the text is centred, so widening it symmetrically keeps it centred.
+   Mobile is untouched: there the frame wraps it to two lines at 14px. */
+@media (min-width: 1024px) {
+    .membership-upsell > p:last-of-type {
+        margin-inline: -12px;
+    }
+}
+
 @media (min-width: 1024px) {
     .membership-upsell {
         margin-top: auto;
@@ -450,6 +469,14 @@
     .membership-upsell > p:last-of-type {
         margin-bottom: 6px;
     }
+}
+
+/* Zero balance: the Redeem trigger is inert. pointer-events also kills the hover, so it cannot
+   look interactive while doing nothing. */
+.wb-redeem-trigger--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
 }
 
 /* Redeem modal trigger wrapper (customer-credit-redeem): display:contents so the wrapped
