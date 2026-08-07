@@ -67,7 +67,19 @@
    base now underlines (not hover-only), hover keeps it. */
 .hover-underline {
     text-decoration: underline;
+    /* The colour has to be stated, not left to the shorthand. The theme underlines links only on
+       hover, via `a { text-decoration-color: transparent }` (assets/base.css). In Chrome our
+       `text-decoration` shorthand resets that back to currentColor, but Safari still treats
+       text-decoration as the legacy line-only property and leaves the colour alone — so on iOS and
+       Safari every link in the portal drew a fully transparent underline. Present, and invisible. */
+    text-decoration-color: currentColor;
     transition: color 0.15s ease;
+}
+/* Same trap for portal links that underline through a utility instead of .hover-underline — the
+   order page's tracking number, and anything added later. Harmless on links with no underline:
+   it colours a line that is never drawn. */
+.account-container a {
+    text-decoration-color: currentColor;
 }
 /* QA #6: links stay underlined, hover feedback = gold color shift. */
 .hover-underline:hover {
