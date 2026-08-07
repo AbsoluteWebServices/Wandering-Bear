@@ -193,11 +193,21 @@
         {%- for discount in order.cart_level_discount_applications -%}
           <div class="flex w-full max-w-[360px] justify-between text-dark-gold"><span>{{ 'customer.order.discount' | t }} ({{ discount.title }})</span><span>-{{ discount.total_allocated_amount | money }}</span></div>
         {%- endfor -%}
-        {%- for method in order.shipping_methods -%}
-          <div class="flex w-full max-w-[360px] justify-between"><span>{{ method.title }}</span><span>{{ method.price | money }}</span></div>
+        {%- comment -%} An order split across several delivery groups — a Stay AI bundle alongside
+          ordinary line items, say — carries one shipping_method per group, which rendered as two
+          identical "Free Ground Shipping $0.00" rows. When every method shares a title they collapse
+          into one row carrying the order's total shipping. Genuinely different methods still list
+          separately, so the summary never misreports what was charged. {%- endcomment -%}
+        {%- assign ship_titles = order.shipping_methods | map: 'title' | uniq -%}
+        {%- if order.shipping_methods.size > 1 and ship_titles.size == 1 -%}
+          <div class="flex w-full max-w-[360px] justify-between"><span>{{ ship_titles[0] }}</span><span>{{ order.shipping_price | money }}</span></div>
         {%- else -%}
-          <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.shipping' | t }}</span><span>{{ order.shipping_price | money }}</span></div>
-        {%- endfor -%}
+          {%- for method in order.shipping_methods -%}
+            <div class="flex w-full max-w-[360px] justify-between"><span>{{ method.title }}</span><span>{{ method.price | money }}</span></div>
+          {%- else -%}
+            <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.shipping' | t }}</span><span>{{ order.shipping_price | money }}</span></div>
+          {%- endfor -%}
+        {%- endif -%}
         {%- for tax_line in order.tax_lines -%}
           <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.tax' | t }} ({{ tax_line.title }})</span><span>{{ tax_line.price | money }}</span></div>
         {%- endfor -%}
