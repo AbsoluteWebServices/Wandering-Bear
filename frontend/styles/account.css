@@ -74,6 +74,15 @@
     text-decoration: underline;
     color: var(--color-dark-gold);
 }
+/* WebKit does not propagate text-decoration into flex items, so wherever .hover-underline is
+   itself a flex container its label loses the underline on Safari and iOS while Chrome still
+   draws it — the link then reads as plain text and nothing marks it as clickable. Declaring the
+   decoration on the label directly covers both engines. Wrapping the label in a <span> is the
+   other half of this: a bare text node inside a flex container is an anonymous item and cannot
+   be targeted. Harmless for ordinary inline links, whose spans inherit the same value anyway. */
+.hover-underline > span {
+    text-decoration: underline;
+}
 
 /* ---- Order-history table (customer-dashboard) --------------------------- */
 /* Thick espresso frame on all four sides; bold column headers. In CSS (not Tailwind
