@@ -409,9 +409,12 @@
           </tbody>
         </table>
       </div>
-      {%- if paginate.pages > 1 -%}
-        <div class="mt-4 body text-espresso">{{ paginate | default_pagination }}</div>
-      {%- endif -%}
+      {%- comment -%} The site's own pagination component (also used by product-grid and
+        quick-order-list), not `default_pagination` — that filter emits bare browser-chrome links
+        that looked nothing like the rest of the theme. The snippet self-styles and already
+        returns nothing unless paginate.pages > 1, so a customer with 10 orders or fewer sees
+        no control at all. {%- endcomment -%}
+      {%- render 'pagination-controls', paginate: paginate -%}
     {%- endpaginate -%}
   {%- elsif preview -%}
     {%- comment -%} PREVIEW-only mock table {%- endcomment -%}
@@ -448,19 +451,41 @@
         </tbody>
       </table>
     </div>
-      {%- comment -%} Mirrors the class names Shopify's `default_pagination` emits on the real table
-        (span.prev / span.page.current / span.page / span.next) so anything QA flags about the
-        control's look applies to production too, not just to this stand-in. {%- endcomment -%}
-      <div class="mt-4 body text-espresso" x-show="pages > 1">
-        <span class="prev" x-show="page > 1"><a href="#" @click.prevent="page--">&laquo; Previous</a></span>
-        <template x-for="p in pages" :key="p">
-          <span :class="p === page ? 'page current' : 'page'">
-            <template x-if="p === page"><span x-text="p"></span></template>
-            <template x-if="p !== page"><a href="#" @click.prevent="page = p" x-text="p"></a></template>
-          </span>
-        </template>
-        <span class="next" x-show="page < pages"><a href="#" @click.prevent="page++">Next &raquo;</a></span>
-      </div>
+      {%- comment -%} Same DOM and class names as `pagination-controls` above, so the preview
+        picks up that snippet's stylesheet and shows the real control rather than a stand-in.
+        It cannot render the snippet itself: that needs a paginate object, and {% paginate %}
+        only accepts Shopify objects, never a Liquid array. Hidden below two pages, matching
+        the snippet's own `paginate.pages > 1` guard. {%- endcomment -%}
+      <nav class="pagination" aria-label="{{ 'content.pagination.nav_label' | t }}" x-show="pages > 1">
+        <ul class="pagination__list" role="list">
+          <li class="pagination__item">
+            <template x-if="page > 1">
+              <a href="#" @click.prevent="page--" class="pagination__link pagination__link--arrow" aria-label="{{ 'content.pagination.previous' | t }}">{{ 'icon-chevron-left.svg' | inline_asset_content }}</a>
+            </template>
+            <template x-if="page === 1">
+              <span class="pagination__link pagination__link--arrow pagination__link--disabled" aria-disabled="true" aria-label="{{ 'content.pagination.previous' | t }}">{{ 'icon-chevron-left.svg' | inline_asset_content }}</span>
+            </template>
+          </li>
+          <template x-for="p in pages" :key="p">
+            <li class="pagination__item">
+              <template x-if="p !== page">
+                <a href="#" @click.prevent="page = p" class="pagination__link pagination__link--page" x-text="p"></a>
+              </template>
+              <template x-if="p === page">
+                <span class="pagination__link pagination__link--page pagination__link--current" aria-current="page" x-text="p"></span>
+              </template>
+            </li>
+          </template>
+          <li class="pagination__item">
+            <template x-if="page < pages">
+              <a href="#" @click.prevent="page++" class="pagination__link pagination__link--arrow" aria-label="{{ 'content.pagination.next' | t }}">{{ 'icon-chevron-right.svg' | inline_asset_content }}</a>
+            </template>
+            <template x-if="page === pages">
+              <span class="pagination__link pagination__link--arrow pagination__link--disabled" aria-disabled="true" aria-label="{{ 'content.pagination.next' | t }}">{{ 'icon-chevron-right.svg' | inline_asset_content }}</span>
+            </template>
+          </li>
+        </ul>
+      </nav>
     </div>
   {%- else -%}
     <div class="text-center py-10">

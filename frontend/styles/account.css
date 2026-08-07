@@ -101,6 +101,47 @@
     border-bottom: 0;
 }
 
+/* ---- Order history pagination ------------------------------------------- */
+/* The site's `pagination-controls` component, sized down for this table. Every rule is scoped
+   to .account-container so the collection grid and quick-order list keep the component's own
+   proportions. */
+.account-container .pagination {
+    /* Component default is 20px padding on top of a 20px margin, which left the control adrift
+       roughly 40px below the table. It reads as part of the table, so: one gap, and a small one. */
+    padding: 0;
+    margin-top: 12px;
+}
+.account-container .pagination__link {
+    /* Same type as the rows ("January 3, 2026") instead of the component's 16px body, which
+       looked like a different piece of UI parked underneath. */
+    font-family: var(--font-kurdis-semi-condensed);
+    font-weight: 700;
+    font-size: 10px;
+    /* The current-page marker is a ::before at z-index:-1, which assumes the control sits on a
+       transparent backdrop. Inside the order-history card it slid behind the card's own
+       background instead, leaving cream text on cream — the active page was near invisible.
+       Its own stacking context keeps the marker above the card and below the digit. */
+    isolation: isolate;
+}
+/* Same fix for the hover indicator, which is a ::before on the list in the anchor-positioning branch. */
+.account-container .pagination__list {
+    isolation: isolate;
+}
+/* 36px cells around 10px digits left too much air. 28px keeps the row compact while staying
+   large enough to hit; mobile keeps a bigger target. */
+.account-container .pagination__item {
+    width: 28px;
+}
+.account-container .pagination__link svg {
+    width: 6px;
+    height: 9px;
+}
+@media (max-width: 749px) {
+    .account-container .pagination__item {
+        width: 34px;
+    }
+}
+
 /* ---- Membership card — Elite upsell panel (Figma Rectangle 10494) -------- */
 /* Full-bleed background pinned to the bottom of the progress column: the panel
    fills its column edge-to-edge (mobile: card edges; desktop: divider → card
