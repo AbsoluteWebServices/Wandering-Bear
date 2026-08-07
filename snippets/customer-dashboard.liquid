@@ -8,6 +8,7 @@
   @param {string} credits_formatted - money-formatted credit balance
   @param {string} first_name - customer first name (optional)
   @param {boolean} preview - true on the preview page (renders mock order rows)
+  @param {number} orders_count - preview only: how many of the 25 mock orders to show (default all)
 {%- enddoc -%}
 {%- liquid
   assign display_tier = tier | default: 'FREE'
@@ -72,7 +73,45 @@
   assign t_contact = 'customer.dashboard.contact_cta' | t
   assign t_shop = 'customer.dashboard.no_orders_cta' | t
 
-  assign mock_orders = '#743463|June 3, 2026|2342425325|Paid|Fulfilled|$69.98;#729582|May 3, 2026|2342425325|Paid|Fulfilled|$69.98;#718841|April 3, 2026|2342425325|Paid|Fulfilled|$69.98;#708921|March 3, 2026|2342425325|Paid|Fulfilled|$117.16;#701085|February 3, 2026|2342425325|Paid|Fulfilled|$113.87;#693096|January 3, 2026|2342425325|Paid|Fulfilled|$109.97' | split: ';'
+  comment
+    25 rows, not the 6 the mock started with: order history paginates at 10, so a shorter
+    list could never show the control. Fields mirror the real table's columns in order.
+  endcomment
+-%}
+{%- capture mock_orders_raw -%}
+    #743463|June 3, 2026|2342425325|Pending|Unfulfilled|$69.98;
+    #733587|May 3, 2026|2342425326|Paid|Fulfilled|$69.98;
+    #723574|April 3, 2026|2342425327|Paid|Fulfilled|$69.98;
+    #713424|March 3, 2026|2342425328|Paid|Fulfilled|$117.16;
+    #703137|February 3, 2026|2342425329|Paid|Fulfilled|$113.87;
+    #692713|January 3, 2026|2342425330|Paid|Fulfilled|$109.97;
+    #682152|December 3, 2025|2342425331|Paid|Fulfilled|$74.99;
+    #671454|November 3, 2025|2342425332|Paid|Fulfilled|$69.98;
+    #660619|October 3, 2025|2342425333|Paid|Fulfilled|$132.45;
+    #649647|September 3, 2025|2342425334|Paid|Fulfilled|$69.98;
+    #638538|August 3, 2025|2342425335|Paid|Fulfilled|$89.50;
+    #627292|July 3, 2025|2342425336|Paid|Fulfilled|$117.16;
+    #615909|June 3, 2025|2342425337|Paid|Fulfilled|$69.98;
+    #604389|May 3, 2025|2342425338|Paid|Fulfilled|$101.20;
+    #592732|April 3, 2025|2342425339|Paid|Fulfilled|$69.98;
+    #580938|March 3, 2025|2342425340|Paid|Fulfilled|$69.98;
+    #569007|February 3, 2025|2342425341|Paid|Fulfilled|$124.30;
+    #556939|January 3, 2025|2342425342|Paid|Fulfilled|$69.98;
+    #544734|December 3, 2024|2342425343|Paid|Fulfilled|$95.75;
+    #532392|November 3, 2024|2342425344|Paid|Fulfilled|$69.98;
+    #519913|October 3, 2024|2342425345|Paid|Fulfilled|$69.98;
+    #507297|September 3, 2024|2342425346|Paid|Fulfilled|$113.87;
+    #494544|August 3, 2024|2342425347|Paid|Fulfilled|$69.98;
+    #481654|July 3, 2024|2342425348|Paid|Fulfilled|$78.40;
+    #468627|June 3, 2024|2342425349|Paid|Fulfilled|$140.02
+{%- endcapture -%}
+{%- liquid
+  assign mock_orders = mock_orders_raw | split: ';'
+  # Trim the list so a state can show the short table — under 11 orders there is no second page
+  # and the control disappears entirely, which is its own thing to review.
+  if orders_count
+    assign mock_orders = mock_orders | slice: 0, orders_count
+  endif
 -%}
 
 {%- capture crown -%}
@@ -376,12 +415,16 @@
           </tbody>
         </table>
       </div>
-      {%- if paginate.pages > 1 -%}
-        <div class="mt-4 body text-espresso">{{ paginate | default_pagination }}</div>
-      {%- endif -%}
+      {%- comment -%} The site's own pagination component (also used by product-grid and
+        quick-order-list), not `default_pagination` — that filter emits bare browser-chrome links
+        that looked nothing like the rest of the theme. The snippet self-styles and already
+        returns nothing unless paginate.pages > 1, so a customer with 10 orders or fewer sees
+        no control at all. {%- endcomment -%}
+      {%- render 'pagination-controls', paginate: paginate -%}
     {%- endpaginate -%}
   {%- elsif preview -%}
     {%- comment -%} PREVIEW-only mock table {%- endcomment -%}
+    <div x-data="{ page: 1, per: 10, total: {{ mock_orders.size }}, get pages() { return Math.ceil(this.total / this.per) } }">
     <div class="overflow-x-auto">
       {%- comment -%} Same wb-orders-table class as the real table so the preview shows the real
         frame and header weight, not a lighter stand-in. {%- endcomment -%}
@@ -398,8 +441,11 @@
         </thead>
         <tbody>
           {%- for row in mock_orders -%}
-            {%- assign c = row | split: '|' -%}
-            <tr class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.8] text-bear-black">
+            {%- assign c = row | strip | split: '|' -%}
+            {%- comment -%} Alpine slices the rows client-side: Liquid cannot read ?page= and
+              {% paginate %} only accepts Shopify objects, never a Liquid array. {%- endcomment -%}
+            <tr x-show="Math.floor({{ forloop.index0 }} / per) + 1 === page"
+                class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.8] text-bear-black">
               <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><span class="font-bold hover-underline">{{ c[0] }}</span></td>
               <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 whitespace-nowrap">{{ c[1] }}</td>
               <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><span class="hover-underline">{{ c[2] }}</span></td>
@@ -410,6 +456,42 @@
           {%- endfor -%}
         </tbody>
       </table>
+    </div>
+      {%- comment -%} Same DOM and class names as `pagination-controls` above, so the preview
+        picks up that snippet's stylesheet and shows the real control rather than a stand-in.
+        It cannot render the snippet itself: that needs a paginate object, and {% paginate %}
+        only accepts Shopify objects, never a Liquid array. Hidden below two pages, matching
+        the snippet's own `paginate.pages > 1` guard. {%- endcomment -%}
+      <nav class="pagination" aria-label="{{ 'content.pagination.nav_label' | t }}" x-show="pages > 1">
+        <ul class="pagination__list" role="list">
+          <li class="pagination__item">
+            <template x-if="page > 1">
+              <a href="#" @click.prevent="page--" class="pagination__link pagination__link--arrow" aria-label="{{ 'content.pagination.previous' | t }}">{{ 'icon-chevron-left.svg' | inline_asset_content }}</a>
+            </template>
+            <template x-if="page === 1">
+              <span class="pagination__link pagination__link--arrow pagination__link--disabled" aria-disabled="true" aria-label="{{ 'content.pagination.previous' | t }}">{{ 'icon-chevron-left.svg' | inline_asset_content }}</span>
+            </template>
+          </li>
+          <template x-for="p in pages" :key="p">
+            <li class="pagination__item">
+              <template x-if="p !== page">
+                <a href="#" @click.prevent="page = p" class="pagination__link pagination__link--page" x-text="p"></a>
+              </template>
+              <template x-if="p === page">
+                <span class="pagination__link pagination__link--page pagination__link--current" aria-current="page" x-text="p"></span>
+              </template>
+            </li>
+          </template>
+          <li class="pagination__item">
+            <template x-if="page < pages">
+              <a href="#" @click.prevent="page++" class="pagination__link pagination__link--arrow" aria-label="{{ 'content.pagination.next' | t }}">{{ 'icon-chevron-right.svg' | inline_asset_content }}</a>
+            </template>
+            <template x-if="page === pages">
+              <span class="pagination__link pagination__link--arrow pagination__link--disabled" aria-disabled="true" aria-label="{{ 'content.pagination.next' | t }}">{{ 'icon-chevron-right.svg' | inline_asset_content }}</span>
+            </template>
+          </li>
+        </ul>
+      </nav>
     </div>
   {%- else -%}
     <div class="text-center py-10">

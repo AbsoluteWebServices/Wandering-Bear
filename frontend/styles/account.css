@@ -74,6 +74,15 @@
     text-decoration: underline;
     color: var(--color-dark-gold);
 }
+/* WebKit does not propagate text-decoration into flex items, so wherever .hover-underline is
+   itself a flex container its label loses the underline on Safari and iOS while Chrome still
+   draws it — the link then reads as plain text and nothing marks it as clickable. Declaring the
+   decoration on the label directly covers both engines. Wrapping the label in a <span> is the
+   other half of this: a bare text node inside a flex container is an anonymous item and cannot
+   be targeted. Harmless for ordinary inline links, whose spans inherit the same value anyway. */
+.hover-underline > span {
+    text-decoration: underline;
+}
 
 /* ---- Order-history table (customer-dashboard) --------------------------- */
 /* Thick espresso frame on all four sides; bold column headers. In CSS (not Tailwind
@@ -99,6 +108,52 @@
 /* Drop the last row's thin under-line so it doesn't double up against the thick bottom frame. */
 .wb-orders-table tbody tr:last-child td {
     border-bottom: 0;
+}
+
+/* ---- Order history pagination ------------------------------------------- */
+/* The site's `pagination-controls` component, sized down for this table. Every rule is scoped
+   to .account-container so the collection grid and quick-order list keep the component's own
+   proportions. */
+.account-container .pagination {
+    /* Resize through the component's own variables, never by setting a width on the cell: the
+       hover indicator and the current-page marker are both sized as
+       --pagination-size - 2 * --pagination-inset and offset by the inset, so a hard-coded cell
+       width leaves them a few px too large and pushed off-centre. */
+    --pagination-size: 28px;
+    --pagination-inset: 2px;
+    --pagination-radius: 4;
+    /* Component default is 20px padding on top of a 20px margin, which left the control adrift
+       roughly 40px below the table. It reads as part of the table, so: one gap, and a small one. */
+    padding: 0;
+    margin-top: 12px;
+}
+.account-container .pagination__link {
+    /* Same type as the rows ("January 3, 2026") instead of the component's 16px body, which
+       looked like a different piece of UI parked underneath. */
+    font-family: var(--font-kurdis-semi-condensed);
+    font-weight: 700;
+    font-size: 10px;
+    /* The current-page marker is a ::before at z-index:-1, which assumes the control sits on a
+       transparent backdrop. Inside the order-history card it slid behind the card's own
+       background instead, leaving cream text on cream — the active page was near invisible.
+       Its own stacking context keeps the marker above the card and below the digit. */
+    isolation: isolate;
+}
+/* Same fix for the hover indicator, which is a ::before on the list in the anchor-positioning branch. */
+.account-container .pagination__list {
+    isolation: isolate;
+}
+.account-container .pagination__link svg {
+    width: 6px;
+    height: 9px;
+}
+/* The component jumps to 44px cells on mobile; 34px is enough around 10px digits and still a
+   comfortable target. Higher specificity than its own media query, so source order is irrelevant. */
+@media (max-width: 749px) {
+    .account-container .pagination {
+        --pagination-size: 34px;
+        --pagination-inset: 3px;
+    }
 }
 
 /* ---- Membership card — Elite upsell panel (Figma Rectangle 10494) -------- */

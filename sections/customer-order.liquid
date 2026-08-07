@@ -71,11 +71,28 @@
         This also lands on Figma 1:1162: a 14px arrow + 8px gap + the 107px label is 129px wide, so
         centring it in the 165px button puts the arrow 18px in from the edge, which is exactly the
         inset the frame specifies. {%- endcomment -%}
-      <a href="{{ routes.account_url }}" class="inline-flex items-center justify-center !gap-2 w-[165px] h-[43px] rounded-[10px] bg-foam shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-center text-[#4B2A18] transition-opacity hover:opacity-80">
-        <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {%- comment -%} The shared button (.btn + the blob shape, as rendered by snippets/wb-button),
+        not a bespoke rounded rectangle: same silhouette, shadow and hover as every other CTA.
+        Inlined rather than rendered through wb-button because that snippet emits a label span and
+        nothing else, and this button also carries the arrow.
+        secondary-gold, not secondary-cream: gold blob with cream text at rest, inverting to a cream
+        blob with espresso text on hover. The two variants are exact mirrors of each other, so the
+        style name alone gets the requested direction — no per-button colour overrides.
+        Sizing overrides .btn's own 205px width and 20px type; the height already matches at 43px. {%- endcomment -%}
+      <a href="{{ routes.account_url }}" class="btn secondary-gold !w-[165px] !h-[43px] !text-[14px] !gap-2">
+        {%- comment -%} The arrow sits in a <span> so it inherits .btn's span colour and its hover
+          transition — as a bare child of the anchor it would keep the surrounding text colour and
+          stay dark while the label turned cream. !static undoes `.btn svg { position: absolute;
+          inset: 0 }`, which is meant for the blob and would otherwise stretch the arrow over the
+          whole button; !fill-none undoes the blob's cream fill, which beats the element's own
+          fill="none" attribute and would flood the open arrow path. {%- endcomment -%}
+        <span class="flex shrink-0"><svg class="!static !fill-none w-[14px] h-[10px]" viewBox="0 0 14 10" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         {%- comment -%} QA: the label sat slightly high in Windows/Chrome. .wb-optical-center trims
           the text box to the glyphs so items-center lands on them, not on font metrics. {%- endcomment -%}
         <span class="wb-optical-center">{{ 'customer.order.back_to_account' | t }}</span>
+        <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]" width="280" height="47" viewBox="0 0 280 47" fill="none">
+          <path d="M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z"/>
+        </svg>
       </a>
       {%- liquid
         assign tracking_class = 'font-gothic_condensed font-extrabold text-[16px] leading-none text-right underline text-espresso'
@@ -193,11 +210,21 @@
         {%- for discount in order.cart_level_discount_applications -%}
           <div class="flex w-full max-w-[360px] justify-between text-dark-gold"><span>{{ 'customer.order.discount' | t }} ({{ discount.title }})</span><span>-{{ discount.total_allocated_amount | money }}</span></div>
         {%- endfor -%}
-        {%- for method in order.shipping_methods -%}
-          <div class="flex w-full max-w-[360px] justify-between"><span>{{ method.title }}</span><span>{{ method.price | money }}</span></div>
+        {%- comment -%} An order split across several delivery groups — a Stay AI bundle alongside
+          ordinary line items, say — carries one shipping_method per group, which rendered as two
+          identical "Free Ground Shipping $0.00" rows. When every method shares a title they collapse
+          into one row carrying the order's total shipping. Genuinely different methods still list
+          separately, so the summary never misreports what was charged. {%- endcomment -%}
+        {%- assign ship_titles = order.shipping_methods | map: 'title' | uniq -%}
+        {%- if order.shipping_methods.size > 1 and ship_titles.size == 1 -%}
+          <div class="flex w-full max-w-[360px] justify-between"><span>{{ ship_titles[0] }}</span><span>{{ order.shipping_price | money }}</span></div>
         {%- else -%}
-          <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.shipping' | t }}</span><span>{{ order.shipping_price | money }}</span></div>
-        {%- endfor -%}
+          {%- for method in order.shipping_methods -%}
+            <div class="flex w-full max-w-[360px] justify-between"><span>{{ method.title }}</span><span>{{ method.price | money }}</span></div>
+          {%- else -%}
+            <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.shipping' | t }}</span><span>{{ order.shipping_price | money }}</span></div>
+          {%- endfor -%}
+        {%- endif -%}
         {%- for tax_line in order.tax_lines -%}
           <div class="flex w-full max-w-[360px] justify-between"><span>{{ 'customer.order.tax' | t }} ({{ tax_line.title }})</span><span>{{ tax_line.price | money }}</span></div>
         {%- endfor -%}
