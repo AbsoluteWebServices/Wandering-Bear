@@ -13,7 +13,14 @@
         <ul class="flex flex-wrap lg:!flex-nowrap justify-center md:!justify-start w-full !gap-1">
             {% for link in menu.links %}
                 <li>
-                    <a class="uppercase" href="{{ link.url }}">
+                    <a class="uppercase"
+                    {% if link.url == '/cookie-policy' %}
+                      href="javascript:Cookiebot.renew()"
+                    {% else %}
+                      href="{{ link.url }}"
+                    {% endif %}
+                    >
+
                         {{ link.title }}
                     </a>
                     <span class="ml-1">·</span>

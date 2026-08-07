@@ -27,12 +27,24 @@ class CartDrawerComponent extends DialogComponent {
   /** @type {AbortController | null} */
   #historyAbortController = null;
 
+  /**
+   * @type {ResizeObserver}
+   */
+  #headerResizeObserver = new ResizeObserver(
+    () => this.#updateContentHeight()
+  );
+
   connectedCallback() {
     super.connectedCallback();
 
     document.addEventListener(
       CartAddEvent.eventName,
       this.#handleCartAdd
+    );
+
+    document.addEventListener(
+      CartUpdateEvent.eventName,
+      this.#handleCartUpdate
     );
 
     document.addEventListener(
@@ -47,6 +59,16 @@ class CartDrawerComponent extends DialogComponent {
 
     this.addEventListener(
       DialogOpenEvent.eventName,
+      this.#updateContentHeight
+    );
+
+    this.addEventListener(
+      DialogOpenEvent.eventName,
+      this.#observeHeader
+    );
+
+    this.addEventListener(
+      DialogOpenEvent.eventName,
       this.#updateStickyState
     );
 
@@ -55,9 +77,19 @@ class CartDrawerComponent extends DialogComponent {
       this.#handleHistoryOpen
     );
 
+    window.addEventListener(
+      'resize',
+      this.#handleResize
+    );
+
     this.addEventListener(
       DialogCloseEvent.eventName,
       this.#handleHistoryClose
+    );
+
+    this.addEventListener(
+      DialogCloseEvent.eventName,
+      this.#handleLayoutClose
     );
 
     if (history.state?.cartDrawerOpen) {
@@ -74,6 +106,11 @@ class CartDrawerComponent extends DialogComponent {
     );
 
     document.removeEventListener(
+      CartUpdateEvent.eventName,
+      this.#handleCartUpdate
+    );
+
+    document.removeEventListener(
       CART_BUNDLE_EDIT_EVENT,
       this.#handleBundleEdit
     );
@@ -81,6 +118,16 @@ class CartDrawerComponent extends DialogComponent {
     document.removeEventListener(
       CART_BUNDLE_CLOSE_EVENT,
       this.#handleBundleClose
+    );
+
+    this.removeEventListener(
+      DialogOpenEvent.eventName,
+      this.#updateContentHeight
+    );
+
+    this.removeEventListener(
+      DialogOpenEvent.eventName,
+      this.#observeHeader
     );
 
     this.removeEventListener(
@@ -93,10 +140,22 @@ class CartDrawerComponent extends DialogComponent {
       this.#handleHistoryOpen
     );
 
+    window.removeEventListener(
+      'resize',
+      this.#handleResize
+    );
+
     this.removeEventListener(
       DialogCloseEvent.eventName,
       this.#handleHistoryClose
     );
+
+    this.removeEventListener(
+      DialogCloseEvent.eventName,
+      this.#handleLayoutClose
+    );
+
+    this.#headerResizeObserver.disconnect();
 
     this.#historyAbortController?.abort();
   }
@@ -144,6 +203,7 @@ class CartDrawerComponent extends DialogComponent {
     bundleEditor?.setAttribute('hidden', '');
     cartView?.removeAttribute('hidden');
 
+    this.#updateContentHeight();
     this.#updateStickyState();
   };
 
@@ -260,6 +320,74 @@ class CartDrawerComponent extends DialogComponent {
   close() {
     this.closeDialog();
   }
+
+  /**
+   * Cart header variable height update
+   */
+  #updateContentHeight = () => {
+    const { dialog } =
+      /** @type {Refs} */ (this.refs);
+
+    if (!dialog) return;
+
+    const header = dialog.querySelector(
+      '.cart-drawer__header'
+    );
+
+    const hasSummary = dialog.querySelector(
+      '.cart-drawer__summary'
+    );
+
+    const headerHeight =
+      header instanceof HTMLElement
+        ? header.getBoundingClientRect().height
+        : 0;
+
+    if (hasSummary && headerHeight > 0) {
+      dialog.style.setProperty(
+        '--header-height',
+        `${Math.ceil(headerHeight)}px`
+      );
+    } else {
+      dialog.style.removeProperty('--header-height');
+    }
+  };
+
+
+  #observeHeader = () => {
+    const header = this.refs.dialog?.querySelector(
+      '.cart-drawer__header'
+    );
+
+    this.#headerResizeObserver.disconnect();
+
+    if (header instanceof HTMLElement) {
+      this.#headerResizeObserver.observe(header);
+    }
+  };
+
+  #handleLayoutClose = () => {
+    this.#headerResizeObserver.disconnect();
+  };
+
+  #handleResize = () => {
+    if (!this.refs.dialog?.open) return;
+
+    this.#updateContentHeight();
+    this.#updateStickyState();
+  };
+
+  #handleCartUpdate = () => {
+    if (!this.refs.dialog?.open) return;
+
+    requestAnimationFrame(() => {
+      if (!this.refs.dialog?.open) return;
+
+      this.#updateContentHeight();
+      this.#observeHeader();
+      this.#updateStickyState();
+    });
+  };
 
   #updateStickyState = () => {
     const { dialog } =

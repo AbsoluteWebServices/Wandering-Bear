@@ -3,18 +3,18 @@
 <div>
     {% for entry in nav_blocks.value %}
         <div class="pl-5.5 md:!pl-8 py-2.5 md:!py-[15px] flex items-center !gap-5 md:!gap-7 border-b border-[#431A031A]">
-            <a href="{{ entry.url }}" class="w-[80px] h-[80px] md:!w-[86px] md:!h-[88px]">
+            <a href="{{ entry.url }}" class="w-[80px] h-[80px]">
             {{ entry.image | image_url: width: 200 | image_tag: class: 'h-full w-full object-cover' }}
             </a>
 
             <div class="flex flex-col !gap-2">
                 <a href="{{ entry.url }}" class="flex items-center !gap-2">
-                   <span class="font-gothic_condensed text-[20px] font-extrabold">{{ entry.name }}</span>
+                   <span class="font-gothic_condensed text-[20px] font-extrabold text-bear-black">{{ entry.name }}</span>
                    <span class="text-sm font-medium font-parslay text-gold">{{ entry.accent_text }}</span>
                 </a>
                 <div class="flex items-center !gap-[5px] !cursor-default">
                 {% for badge in entry.badges.value %}
-                    <span class="font-kurdis-semi-condensed text-xs font-bold py-1.5 px-2.5 rounded-[2px] bg-grey-tag/70 text-black uppercase border border-sky-blue">{{ badge }}</span>
+                    <span class="font-kurdis-semi-condensed text-xs font-bold py-1.5 px-2.5 rounded-[2px] bg-[#E1E1E1B2] text-black uppercase border border-sky-blue">{{ badge }}</span>
                 {% endfor %}
                 </div>
             </div>

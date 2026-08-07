@@ -26,20 +26,39 @@
     endfor
 %}
 
+{% capture membership_widget_style %}
+  --desktop-color: {{ section.settings.color_scheme_top.settings.foreground_heading }};
+  --mobile-color: {{ section.settings.color_scheme_top.settings.foreground }};
+{% endcapture %}
+
+{% style %}
+.membership-widget {
+  color: var(--desktop-color);
+}
+
+@media (max-width: 768px) {
+  .membership-widget {
+    color: var(--mobile-color);
+  }
+}
+{% endstyle %}
+
 {% if is_customer == false or membership_level == '' %}
-<div class="flex flex-row text-base font-tablet font-bold leading-[1] !gap-1" style="color: {{ section.settings.color_scheme_top.settings.foreground_heading }}">
-       <a href="{{ shop.url }}/pages/membership" class="flex flex-col text-gold font-gothic_condensed">
+<div class="membership-widget flex flex-row text-base font-tablet font-bold leading-[1] !gap-1" style="{{ membership_widget_style }}">
+       <a href="{{ shop.url }}/pages/membership" class="flex flex-col text-espresso smd:!text-gold font-gothic_condensed">
         <span>EARN</span>
-        <span class="rotate-[-1.989deg]">CREDIT</span>
+        <div class="flex gap-2 rotate-[-1.989deg]">
+          <span>CREDIT</span>
+          {% render 'tooltip', content: settings.nonmember_tooltip %}
+        </div>
       </a>
-      {% render 'tooltip', content: settings.nonmember_tooltip %}
 </div>
 {% else %}
 <div class="relative flex flex-row text-base font-tablet leading-[1] font-bold !gap-1" style="color: var(--color-espresso)">
-       <div class="flex !gap-0 flex-col">
+       <div class="flex !gap-0 flex-col !leading-[0px]">
         <div class="flex flex-row items-center !gap-0">
         <span class="font-gothic_condensed">YOUR</span>
-        <div class="rotate-[1.993deg] drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)] px-4 py-3 left-1 -top-1.5 relative flex justify-center items-center w-full h-5 overflow-hidden">
+        <div class="rotate-[1.993deg] drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)] px-4 py-3 left-1 -top-1.5 relative flex justify-center items-center w-fit h-5 overflow-hidden">
             <span class="relative z-10 text-[#E4B850] text-center rotate-[1.993deg] text-xs">{{ membership_level }}</span>
             <svg
               preserveAspectRatio="none"
