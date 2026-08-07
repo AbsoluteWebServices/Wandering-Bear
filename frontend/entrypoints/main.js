@@ -22,6 +22,7 @@ import '../styles/multi-coll-carousel.css';
 import '../styles/blog.css';
 import '../styles/collection.css';
 import '../styles/inveterate.css';
+import '../styles/stay-ai.css';
 
 export {}
 

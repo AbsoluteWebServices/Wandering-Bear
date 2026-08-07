@@ -1,0 +1,20 @@
+<div
+  class="
+    back-account wb-grid pb-1 pt-8
+    {% if request.path contains 'apps/retextion' %} stay-ai grid-flow-col auto-cols-[minmax(1rem,1fr)_minmax(0px,1200px)_minmax(1rem,1fr)] bg-[#fbf2ec]{% endif %}
+    {% if request.path contains 'community/membership' %} membership-account bg-[#f2f2f3] [&~.inveterate.inveterate\_\_loading]:bg-[#f2f2f3]{% endif %}
+  "
+>
+  {% if request.path contains 'apps/retextion' %}<span></span>{% endif %}
+
+  <div class="back-account__container [container:Stay-root/inline-size]{% if request.path contains 'community/membership' %} w-full max-w-[1436px] px-[130px] mx-auto{% endif %}">
+    <a href="{{ routes.account_url }}" class="back-account__link inline-flex items-center gap-1.5 font-bold text-espresso! hover:text-gold! transition-colors duration-300" title="{{ 'customer.order.back_to_account' | t }}">
+      <span class="back-account__icon inline-block rotate-180 size-4">
+        {{- 'icon-arrow.svg' | inline_asset_content -}}
+      </span>
+      <span>{{ 'customer.order.back_to_account' | t }}</span>
+    </a>
+  </div>
+
+  {% if request.path contains 'apps/retextion' %}<span></span>{% endif %}
+</div>

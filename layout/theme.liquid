@@ -148,6 +148,10 @@
       data-product-transition="{{ settings.transition_to_main_product }}"
       data-template="{{ template }}"
     >
+      {% if request.path contains 'apps/retextion' or request.path contains 'community/membership' %}
+        {% render 'back-account' %}
+      {% endif %}
+
       {{ content_for_layout }}
     </main>
     {% section 'aw-membership-modal' %}

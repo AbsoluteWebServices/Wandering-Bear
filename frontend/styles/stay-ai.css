@@ -1,0 +1,9 @@
+[data-testid='SubscriptionBreadcrumbs'] form a + div,
+[data-testid='SubscriptionBreadcrumbs'] form button.MuiButtonBase-root {
+  display: none;
+}
+
+[data-testid='SubscriptionBreadcrumbs'] form a {
+  border-radius: 0.5rem;
+  pointer-events: none;
+}
