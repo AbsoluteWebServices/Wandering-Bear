@@ -72,7 +72,40 @@
   assign t_contact = 'customer.dashboard.contact_cta' | t
   assign t_shop = 'customer.dashboard.no_orders_cta' | t
 
-  assign mock_orders = '#743463|June 3, 2026|2342425325|Paid|Fulfilled|$69.98;#729582|May 3, 2026|2342425325|Paid|Fulfilled|$69.98;#718841|April 3, 2026|2342425325|Paid|Fulfilled|$69.98;#708921|March 3, 2026|2342425325|Paid|Fulfilled|$117.16;#701085|February 3, 2026|2342425325|Paid|Fulfilled|$113.87;#693096|January 3, 2026|2342425325|Paid|Fulfilled|$109.97' | split: ';'
+  comment
+    25 rows, not the 6 the mock started with: order history paginates at 10, so a shorter
+    list could never show the control. Fields mirror the real table's columns in order.
+  endcomment
+-%}
+{%- capture mock_orders_raw -%}
+    #743463|June 3, 2026|2342425325|Pending|Unfulfilled|$69.98;
+    #733587|May 3, 2026|2342425326|Paid|Fulfilled|$69.98;
+    #723574|April 3, 2026|2342425327|Paid|Fulfilled|$69.98;
+    #713424|March 3, 2026|2342425328|Paid|Fulfilled|$117.16;
+    #703137|February 3, 2026|2342425329|Paid|Fulfilled|$113.87;
+    #692713|January 3, 2026|2342425330|Paid|Fulfilled|$109.97;
+    #682152|December 3, 2025|2342425331|Paid|Fulfilled|$74.99;
+    #671454|November 3, 2025|2342425332|Paid|Fulfilled|$69.98;
+    #660619|October 3, 2025|2342425333|Paid|Fulfilled|$132.45;
+    #649647|September 3, 2025|2342425334|Paid|Fulfilled|$69.98;
+    #638538|August 3, 2025|2342425335|Paid|Fulfilled|$89.50;
+    #627292|July 3, 2025|2342425336|Paid|Fulfilled|$117.16;
+    #615909|June 3, 2025|2342425337|Paid|Fulfilled|$69.98;
+    #604389|May 3, 2025|2342425338|Paid|Fulfilled|$101.20;
+    #592732|April 3, 2025|2342425339|Paid|Fulfilled|$69.98;
+    #580938|March 3, 2025|2342425340|Paid|Fulfilled|$69.98;
+    #569007|February 3, 2025|2342425341|Paid|Fulfilled|$124.30;
+    #556939|January 3, 2025|2342425342|Paid|Fulfilled|$69.98;
+    #544734|December 3, 2024|2342425343|Paid|Fulfilled|$95.75;
+    #532392|November 3, 2024|2342425344|Paid|Fulfilled|$69.98;
+    #519913|October 3, 2024|2342425345|Paid|Fulfilled|$69.98;
+    #507297|September 3, 2024|2342425346|Paid|Fulfilled|$113.87;
+    #494544|August 3, 2024|2342425347|Paid|Fulfilled|$69.98;
+    #481654|July 3, 2024|2342425348|Paid|Fulfilled|$78.40;
+    #468627|June 3, 2024|2342425349|Paid|Fulfilled|$140.02
+{%- endcapture -%}
+{%- liquid
+  assign mock_orders = mock_orders_raw | split: ';'
 -%}
 
 {%- capture crown -%}
@@ -382,6 +415,7 @@
     {%- endpaginate -%}
   {%- elsif preview -%}
     {%- comment -%} PREVIEW-only mock table {%- endcomment -%}
+    <div x-data="{ page: 1, per: 10, total: {{ mock_orders.size }}, get pages() { return Math.ceil(this.total / this.per) } }">
     <div class="overflow-x-auto">
       {%- comment -%} Same wb-orders-table class as the real table so the preview shows the real
         frame and header weight, not a lighter stand-in. {%- endcomment -%}
@@ -398,8 +432,11 @@
         </thead>
         <tbody>
           {%- for row in mock_orders -%}
-            {%- assign c = row | split: '|' -%}
-            <tr class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.8] text-bear-black">
+            {%- assign c = row | strip | split: '|' -%}
+            {%- comment -%} Alpine slices the rows client-side: Liquid cannot read ?page= and
+              {% paginate %} only accepts Shopify objects, never a Liquid array. {%- endcomment -%}
+            <tr x-show="Math.floor({{ forloop.index0 }} / per) + 1 === page"
+                class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.8] text-bear-black">
               <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><span class="font-bold hover-underline">{{ c[0] }}</span></td>
               <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 whitespace-nowrap">{{ c[1] }}</td>
               <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><span class="hover-underline">{{ c[2] }}</span></td>
@@ -410,6 +447,20 @@
           {%- endfor -%}
         </tbody>
       </table>
+    </div>
+      {%- comment -%} Mirrors the class names Shopify's `default_pagination` emits on the real table
+        (span.prev / span.page.current / span.page / span.next) so anything QA flags about the
+        control's look applies to production too, not just to this stand-in. {%- endcomment -%}
+      <div class="mt-4 body text-espresso" x-show="pages > 1">
+        <span class="prev" x-show="page > 1"><a href="#" @click.prevent="page--">&laquo; Previous</a></span>
+        <template x-for="p in pages" :key="p">
+          <span :class="p === page ? 'page current' : 'page'">
+            <template x-if="p === page"><span x-text="p"></span></template>
+            <template x-if="p !== page"><a href="#" @click.prevent="page = p" x-text="p"></a></template>
+          </span>
+        </template>
+        <span class="next" x-show="page < pages"><a href="#" @click.prevent="page++">Next &raquo;</a></span>
+      </div>
     </div>
   {%- else -%}
     <div class="text-center py-10">
