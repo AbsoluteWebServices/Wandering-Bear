@@ -28,3 +28,5 @@ snippets/vite-tag.liquid
 
 # Build assets
 assets/wb-*
+# QA screenshots from qa-webkit-underlines.mjs
+/qa-webkit-*.png
