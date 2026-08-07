@@ -91,7 +91,7 @@
             "custom_width_mobile": 100,
             "height": "fit",
             "details_position": "flex-start",
-            "gap": 12,
+            "gap": 0,
             "gap_tablet": 0,
             "gap_mobile": 12,
             "sticky_details_desktop": false,
@@ -192,7 +192,7 @@
                   "type": "text",
                   "name": "t:names.text",
                   "settings": {
-                    "block_class": "product-description",
+                    "block_class": "product-description is-lp",
                     "text": "<ul><li><strong>About 16 cups of coffee</strong></li><li>Strong, each glass = 2 espresso shots</li><li>Store anywhere until you're ready to pour</li><li>No dairy, no sugar</li></ul>",
                     "width": "fit-content",
                     "max_width": "normal",
@@ -239,11 +239,22 @@
                 "padding-inline-end": 0
               },
               "blocks": {}
+            },
+            "savings_badge_EFnRnU": {
+              "type": "savings-badge",
+              "name": "Savings Badge",
+              "disabled": true,
+              "settings": {
+                "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
+                "text": "<p>SAVE 20% OFF YOUR FIRST AUTOSHIP ORDER WITH CODE: <span style=\"text-decoration:underline\">NEWONTAP</span></p>"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
             "group_R4iBAi",
-            "variant_picker_bundle_8YiPPB"
+            "variant_picker_bundle_8YiPPB",
+            "savings_badge_EFnRnU"
           ]
         }
       },
@@ -251,7 +262,7 @@
       "settings": {
         "section_id": "shop-now",
         "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
-        "bundle_collection": "test-cold-brew-on-tap-96oz",
+        "bundle_collection": "site-v2-groupedpdp-96oz",
         "bundle_add_to_cart_text": "Add",
         "oos_badge_text": "Out of Stock",
         "oos_button_text": "Get Notified",
