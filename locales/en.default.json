@@ -156,6 +156,7 @@
       "col_product": "Product",
       "col_sku": "SKU",
       "col_price": "Price",
+      "price_each": "{{ price }} \/ Each",
       "col_quantity": "Quantity",
       "billing_address": "Billing Address",
       "shipping_address": "Shipping Address",
