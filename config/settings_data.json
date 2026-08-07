@@ -172,6 +172,11 @@
           "exclusive_access_modal_foreground": "#1A1A1A",
           "exclusive_access_additional_tags": ""
         }
+      },
+      "2647664283302970701": {
+        "type": "shopify://apps/cookiebot-cmp/blocks/uc-banner/42d95aba-03be-478d-adf0-7bb4f5efae78",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
