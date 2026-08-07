@@ -58,6 +58,16 @@
     <div class="{{ lbl }}">7 · ELITE · no subscription · $0</div>
     {%- render 'customer-dashboard', preview: true, tier: 'ELITE', autoship_state: 'none', first_name: 'Jordan',
         credits_formatted: '$0.00' -%}
+
+    {%- comment -%} States 1-7 all carry the full 25 mock orders, i.e. a paginated table. This one
+      is the other side of that: 6 orders is under the by-10 split, so the control is absent
+      rather than shown with a single page. {%- endcomment -%}
+    <div class="{{ lbl }}">8 · VIP · 1 active · $4.20 · only 6 orders (short table, no pagination)</div>
+    {%- render 'customer-dashboard', preview: true, tier: 'VIP', autoship_state: 'active', first_name: 'Alex',
+        credits_formatted: '$4.20', credits_expiry: '01/01/2028', orders_count: 6,
+        autoship_count: 1, autoship_bundle: '96oz Bundle – 2 Boxes', autoship_next_date: '08/09/2026',
+        autoship_items: 'Cold Brew On Tap (96 oz) - Mocha', autoship_more: 0,
+        next_tier_label: 'ELITE', progress_percent: 60, progress_text: 'Spend $250.00 more to reach ELITE status' -%}
   </div>
 </section>
 

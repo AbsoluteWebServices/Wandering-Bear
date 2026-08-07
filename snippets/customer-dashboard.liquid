@@ -8,6 +8,7 @@
   @param {string} credits_formatted - money-formatted credit balance
   @param {string} first_name - customer first name (optional)
   @param {boolean} preview - true on the preview page (renders mock order rows)
+  @param {number} orders_count - preview only: how many of the 25 mock orders to show (default all)
 {%- enddoc -%}
 {%- liquid
   assign display_tier = tier | default: 'FREE'
@@ -106,6 +107,11 @@
 {%- endcapture -%}
 {%- liquid
   assign mock_orders = mock_orders_raw | split: ';'
+  # Trim the list so a state can show the short table — under 11 orders there is no second page
+  # and the control disappears entirely, which is its own thing to review.
+  if orders_count
+    assign mock_orders = mock_orders | slice: 0, orders_count
+  endif
 -%}
 
 {%- capture crown -%}
