@@ -66,3 +66,73 @@
     }
 }
 
+#inveterate-member-tier-selection .inveterate__tier__banner__footer button.inveterate__button__primary {
+    width: 102px !important;
+}
+
+@media screen and (min-width: 750px) and (max-width: 1024px) {
+    .inveterate .inveterate__member__program {
+        flex-grow: 1;
+    }
+
+    .inveterate__member__block.inveterate__discounts,
+    .inveterate__member__block.inveterate__orders,
+    .inveterate .inveterate__member__program__spend__container,
+    .inveterate .inveterate__member__block__group,
+    .inveterate .inveterate__member__block__group hr,
+    .inveterate .inveterate__redemption > * {
+        width: 100%;
+    }
+
+    .inveterate .inveterate__redemption > * {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .inveterate__redeem__right_discount_line .inveterate__redeem__right__button_group .inveterate__redeem__existing_code_container {
+        width: calc(100% - 42px) !important;
+    }
+
+    .inveterate__redeem__right_discount_line .inveterate__redeem__right__button_group {
+        position: relative;
+        justify-content: flex-start;
+        width: 100%;
+        width: auto;
+        flex-grow: 1;
+    }
+
+    .inveterate .inveterate__edit__discount__stack {
+        top: 38px !important;
+        right: 0px !important;
+        min-width: 144px;
+    }
+
+    .inveterate .inveterate__redemption__button {
+        position: relative !important;
+    }
+
+    .inveterate__redeem__right .inveterate__redeem__right_discount_line {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        width: 100%;
+        flex-grow: 1;
+        gap: 8px;
+    }
+
+    .inveterate__redeem__discount_line .inveterate__redeem__right {
+        width: calc(100% - 44px) !important;
+    }
+
+    .inveterate__redeem__contract_discount_line .inveterate__redeem__right__button_group {
+        position: relative;
+        margin-left: auto;
+        display: inline-block;
+    }
+
+    .inveterate__redeem__contract_discount_line {
+        display: flex;
+        width: 100% !important;
+    }
+}

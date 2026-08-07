@@ -1,0 +1,5 @@
+{% doc %}
+  Loads assets/inveterate-cart-bridge.js — wraps Inveterate's hosted
+  `addTierToCart` so the Horizon cart drawer / badge refresh after membership ATC.
+{% enddoc %}
+<script src="{{ 'inveterate-cart-bridge.js' | asset_url }}" type="module" fetchpriority="low"></script>
