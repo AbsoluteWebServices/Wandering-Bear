@@ -72,11 +72,14 @@
         centring it in the 165px button puts the arrow 18px in from the edge, which is exactly the
         inset the frame specifies. {%- endcomment -%}
       {%- comment -%} The shared button (.btn + the blob shape, as rendered by snippets/wb-button),
-        not a bespoke rounded rectangle: same silhouette, shadow and cream→gold hover as every other
-        CTA. Inlined rather than rendered through wb-button because that snippet emits a label span
-        and nothing else, and this button also carries the arrow.
+        not a bespoke rounded rectangle: same silhouette, shadow and hover as every other CTA.
+        Inlined rather than rendered through wb-button because that snippet emits a label span and
+        nothing else, and this button also carries the arrow.
+        secondary-gold, not secondary-cream: gold blob with cream text at rest, inverting to a cream
+        blob with espresso text on hover. The two variants are exact mirrors of each other, so the
+        style name alone gets the requested direction — no per-button colour overrides.
         Sizing overrides .btn's own 205px width and 20px type; the height already matches at 43px. {%- endcomment -%}
-      <a href="{{ routes.account_url }}" class="btn secondary-cream !w-[165px] !h-[43px] !text-[14px] !gap-2">
+      <a href="{{ routes.account_url }}" class="btn secondary-gold !w-[165px] !h-[43px] !text-[14px] !gap-2">
         {%- comment -%} The arrow sits in a <span> so it inherits .btn's span colour and its hover
           transition — as a bare child of the anchor it would keep the surrounding text colour and
           stay dark while the label turned cream. !static undoes `.btn svg { position: absolute;
