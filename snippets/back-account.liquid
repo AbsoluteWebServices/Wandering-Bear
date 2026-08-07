@@ -1,3 +1,6 @@
+{%- capture membership_tier -%}{%- render 'customer-membership-tier' -%}{%- endcapture -%}
+{%- assign membership_tier = membership_tier | strip -%}
+
 <div
   class="
     back-account wb-grid pb-1 pt-8
@@ -18,3 +21,23 @@
 
   {% if request.path contains 'apps/retextion' %}<span></span>{% endif %}
 </div>
+
+{% stylesheet %}
+  .back-account:has(~ .inveterate__tiers .inveterate__hero) {
+    background-color: #fbf2ec;
+  }
+{% endstylesheet %}
+
+{%- if customer -%}
+  {%- if membership_tier == 'VIP' or membership_tier == 'ELITE' -%}
+    {% style %}
+      .inveterate .inveterate__hero__caption {
+        display: none;
+      }
+
+      .inveterate .inveterate__pricing.program-tiers .inveterate__pricing__blocks .inveterate__pricing__block:first-child .inveterate__pricing__block__footer {
+        display: none;
+      }
+    {% endstyle %}
+  {%- endif -%}
+{%- endif -%}
