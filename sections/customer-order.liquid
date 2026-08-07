@@ -99,7 +99,12 @@
         a trailing `| date` would be applied to the already-translated sentence, not to created_at. {%- endcomment -%}
       <div class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black mt-2 mb-6">{{ 'customer.order.placed_on' | t: date: o_placed_on }}</div>
 
-      <div class="overflow-x-auto">
+      {%- comment -%} Desktop keeps the table. Below smd the five columns cannot share 350px — the
+        product name shredded into six lines and the table scrolled sideways — so Figma 1:1301 drops
+        the table entirely and stacks each item: title, SKU, unit price, then a Quantity / Total pair.
+        Both presentations read the same normalised li_* values, so there is one source of truth for
+        the data; only the markup differs. {%- endcomment -%}
+      <div class="overflow-x-auto hidden smd:!block">
         <table class="w-full border-collapse text-left">
           <thead>
             <tr class="font-kurdis-semi-condensed font-bold text-[12px] uppercase text-bear-black align-bottom">
@@ -140,6 +145,41 @@
           </tbody>
         </table>
       </div>
+
+      {%- comment -%} Mobile: one block per line item (Figma 1:1301). {%- endcomment -%}
+      <ul class="smd:!hidden body text-bear-black">
+        {%- for row in rows -%}
+          {%- liquid
+            if preview
+              assign f = row | split: '|'
+              assign li_title = f[0]
+              assign li_sku = f[1]
+              assign li_price = f[2]
+              assign li_qty = f[3]
+              assign li_total = f[4]
+            else
+              assign li_title = row.title
+              assign li_sku = row.sku
+              assign li_price = row.price | money
+              assign li_qty = row.quantity
+              assign li_total = row.final_line_price | money
+            endif
+          -%}
+          <li class="border-t border-espresso py-4">
+            <div class="font-extrabold uppercase leading-[1.3]">{{ li_title }}</div>
+            <div class="mt-2">{{ li_sku }}</div>
+            <div class="mt-2">{{ 'customer.order.price_each' | t: price: li_price }}</div>
+            <div class="mt-4 flex items-baseline justify-between">
+              <span>{{ 'customer.order.col_quantity' | t }}</span>
+              <span>{{ 'customer.order.total' | t }}</span>
+            </div>
+            <div class="flex items-baseline justify-between">
+              <span>{{ li_qty }}</span>
+              <span>{{ li_total }}</span>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
 
       {%- comment -%} Order summary (right-aligned) {%- endcomment -%}
       <div class="border-t border-espresso pt-5 flex flex-col items-end !gap-4 body text-bear-black">
