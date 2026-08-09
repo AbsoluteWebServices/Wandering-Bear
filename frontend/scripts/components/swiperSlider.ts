@@ -21,6 +21,8 @@ export default (Alpine: AlpineType) => {
 
         initSwiper() {
             const slideCount = this.el.querySelectorAll('.swiper-slide').length;
+            const maxSlidesPerView = 5.8;               // the 1024px breakpoint
+            const canLoop = slideCount > Math.ceil(maxSlidesPerView) * 2;
             
             this.swiper = new Swiper(this.el.querySelector('.swiper'), {
                 modules: [Navigation, Mousewheel],
@@ -41,7 +43,7 @@ export default (Alpine: AlpineType) => {
                 centerInsufficientSlides: true,
                 centeredSlidesBounds: true,
                 watchOverflow: true,
-                loop: slideCount > 3 ? true : false,
+                loop: canLoop,
                 speed: 800,
                 breakpoints: {
                     768: {
