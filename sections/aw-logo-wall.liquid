@@ -37,7 +37,7 @@
     <div class="container aw-logo-wall__inner relative z-[1] max-w-[1132px] flex flex-col mx-auto !gap-[30px]{% if section.settings.grayscale %} aw-logo-wall--grayscale{% endif %}{% if section.settings.mobile_per_row == '3' %} aw-logo-wall--mobile-3{% endif %}">
         {% if title_type == 'image' %}
             {% if title_image != blank %}
-                <div class="aw-logo-wall__title-image mx-auto w-full max-w-[442px]">
+                <div class="aw-logo-wall__title-image mx-auto w-full max-w-full px-5 md:px-0 md:max-w-[442px]">
                     {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                 </div>
             {% endif %}
@@ -52,10 +52,10 @@
             {% endif %}
         {% endif %}
 
-        <div class="aw-logo-wall__row max-w-[380px] sm:max-w-[450px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full gap-7 smd:!gap-0">
+        <div class="aw-logo-wall__row max-w-[380px] sm:max-w-[450px] mx-auto md:!max-w-full flex items-center justify-center lg:!justify-between flex-wrap w-full gap-4 smd:!gap-0">
             {% for block in section.blocks %}          
                 <div class="aw-logo-wall__cell
-                {% if block.settings.hide_on_mobile %} hidden md:flex {% endif %} w-[128px] sm:w-[200px] h-[58px] md:!h-[72px] flex items-center justify-center">
+                {% if block.settings.hide_on_mobile %} hidden md:flex {% endif %} w-[108px] sm:w-[200px] h-[58px] md:!h-[72px] flex items-center justify-center">
                     {% assign class = 'object-contain !max-h-full !w-auto !h-auto  logo-' | append: block.id %}
                     {{ block.settings.image | image_url: width: 400 | image_tag: class: class, alt: block.settings.image.alt }}
                 </div>
