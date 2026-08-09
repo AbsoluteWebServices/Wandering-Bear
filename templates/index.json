@@ -306,7 +306,7 @@
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/Sprouts_Gold.png",
-            "hide_on_mobile": true,
+            "hide_on_mobile": false,
             "max_width": "137",
             "max_width_mobile": ""
           }
