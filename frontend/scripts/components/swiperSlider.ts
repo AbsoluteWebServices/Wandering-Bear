@@ -21,7 +21,15 @@ export default (Alpine: AlpineType) => {
 
         initSwiper() {
             const slideCount = this.el.querySelectorAll('.swiper-slide').length;
-            const maxSlidesPerView = 5.8;               // the 1024px breakpoint
+
+            let maxSlidesPerView = 0;
+           
+            if (window.innerWidth < 1024) {
+                maxSlidesPerView = 2.5;
+            } else if (window.innerWidth >= 1024) {
+                maxSlidesPerView = 5.8;
+            }
+
             const canLoop = slideCount > Math.ceil(maxSlidesPerView) * 2;
             
             this.swiper = new Swiper(this.el.querySelector('.swiper'), {
