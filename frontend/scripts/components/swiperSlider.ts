@@ -42,6 +42,7 @@ export default (Alpine: AlpineType) => {
                 centeredSlidesBounds: true,
                 watchOverflow: true,
                 loop: slideCount > 3 ? true : false,
+                speed: 800,
                 breakpoints: {
                     768: {
                         slidesPerView: 3.5,

@@ -33,7 +33,7 @@
         <span class="h1 mb-8 title-text leading-[1.2] text-center" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     {% if content != blank %}
-        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:!mt-5 !mb-5">
+        <div class="hidden md:!block rte text-center max-w-[436px] w-full mx-auto h3 [&>h3:not(:first-child)]:!mt-5 mb-5">
             {{ content }}
         </div>
     {% endif %}
