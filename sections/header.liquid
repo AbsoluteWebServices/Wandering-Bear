@@ -306,6 +306,7 @@
 <header-component
   x-data="header()"
   id="header-component"
+  data-tooltip-below
   class="{{ class }} {% if template.name == 'product' %}product-page-header{% endif %}"
   data-theme-color="rgb({{ section.settings.color_scheme_top.settings.background.rgb }})"
   {% if transparent %}

@@ -46,8 +46,8 @@
 {% if is_customer == false or membership_level == '' %}
 <div class="membership-widget flex flex-row text-base font-tablet font-bold leading-[1] !gap-1" style="{{ membership_widget_style }}">
        <a href="{{ shop.url }}/pages/membership" class="flex flex-col text-espresso smd:!text-gold font-gothic_condensed">
-        <span>EARN</span>
-        <div class="flex gap-2 rotate-[-1.989deg]">
+        <span class="rotate-[-1.99deg]">EARN</span>
+        <div class="flex gap-2 rotate-[-1.99deg]">
           <span>CREDIT</span>
           {% render 'tooltip', content: settings.nonmember_tooltip %}
         </div>
