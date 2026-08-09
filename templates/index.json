@@ -275,22 +275,22 @@
     "aw_logo_wall_AXpPn6": {
       "type": "aw-logo-wall",
       "blocks": {
-        "logo_a34R38": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Erewhon_Gold.png",
-            "hide_on_mobile": false,
-            "max_width": "165",
-            "max_width_mobile": "128"
-          }
-        },
         "logo_GW6Tnx": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/Wholefoods_Gold.png",
             "hide_on_mobile": false,
             "max_width": "101",
-            "max_width_mobile": "80"
+            "max_width_mobile": "66"
+          }
+        },
+        "logo_a34R38": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Erewhon_Gold.png",
+            "hide_on_mobile": false,
+            "max_width": "165",
+            "max_width_mobile": "93"
           }
         },
         "logo_jD4Mzy": {
@@ -299,7 +299,7 @@
             "image": "shopify://shop_images/Costco_Gold.png",
             "hide_on_mobile": false,
             "max_width": "147",
-            "max_width_mobile": "122"
+            "max_width_mobile": "99"
           }
         },
         "logo_nYDjHb": {
@@ -308,7 +308,7 @@
             "image": "shopify://shop_images/Sprouts_Gold.png",
             "hide_on_mobile": false,
             "max_width": "137",
-            "max_width_mobile": ""
+            "max_width_mobile": "104"
           }
         },
         "logo_3BhRQY": {
@@ -317,13 +317,13 @@
             "image": "shopify://shop_images/Target_Gold.png",
             "hide_on_mobile": false,
             "max_width": "198",
-            "max_width_mobile": "124"
+            "max_width_mobile": "110"
           }
         }
       },
       "block_order": [
-        "logo_a34R38",
         "logo_GW6Tnx",
+        "logo_a34R38",
         "logo_jD4Mzy",
         "logo_nYDjHb",
         "logo_3BhRQY"
