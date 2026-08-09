@@ -73,7 +73,7 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/on-tap-cold-brew",
-            "image": "shopify://shop_images/WBSB96oz_PDP_1_FINAL.jpg",
+            "image": "shopify://shop_images/Cold_brew_Boxes_2.png",
             "hover_image": "shopify://shop_images/shadow-layer.png",
             "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
             "mobile_image_alt": "",
@@ -87,7 +87,7 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/multi-serve",
-            "image": "shopify://shop_images/WBOB96oz_PRODUCT_PDP_1_FINAL.jpg",
+            "image": "shopify://shop_images/Multiserve.png",
             "hover_image": "shopify://shop_images/shadow-layer.png",
             "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
             "mobile_image_alt": "",
@@ -100,7 +100,7 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/single-serve",
-            "image": "shopify://shop_images/homepage-3-top-layer_71c09c93-38a8-4352-82ca-a2392d02867e.png",
+            "image": "shopify://shop_images/SINGLE_SERVE.png",
             "hover_image": "shopify://shop_images/shadow-layer.png",
             "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
             "mobile_image_alt": "",
