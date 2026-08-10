@@ -825,9 +825,11 @@ body.no-scroll {
     line-height: 1.65;
     color: var(--color-espresso);
 }
-/* The order line is a link but deliberately NOT underlined — 13 digits under a rule turned the row
-   into noise. It carries weight instead, and .account-container's hover still shifts it to gold.
-   This is the one exception to the portal's "account links are always underlined". */
+/* The order line is a link but deliberately NOT underlined at rest — 13 digits under a rule turned
+   the row into noise — so weight 800 carries it instead. The one exception to the portal's "account
+   links are always underlined".
+   Hover still gets the portal's own treatment (underline + gold), because without it the element
+   had no affordance at all: no rule, no colour change, nothing saying it was clickable. */
 .wb-credit-history__order {
     display: block;
     font-family: var(--font-kurdis-semi-condensed);
@@ -836,6 +838,12 @@ body.no-scroll {
     line-height: 1.65;
     color: var(--color-espresso);
     text-decoration: none;
+    transition: color 0.15s ease;
+}
+a.wb-credit-history__order:hover {
+    color: var(--color-dark-gold);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
 }
 /* Expiry note — muted, and the row's only cue that credits are gone or going. */
 .wb-credit-history__expiry {
