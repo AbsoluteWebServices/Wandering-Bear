@@ -22,6 +22,10 @@
   # Redeem → Inveterate member portal (the redeem modal lives in the portal runtime, which
   # only loads at /community/membership — it can't be triggered from a custom page).
   assign redeem_url = '/community/membership?customerId=' | append: customer.id
+  assign membership_url = routes.root_url | append: '/pages/membership'
+  # History tabs. ALL is the tab; the rest are CreditTransaction.type values, so account.ts can
+  # filter on the value straight from the button without a lookup table.
+  assign filters = 'ALL,EARNED,REDEEMED,EXPIRED' | split: ','
 -%}
 
 <section class="w-full" style="background-color: var(--color-brand-cream);">
@@ -32,61 +36,122 @@
        data-worker-token="{{ settings.account_worker_dev_token | default: '' }}"
        data-customer-id="{{ customer.id }}">
 
-    {%- comment -%} Back link {%- endcomment -%}
-    <a href="{{ routes.account_url }}" class="inline-flex items-center !gap-2 font-kurdis-condensed font-extrabold uppercase text-[14px] leading-none text-espresso hover-underline mb-5">
-      <svg class="w-[14px] h-[10px] shrink-0" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      {%- comment -%} The label is wrapped rather than left as a bare text node: this link is an
-        inline-flex container, so the text would be an anonymous flex item, and WebKit does not
-        propagate text-decoration into flex items. On Safari and iOS the underline simply vanished
-        while Chrome drew it. A real inline box carries the decoration on every engine. {%- endcomment -%}
-      <span>{{ 'customer.credits.back_to_account' | t }}</span>
-    </a>
+    {%- comment -%} Heading first, then the back button — both Figma frames put the button under the
+      title (mobile centres the pair, desktop left-aligns it). {%- endcomment -%}
+    {%- comment -%} 25px at every width. Both frames set the title at 25px (1:1208 and 1:1338 alike);
+      the 32px desktop step this used to carry made the heading a third larger than drawn. {%- endcomment -%}
+    <h1 class="wb-credit-title font-kurdis-condensed font-extrabold text-espresso text-[25px] leading-none mb-4 text-center smd:!text-left">{{ 'customer.credits.title' | t }}</h1>
 
-    <h1 class="font-kurdis-condensed font-extrabold text-espresso text-[25px] md:!text-[32px] leading-none mb-6">{{ 'customer.credits.title' | t }}</h1>
+    {%- comment -%} Same control as the order page (sections/customer-order.liquid): the shared .btn
+      blob in secondary-cream, not a text link — cream blob with espresso text at rest, inverting to
+      gold on hover. Inlined rather than rendered through wb-button because that snippet emits only
+      a label span and this button also carries the arrow. {%- endcomment -%}
+    {%- comment -%} Button and FAQ link share one row, the link pushed to the far right of the
+      content column and centred against the button — that is where the desktop frame puts it. The
+      mobile frame stacks them instead; one row at every width was the call. {%- endcomment -%}
+    <div class="mb-5 flex items-center justify-between !gap-5">
+      <a href="{{ routes.account_url }}" class="btn secondary-cream !w-[165px] !h-[43px] !text-[14px] !gap-2">
+        {%- comment -%} The arrow sits in a <span> so it inherits .btn's span colour and hover
+          transition. !static undoes `.btn svg { position: absolute; inset: 0 }`, which is meant for
+          the blob and would stretch the arrow over the whole button; !fill-none undoes the blob's
+          cream fill, which beats the element's own fill="none" and would flood the arrow path. {%- endcomment -%}
+        <span class="flex shrink-0"><svg class="!static !fill-none w-[14px] h-[10px]" viewBox="0 0 14 10" aria-hidden="true"><path d="M5 1 1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        {%- comment -%} .wb-optical-center trims the text box to the glyphs so items-center lands on
+          them and not on font metrics (the label sat high in Windows/Chrome otherwise). {%- endcomment -%}
+        <span class="wb-optical-center">{{ 'customer.credits.back_to_account' | t }}</span>
+        <svg preserveAspectRatio="none" class="btn-svg w-full h-full drop-shadow-[4px_4px_4px_rgba(0,0,0,0.25)]" width="280" height="47" viewBox="0 0 280 47" fill="none" aria-hidden="true">
+          <path d="M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z"/>
+        </svg>
+      </a>
+
+      {%- comment -%} Same link as the dashboard's membership card — same target, same type. Its own
+        key rather than customer.dashboard.membership_faq: the label here is "View Membership FAQ"
+        per the frame, while the dashboard card says just "Membership FAQ". Drawn in the mobile
+        frame only, kept at every width — the dashboard shows it on desktop too, and there is no
+        reason to hide a help link on the wider screen. {%- endcomment -%}
+      <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.credits.membership_faq' | t }}</a>
+    </div>
 
     {%- comment -%} ---------- Credit summary card (native balance + worker expiry) ---------- {%- endcomment -%}
-    <div class="relative {{ card }} px-6 py-7 md:!px-10 mb-4 flex flex-col !gap-5 md:!flex-row md:!items-center md:!justify-between">
-      <div class="flex-1">
-        <div class="flex items-end !gap-3">
-          <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
-          <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
+    {%- comment -%} Desktop is a row: label + amount left, Redeem right (frame 1:1208, everything
+      left-aligned at card+27). Phone is not the same block narrowed — frame 1:1338 pins the label
+      to the left edge and centres the amount and the expiry in the card, with Redeem full width
+      underneath. The switch is .wb-credit-summary in account.css. {%- endcomment -%}
+    {%- comment -%} Padding and the gap are in account.css, measured off the frames — see
+      docs/tasks/credit-history-spec.md. Not the dashboard's px-6/py-7/px-10: this card is 104 tall
+      on desktop with a 26/19 inset, and on phone the Redeem button breaks out of the padding.
+    {%- endcomment -%}
+    <div class="relative {{ card }} wb-credit-summary mb-5 md:!mb-6 flex flex-col md:!flex-row md:!items-center md:!justify-between">
+      <div class="flex-1 wb-credit-summary__figures">
+        <div class="flex items-end !gap-3 wb-credit-summary__line">
+          <span class="wb-credit-summary__label inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
+          <span class="wb-credit-summary__amount font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
         </div>
-        <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line data-wb-no-expiry="{{ no_expiry_text }}">{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+        <div class="wb-credit-summary__expiry font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line data-wb-no-expiry="{{ no_expiry_text }}">{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
       </div>
       {%- comment -%} Redeem → on-page redemption modal (generate Inveterate code, apply to cart);
         falls back to the /community/membership portal link when JS is off. {%- endcomment -%}
-      {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shrink-0 shadow-button !w-full smd:!w-[335px] !h-[40px] !text-[15px]' -%}
+      {%- comment -%} No width utility here on purpose: the button has to break out of the card's
+        padding on phone (335 in a 350 card), and a Tailwind `!w-…` cannot be overridden from
+        account.css — an !important inside @layer utilities outranks an unlayered !important. The
+        width lives in .wb-credit-summary .btn instead. {%- endcomment -%}
+      {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shrink-0 shadow-button !h-[40px] !text-[15px]' -%}
     </div>
 
     {%- comment -%} ---------- Transaction history (worker /credits, filled by account.ts) ---------- {%- endcomment -%}
     <div class="{{ card }} p-5 md:!p-6" data-wb-credit-history>
-      <div class="tag text-espresso uppercase mb-4">{{ 'customer.credits.history' | t }}</div>
+      {%- comment -%} Mixed case at 18px, not the portal's uppercase .tag: both frames set this
+        heading as sentence case and noticeably larger than the table under it. {%- endcomment -%}
+      <div class="wb-credit-history__title">{{ 'customer.credits.history' | t }}</div>
 
       {%- comment -%} Worker load-failure note {%- endcomment -%}
       <p data-wb-error-note class="font-kurdis-semi-condensed font-semibold text-[12px] leading-[1.3] text-[#BD2121] mb-4" role="status">{{ 'customer.dashboard.load_error' | t }}</p>
 
-      <div class="overflow-x-auto">
-        <table class="w-full border border-espresso/20 border-collapse">
+      {%- comment -%}
+        Tabs + table live in one bordered panel (Figma). The tabs filter the rows already fetched —
+        no second request — so account.ts only toggles row visibility.
+      {%- endcomment -%}
+      <div class="wb-credit-history">
+        <div class="wb-credit-history__tabs" role="tablist" aria-label="{{ 'customer.credits.history' | t }}" data-wb-credit-tabs>
+          {%- for f in filters -%}
+            {%- assign filter_key = f | downcase | prepend: 'customer.credits.filter_' -%}
+            <button type="button" role="tab" class="wb-credit-history__tab" data-wb-credit-filter="{{ f }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+              {{ filter_key | t }}
+            </button>
+          {%- endfor -%}
+        </div>
+
+        <table class="wb-credit-history__table">
           <thead>
-            <tr class="text-left tag text-espresso uppercase">
-              <th class="p-3 border-b border-espresso/20">{{ 'customer.credits.col_date' | t }}</th>
-              <th class="p-3 border-b border-espresso/20">{{ 'customer.credits.col_activity' | t }}</th>
-              <th class="p-3 border-b border-espresso/20 hidden md:!table-cell">{{ 'customer.credits.col_order' | t }}</th>
-              <th class="p-3 border-b border-espresso/20 text-right">{{ 'customer.credits.col_amount' | t }}</th>
+            <tr>
+              <th scope="col">{{ 'customer.credits.col_date_type' | t }}</th>
+              <th scope="col">{{ 'customer.credits.col_credits' | t }}</th>
+              <th scope="col">{{ 'customer.credits.col_balance' | t }}</th>
             </tr>
           </thead>
+          {%- comment -%}
+            Row copy account.ts needs but cannot translate itself. These are label PREFIXES, joined
+            to their value in JS ("Order" + "#123", "Expires on" + a date) — same shape as the
+            dashboard's expires_label. A "{{ placeholder }}" string cannot be passed through an
+            attribute here: Liquid reads the inner braces as the end of the output tag.
+          {%- endcomment -%}
           <tbody data-wb-credit-rows
                  data-wb-type-earned="{{ 'customer.credits.type_earned' | t }}"
                  data-wb-type-redeemed="{{ 'customer.credits.type_redeemed' | t }}"
                  data-wb-type-expired="{{ 'customer.credits.type_expired' | t }}"
-                 data-wb-type-adjusted="{{ 'customer.credits.type_adjusted' | t }}">
+                 data-wb-type-adjusted="{{ 'customer.credits.type_adjusted' | t }}"
+                 data-wb-order-label="{{ 'customer.credits.order_number' | t }}"
+                 data-wb-expires-label="{{ 'customer.credits.expires_on' | t }}"
+                 data-wb-expired-label="{{ 'customer.credits.expired' | t }}">
             {%- comment -%} Rows injected by account.ts from GET /apps/wb/credits {%- endcomment -%}
           </tbody>
         </table>
-      </div>
 
-      {%- comment -%} Empty state — shown by account.ts when there are no transactions {%- endcomment -%}
-      <p data-wb-credit-empty class="body text-espresso text-center py-8" hidden>{{ 'customer.credits.empty' | t }}</p>
+        {%- comment -%} No transactions at all — shown by account.ts {%- endcomment -%}
+        <p data-wb-credit-empty class="wb-credit-history__note" hidden>{{ 'customer.credits.empty' | t }}</p>
+        {%- comment -%} Transactions exist, but none match the active tab {%- endcomment -%}
+        <p data-wb-credit-filter-empty class="wb-credit-history__note" hidden>{{ 'customer.credits.filter_empty' | t }}</p>
+      </div>
     </div>
 
   </div>

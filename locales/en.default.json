@@ -166,17 +166,25 @@
     },
     "credits": {
       "back_to_account": "Back to Account",
+      "membership_faq": "View Membership FAQ",
       "title": "Membership Credit History",
-      "history": "Credit History",
-      "col_date": "Date",
-      "col_activity": "Activity",
-      "col_order": "Order",
-      "col_amount": "Amount",
+      "history": "Credits History",
+      "col_date_type": "Date and type",
+      "col_credits": "Credits",
+      "col_balance": "Credits balance",
+      "filter_all": "All",
+      "filter_earned": "Earned",
+      "filter_redeemed": "Redeemed",
+      "filter_expired": "Expired",
+      "order_number": "Order",
+      "expires_on": "Expires on",
+      "expired": "Expired",
       "type_earned": "Earned",
       "type_redeemed": "Redeemed",
       "type_expired": "Expired",
       "type_adjusted": "Adjusted",
-      "empty": "No credit activity yet."
+      "empty": "No credit activity yet.",
+      "filter_empty": "No credits in this category yet."
     }
   },
   "accessibility": {
