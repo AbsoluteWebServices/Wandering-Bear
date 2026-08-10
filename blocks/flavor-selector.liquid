@@ -7,6 +7,11 @@
     assign bundle_url = block.settings.bundle_url
     assign bundle_swatch = block.settings.bundle_swatch
     assign bundle_label = block.settings.bundle_label
+
+    assign is_lp = false
+    if template.suffix == 'overview-1' or template.suffix == 'overview-2'
+        assign is_lp = true
+    endif
 %}
 
 {% style %}
@@ -61,8 +66,8 @@
     }
 {% endstyle %}
 
-<fieldset class="flavor-selector-group !my-5 lg:!my-0">
-  <div class="flex items-center gap-2 mb-5">
+<fieldset class="flavor-selector-group {% if is_lp %} !mt-3 !mb-5 {% else %} !my-5 {% endif %} lg:!my-0">
+  <div class="flex items-center gap-2 mb-8">
     <legend class="font-bold font-gothic_condensed text-bear-black block uppercase text-base !leading-1">
         Choose Flavor:
     </legend>
