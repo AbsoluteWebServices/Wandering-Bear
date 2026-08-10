@@ -66,6 +66,11 @@ type CreditTxn = {
   order_name: string | null;
   order_url: string | null;
   description: string;
+  // This entry's own expiry (earn rows only) — drives the row's "Expires on …" / "Expired" note.
+  expires_at: string | null;
+  // Running balance after this entry; transactions[0].balance_after === balance.
+  balance_after: number;
+  balance_after_formatted: string;
 };
 
 type Credits = {
@@ -297,60 +302,133 @@ function formatDate(iso: string): string {
   return m ? `${MONTHS[+m[2] - 1]} ${+m[3]}, ${m[1]}` : iso;
 }
 
+/** Is this entry's own expiry already past? Earn rows only — a debit has no expiry of its own. */
+function isExpired(t: CreditTxn, nowMs: number): boolean {
+  return t.type === 'EXPIRED' || (t.expires_at != null && Date.parse(t.expires_at) <= nowMs);
+}
+
+/** Build the "Date and type" cell: date, description, order link, expiry note (Figma 1:1208). */
+function dateTypeCell(t: CreditTxn, tbody: HTMLElement, nowMs: number): HTMLTableCellElement {
+  const td = document.createElement('td');
+
+  const date = document.createElement('div');
+  date.className = 'wb-credit-history__date';
+  date.textContent = formatDate(t.date);
+  td.appendChild(date);
+
+  // Upstream wording ("Earned from purchase") when there is any, else the translated type — the
+  // Inveterate reason is free text and can come back empty.
+  const desc = document.createElement('div');
+  desc.className = 'wb-credit-history__desc';
+  desc.textContent =
+    t.description ||
+    tbody.getAttribute(`data-wb-type-${t.type.toLowerCase()}`) ||
+    t.type.charAt(0) + t.type.slice(1).toLowerCase();
+  td.appendChild(desc);
+
+  // The order line only appears when the worker actually resolved one (see orderRef() — the
+  // Inveterate ledger's order field is undocumented, so it is often null).
+  if (t.order_name) {
+    const order = document.createElement(t.order_url ? 'a' : 'span');
+    order.className = 'wb-credit-history__order';
+    order.textContent = `${tbody.getAttribute('data-wb-order-label') || 'Order'} ${t.order_name}`;
+    if (t.order_url && order instanceof HTMLAnchorElement) {
+      order.href = t.order_url;
+      order.classList.add('hover-underline');
+    }
+    td.appendChild(order);
+  }
+
+  // "Expires on Aug 2, 2026" while the credits are live, "Expired" once they are gone.
+  const expired = isExpired(t, nowMs);
+  if (expired || t.expires_at) {
+    const note = document.createElement('div');
+    note.className = 'wb-credit-history__expiry';
+    if (expired) {
+      note.textContent = tbody.getAttribute('data-wb-expired-label') || 'Expired';
+    } else {
+      const label = tbody.getAttribute('data-wb-expires-label') || 'Expires on';
+      note.textContent = `${label} ${formatDate(t.expires_at as string)}`;
+    }
+    td.appendChild(note);
+  }
+
+  return td;
+}
+
+/** Show only the rows matching the active tab; swap in the filter-empty note when none match. */
+function applyCreditFilter(scope: HTMLElement, filter: string): void {
+  const rows = scope.querySelectorAll<HTMLElement>('[data-wb-credit-rows] tr');
+  let last: HTMLElement | null = null;
+  rows.forEach((tr) => {
+    const match = filter === 'ALL' || tr.dataset.wbCreditType === filter;
+    tr.hidden = !match;
+    tr.removeAttribute('data-wb-last');
+    if (match) last = tr;
+  });
+  // The row that ends up against the panel border loses its own rule (see account.css) — which row
+  // that is depends on the filter, so it is marked here rather than with CSS :last-child.
+  (last as HTMLElement | null)?.setAttribute('data-wb-last', '');
+  const note = scope.querySelector<HTMLElement>('[data-wb-credit-filter-empty]');
+  if (note) note.hidden = last != null;
+}
+
 /** Credit history page: fill the summary-card expiry + the transaction table (GET /credits). */
 function renderCredits(d: Credits): void {
   if (!root) return;
 
   setExpiryLine(formatUsDate(d.expires_at));
 
+  const panel = root.querySelector<HTMLElement>('.wb-credit-history');
   const tbody = root.querySelector<HTMLElement>('[data-wb-credit-rows]');
-  if (!tbody) return;
+  if (!panel || !tbody) return;
   const txns = d.transactions ?? [];
   if (!txns.length) {
+    // CSS hides the tabs and the header row off this, so an empty account shows one line of copy
+    // rather than a column header with nothing under it.
     root.querySelector<HTMLElement>('[data-wb-credit-empty]')?.removeAttribute('hidden');
     return;
   }
 
-  const label = (t: string): string =>
-    tbody.getAttribute(`data-wb-type-${t.toLowerCase()}`) || t.charAt(0) + t.slice(1).toLowerCase();
-
+  const nowMs = Date.now();
   tbody.textContent = '';
   txns.forEach((t) => {
     // EARNED always credits, REDEEMED/EXPIRED always debit; ADJUSTED goes either way, so take the
     // sign from the numeric amount rather than assuming a gain.
     const positive = t.type === 'ADJUSTED' ? t.amount >= 0 : t.type === 'EARNED';
-    const amtColor = t.type === 'EARNED' ? 'text-dark-gold' : t.type === 'EXPIRED' ? 'text-espresso/50' : 'text-espresso';
+    const expired = isExpired(t, nowMs);
+
     const tr = document.createElement('tr');
-    tr.className = 'body text-espresso';
-
-    const date = document.createElement('td');
-    date.className = 'p-3 border-b border-espresso/10 whitespace-nowrap';
-    date.textContent = formatDate(t.date);
-
-    const activity = document.createElement('td');
-    activity.className = 'p-3 border-b border-espresso/10';
-    activity.textContent = label(t.type);
-
-    const orderCell = document.createElement('td');
-    orderCell.className = 'p-3 border-b border-espresso/10 hidden md:!table-cell';
-    if (t.order_name) {
-      const a = document.createElement('a');
-      a.href = t.order_url || '#';
-      a.className = 'hover-underline';
-      a.textContent = t.order_name;
-      orderCell.appendChild(a);
-    } else {
-      orderCell.textContent = '—';
-    }
+    // The tabs filter on this; it is the worker's `type` verbatim, so no mapping table.
+    tr.dataset.wbCreditType = t.type;
 
     const amount = document.createElement('td');
-    amount.className = `p-3 border-b border-espresso/10 text-right whitespace-nowrap font-bold ${amtColor}`;
+    amount.className = `wb-credit-history__amount${
+      expired ? ' wb-credit-history__amount--muted' : positive ? ' wb-credit-history__amount--earned' : ''
+    }`;
     // The sign is ours; drop one the worker may already have baked into the formatted amount.
-    amount.textContent = `${positive ? '+' : '-'}${t.amount_formatted.replace(/^-/, '')}`;
+    // Expired credits are shown unsigned: the loss is already said by the greyed "Expired" note,
+    // and a "-" next to it reads as a second, separate deduction.
+    const bare = t.amount_formatted.replace(/^[-+]/, '');
+    amount.textContent = expired ? bare : `${positive ? '+' : '-'}${bare}`;
 
-    tr.append(date, activity, orderCell, amount);
+    const balance = document.createElement('td');
+    balance.className = 'wb-credit-history__balance';
+    balance.textContent = t.balance_after_formatted;
+
+    tr.append(dateTypeCell(t, tbody, nowMs), amount, balance);
     tbody.appendChild(tr);
   });
+
+  // Tabs: filter the rows already in the DOM — no second request, no re-render.
+  const tabs = panel.querySelectorAll<HTMLElement>('[data-wb-credit-filter]');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((other) => other.setAttribute('aria-selected', String(other === tab)));
+      applyCreditFilter(panel, tab.dataset.wbCreditFilter || 'ALL');
+    });
+  });
+  applyCreditFilter(panel, 'ALL');
 }
 
 /** Dev-only state override for QA: `/account?wb_qa=1&wb_autoship=cancelled&wb_active_count=2&…`
@@ -389,8 +467,47 @@ function qaOverride(): Summary | null {
   };
 }
 
+/** Dev-only credit history for QA: `/pages/credit-history?wb_qa=1` renders the rows drawn in Figma
+ *  1:1208 (earn, expired earn, redeem) without a worker or an enrolled member. `wb_rows=0` gives
+ *  the empty state. Mirrors qaOverride() for the dashboard; returns null when not in QA. */
+function qaCredits(): Credits | null {
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('wb_qa') !== '1') return null;
+  const row = (
+    type: CreditTxn['type'], amount: string, date: string, description: string,
+    order: string | null, expires: string | null, balance: string,
+  ): CreditTxn => ({
+    id: `qa-${date}`, type, amount: 0, amount_formatted: amount, date, description,
+    order_name: order, order_url: order ? `/account/orders/${order.replace('#', '')}` : null,
+    expires_at: expires, balance_after: 0, balance_after_formatted: balance,
+  });
+  // A live "Expires on …" row has to sit in the future or it renders as expired, so the two earn
+  // rows carry a rolling +60d / +30d expiry rather than the Figma's fixed (and now past) dates.
+  const inDays = (n: number): string => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
+  const transactions = p.get('wb_rows') === '0' ? [] : [
+    row('EARNED', '$5', '2026-06-03', 'Earned from purchase', '#6639365292129', inDays(60), '$10'),
+    row('EXPIRED', '$5', '2026-06-02', 'Earned from purchase', '#6535708704865', null, '$5'),
+    row('EARNED', '$5', '2026-05-03', 'Earned from purchase', '#6579355549793', inDays(30), '$10'),
+    row('REDEEMED', '$10', '2026-05-02', 'Redeemed at checkout', null, null, '$5'),
+  ];
+  return {
+    balance: 1500, balance_formatted: '$15', currency: 'USD',
+    expires_at: p.get('wb_expiry') || '2028-01-01',
+    transactions,
+    pagination: { page: 1, per_page: 50, total: transactions.length, has_next: false },
+  };
+}
+
 async function hydrate(): Promise<void> {
   if (!root) return;
+  if (root.querySelector('[data-wb-credit-history]')) {
+    const qaRows = qaCredits();
+    if (qaRows) {
+      renderCredits(qaRows);
+      root.removeAttribute('data-wb-loading');
+      return;
+    }
+  }
   const qa = qaOverride();
   if (qa) {
     renderMembership(qa.membership);

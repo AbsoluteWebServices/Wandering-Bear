@@ -1,0 +1,19 @@
+/*
+ * QA preview for the Membership Credit History page, reachable at
+ * /search?view=credit-history-preview.
+ *
+ * An alternate SEARCH template on purpose, for the same reason as
+ * search.account-preview.json: page.credit-history.json only resolves once a page resource named
+ * "credit-history" exists in the store, so it 404s on a fresh dev theme. Search always resolves.
+ *
+ * Add ?wb_qa=1 for the Figma rows without a worker, &wb_rows=0 for the empty state.
+ */
+{
+  "sections": {
+    "main": {
+      "type": "customer-credits",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
