@@ -733,7 +733,13 @@ body.no-scroll {
    NOTE: the table region in both Figma frames is a pasted screenshot of the stock Inveterate
    portal, so it carries no WB tokens — the structure below is the design's, the type and colour
    are the account portal's own. */
+/* Colours below are sampled from the Figma screenshot slices (1:1376–1:1378), not from the brand
+   palette: the block is a pasted capture of the stock Inveterate/Polaris table, so its text is pure
+   black on a mid grey rather than the portal's espresso. Measured with PIL over the rendered
+   slices — see docs/tasks/credit-history-spec.md. */
 .wb-credit-history {
+    --wb-credit-ink: #000000;
+    --wb-credit-muted: #727272;
     border: 1px solid color-mix(in srgb, var(--color-espresso) 20%, transparent);
     border-radius: 8px;
     overflow: hidden;
@@ -752,18 +758,18 @@ body.no-scroll {
     font-weight: 700;
     font-size: 12px;
     line-height: 1;
-    color: color-mix(in srgb, var(--color-espresso) 45%, transparent);
+    color: var(--wb-credit-muted);
     background: none;
     border: 0;
     padding: 0;
     cursor: pointer;
 }
 .wb-credit-history__tab:hover {
-    color: var(--color-espresso);
+    color: var(--wb-credit-ink);
     text-decoration: underline;
 }
 .wb-credit-history__tab[aria-selected='true'] {
-    color: var(--color-espresso);
+    color: var(--wb-credit-ink);
 }
 
 .wb-credit-history__table {
@@ -786,7 +792,7 @@ body.no-scroll {
     font-weight: 800;
     font-size: 12px;
     line-height: 1;
-    color: var(--color-espresso);
+    color: var(--wb-credit-ink);
     border-bottom: 1px solid color-mix(in srgb, var(--color-espresso) 20%, transparent);
     white-space: nowrap;
 }
@@ -816,14 +822,14 @@ body.no-scroll {
     /* 1.65 puts ~20px between the four lines of the cell instead of 18 — the date, description,
        order and expiry are four separate facts and needed the air to stop reading as a block. */
     line-height: 1.65;
-    color: var(--color-espresso);
+    color: var(--wb-credit-ink);
 }
 .wb-credit-history__desc {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
     font-size: 12px;
     line-height: 1.65;
-    color: var(--color-espresso);
+    color: var(--wb-credit-ink);
 }
 /* Order line: weight 800 AND the portal's permanent underline — account links are always
    underlined, so this is no longer an exception. text-decoration-color is stated explicitly for the
@@ -836,7 +842,7 @@ body.no-scroll {
     font-weight: 800;
     font-size: 12px;
     line-height: 1.65;
-    color: var(--color-espresso);
+    color: var(--wb-credit-ink);
     text-decoration: underline;
     text-decoration-color: currentColor;
     transition: color 0.15s ease;
@@ -852,24 +858,30 @@ a.wb-credit-history__order:hover {
     font-weight: 600;
     font-size: 12px;
     line-height: 1.65;
-    color: color-mix(in srgb, var(--color-espresso) 45%, transparent);
+    color: var(--wb-credit-muted);
 }
 
 .wb-credit-history__amount,
 .wb-credit-history__balance {
     font-family: var(--font-kurdis-semi-condensed);
-    font-weight: 700;
     font-size: 12px;
     line-height: 1.5;
-    color: var(--color-espresso);
+    color: var(--wb-credit-ink);
 }
-/* Earned reads as a gain (gold, signed); spent and expired stay neutral, and expired greys out
-   entirely — in Figma an expired row is legible but visibly inactive. */
+/* The frame draws the running balance heavier than the credits figure beside it. */
+.wb-credit-history__amount {
+    font-weight: 600;
+}
+.wb-credit-history__balance {
+    font-weight: 800;
+}
+/* Earned is BLACK in the frame, not gold — the sign alone marks the gain. Expired greys out
+   entirely: legible but visibly inactive. */
 .wb-credit-history__amount--earned {
-    color: var(--color-dark-gold);
+    color: var(--wb-credit-ink);
 }
 .wb-credit-history__amount--muted {
-    color: color-mix(in srgb, var(--color-espresso) 45%, transparent);
+    color: var(--wb-credit-muted);
 }
 
 /* Empty states (no history at all / nothing under the active tab). */
