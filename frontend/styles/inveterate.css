@@ -12,3 +12,127 @@
     }
 }
 
+.inveterate__member__membership_details_actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+}
+
+/* Match theme `.btn.secondary` / `.btn.secondary-gold` (same blob SVG as wb-button) */
+.inveterate__member__membership_details_actions .inveterate__membership__link {
+    --inveterate-btn-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 47' preserveAspectRatio='none'%3E%3Cpath fill='black' d='M2.59169 4.88727C0.390365 7.61342 0.302126 10.8262 0.264973 13.9059C0.176734 21.2351 0.09314 28.5613 0.00490134 35.8904C-0.0183194 37.8822 -0.0136752 39.9555 1.33777 41.7417C4.59331 46.0364 8.70337 46.9734 20.8617 46.9734C102.413 46.9734 183.968 47.1336 265.524 46.6681C268.418 46.653 271.594 46.7497 273.967 45.6707C280.399 42.7481 279.698 37.4077 279.503 33.4454C279.141 26.0678 280 20.005 280 12.6245C280 7.4623 279.113 5.38898 276.484 3.34587C273.117 0.725503 266.105 0.83733 260.852 0.767816C226.318 0.305398 191.766 0.0666329 157.218 0.0122307C122.448 -0.0451938 87.6769 0.0998786 52.9063 0.441403C43.0979 0.538118 33.2941 0.649945 23.4903 0.779905C16.0876 0.87662 6.6971 -0.187244 2.59169 4.88727Z'/%3E%3C/svg%3E");
+
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 0;
+    height: 43px;
+    padding-inline: 0.75rem;
+    font-family: var(--font-kurdis-condensed) !important;
+    font-size: 1.25rem !important;
+    font-style: normal;
+    font-weight: 800 !important;
+    line-height: 100% !important;
+    text-align: center;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    color: var(--color-cream) !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0;
+    transition: color 0.3s ease;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: var(--color-brand-gold);
+        -webkit-mask: var(--inveterate-btn-svg) center / 100% 100% no-repeat;
+        mask: var(--inveterate-btn-svg) center / 100% 100% no-repeat;
+        filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+        transition: background-color 0.3s ease;
+        pointer-events: none;
+    }
+
+    &:hover {
+        color: var(--color-brand-espresso) !important;
+
+        &::before {
+            background-color: var(--color-brand-cream);
+        }
+    }
+}
+
+#inveterate-member-tier-selection .inveterate__tier__banner__footer button.inveterate__button__primary {
+    width: 102px !important;
+}
+
+@media screen and (min-width: 750px) and (max-width: 1024px) {
+    .inveterate .inveterate__member__program {
+        flex-grow: 1;
+    }
+
+    .inveterate__member__block.inveterate__discounts,
+    .inveterate__member__block.inveterate__orders,
+    .inveterate .inveterate__member__program__spend__container,
+    .inveterate .inveterate__member__block__group,
+    .inveterate .inveterate__member__block__group hr,
+    .inveterate .inveterate__redemption > * {
+        width: 100%;
+    }
+
+    .inveterate .inveterate__redemption > * {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 749px) {
+    .inveterate__redeem__right_discount_line .inveterate__redeem__right__button_group .inveterate__redeem__existing_code_container {
+        width: calc(100% - 42px) !important;
+    }
+
+    .inveterate__redeem__right_discount_line .inveterate__redeem__right__button_group {
+        position: relative;
+        justify-content: flex-start;
+        width: 100%;
+        width: auto;
+        flex-grow: 1;
+    }
+
+    .inveterate .inveterate__edit__discount__stack {
+        top: 38px !important;
+        right: 0px !important;
+        min-width: 144px;
+    }
+
+    .inveterate .inveterate__redemption__button {
+        position: relative !important;
+    }
+
+    .inveterate__redeem__right .inveterate__redeem__right_discount_line {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        width: 100%;
+        flex-grow: 1;
+        gap: 8px;
+    }
+
+    .inveterate__redeem__discount_line .inveterate__redeem__right {
+        width: calc(100% - 44px) !important;
+    }
+
+    .inveterate__redeem__contract_discount_line .inveterate__redeem__right__button_group {
+        position: relative;
+        margin-left: auto;
+        display: inline-block;
+    }
+
+    .inveterate__redeem__contract_discount_line {
+        display: flex;
+        width: 100% !important;
+    }
+}

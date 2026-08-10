@@ -42,29 +42,15 @@
         {% endif %}
       >
       <button
-        class="email-signup__button custom relative {% if block_settings.integrated_button or block_settings.border_style == 'underline' %}email-signup__button--integrated{% endif %} email-signup__button--{{ block_settings.display_type }} {{ block_settings.button_type_preset }} {{ block_settings.style_class }} {{ block_settings.style_class }}--{{ block.id }} {% if block_settings.inherit_color_scheme == false %}color-{{ block_settings.color_scheme }}{% endif %}"
+        class="email-signup__button shadow-button custom relative group {% if block_settings.integrated_button or block_settings.border_style == 'underline' %}email-signup__button--integrated{% endif %} email-signup__button--{{ block_settings.display_type }} {{ block_settings.button_type_preset }} {{ block_settings.style_class }} {{ block_settings.style_class }}--{{ block.id }} {% if block_settings.inherit_color_scheme == false %}color-{{ block_settings.color_scheme }}{% endif %}"
         {% if block_settings.display_type != 'text' %}
           aria-label="{{ 'actions.sign_up' | t }}"
         {% endif %}
       >
       <span class="relative z-10 font-kurdis-semi-condensed text-lg font-bold uppercase">{{ block_settings.label }}</span>
-      <svg preserveAspectRatio="none" class="absolute top-0 left-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" width="134" height="69" viewBox="0 0 134 69" fill="none">
-      <g filter="url(#filter0_d_3_418)">
-        <path d="M1.16626 6.34305C0.175664 9.88125 0.135957 14.051 0.119238 18.0481C0.0795305 27.5605 0.041913 37.0689 0.0022056 46.5812C-0.00824371 49.1662 -0.00615386 51.8571 0.601996 54.1754C2.06699 59.7494 3.91652 60.9654 9.38778 60.9654C46.0858 60.9654 82.7858 61.1733 119.486 60.5693C120.788 60.5497 122.217 60.6752 123.285 59.2748C126.18 55.4816 125.864 48.5504 125.776 43.4078C125.613 33.8327 126 25.964 126 16.3849C126 9.68512 125.601 6.9942 124.418 4.34252C122.903 0.94161 119.747 1.08675 117.383 0.996527C101.843 0.396367 86.2947 0.0864809 70.7482 0.0158739C55.1014 -0.0586558 39.4546 0.12963 23.8078 0.572885C19.394 0.698409 14.9823 0.843545 10.5706 1.01222C7.2394 1.13774 3.0137 -0.243019 1.16626 6.34305Z" fill="#AF7404"/>
-      </g>
-      <defs>
-        <filter id="filter0_d_3_418" x="0" y="0" width="134" height="69" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-          <feOffset dx="4" dy="4"/>
-          <feGaussianBlur stdDeviation="2"/>
-          <feComposite in2="hardAlpha" operator="out"/>
-          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_3_418"/>
-          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_3_418" result="shape"/>
-        </filter>
-      </defs>
-    </svg>
+      <svg preserveAspectRatio="none" class="absolute -left-1 w-full h-[61px] text-gold  group-hover:!text-espresso transition-colors duration-300" height="61" width="126" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126 61" fill="none">
+         <path d="M1.16626 6.34305C0.175664 9.88125 0.135957 14.051 0.119238 18.0481C0.0795305 27.5605 0.041913 37.0689 0.0022056 46.5812C-0.00824371 49.1662 -0.00615386 51.8571 0.601996 54.1754C2.06699 59.7494 3.91652 60.9654 9.38778 60.9654C46.0858 60.9654 82.7858 61.1733 119.486 60.5693C120.788 60.5497 122.217 60.6752 123.285 59.2748C126.18 55.4816 125.864 48.5504 125.776 43.4078C125.613 33.8327 126 25.964 126 16.3849C126 9.68512 125.601 6.9942 124.418 4.34252C122.903 0.94161 119.747 1.08675 117.383 0.996527C101.843 0.396367 86.2947 0.0864809 70.7482 0.0158739C55.1014 -0.0586558 39.4546 0.12963 23.8078 0.572885C19.394 0.698409 14.9823 0.843545 10.5706 1.01222C7.2394 1.13774 3.0137 -0.243019 1.16626 6.34305Z" fill="currentColor"/>
+      </svg>
       </button>
     </div>
 

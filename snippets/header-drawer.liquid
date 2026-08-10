@@ -63,7 +63,7 @@
         {% render 'icons', icon: 'menu' with class: '!w-8 !h-5' %}
       </span>
       <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
-        {{- 'icon-close.svg' | inline_asset_content -}}
+        {% render 'icons', icon: 'close' with class: '!w-5 !h-5' %}
       </span>
     </summary>
     <div
@@ -73,10 +73,10 @@
         color-{{ block_settings.color_scheme }}
       "
     >
-      <div class="bg-light-sky flex w-full h-[68px] md:!h-[86px] flex items-center">
-      <div class="!pl-0 !pr-[31px] flex h-full justify-between md:!justify-start items-center md:!px-[31px] h-fit w-full relative border-b border-[#431A031A]">
+      <div data-tooltip-below class="bg-sky-blue flex w-full h-[68px] smd:!h-[86px] flex items-center">
+      <div class="!pl-0 h-full wb-grid grid-cols-3 smd:!flex smd:!px-[31px] h-fit w-full relative border-b border-[#431A031A]">
         <button
-        class="button close-button menu-drawer__close-button md:!bg-white md:!rounded-full md:!drop-shadow-lg md:!absolute md:!top-3 md:!right-3.5 md:!h-[42px] md:!w-[42px] md:!p-0"
+        class="button close-button menu-drawer__close-button smd:!bg-white smd:!rounded-full smd:!drop-shadow-lg !top-1/2 -translate-y-1/2 smd:!absolute smd:!right-3.5 smd:!h-[42px] smd:!w-[42px] smd:!p-0"
         type="button"
         aria-label="{{ 'actions.close' | t }}"
         on:click="/close"
@@ -86,21 +86,40 @@
         </span>
       </button>
 
+      <div class="flex justify-center smd:justify-between smd:mr-5.5 items-center w-full">
       <div class="w-[90px] flex h-full items-center">
-          <a href="/" class="">
-          {{ settings.logo | image_url: width: 200 | image_tag: class: 'h-full w-full object-contain' }}
+          <a href="/" class="text-bear-black">
+          {{ settings.logo_svg }}
           </a>
         </div>
-        <ul class="drawer-menu-list hidden md:!flex h-full items-center">
+        <ul class="drawer-menu-list hidden smd:!flex h-full items-center">
         {% for link in linklist.links %}
           <li class="drawer-menu-item h-full relative">
-            <a class="font-kurdis uppercase text-sm font-bold text-bear-black flex items-center h-full pt-[39px] pb-[29px] px-6" href="{{ link.url }}">{{ link.title }}</a>
+            <a class="font-kurdis-semi-condensed uppercase text-sm font-bold text-bear-black flex items-center h-full pt-[39px] pb-[29px] px-6" href="{{ link.url }}">{{ link.title }}</a>
           </li>
         {% endfor %}
         </ul>
-        <div class="flex md:!hidden">
+        
+      </div>
+      <div class="flex smd:!hidden justify-end items-center w-full pr-3">
           {% render 'membership-widget' %}
         </div>
+      <div class="flex smd:!hidden bg-[#F1E3D3] h-[62px] w-full fixed bottom-0 left-0 right-0 border-t border-[#431A031A]">
+        <ul class="h-full w-full flex !gap-0 items-center justify-between">
+        {% for link in linklist.links %}
+          <li class="h-full w-full flex justify-center items-center
+          {% if forloop.first %} hidden smd:flex {% endif %} border-r border-[#431A031A]
+          {% if forloop.last %} smd:border-r-0 {% endif %}">
+            <a class="font-kurdis justify-center uppercase text-sm font-bold text-bear-black text-center flex mx-auto items-center h-full w-full" href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+        {% endfor %}
+        {% if section.settings.mobile_account_link %}
+        <li class="h-full w-full flex justify-center items-center flex md:hidden">
+          <a class="font-kurdis justify-center uppercase text-sm font-bold text-bear-black text-center flex mx-auto items-center h-full w-full" href="{{ section.settings.mobile_account_link | default: routes.account_url }}">{{ section.settings.mobile_account_link_text | default: 'Account' }}</a>
+        </li>
+        {% endif %}
+        </ul>
+      </div>
       </div>
       </div>
       <nav
@@ -596,7 +615,7 @@
           {% endif %}
         </ul> {% endcomment %}
       </nav>
-      <div class="flex md:!hidden bg-[#F1E3D3] h-[62px] w-full fixed bottom-0 left-0 right-0 border-t border-[#431A031A]">
+      {% comment %} <div class="flex md:!hidden bg-[#F1E3D3] h-[62px] w-full fixed bottom-0 left-0 right-0 border-t border-[#431A031A]">
         <ul class="h-full w-full flex !gap-0 items-center justify-between">
         {% for link in linklist.links %}
           <li class="h-full w-full flex justify-center items-center
@@ -611,7 +630,7 @@
         </li>
         {% endif %}
         </ul>
-      </div>
+      </div> {% endcomment %}
       <div
         class="menu-drawer__utility-links menu-drawer__animated-element"
         style="--menu-drawer-animation-index: {{ linklist.links.size }};"

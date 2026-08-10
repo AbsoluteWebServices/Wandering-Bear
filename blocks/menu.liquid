@@ -51,7 +51,7 @@
       {{ block.shopify_attributes }}
       
     >
-      <summary class="menu__heading !text-[28px] md:!text-[25px] !font-gothic_condensed !font-extrabold {% if heading == blank and menu.title == blank %} menu__heading--empty{% endif %} {{ block_settings.heading_preset }}">
+      <summary class="menu__heading !text-[28px] md:!text-[25px] !font-gothic_condensed !font-extrabold uppercase {% if heading == blank and menu.title == blank %} menu__heading--empty{% endif %} {{ block_settings.heading_preset }}">
         <span class="menu__heading__default">{{ heading | default: menu.title }}</span>
         <span class="menu__heading__accordion">
           {{ heading | default: menu.title }}

@@ -1,0 +1,79 @@
+<script>
+(function () {
+  if (window.__cookiebotShopifyConsentBridgeLoaded) return;
+  window.__cookiebotShopifyConsentBridgeLoaded = true;
+
+  let shopifyConsentLoading = false;
+  let shopifyConsentLoaded = false;
+  let lastConsentPayload = '';
+
+  function loadShopifyConsentApi(callback) {
+    if (window.Shopify?.customerPrivacy || shopifyConsentLoaded) {
+      shopifyConsentLoaded = true;
+      callback?.();
+      return;
+    }
+
+    if (shopifyConsentLoading) {
+      setTimeout(() => loadShopifyConsentApi(callback), 100);
+      return;
+    }
+
+    if (typeof window.Shopify?.loadFeatures !== 'function') {
+      setTimeout(() => loadShopifyConsentApi(callback), 100);
+      return;
+    }
+
+    shopifyConsentLoading = true;
+
+    window.Shopify.loadFeatures(
+      [{ name: 'consent-tracking-api', version: '0.1' }],
+      function (error) {
+        shopifyConsentLoading = false;
+
+        if (error) {
+          console.error('Shopify loadFeatures error:', error);
+          return;
+        }
+
+        shopifyConsentLoaded = true;
+        console.log('Consent API loaded', window.Shopify.customerPrivacy);
+        callback?.();
+      }
+    );
+  }
+
+  function syncCookiebotToShopify() {
+    loadShopifyConsentApi(function () {
+      if (!window.Cookiebot?.consent || !window.Shopify?.customerPrivacy) return;
+
+      const C = Cookiebot.consent;
+
+      const payload = {
+        analytics: !!C.statistics,
+        marketing: !!C.marketing,
+        preferences: !!C.preferences,
+        sale_of_data: !!C.marketing
+      };
+
+      const payloadKey = JSON.stringify(payload);
+
+      if (payloadKey === lastConsentPayload) return;
+      lastConsentPayload = payloadKey;
+
+      window.Shopify.customerPrivacy.setTrackingConsent(payload, function () {
+        console.log(
+          'Consent captured',
+          window.Shopify.customerPrivacy.getTrackingConsent()
+        );
+      });
+    });
+  }
+
+  window.addEventListener('CookiebotOnConsentReady', syncCookiebotToShopify);
+  window.addEventListener('CookiebotOnAccept', syncCookiebotToShopify);
+  window.addEventListener('CookiebotOnDecline', syncCookiebotToShopify);
+
+  loadShopifyConsentApi();
+})();
+</script>

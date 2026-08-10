@@ -193,7 +193,7 @@
         }
       },
       "settings": {
-        "bundle_collection": "test-cold-brew-on-tap-96oz",
+        "bundle_collection": "site-v2-groupedpdp-96oz",
         "bundle_add_to_cart_text": "Add",
         "oos_badge_text": "Out of Stock",
         "oos_button_text": "Get Notified",
@@ -419,9 +419,9 @@
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
-        "title_image": "shopify://shop_images/cold-brew-title.svg",
-        "title_image_mobile": "shopify://shop_images/cold-brew-title.svg",
-        "diagram_image": "shopify://shop_images/cupofcoldbrew_1_184edfd5-6ed8-4e1e-a095-a57e7070ff36.png",
+        "title_image": "shopify://shop_images/SPCB_Module.svg",
+        "title_image_mobile": "shopify://shop_images/SPCB_Module.svg",
+        "diagram_image": "shopify://shop_images/Short_Glass_Front_Angle.png",
         "text_background_color": "",
         "text_background_opacity": 100,
         "padding-block-start": 0,

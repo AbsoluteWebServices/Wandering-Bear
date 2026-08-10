@@ -1,0 +1,62 @@
+/* Govalo Gift Card styles */
+
+.gvlo-modal {
+    background-color: var(--color-cream) !important;
+
+    .gvlo-field {
+       
+
+        label {
+            font-family: var(--font-kurdis-condensed, 'Kurdis Semi Condensed') !important;
+            font-weight: 700 !important;
+            color: var(--color-espresso) !important;
+        }
+
+        input, select, span, textarea {
+            font-family: var(--font-kurdis-semi-condensed, 'Kurdis Semi Condensed') !important;
+            color: var(--color-bear-black) !important;
+            border-radius: 0 !important;
+        }
+    }
+}
+
+.gvlo-modal > *,
+.gvlo-modal > * > * {
+    font-family: var(--font-kurdis-semi-condensed, 'Kurdis Semi Condensed') !important;
+    color: var(--color-bear-black) !important;
+}
+
+h2.gvlo-heading {
+    color: var(--color-espresso) !important;
+    font-family: var(--font-gothic__condensed, 'Gothic Condensed') !important;
+    font-weight: 800 !important;
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+    text-transform: uppercase !important;
+}
+
+.gvlo-button.button {
+    font-family: var(--font-kurdis-condensed, 'Kurdis Condensed') !important;
+    font-weight: 800 !important;
+    font-size: 20px !important;
+    line-height: 1.2 !important;
+    text-transform: uppercase !important;
+    background-color: var(--color-espresso) !important;
+    color: var(--color-cream) !important;
+    border-radius: 10px !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    cursor: pointer !important;
+
+    &:hover {
+        background-color: var(--color-gold) !important;
+    }
+
+    &:focus {
+        outline: none !important;
+    }
+}
+
+.gvlo-left.gvlo-arrow-btn .rotate-180 {
+    transform: rotate(0) !important;
+}

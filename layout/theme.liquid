@@ -6,6 +6,8 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0c89efb0-64d9-4d4b-8214-f2118b4a0481" data-blockingmode="auto" type="text/javascript"></script>
+
 <!-- Start of Shoplift scripts -->
 {% render 'shoplift' %}
 <!-- End of Shoplift scripts -->
@@ -60,7 +62,9 @@
       render 'vite-tag' with 'main.css'
       render 'vite-tag' with 'main.js'
     -%}
+
     {{ content_for_header }}
+    {% render 'cookie-consent' %}
     {% # theme-check-enable RemoteAsset %}
     <link rel="stylesheet" href="https://use.typekit.net/bze4adt.css">
   </head>
@@ -148,6 +152,10 @@
       data-product-transition="{{ settings.transition_to_main_product }}"
       data-template="{{ template }}"
     >
+      {% if request.path contains 'apps/retextion' or request.path contains 'community/membership' %}
+        {% render 'back-account' %}
+      {% endif %}
+
       {{ content_for_layout }}
     </main>
     {% section 'aw-membership-modal' %}

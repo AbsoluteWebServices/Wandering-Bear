@@ -30,7 +30,8 @@
 
 .section.header__row {
   @media screen and (max-width: 768px) {
-    grid-template-columns: 1fr;
+    /* grid-template-columns: 1fr; */
+    display: flex;
   }
 }
 

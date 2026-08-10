@@ -73,23 +73,23 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/on-tap-cold-brew",
-            "image": "shopify://shop_images/WBSB96oz_PDP_1_FINAL.jpg",
+            "image": "shopify://shop_images/Cold_brew_Boxes_2.png",
             "hover_image": "shopify://shop_images/shadow-layer.png",
-            "image_mobile": "shopify://shop_images/MobileTile_1_Text.png",
+            "image_mobile": "shopify://shop_images/COLD_BREW_BOXES_BUTTON.png",
             "mobile_image_alt": "",
             "title": "Cold Brew Boxes",
             "subtitle": "Always delicious and ready \"on tap\" in your fridge with 13 flavors to choose from.",
             "accent_text": "",
-            "badge": "shopify://shop_images/Most_Popular_Badge.png"
+            "badge": "shopify://shop_images/BADGE_TEST_2.svg"
           }
         },
         "collection_tile_rCwyCX": {
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/multi-serve",
-            "image": "shopify://shop_images/WBOB96oz_PRODUCT_PDP_1_FINAL.jpg",
+            "image": "shopify://shop_images/Multiserve.png",
             "hover_image": "shopify://shop_images/shadow-layer.png",
-            "image_mobile": "shopify://shop_images/MobileTile_2_Text.png",
+            "image_mobile": "shopify://shop_images/Multi_Servce_Homepage.png",
             "mobile_image_alt": "",
             "title": "Multi-Serve Cartons",
             "subtitle": "Fridge door friendly. Cold brews, latte and cold brew concentrate.",
@@ -100,9 +100,9 @@
           "type": "collection_tile",
           "settings": {
             "url": "shopify://collections/single-serve",
-            "image": "shopify://shop_images/homepage-3-top-layer_71c09c93-38a8-4352-82ca-a2392d02867e.png",
+            "image": "shopify://shop_images/SINGLE_SERVE.png",
             "hover_image": "shopify://shop_images/shadow-layer.png",
-            "image_mobile": "shopify://shop_images/MobileTile_3_Text.png",
+            "image_mobile": "shopify://shop_images/Single_serves_homepage.png",
             "mobile_image_alt": "",
             "title": "Single Serves",
             "subtitle": "Your coffee shop moment, canned. Perfect for on-the-go. Cold brew and lattes.",
@@ -275,22 +275,22 @@
     "aw_logo_wall_AXpPn6": {
       "type": "aw-logo-wall",
       "blocks": {
-        "logo_a34R38": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Erewhon_Gold.png",
-            "hide_on_mobile": false,
-            "max_width": "165",
-            "max_width_mobile": "128"
-          }
-        },
         "logo_GW6Tnx": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/Wholefoods_Gold.png",
             "hide_on_mobile": false,
             "max_width": "101",
-            "max_width_mobile": "80"
+            "max_width_mobile": "66"
+          }
+        },
+        "logo_a34R38": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Erewhon_Gold.png",
+            "hide_on_mobile": false,
+            "max_width": "165",
+            "max_width_mobile": "93"
           }
         },
         "logo_jD4Mzy": {
@@ -299,16 +299,16 @@
             "image": "shopify://shop_images/Costco_Gold.png",
             "hide_on_mobile": false,
             "max_width": "147",
-            "max_width_mobile": "122"
+            "max_width_mobile": "99"
           }
         },
         "logo_nYDjHb": {
           "type": "logo",
           "settings": {
             "image": "shopify://shop_images/Sprouts_Gold.png",
-            "hide_on_mobile": true,
+            "hide_on_mobile": false,
             "max_width": "137",
-            "max_width_mobile": ""
+            "max_width_mobile": "104"
           }
         },
         "logo_3BhRQY": {
@@ -317,13 +317,13 @@
             "image": "shopify://shop_images/Target_Gold.png",
             "hide_on_mobile": false,
             "max_width": "198",
-            "max_width_mobile": "124"
+            "max_width_mobile": "110"
           }
         }
       },
       "block_order": [
-        "logo_a34R38",
         "logo_GW6Tnx",
+        "logo_a34R38",
         "logo_jD4Mzy",
         "logo_nYDjHb",
         "logo_3BhRQY"
@@ -372,7 +372,7 @@
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589_62e3d5a1-7d02-4e2b-bbe7-4026e639b7de.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226590_164fb897-49ec-422d-88c8-0c23c0483ea0.svg",
-        "content": "<p>Inspired by the drinks in NYC coffee shops, two friends, Matt and Ben, set out to bring that same freshness and taste to your fridge. They started brewing the coffee they wanted to drink every day and nearly 100,000,000 cups later, the mission hasn't changed. <br/><br/><strong>We take inspiration from coffee shop culture to craft beverages with uncompromising quality and great taste, good enough to drink every day.</strong></p><p></p><p>We hope you try (and enjoy) it.</p>",
+        "content": "<p>Inspired by the drinks in NYC coffee shops, two friends, Matt and Ben, set out to bring that same freshness and taste to your fridge. They started brewing the coffee they wanted to drink every day and nearly 100,000,000 cups later, the mission hasn't changed. <br/><br/>We take inspiration from coffee shop culture to craft beverages with uncompromising quality and great taste, good enough to drink every day.</p><p></p><p>We hope you try (and enjoy) it.</p>",
         "background_image": "shopify://shop_images/Homepage.png",
         "video": "shopify://files/videos/wb-about.mp4",
         "signature_image": "shopify://shop_images/signatures_1.png",

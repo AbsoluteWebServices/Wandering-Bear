@@ -20,6 +20,11 @@
         "label": "t:settings.default_logo"
       },
       {
+        "type": "html",
+        "id": "logo_svg",
+        "label": "Logo SVG",
+      },
+      {
         "type": "image_picker",
         "id": "logo_inverse",
         "label": "t:settings.inverse_logo",

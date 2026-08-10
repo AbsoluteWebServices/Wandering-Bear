@@ -306,6 +306,7 @@
 <header-component
   x-data="header()"
   id="header-component"
+  data-tooltip-below
   class="{{ class }} {% if template.name == 'product' %}product-page-header{% endif %}"
   data-theme-color="rgb({{ section.settings.color_scheme_top.settings.background.rgb }})"
   {% if transparent %}
@@ -396,7 +397,7 @@
           style="{{ style | strip }}"
         {%- endif -%}
       >
-        <div class="header__columns spacing-style !pt-4.5 !pr-2.5">
+        <div class="header__columns spacing-style !pt-4.5 !px-6 w-full">
           {{ content }}
         </div>
       </div>

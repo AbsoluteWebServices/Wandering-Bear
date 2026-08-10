@@ -107,7 +107,11 @@
             max-w-[420px]
         {% endif %}
         max-w-[420px]">
-            <h1 class="text-inherit !leading-[100%] {% if template.name == 'blog' %} mb-8 lg:mb-10 {% else %} mb-5 max-w-[289px] md:max-w-none mx-auto {% endif %} text-center md:text-left
+            <h1 class="
+            {% if section.settings.title_mobile != blank %}
+              hidden md:block
+            {% endif %}
+            text-inherit !leading-[100%] {% if template.name == 'blog' %} mb-8 lg:mb-10 {% else %} mb-5 max-w-[289px] md:max-w-none mx-auto {% endif %} text-center md:text-left
             {% case section.settings.title_size %}
                 {% when 'display-md' %}
                     display-md
@@ -119,7 +123,24 @@
             {% if template.name == 'blog' %}
                 !text-[35px] md:!text-[75px]
             {% endif %}
-            ">{{ section.settings.title }}</h1>
+            ">{{ section.settings.title | replace: '\b','<br>' }}</h1>
+            
+            <h1 class="
+            block md:hidden
+            text-inherit !leading-[100%] {% if template.name == 'blog' %} mb-8 lg:mb-10 {% else %} mb-5 max-w-[289px] md:max-w-none mx-auto {% endif %} text-center md:text-left
+            {% case section.settings.title_size %}
+                {% when 'display-md' %}
+                    display-md
+                {% when 'display-lg' %}
+                    display-lg
+                {% when 'display-xl' %}
+                    display-xl
+            {% endcase %}
+            {% if template.name == 'blog' %}
+                !text-[35px] md:!text-[75px]
+            {% endif %}
+            ">{{ section.settings.title_mobile | replace: '\b','<br>' }}</h1>
+
             {% if section.settings.description != blank %}
                 <div class="text-inherit font-kurdis-semi-condensed mb-5 [&_ul]:md:ml-2 [&_ul]:!gap-3 [&_ul]:font-kurdis-semi-condensed [&_li]:font-kurdis-semi-condensed">
                     {{ section.settings.description }}
@@ -184,7 +205,8 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Title"
+      "label": "Title",
+      "info": "Use '\\b' for line breaks"
     },
     {
       "type": "select",
@@ -205,6 +227,32 @@
         }
       ],
       "default": "display-md"
+    },
+    {
+      "type": "text",
+      "id": "title_mobile",
+      "label": "Title Mobile",
+      "info": "Use '\\b' for line breaks"
+    },
+    {
+      "type": "select",
+      "id": "title_mobile_size",
+      "label": "Title Mobile Size",
+      "options": [
+        {
+          "value": "display-md",
+          "label": "Medium"
+        },
+        {
+          "value": "display-lg",
+          "label": "Large"
+        },
+        {
+          "value": "display-xl",
+          "label": "X-Large"
+        }
+      ],
+      "default": "display-lg"
     },
     {
       "type": "richtext",

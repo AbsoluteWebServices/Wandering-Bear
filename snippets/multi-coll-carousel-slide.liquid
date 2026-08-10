@@ -20,13 +20,16 @@
     <a href="{{ product_url }}">
         
         {% if product.metafields.custom.carousel_image != blank %}
-            {% render 'picture', source: product.metafields.custom.carousel_image, class: 'w-full h-full object-cover w-full h-full border border-transparent group-hover:border-gold rounded-[14px] lg:rounded-[1vw] transition-all duration-300 absolute h-full w-full' %}
+            {% render 'picture', source: product.metafields.custom.carousel_image, class: 'w-full h-full object-cover w-full h-full border border-transparent rounded-[14px] lg:rounded-[1vw] transition-all duration-300 absolute h-full w-full group-hover:opacity-0 z-[2]' %}
         {% else %}
             <img src="{{ 'placeholder-image.png' | asset_url }}" class="w-full h-full object-cover w-full h-full" alt="{{ product.title }}">
             <div class="absolute top-0 z-[1] wb-flex flex-col h-full w-full items-center justify-center p-4">
                 <span class="font-bold text-xs uppercase block mb-4 text-center">Missing Image</span>
                 <span class="text-xs text-center">Add Carousel Image metafield image for <em>{{ product.title }}</em></span>
             </div>
+        {% endif %}
+        {% if product.metafields.custom.carousel_hover_image != blank %}
+            {% render 'picture', source: product.metafields.custom.carousel_hover_image, class: 'w-full h-full object-cover w-full h-full border border-transparent group-hover:border-gold rounded-[14px] lg:rounded-[1vw] transition-all duration-300 absolute h-full w-full' %}
         {% endif %}
         <div class="relative flex-col bottom-0 mx-auto h-full flex justify-end text-center justify-center items-center z-[2] w-full px-4">
             <div class="h-[60px] gap-2 lg:h-[100px] flex flex-col justify-start md:justify-end items-center mb-2 lg:!mb-4">
