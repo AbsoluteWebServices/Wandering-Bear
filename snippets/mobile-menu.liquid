@@ -3,7 +3,7 @@
 <div>
     {% for entry in nav_blocks.value %}
         <div class="pl-5.5 md:!pl-8 py-2.5 md:!py-[15px] flex items-center !gap-5 md:!gap-7 border-b border-[#431A031A]">
-            <a href="{{ entry.url }}" class="w-[80px] h-[80px]">
+            <a href="{{ entry.url }}" class="w-[80px] h-[80px] shadow-button">
             {{ entry.image | image_url: width: 200 | image_tag: class: 'h-full w-full object-cover' }}
             </a>
 
