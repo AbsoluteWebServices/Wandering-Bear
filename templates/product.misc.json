@@ -24,7 +24,7 @@
             "details_position": "flex-start",
             "gap": 0,
             "gap_tablet": 0,
-            "gap_mobile": 12,
+            "gap_mobile": 0,
             "sticky_details_desktop": true,
             "inherit_color_scheme": true,
             "color_scheme": "scheme-1",
@@ -85,7 +85,7 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
-                "padding-block-start-mobile": 0,
+                "padding-block-start-mobile": 36,
                 "padding-block-end-mobile": 0,
                 "padding-inline-start-mobile": 0,
                 "padding-inline-end-mobile": 0
@@ -164,7 +164,7 @@
                 "variant_style": "dropdowns",
                 "show_swatches": true,
                 "padding-block-start": 0,
-                "padding-block-end": 8,
+                "padding-block-end": 16,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },

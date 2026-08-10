@@ -108,7 +108,7 @@
 
           {%- assign fieldset_index = forloop.index0 -%}
           <fieldset
-            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
+            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %} {% if simple_pdp %} simple-pdp {% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
             ref="fieldsets[]"
             {{ option_id_attribute }}
@@ -360,6 +360,11 @@
 {% endunless %}
 
 {% stylesheet %}
+  /* Scoped so aw's generic .variant-option / .variant-picker rules can't bleed onto
+     the native-wired misc/simple picker. :not([data-native-wiring]) still matches aw's
+     own (concentrate / overview-2) pickers, which don't set that attribute. Selectors
+     that target the <variant-picker> host itself use `&`. */
+  variant-picker:not([data-native-wiring]) {
   .variant-option label {
     border: 1px solid transparent;
   }
@@ -403,8 +408,8 @@
     border-bottom-right-radius: 5px;
   }
 
-  /* Variant picker container styles - unique to main variant picker */
-  .variant-picker {
+  /* Variant picker container styles (`&` = the <variant-picker> host). */
+  & {
     width: 100%;
   }
 
@@ -412,7 +417,7 @@
     width: 100%;
   }
 
-  .variant-picker[data-shopify-visual-preview] {
+  &[data-shopify-visual-preview] {
     min-width: 300px;
     padding-inline-start: max(4px, var(--padding-inline-start));
   }
@@ -473,18 +478,19 @@
     transform: translateY(-50%);
   }
 
-  /* Variant picker alignment modifiers */
-  .variant-picker--center,
-  .variant-picker--center .variant-option {
+  /* Variant picker alignment modifiers (`&` = the <variant-picker> host). */
+  &.variant-picker--center,
+  &.variant-picker--center .variant-option {
     text-align: center;
     align-items: center;
     justify-content: center;
     width: 100%;
   }
 
-  .variant-picker--right,
-  .variant-picker--right .variant-option {
+  &.variant-picker--right,
+  &.variant-picker--right .variant-option {
     text-align: right;
     justify-content: right;
+  }
   }
 {% endstylesheet %}

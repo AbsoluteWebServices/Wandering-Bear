@@ -322,8 +322,8 @@
     border-bottom-right-radius: 5px;
   }
 
-  /* Variant picker container styles - unique to main variant picker */
-  .variant-picker {
+  variant-picker:not([data-native-wiring]) {
+  & {
     width: 100%;
   }
 
@@ -331,7 +331,7 @@
     width: 100%;
   }
 
-  .variant-picker[data-shopify-visual-preview] {
+  &[data-shopify-visual-preview] {
     min-width: 300px;
     padding-inline-start: max(4px, var(--padding-inline-start));
   }
@@ -392,18 +392,19 @@
     transform: translateY(-50%);
   }
 
-  /* Variant picker alignment modifiers */
-  .variant-picker--center,
-  .variant-picker--center .variant-option {
+  /* Variant picker alignment modifiers (`&` = the <variant-picker> host). */
+  &.variant-picker--center,
+  &.variant-picker--center .variant-option {
     text-align: center;
     align-items: center;
     justify-content: center;
     width: 100%;
   }
 
-  .variant-picker--right,
-  .variant-picker--right .variant-option {
+  &.variant-picker--right,
+  &.variant-picker--right .variant-option {
     text-align: right;
     justify-content: right;
+  }
   }
 {% endstylesheet %}

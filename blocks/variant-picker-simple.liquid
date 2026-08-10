@@ -3,10 +3,11 @@
   if request.visual_preview_mode and product_resource == blank
     assign product_resource = collections.all.products.first
   endif
+  assign simple = true
 -%}
 
 {% unless product_resource == blank %}
-  {% render 'variant-main-picker', product_resource: product_resource, section: section, product: product, block: block %}
+  {% render 'variant-main-picker', product_resource: product_resource, section: section, product: product, block: block, simple: simple %}
 {% endunless %}
 
 {% schema %}
