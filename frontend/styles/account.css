@@ -825,9 +825,11 @@ body.no-scroll {
     line-height: 1.65;
     color: var(--color-espresso);
 }
-/* The order line is a link but deliberately NOT underlined — 13 digits under a rule turned the row
-   into noise. It carries weight instead, and .account-container's hover still shifts it to gold.
-   This is the one exception to the portal's "account links are always underlined". */
+/* Order line: weight 800 AND the portal's permanent underline — account links are always
+   underlined, so this is no longer an exception. text-decoration-color is stated explicitly for the
+   same reason .hover-underline states it: the theme sets `a { text-decoration-color: transparent }`
+   in base.css, and Safari does not reset that from the `text-decoration` shorthand, so the line
+   would be drawn and invisible on iOS. */
 .wb-credit-history__order {
     display: block;
     font-family: var(--font-kurdis-semi-condensed);
@@ -835,7 +837,14 @@ body.no-scroll {
     font-size: 12px;
     line-height: 1.65;
     color: var(--color-espresso);
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    transition: color 0.15s ease;
+}
+a.wb-credit-history__order:hover {
+    color: var(--color-dark-gold);
+    text-decoration: underline;
+    text-decoration-color: currentColor;
 }
 /* Expiry note — muted, and the row's only cue that credits are gone or going. */
 .wb-credit-history__expiry {
