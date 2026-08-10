@@ -1027,3 +1027,14 @@ a.wb-credit-history__order:hover {
 .wb-credit-history[data-wb-credit-filtered] .wb-credit-history__table td:nth-child(3) {
     display: none;
 }
+
+/* Back to Account (credit history + order page) sits on foam, not the shared secondary-cream fill.
+   1:1208 draws the blob at #FEF8F3 while the page background is #F2E6DC — on the cream fill the
+   button was the same colour as the page behind it and only its shadow gave it an edge.
+   Scoped to .wb-account-back rather than changing .btn.secondary-cream, which the hero, contact
+   CTA, listicles and the homepage all use — that would repaint buttons across the whole site.
+   Hover is deliberately not restated: .btn.secondary-cream:hover svg is more specific than this
+   rule, so the gold inversion still wins. */
+.btn.wb-account-back .btn-svg {
+    fill: var(--color-brand-foam);
+}
