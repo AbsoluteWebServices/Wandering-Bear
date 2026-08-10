@@ -820,16 +820,17 @@ body.no-scroll {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
     font-size: 12px;
-    /* 15px between the four lines, straight off the frame (date 143 / desc 158 / order 173 /
-       expiry 188) — 1.25 at 12px. */
-    line-height: 1.25;
+    /* 18px between the four lines. The frame's own capture sits at 15 (date 143 / desc 158 /
+       order 173 / expiry 188), but that is a screenshot of a lighter, narrower face — at Kurdis
+       SemiCondensed 12px the same 15 reads as a solid block, so the cell gets 1.5 instead. */
+    line-height: 1.5;
     color: var(--wb-credit-ink);
 }
 .wb-credit-history__desc {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
     font-size: 12px;
-    line-height: 1.25;
+    line-height: 1.5;
     color: var(--wb-credit-ink);
 }
 /* Order line exactly as drawn: same weight as the description above it, no underline. That makes
@@ -842,7 +843,7 @@ body.no-scroll {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
     font-size: 12px;
-    line-height: 1.25;
+    line-height: 1.5;
     color: var(--wb-credit-ink);
     text-decoration: none;
     transition: color 0.15s ease;
@@ -857,7 +858,7 @@ a.wb-credit-history__order:hover {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
     font-size: 12px;
-    line-height: 1.25;
+    line-height: 1.5;
     color: var(--wb-credit-muted);
 }
 
