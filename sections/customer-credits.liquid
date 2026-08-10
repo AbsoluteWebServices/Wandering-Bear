@@ -46,10 +46,10 @@
       blob in secondary-cream, not a text link — cream blob with espresso text at rest, inverting to
       gold on hover. Inlined rather than rendered through wb-button because that snippet emits only
       a label span and this button also carries the arrow. {%- endcomment -%}
-    {%- comment -%} Button and FAQ link share one row, the link pushed to the far right of the
-      content column and centred against the button — that is where the desktop frame puts it. The
-      mobile frame stacks them instead; one row at every width was the call. {%- endcomment -%}
-    <div class="mb-5 flex items-center justify-between !gap-5">
+    {%- comment -%} The two frames genuinely differ here, so the breakpoint carries it: 1:1338 stacks
+      the button and the link and centres both on the frame (link 28px under the button), while
+      1:1208 puts them on one row with the link pushed to the far right of the content column. {%- endcomment -%}
+    <div class="mb-5 flex flex-col items-center !gap-7 smd:!flex-row smd:!justify-between smd:!gap-5">
       <a href="{{ routes.account_url }}" class="btn secondary-cream !w-[165px] !h-[43px] !text-[14px] !gap-2">
         {%- comment -%} The arrow sits in a <span> so it inherits .btn's span colour and hover
           transition. !static undoes `.btn svg { position: absolute; inset: 0 }`, which is meant for
