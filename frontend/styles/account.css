@@ -739,7 +739,7 @@ body.no-scroll {
    slices — see docs/tasks/credit-history-spec.md. */
 .wb-credit-history {
     --wb-credit-ink: #000000;
-    --wb-credit-muted: #727272;
+    --wb-credit-muted: #767676;
     border: 1px solid color-mix(in srgb, var(--color-espresso) 20%, transparent);
     border-radius: 8px;
     overflow: hidden;
@@ -782,7 +782,8 @@ body.no-scroll {
 .wb-credit-history__table th,
 .wb-credit-history__table td {
     text-align: left;
-    padding: 12px 16px;
+    /* Frame row pitch is 87: four 15px lines plus 27 of padding, split over the row's own edges. */
+    padding: 13px 16px;
     vertical-align: top;
 }
 /* Column headers sit a weight above the rows so the header row reads as a header and not as a
@@ -817,34 +818,33 @@ body.no-scroll {
 /* "Date and type" cell: date, description, order link, then the expiry note. */
 .wb-credit-history__date {
     font-family: var(--font-kurdis-semi-condensed);
-    font-weight: 700;
+    font-weight: 600;
     font-size: 12px;
-    /* 1.65 puts ~20px between the four lines of the cell instead of 18 — the date, description,
-       order and expiry are four separate facts and needed the air to stop reading as a block. */
-    line-height: 1.65;
+    /* 15px between the four lines, straight off the frame (date 143 / desc 158 / order 173 /
+       expiry 188) — 1.25 at 12px. */
+    line-height: 1.25;
     color: var(--wb-credit-ink);
 }
 .wb-credit-history__desc {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
     font-size: 12px;
-    line-height: 1.65;
+    line-height: 1.25;
     color: var(--wb-credit-ink);
 }
-/* Order line: weight 800 AND the portal's permanent underline — account links are always
-   underlined, so this is no longer an exception. text-decoration-color is stated explicitly for the
-   same reason .hover-underline states it: the theme sets `a { text-decoration-color: transparent }`
-   in base.css, and Safari does not reset that from the `text-decoration` shorthand, so the line
-   would be drawn and invisible on iOS. */
+/* Order line exactly as drawn: same weight as the description above it, no underline. That makes
+   it the portal's one un-underlined link, so hover carries the whole affordance — the gold shift
+   plus the rule appearing. text-decoration-color is stated explicitly for the same reason
+   .hover-underline states it: base.css sets `a { text-decoration-color: transparent }`, and Safari
+   does not reset that from the shorthand, so the hover line would be drawn and invisible on iOS. */
 .wb-credit-history__order {
     display: block;
     font-family: var(--font-kurdis-semi-condensed);
-    font-weight: 800;
+    font-weight: 600;
     font-size: 12px;
-    line-height: 1.65;
+    line-height: 1.25;
     color: var(--wb-credit-ink);
-    text-decoration: underline;
-    text-decoration-color: currentColor;
+    text-decoration: none;
     transition: color 0.15s ease;
 }
 a.wb-credit-history__order:hover {
@@ -857,7 +857,7 @@ a.wb-credit-history__order:hover {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
     font-size: 12px;
-    line-height: 1.65;
+    line-height: 1.25;
     color: var(--wb-credit-muted);
 }
 
@@ -947,7 +947,11 @@ a.wb-credit-history__order:hover {
     margin-inline: -16px;
 }
 /* "YOUR CREDIT:" leaves the flex line so the amount can centre on the CARD rather than on the space
-   the label leaves beside it — the frame centres $15 on the card's own centre (174.5 of 350). */
+   the label leaves beside it — the frame centres $15 on the card's own centre (174.5 of 350).
+   It is pinned to the TOP, not centred: 1:1338 puts the label at card+16 and the amount at card+30,
+   so the label starts 14px above the figure. Centring it dropped it to the middle of the amount —
+   QA flagged exactly this ("move this text up"). top:0 lands on card+16, since an absolutely
+   positioned box is placed against its container's padding box. */
 /* Phone vertical rhythm, measured off 1:1338 (card 350x162): amount top +30, expiry top +87,
    button top +109. Card padding-top is 16, so the figures need 14 more; the amount then has to
    occupy a full 45px line box (the markup's leading-[0.78] gives 35) for the expiry to land on
@@ -963,9 +967,10 @@ a.wb-credit-history__order:hover {
 .wb-credit-summary__label {
     position: absolute;
     left: 0;
-    top: 50%;
-    translate: 0 -50%;
-    transform-origin: left center;
+    /* 5, not 0: the label carries rotate(-4deg), which lifts its box above the flow position, so
+       top:0 overshot the frame's card+16 by exactly that. */
+    top: 5px;
+    transform-origin: left top;
 }
 .wb-credit-summary__line {
     justify-content: center;
@@ -999,7 +1004,6 @@ a.wb-credit-history__order:hover {
     }
     .wb-credit-summary__label {
         position: static;
-        translate: none;
         transform-origin: bottom left;
     }
     .wb-credit-summary__line {
@@ -1028,7 +1032,7 @@ a.wb-credit-history__order:hover {
     font-weight: 700;
     font-size: 18px;
     line-height: 1.2;
-    color: var(--color-espresso);
+    color: #000000;
     margin-bottom: 24px;
 }
 
@@ -1049,4 +1053,28 @@ a.wb-credit-history__order:hover {
    rule, so the gold inversion still wins. */
 .btn.wb-account-back .btn-svg {
     fill: var(--color-brand-foam);
+}
+
+/* Desktop column geometry, measured off the frame's own table capture (1:1255, panel 727 wide):
+   the three columns start their text at 11 / 521 / 606 from the panel's left edge. Cells carry the
+   11 as padding-left and the two numeric columns take fixed widths, so the boxes land at
+   510 / 595 and the text inside them at 521 / 606. Phone keeps the shrink-to-content widths above —
+   a fixed 85+132 would leave the date column 86px on a 303 panel. */
+@media (min-width: 1024px) {
+    .wb-credit-history__tabs {
+        padding-left: 11px;
+    }
+    .wb-credit-history__table th,
+    .wb-credit-history__table td {
+        padding-left: 11px;
+        padding-right: 0;
+    }
+    .wb-credit-history__table th:nth-child(2),
+    .wb-credit-history__table td:nth-child(2) {
+        width: 85px;
+    }
+    .wb-credit-history__table th:nth-child(3),
+    .wb-credit-history__table td:nth-child(3) {
+        width: 132px;
+    }
 }
