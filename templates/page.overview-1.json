@@ -223,6 +223,7 @@
       ],
       "name": "Custom Header",
       "settings": {
+        "class_name": "fixed top-0 z-10",
         "content_direction": "column",
         "vertical_on_mobile": true,
         "horizontal_alignment": "flex-start",
