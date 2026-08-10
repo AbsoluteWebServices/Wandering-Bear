@@ -959,9 +959,14 @@ body.no-scroll {
         min-height: 104px;
         gap: 20px;
     }
+    /* 1:1208 does NOT centre the button in the 104-tall card: it sits 37 from the top and 27 from
+       the bottom. items-center gave 31/34, so it is pinned to the bottom instead and pushed off the
+       21px padding by the remaining 6. */
     .wb-credit-summary .wb-redeem-root .btn {
         width: 335px;
         margin-inline: 0;
+        align-self: flex-end;
+        margin-bottom: 6px;
     }
     .wb-credit-summary__figures {
         padding-top: 0;
