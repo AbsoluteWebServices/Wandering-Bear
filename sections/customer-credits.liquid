@@ -22,7 +22,10 @@
   # Redeem → Inveterate member portal (the redeem modal lives in the portal runtime, which
   # only loads at /community/membership — it can't be triggered from a custom page).
   assign redeem_url = '/community/membership?customerId=' | append: customer.id
-  assign membership_url = routes.root_url | append: '/pages/membership'
+  # Plain path, NOT routes.root_url | append: — root_url is already "/" on the primary locale, so
+  # appending "/pages/…" produced "//pages/membership", which a browser reads as protocol-relative
+  # and resolves to https://pages/membership. Same form the dashboard uses.
+  assign membership_url = '/pages/membership'
   # History tabs. ALL is the tab; the rest are CreditTransaction.type values, so account.ts can
   # filter on the value straight from the button without a lookup table.
   assign filters = 'ALL,EARNED,REDEEMED,EXPIRED' | split: ','

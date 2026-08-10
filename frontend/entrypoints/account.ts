@@ -414,7 +414,10 @@ function renderCredits(d: Credits): void {
 
     const balance = document.createElement('td');
     balance.className = 'wb-credit-history__balance';
-    balance.textContent = t.balance_after_formatted;
+    // A worker older than this theme has no balance_after_formatted, and assigning undefined to
+    // textContent (a nullable DOMString) empties the cell rather than writing "undefined" — the
+    // column then reads as a styling bug instead of missing data. A dash says which it is.
+    balance.textContent = t.balance_after_formatted || '—';
 
     tr.append(dateTypeCell(t, tbody, nowMs), amount, balance);
     tbody.appendChild(tr);
