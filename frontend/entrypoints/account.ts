@@ -358,6 +358,12 @@ function dateTypeCell(t: CreditTxn, tbody: HTMLElement, nowMs: number): HTMLTabl
 
 /** Show only the rows matching the active tab; swap in the filter-empty note when none match. */
 function applyCreditFilter(scope: HTMLElement, filter: string): void {
+  // A running balance only means anything on an unbroken sequence. Filtered to Redeemed you get
+  // "$0.00" above "$5.00" while the account actually holds $11 — each figure is the true balance
+  // after its own entry, but the rows that explain the steps between them are hidden, so the column
+  // reads as broken data. It is shown on All and dropped everywhere else (see account.css).
+  scope.toggleAttribute('data-wb-credit-filtered', filter !== 'ALL');
+
   const rows = scope.querySelectorAll<HTMLElement>('[data-wb-credit-rows] tr');
   let last: HTMLElement | null = null;
   rows.forEach((tr) => {

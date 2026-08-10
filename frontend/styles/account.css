@@ -1005,3 +1005,11 @@ body.no-scroll {
     color: var(--color-espresso);
     margin-bottom: 24px;
 }
+
+/* The running-balance column is dropped on a filtered tab (account.ts sets the attribute): with
+   rows hidden the figures no longer form a sequence, and a column that steps $0.00 → $5.00 while
+   the account holds $11 reads as a bug rather than as per-entry truth. */
+.wb-credit-history[data-wb-credit-filtered] .wb-credit-history__table th:nth-child(3),
+.wb-credit-history[data-wb-credit-filtered] .wb-credit-history__table td:nth-child(3) {
+    display: none;
+}
