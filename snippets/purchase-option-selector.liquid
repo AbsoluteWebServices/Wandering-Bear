@@ -15,10 +15,13 @@
   <fieldset>
     <input x-model="purchaseOption" @change="onPurchaseOptionChange" type="radio" value="autoship" name="purchase_option" id="autoship" checked class="absolute! top-0 left-0 w-0 h-0 opacity-0 hidden">
     <label
-      class="subscription-value-label wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-2.5 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300 md:mt-2.5"
+      class="relative subscription-value-label wb-grid !grid-cols-[20px_1fr_100px] !gap-x-3 w-full pl-2.5 pr-3.25 py-4 border cursor-pointer font-gothic_condensed rounded-[5px] mt-2.5 text-bear-black hover:bg-dark-foam! hover:[&_.subscription-label-name]:text-dark-gold transition-colors duration-300 md:mt-2.5"
       :class="purchaseOption === 'autoship' ? 'border-kraft pb-3.5!' : 'border-[#CFBDB1]'"
       for="autoship"
     >
+    <div class="absolute -top-[40px] md:-top-9 right-5 md:right-12 z-[2] w-fit">
+      {{ variant_picker_blocks }}
+    </div>
       <div class="col-start-1 h-5 w-5 rounded-full flex justify-center items-center border"
         :class="purchaseOption === 'autoship' ? 'bg-dark-gold border-dark-gold' : 'bg-transparent border-[#CFBDB1]'"
       >

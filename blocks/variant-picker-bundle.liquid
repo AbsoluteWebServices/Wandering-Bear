@@ -10,7 +10,11 @@
   endif
 -%}
 
-{% render 'variant-main-picker-bundle', product_resource: product_resource, section: section, product: product, bundle_products: bundle_products %}
+{% capture variant_picker_blocks %}
+  {% content_for 'blocks' %}
+{% endcapture %}
+
+{% render 'variant-main-picker-bundle', product_resource: product_resource, section: section, product: product, bundle_products: bundle_products, variant_picker_blocks: variant_picker_blocks %}
 
 {% schema %}
 {
@@ -96,6 +100,11 @@
       "step": 1,
       "unit": "px",
       "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
     }
   ],
   "presets": [

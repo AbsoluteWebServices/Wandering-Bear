@@ -7,11 +7,11 @@
   assign path = entry | replace: '~/', '../' | replace: '@/', '../'
 %}
 {% if path == "/frontend/entrypoints/account.ts" or path == "account.ts" %}
-  <script src="{{ 'wb-account.Cba_u1OW.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
+  <script src="{{ 'wb-account._euxv3h5.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
 {% elsif path == "/frontend/entrypoints/main.css" or path == "main.css" %}
-  {{ 'wb-main.BnxLVJqH.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
+  {{ 'wb-main.ynn199DW.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% elsif path == "/frontend/entrypoints/main.js" or path == "main.js" %}
-  <script src="{{ 'wb-main.BNs7PhE0.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
+  <script src="{{ 'wb-main.B9bTPZ3Z.js' | asset_url | split: '?' | first }}" type="module" crossorigin="anonymous"></script>
   <link rel="modulepreload" href="{{ 'wb-swiper-core.D_6D7Tu7.js' | asset_url | split: '?' | first }}" crossorigin="anonymous">
-  {{ 'wb-main.CBBKUtaF.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
+  {{ 'wb-main.C9iIFnLh.css' | asset_url | split: '?' | first | stylesheet_tag: preload: preload_stylesheet }}
 {% endif %}

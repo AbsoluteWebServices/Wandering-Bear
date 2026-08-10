@@ -4,10 +4,14 @@
   @param {section} section - The section object
   @param {string} children - The children of the section
 {%- enddoc -%}
-
+{% capture class_name %}
+  {% if section.settings.class_name != '' %}
+    {{ section.settings.class_name }}
+  {% endif %}
+{% endcapture %}
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}"
+  class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} {{ class_name }}"
   data-testid="ui-test-section"
 
   {% if request.visual_preview_mode %}

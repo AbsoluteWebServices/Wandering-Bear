@@ -24,6 +24,7 @@ import '../styles/collection.css';
 import '../styles/inveterate.css';
 import '../styles/stay-ai.css';
 import '../styles/gift-card.css';
+import '../styles/landing-pages.css';
 
 export {}
 

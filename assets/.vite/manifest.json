@@ -27,13 +27,13 @@
     ]
   },
   "frontend/entrypoints/account.ts": {
-    "file": "wb-account.Cba_u1OW.js",
+    "file": "wb-account._euxv3h5.js",
     "name": "account",
     "src": "frontend/entrypoints/account.ts",
     "isEntry": true
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.BnxLVJqH.css",
+    "file": "wb-main.ynn199DW.css",
     "name": "main",
     "names": [
       "main.css"
@@ -42,7 +42,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.BNs7PhE0.js",
+    "file": "wb-main.B9bTPZ3Z.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -77,7 +77,7 @@
       "frontend/scripts/components/reviewCarouselBlock.ts"
     ],
     "css": [
-      "wb-main.CBBKUtaF.css"
+      "wb-main.C9iIFnLh.css"
     ]
   },
   "frontend/scripts/components/accordion.ts": {
@@ -150,7 +150,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "wb-media-gallery-bundle.BDv-rNX9.js",
+    "file": "wb-media-gallery-bundle.e6-7gd_F.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
@@ -197,7 +197,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/productsSlider.ts": {
-    "file": "wb-productsSlider.B6uQ3Oh5.js",
+    "file": "wb-productsSlider.CDAutIMI.js",
     "name": "productsSlider",
     "src": "frontend/scripts/components/productsSlider.ts",
     "isDynamicEntry": true,
@@ -208,7 +208,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarousel.ts": {
-    "file": "wb-reviewCarousel.BLp2jxpE.js",
+    "file": "wb-reviewCarousel.B2TNryRT.js",
     "name": "reviewCarousel",
     "src": "frontend/scripts/components/reviewCarousel.ts",
     "isDynamicEntry": true,
@@ -219,7 +219,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarouselBlock.ts": {
-    "file": "wb-reviewCarouselBlock.CcuRNthE.js",
+    "file": "wb-reviewCarouselBlock.CKWxn7sG.js",
     "name": "reviewCarouselBlock",
     "src": "frontend/scripts/components/reviewCarouselBlock.ts",
     "isDynamicEntry": true,
@@ -230,7 +230,7 @@
     ]
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.CaQ5PuS4.js",
+    "file": "wb-swiperSlider.DycCt4tm.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,
