@@ -868,12 +868,11 @@ a.wb-credit-history__order:hover {
     line-height: 1.5;
     color: var(--wb-credit-ink);
 }
-/* The frame draws the running balance heavier than the credits figure beside it. */
-.wb-credit-history__amount {
-    font-weight: 600;
-}
+/* Both numeric columns carry the SAME weight in the frame — the balance is not emphasised over
+   the credits figure beside it. */
+.wb-credit-history__amount,
 .wb-credit-history__balance {
-    font-weight: 800;
+    font-weight: 600;
 }
 /* Earned is BLACK in the frame, not gold — the sign alone marks the gain. Expired greys out
    entirely: legible but visibly inactive. */
@@ -909,18 +908,20 @@ a.wb-credit-history__order:hover {
     }
     .wb-credit-history__table th,
     .wb-credit-history__table td {
-        padding: 10px 12px;
+        padding: 13px 0 13px 11px;
     }
+    /* The numeric columns give up their side padding entirely: at 375 the panel is ~303 and
+       "Credits balance" alone claims ~100 of it, which pushed "Earned from purchase" onto a second
+       line and broke the 15px rhythm the frame keeps. */
     .wb-credit-history__table th:nth-child(n + 2),
     .wb-credit-history__table td:nth-child(n + 2) {
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 8px;
+        padding-right: 0;
     }
-    /* A 13-digit order id does not fit the date column at 375 and wrapped after the word "Order",
-       which reads as two separate lines rather than one reference. One step down in size keeps it
-       whole — the number is something people copy, so breaking it is the worse trade. */
+    /* The order id stays at 12px like every other line — dropping it to 11 broke the frame's even
+       15px rhythm. nowrap keeps the 13 digits on one line; the column has the room now that the
+       numeric columns gave up their side padding. */
     .wb-credit-history__order {
-        font-size: 11px;
         white-space: nowrap;
     }
 }
