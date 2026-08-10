@@ -332,10 +332,10 @@ function dateTypeCell(t: CreditTxn, tbody: HTMLElement, nowMs: number): HTMLTabl
     const order = document.createElement(t.order_url ? 'a' : 'span');
     order.className = 'wb-credit-history__order';
     order.textContent = `${tbody.getAttribute('data-wb-order-label') || 'Order'} ${t.order_name}`;
-    if (t.order_url && order instanceof HTMLAnchorElement) {
-      order.href = t.order_url;
-      order.classList.add('hover-underline');
-    }
+    // No .hover-underline here, unlike every other portal link: the order line is a dense run of
+    // digits and an underline under it made the row hard to read. Weight carries it instead
+    // (.wb-credit-history__order), and hover still gives the colour shift.
+    if (t.order_url && order instanceof HTMLAnchorElement) order.href = t.order_url;
     td.appendChild(order);
   }
 
