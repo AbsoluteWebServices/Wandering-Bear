@@ -245,6 +245,7 @@
             "savings_badge_EFnRnU": {
               "type": "savings-badge",
               "name": "Savings Badge",
+              "disabled": true,
               "settings": {
                 "color_scheme": "scheme-53a30445-4815-46e7-b861-da7f32359d08",
                 "text": "<p>SAVE 20% OFF YOUR FIRST AUTOSHIP ORDER WITH CODE: <span style=\"text-decoration:underline\">NEWONTAP</span></p>"
