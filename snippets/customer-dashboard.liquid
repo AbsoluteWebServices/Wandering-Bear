@@ -53,7 +53,19 @@
   assign membership_url = '/pages/membership'
   # Credit history lives on its own page (templates/page.credit-history.json → customer-credits),
   # not in the Inveterate portal — both "View Credit History" links point here.
-  assign credit_history_url = '/pages/credit-history'
+  #
+  # A page template only resolves once a PAGE RESOURCE exists in the store and carries the matching
+  # template suffix, and pages are store data we cannot create from the theme. Until someone wires
+  # that up, /pages/credit-history is a 404 — and once the page exists but still sits on the default
+  # template it is a blank page, which is worse. So the link switches over only when BOTH are true,
+  # and points at the QA preview (an alternate search template, always resolvable) until then.
+  # Nothing to remember to revert: it starts using the real URL by itself.
+  assign credit_history_page = pages['credit-history']
+  if credit_history_page.template_suffix == 'credit-history'
+    assign credit_history_url = credit_history_page.url
+  else
+    assign credit_history_url = '/search?view=credit-history-preview'
+  endif
 
   # Small credit line: shows "Expires <date>" (worker). When there's no expiry the line is hidden
   # entirely (no "Total earned" fallback). The big number is the redeemable balance
