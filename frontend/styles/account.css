@@ -1120,3 +1120,16 @@ a.wb-credit-history__order:hover {
         padding-right: 11px;
     }
 }
+
+/* The title is one line in both frames. At Kurdis Condensed 800/25px it measures 306px, so it
+   only breaks below a ~330px viewport (320px devices), and a touch earlier while the webfont is
+   still loading — the system fallback runs 320px wide. nowrap keeps it whole, and the step down
+   covers the narrow devices where 25px genuinely cannot fit. */
+.wb-credit-title {
+    white-space: nowrap;
+}
+@media (max-width: 359px) {
+    .wb-credit-title {
+        font-size: 22px;
+    }
+}
