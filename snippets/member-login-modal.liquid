@@ -1,0 +1,81 @@
+{%- doc -%}
+  Eager member-login modal.
+
+  Rendered ONCE per page in the real DOM (not inside an Alpine `x-if` template) so
+  Shopify's invisible login CAPTCHA binds to the form. The store requires a CAPTCHA
+  on `customer_login`; Shopify injects it via platform JS that hooks the NATIVE
+  submit of forms present at page load — a form cloned in after load (e.g. inside a
+  modal template) isn't reliably protected, and an intercepted `fetch` submit gets
+  rejected with "Missing CAPTCHA token".
+
+  So this form submits natively: Shopify runs the CAPTCHA, then on success 302s to
+  `return_url` (this page), reloading it logged in. On failure Shopify re-renders the
+  themed /account/login page with the error (standard behaviour).
+
+  Opened from the membership modal's "Login" link via the `open-member-login` window
+  event (see membership-login.ts). Logged-out only.
+{%- enddoc -%}
+<div
+  x-data="{ open: false }"
+  x-on:open-member-login.window="open = true; $nextTick(() => { $refs.returnUrl.value = window.location.pathname + window.location.search; $refs.dialog.showModal() })"
+  x-on:close-member-login.window="$refs.dialog.close()"
+>
+  <dialog
+    x-ref="dialog"
+    x-on:close="open = false"
+    x-on:click.self="$refs.dialog.close()"
+    class="member-login-dialog"
+  >
+    <div class="max-w-[481px] w-[90vw] smd:w-[481px] bg-white rounded-[5px] overflow-hidden relative">
+      <button
+        type="button"
+        aria-label="Close"
+        @click="$refs.dialog.close()"
+        class="cursor-pointer flex justify-center items-center text-bear-black shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-full w-9.5 h-9.5 absolute top-4 right-3 bg-foam hover:bg-gold hover:!text-white transition-all duration-300"
+      >
+        {% render 'icons', icon: 'close', class: 'w-4 h-4 relative' %}
+      </button>
+
+      <div class="wb-flex flex-col items-center justify-center pt-10 pb-8 px-2.5 smd:px-15">
+        <span class="text-[25px] font-extrabold leading-[100%] uppercase font-gothic_condensed text-center mb-2">Member Login</span>
+        <span class="text-[14px] font-semibold leading-[160%] font-kurdis-semi-condensed text-center mb-6 max-w-[290px]">Sign in to unlock your exclusive flavors.</span>
+
+        {%- form 'customer_login', novalidate: 'novalidate', class: 'flex flex-col gap-4 w-full max-w-[290px]' -%}
+          {%- comment -%} Server default is the bare path; JS upgrades it to include the query string (variant/flavor, preview_theme_id, …) when the dialog opens. {%- endcomment -%}
+          <input type="hidden" name="return_url" value="{{ request.path }}" x-ref="returnUrl">
+          {%- render 'customer-input',
+            name: 'customer[email]', type: 'email', label: 'Email',
+            id: 'MemberLoginEmail', autocomplete: 'email', required: true -%}
+          {%- render 'customer-input',
+            name: 'customer[password]', type: 'password', label: 'Password',
+            id: 'MemberLoginPassword', autocomplete: 'current-password', required: true -%}
+          {%- render 'customer-form-button',
+            label: 'Log in', style: 'secondary-gold',
+            class: '!w-full !h-[43px] !text-[20px] mt-1' -%}
+        {%- endform -%}
+
+        <div class="flex flex-row justify-between items-center mt-4 w-full max-w-[290px]">
+          <a href="{{ routes.account_register_url }}" class="tag text-espresso hover-underline">Create account</a>
+          <a href="{{ routes.account_login_url }}#recover" class="tag text-espresso hover-underline">Forgot password?</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  dialog.member-login-dialog {
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
+    margin: auto auto;
+  }
+  
+  dialog.member-login-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+</style>

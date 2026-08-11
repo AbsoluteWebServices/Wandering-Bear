@@ -26,7 +26,7 @@
     </div>
 {% endcapture %}
 
-<div class="max-w-[481px] bg-white rounded-[5px] overflow-hidden relative">
+<div x-data="membershipLogin()" class="max-w-[481px] bg-white rounded-[5px] overflow-hidden relative">
 {% if is_elite %}
     {{ elite_block }}
 {% endif %}
@@ -57,7 +57,7 @@
 {% endif %}
 </div>
 {% if item.login_text != blank and is_elite == false %}
-    <div class="bg-[#BFD7E9] p-4">
+    <div class="bg-[#BFD7E9] p-4" @click="onLoginLink($event)">
         <div class="text-sm font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-espresso [&_p>a]:!text-espresso [&_p>a]:underline [&_strong]:font-bold">
             {{ item.login_text | metafield_tag }}
         </div>

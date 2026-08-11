@@ -33,7 +33,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.mAlqXH0-.css",
+    "file": "wb-main.4Ou_zS1i.css",
     "name": "main",
     "names": [
       "main.css"
@@ -42,7 +42,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.Dz6Ygh6F.js",
+    "file": "wb-main.DONKBupE.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -62,6 +62,7 @@
       "frontend/scripts/components/accordion.ts",
       "frontend/scripts/components/footer.ts",
       "frontend/scripts/components/modal.ts",
+      "frontend/scripts/components/membership-login.ts",
       "frontend/scripts/components/back-in-stock.ts",
       "frontend/scripts/components/elite-atc.ts",
       "frontend/scripts/components/creditRedemption.ts",
@@ -150,7 +151,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "wb-media-gallery-bundle.Im-ju5j4.js",
+    "file": "wb-media-gallery-bundle.oyP7LLLh.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
@@ -159,6 +160,12 @@
       "frontend/entrypoints/main.js",
       "_wb-swiper.K47lYXFL.js"
     ]
+  },
+  "frontend/scripts/components/membership-login.ts": {
+    "file": "wb-membership-login.S5UkAbyK.js",
+    "name": "membership-login",
+    "src": "frontend/scripts/components/membership-login.ts",
+    "isDynamicEntry": true
   },
   "frontend/scripts/components/modal.ts": {
     "file": "wb-modal.B-1O9nPV.js",
@@ -197,7 +204,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/productsSlider.ts": {
-    "file": "wb-productsSlider.CACLF9Lp.js",
+    "file": "wb-productsSlider.C2gLIhqO.js",
     "name": "productsSlider",
     "src": "frontend/scripts/components/productsSlider.ts",
     "isDynamicEntry": true,
@@ -208,7 +215,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarousel.ts": {
-    "file": "wb-reviewCarousel.BFR4Gjma.js",
+    "file": "wb-reviewCarousel.CaLzhHiz.js",
     "name": "reviewCarousel",
     "src": "frontend/scripts/components/reviewCarousel.ts",
     "isDynamicEntry": true,
@@ -219,7 +226,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarouselBlock.ts": {
-    "file": "wb-reviewCarouselBlock.BNf2Vhc6.js",
+    "file": "wb-reviewCarouselBlock.DwdDFHDH.js",
     "name": "reviewCarouselBlock",
     "src": "frontend/scripts/components/reviewCarouselBlock.ts",
     "isDynamicEntry": true,
@@ -230,7 +237,7 @@
     ]
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.Cj2aAfAP.js",
+    "file": "wb-swiperSlider.DG1jpVN9.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,

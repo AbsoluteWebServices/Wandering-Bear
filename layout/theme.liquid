@@ -169,6 +169,7 @@
     </main>
     {% section 'aw-membership-modal' %}
     {% unless customer %}
+      {% render 'member-login-modal' %}
       {% section 'aw-membership-signup-modal' %}
     {% endunless %}
 
