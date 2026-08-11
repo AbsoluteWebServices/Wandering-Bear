@@ -143,7 +143,7 @@
   }
 }
 
-[data-media-gallery-bundle] .swiper-slide {
+[data-media-gallery-bundle] .swiper-main .swiper-slide {
   cursor: zoom-in;
 }
 
