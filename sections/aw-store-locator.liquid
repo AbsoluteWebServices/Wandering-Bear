@@ -73,6 +73,15 @@
      tidy fix; this override just makes the frame the single source of width either way. */
   .wb-store-locator__frame #storelocators_root {
     padding: 0 !important;
+
+    @media screen and (max-width: 750px) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  #sl_footer {
+    display: none !important;
   }
 
   .wb-store-locator__frame iframe {
@@ -86,6 +95,16 @@
     .wb-store-locator__frame {
       min-height: var(--locator-height);
     }
+  }
+
+  @media screen and (max-width: 750px) {
+    #left_top {
+      padding-right: 0px !important;
+    }
+  }
+
+  #showing_results_1, #showing_results_2 {
+    color: var(--color-bear-black) !important;
   }
 {% endstylesheet %}
 
