@@ -142,3 +142,35 @@
     left: 24px;
   }
 }
+
+[data-media-gallery-bundle] .swiper-slide {
+  cursor: zoom-in;
+}
+
+[data-media-gallery-bundle] .swiper-slide.swiper-slide-zoomed {
+  cursor: zoom-out;
+}
+
+/* White zoom icon with a drop shadow so it reads on any image.
+   Swiper adds .swiper-slide-zoomed to the active slide; CSS swaps the icon. */
+.zoom-toggle {
+  color: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+}
+
+.zoom-toggle__icon {
+  width: 100%;
+  height: 100%;
+}
+
+.zoom-toggle__out {
+  display: none;
+}
+
+.swiper-slide-zoomed .zoom-toggle__in {
+  display: none;
+}
+
+.swiper-slide-zoomed .zoom-toggle__out {
+  display: block;
+}

@@ -1,6 +1,6 @@
 import { Alpine as AlpineType } from 'alpinejs'
 import Swiper from 'swiper'
-import { Keyboard } from 'swiper/modules'
+import { Keyboard, Zoom } from 'swiper/modules'
 
 export default (Alpine: typeof AlpineType) => {
   Alpine.data('mediaGalleryBundle', () => {
@@ -163,10 +163,19 @@ export default (Alpine: typeof AlpineType) => {
         this.swiper = new Swiper(mainEl, {
           slidesPerView: 1.12,
           centeredSlides: true,
-          modules: [Keyboard],
+          modules: [Keyboard, Zoom],
           keyboard: true,
           loop: true,
           spaceBetween: 10,
+          zoom: {
+            maxRatio: 2,
+            minRatio: 1,
+          },
+          on: {
+            click: function (swiper,event) {
+              swiper.zoom.toggle(event)
+            }
+          },
           breakpoints: {
             1023: {
               slidesPerView: 1,
