@@ -50,7 +50,7 @@
                         class="swiper-slide rounded-[5px] lg:max-h-[540px] overflow-hidden{% if disable_gallery_background != true %} before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full before:bg-kraft/15 before:rounded-[5px] before:-z-1{% endif %}{% if media.height > media.width or media.height < media.width %}{% endif %}"
                         style="{{ slide_styles }}"
                     >
-                        {{ media | image_url: width: 600 | image_tag: class: 'w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt }}
+                        {% render 'picture', source: media, class: 'w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt %}
                     </div>
                 {% endfor %}
             </div>

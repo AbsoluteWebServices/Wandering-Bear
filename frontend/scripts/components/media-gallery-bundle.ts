@@ -247,11 +247,8 @@ export default (Alpine: typeof AlpineType) => {
           lockTarget.style.height = `${reservedHeight}px`
         }
 
-        mediaWrapper.classList.add('opacity-0')
 
         const finish = () => {
-          mediaWrapper.classList.remove('opacity-0')
-
           lockTarget.style.height = ''
           const natural = lockTarget.offsetHeight
           const next = Math.max(reservedHeight, natural)
