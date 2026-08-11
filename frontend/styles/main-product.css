@@ -183,10 +183,6 @@ input[name="purchase_option"]:checked + label {
         margin-bottom: 0.125rem !important;
     }
 
-    .subscription-value-label .subscription-value-props:not(.is_lp) {
-        display: none !important;
-    }
-
     .subscription-value-props ul {
         gap: 4px;
         padding-inline: 6px;

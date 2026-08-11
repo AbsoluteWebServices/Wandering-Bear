@@ -12,7 +12,7 @@
   assign fallback_cols_desktop = section_settings.slides_per_view_desktop | ceil | at_least: 1
 
   for block in section.blocks
-    if block.id contains 'cart_product_slider'
+    if block.id contains 'product_card' or block.id contains 'cart_product_slider'
       assign product_block_count = product_block_count | plus: 1
     else
       assign has_content_blocks = true
@@ -36,10 +36,11 @@
   style="{% render 'spacing-style', settings: section.settings %}"
   {{ section.shopify_attributes }}
 >
+
   {% if has_content_blocks %}
     <div class="products-slider__content {{ inner_width_class }} relative z-[1] flex flex-col items-center text-center gap-2 w-full">
       {% for block in section.blocks %}
-        {% unless block.id contains 'cart_product_slider' %}
+        {% unless block.id contains 'product_card' or block.id contains 'cart_product_slider' %}
           {% render block %}
         {% endunless %}
       {% endfor %}
@@ -59,7 +60,7 @@
           "
         >
           {% for block in section.blocks %}
-            {% if block.id contains 'cart_product_slider' %}
+            {% if block.id contains 'product_card' or block.id contains 'cart_product_slider' %}
               {% render block %}
             {% endif %}
           {% endfor %}
@@ -94,11 +95,11 @@
         >
           <div class="swiper-wrapper">
             {% for block in section.blocks %}
-              {% if block.id contains 'cart_product_slider' %}
-                <div class="swiper-slide h-auto">
-                  {% render block %}
-                </div>
-              {% endif %}
+              {% if block.id contains 'product_card' or block.id contains 'cart_product_slider' %}
+                  <div class="swiper-slide h-auto">
+                      {% render block %}
+                  </div>
+                {% endif %}
             {% endfor %}
           </div>
         </div>
@@ -614,7 +615,14 @@
     },
     {
       "type": "cart_product_slider"
+    },
+    {
+      "type": "group"
+    },
+    {
+      "type": "product-card"
     }
+
   ],
   "presets": [
     {

@@ -36,7 +36,7 @@
   endcapture
 %}
 
-{% if template.name == 'collection' %}
+{% if template.name == 'collection' or section.settings.layout_type == 'slider' %}
   {% assign product_data = product_resource.metafields.custom.product_group.value %}
   {% assign multi_unit_quantity = product_data.multi_unit_product_quantity %}
 

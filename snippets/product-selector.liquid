@@ -63,14 +63,15 @@
           </div>
         {% elsif member_only and is_member_unlocked == false %}
           {% capture member_badge_label %}
-            <span class="inline-flex gap-0.5 md:mt-0.5">VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only</span>
+            <span class="inline-flex gap-0.5">VIP <span class="inline-block translate-y-[-1px]">/</span> Elite Only</span>
           {% endcapture %}
           {% render 'tooltip',
             content: settings.member_tooltip,
             badge: true,
             label: member_badge_label,
             class: 'flex items-center justify-center gap-0.5 text-[10px]/none font-kurdis uppercase font-bold text-cream whitespace-nowrap py-0.75 px-1 rounded-full relative',
-            style: 'background-color: var(--color-brand-gold); color: var(--color-cream)'
+            style: 'background-color: var(--color-brand-gold); color: var(--color-cream)',
+            unlock: true
           %}
         {% endif %}
       </div>

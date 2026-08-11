@@ -4,6 +4,7 @@
   @param style {string} [optional] Inline styles on root
   @param badge {boolean} [optional] Compact trigger (no extra padding)
   @param label {string} [optional] HTML rendered before the info icon — when set, the whole trigger (label + icon) toggles the tooltip
+  @param unlock {boolean} [optional] Whether to use a button to unlock the tooltip
 {%- endcomment -%}
 
 <div
@@ -17,7 +18,11 @@
     x-ref="trigger"
     @mouseenter="showTooltip()"
     @mouseleave="hideTooltip()"
+    {% if unlock %}
+      @click.prevent.stop="$dispatch('modal-open', { modal: 'membership' })"
+    {% else %}
     @click.prevent.stop="toggleTooltip()"
+    {% endif %}
     class="cursor-pointer {% if label != blank %}flex items-center justify-center gap-0.5{% elsif badge %}{% else %}p-2 -m-2{% endif %}"
   >
     {% if label != blank %}

@@ -16,7 +16,7 @@
             <div class="w-full h-full wb-flex items-stretch justify-stretch lg:[&_picture]:w-full">
               {% render 'picture', source: image, class: '!w-[100vw] lg:!w-auto !h-auto object-cover !min-h-full !min-w-full ', alt: image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
             </div>
-            {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -bottom-10 lg:!bottom-auto lg:-right-10 !w-[188px] !h-auto', loading: 'eager', preload: 'eager' }}
+            {{ badge | image_url: width: 300 | image_tag: class: 'absolute z-[2] -bottom-10 lg:!bottom-auto lg:-right-10 !w-[188px] !h-auto', loading: 'eager', preload: 'eager' }}
         </div>
     {% endif %}
     <div class="wb-flex justify-start items-center w-full lg:!w-1/2 relative z-[1]" style="color: {{ text_color }}">
