@@ -493,11 +493,14 @@ function qaCredits(): Credits | null {
   // A live "Expires on …" row has to sit in the future or it renders as expired, so the two earn
   // rows carry a rolling +60d / +30d expiry rather than the Figma's fixed (and now past) dates.
   const inDays = (n: number): string => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
+  // Amounts are the widest the worker actually formats ($2120.00, no thousands separator) rather
+  // than the frame's tidy "+$5": at 375 a real balance is what pushes the three columns off the
+  // panel, so the preview has to show that case, not hide it.
   const transactions = p.get('wb_rows') === '0' ? [] : [
-    row('EARNED', '$5', '2026-06-03', 'Earned from purchase', '#6639365292129', inDays(60), '$10'),
-    row('EXPIRED', '$5', '2026-06-02', 'Earned from purchase', '#6535708704865', null, '$5'),
-    row('EARNED', '$5', '2026-05-03', 'Earned from purchase', '#6579355549793', inDays(30), '$10'),
-    row('REDEEMED', '$10', '2026-05-02', 'Redeemed at checkout', null, null, '$5'),
+    row('EARNED', '$2000.00', '2026-06-03', 'Earned from purchase', '#6639365292129', inDays(60), '$2120.00'),
+    row('EXPIRED', '$100.00', '2026-06-02', 'Earned from purchase', '#6535708704865', null, '$120.00'),
+    row('EARNED', '$20.00', '2026-05-03', 'Earned from purchase', '#6579355549793', inDays(30), '$20.00'),
+    row('REDEEMED', '$1000.00', '2026-05-02', 'Redeemed at checkout', null, null, '$0.00'),
   ];
   return {
     balance: 1500, balance_formatted: '$15', currency: 'USD',
