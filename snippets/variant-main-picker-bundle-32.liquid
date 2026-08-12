@@ -124,7 +124,7 @@
                 <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-qty-{{ i }}">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">{{ qty }} Cartons</span>
                   <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
-                  <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save {{ savings }}</span>
+                  <span class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ savings }}</span>
                 </label>
             </fieldset>
             {% endfor %}
@@ -152,7 +152,7 @@
                  type="radio" name="bundle-flavor" id="bundle-flavor-single" value="single" checked>
                 <label class="rounded-tr-[5px] rounded-br-[5px] peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-flavor-single">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">Single Flavor</span>
-                  <span class="font-kurdis-semi-condensed text-[10px] text-kraft font-semibold">Save an additional 5%</span>
+                  <span class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save an additional 5%</span>
 
                 </label>
             </fieldset>
