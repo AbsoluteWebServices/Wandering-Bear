@@ -37,8 +37,8 @@
       "name": "AW Hero",
       "settings": {
         "color_scheme": "",
-        "foreground_image": "shopify://shop_images/Homepage_HeaderCoffee.png",
-        "foreground_image_mobile": "shopify://shop_images/Homepage_HeaderCoffee_Mobile.png",
+        "foreground_image": "shopify://shop_images/WB_FRIDGE_GROUP_FULL_SOLO_1.png",
+        "foreground_image_mobile": "shopify://shop_images/WB_FRIDGE_GROUP_MOBILE.png",
         "background_image": "shopify://shop_images/Latte_section.png",
         "background_image_tablet": "shopify://shop_images/Latte_section.png",
         "background_image_mobile": "shopify://shop_images/Latte_section.png",
@@ -123,8 +123,7 @@
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "GO BIG. OR GO BIGGER.",
-        "title_image": "shopify://shop_images/PICK_HOW_YOU_POUR.svg",
-        "badge": "shopify://shop_images/STAY_CAFFEINATED_4116e90f-9fc4-470e-82ef-dcddfd00379b.png"
+        "title_image": "shopify://shop_images/PICK_HOW_YOU_POUR.svg"
       }
     },
     "floating_image_DU4qGq": {
