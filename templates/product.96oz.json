@@ -180,7 +180,7 @@
                 "title": "Looking for cold brew on‑the‑go?",
                 "subtitle": "Try our new cold brew lattes, available in 3 flavors!",
                 "button_label": "Shop Now",
-                "button_link": "/"
+                "button_link": "shopify://products/cold-brew-latte-8-oz-double-latte"
               },
               "blocks": {}
             }
