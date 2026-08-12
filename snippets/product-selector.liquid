@@ -41,7 +41,7 @@
       </div>
     {% endif %}
     {% if image != blank %}
-      {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover absolute' %}
+      {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover absolute !object-center' %}
     {% else %}
       <div class="absolute inset-0 z-[2] wb-flex justify-center items-center">
         <span class="text-xs text-center">Missing Image</span>
