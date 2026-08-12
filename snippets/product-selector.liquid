@@ -32,6 +32,14 @@
     {% if template.suffix == 'single-serve' %} md:min-w-[83px] md:w-[83px]{% endif %}
     {% if template.suffix == 'single-serve' or template.suffix == '32oz'%} rounded-tr-[5px]{% endif %}
   ">
+    {% if child_product.metafields.custom.type != blank %}
+      <div 
+      class="absolute top-0 left-0 right-0 w-full font-bold tracking-[0] z-[3] font-kurdis-semi-condensed uppercase text-xs flex justify-center items-center text-white h-4"
+      style="background-color: {{ child_product.metafields.custom.type.value.background_color }};"
+      >
+        {{ child_product.metafields.custom.type.value.name }}
+      </div>
+    {% endif %}
     {% if image != blank %}
       {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover absolute' %}
     {% else %}
