@@ -193,7 +193,7 @@
         }
       },
       "settings": {
-        "bundle_collection": "grouped-cold-brew-latte-8oz-cans",
+        "bundle_collection": "site-v2-single-serve",
         "bundle_add_to_cart_text": "Add Case",
         "oos_badge_text": "Out of Stock",
         "oos_button_text": "Get Notified",
