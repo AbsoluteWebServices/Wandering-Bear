@@ -5,11 +5,19 @@
 <div class="max-w-[1092px] text-4xl mx-auto px-6 py-10 md:py-20 xl:px-0" id="product-reviews">
   {% if section.blocks.size > 0 %}
     <div class="okendo-reviews-widget__intro mb-4">
-      {% content_for 'blocks' %}
+      {% for block in section.blocks %}
+        {% if block.id contains '_heading' or block.id contains '_text' %}
+          {% render block %}
+        {% endif %}
+      {% endfor %}
     </div>
   {% endif %}
 
-  {% render 'okendo-reviews-widget', product: product %}
+  {% for block in section.blocks %}
+    {% unless block.id contains '_heading' or block.id contains '_text' %}
+      {% render block %}
+    {% endunless %}
+  {% endfor %}
 </div>
 
 {% schema %}
@@ -28,6 +36,9 @@
     },
     {
       "type": "text"
+    },
+    {
+      "type": "@app"
     }
   ],
   "presets": [
