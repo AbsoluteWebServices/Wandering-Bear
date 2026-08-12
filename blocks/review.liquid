@@ -127,10 +127,21 @@
 {%- endif -%}
 
 {% style %}
+  @font-face {
+    font-family: "Kurdis SemiCondensed Fixed";
+    src: url("https://cdn.shopify.com/s/files/1/1418/5086/files/Kurdis-SemiCondensedSemiBold.woff2?v=1776788647") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    ascent-override: 90%;
+    descent-override: 10%;
+    line-gap-override: 0%;
+  }
+
   .rating-wrapper {
     gap: var(--gap-3xs);
     min-width: fit-content;
-    font-family: var(--font-kurdis-semi-condensed) !important;
+    font-family: "Kurdis SemiCondensed Fixed", var(--font-kurdis-semi-condensed) !important;
     font-size: 14px !important;
     font-weight: 600 !important;
   }
@@ -151,6 +162,13 @@
   .rating {
     display: flex;
     align-items: center;
+  }
+
+  /* Center by box geometry, not the text baseline, so stars and text line up
+     the same across platforms regardless of the rendered font's metrics. */
+  .rating-wrapper span,
+  .rating-wrapper .rating-count {
+    line-height: 1;
   }
 
   .rating {
@@ -176,6 +194,7 @@
   }
 
   .stars {
+    display: block;
     height: var(--star-size);
     fill: var(--empty-star-fill-color);
   }
