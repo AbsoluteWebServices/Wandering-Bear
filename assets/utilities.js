@@ -709,9 +709,7 @@ export function setHeaderMenuStyle() {
       const overflowList = headerComponent?.querySelector('overflow-list');
       // const hasReachedMinimum = overflowList && overflowList.hasAttribute('minimum-reached');
       const hasReachedMinimum = window.innerWidth < 750;
-      console.log('hasReachedMinimum', hasReachedMinimum);
       headerComponent.dataset.menuStyle = isTouchDevice() || hasReachedMinimum ? 'drawer' : 'menu';
-      console.log('headerComponent.dataset.menuStyle', headerComponent.dataset.menuStyle);
     });
   }
 }

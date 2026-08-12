@@ -334,6 +334,21 @@
     {% endif %}
   "
 >
+  {%- comment -%}
+    Pre-paint: set data-menu-style synchronously so the desktop menu (and the
+    nav-row background, which CSS gates on [data-menu-style='menu']) render
+    correctly on first paint instead of flashing the drawer/transparent fallback
+    until the header component hydrates. Mirrors setHeaderMenuStyle() in
+    utilities.js; that runs later and just re-confirms this value.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      var h = (document.currentScript && document.currentScript.parentElement) || document.getElementById('header-component');
+      if (!h) return;
+      var touch = 'ontouchstart' in window && navigator.maxTouchPoints > 0;
+      h.setAttribute('data-menu-style', touch || window.innerWidth < 750 ? 'drawer' : 'menu');
+    })();
+  </script>
   <div class="header__underlay header__underlay-closed"></div>
   <div
     class="header__underlay header__underlay-open"
@@ -447,7 +462,10 @@
   }
 
   @media screen and (min-width: 750px) {
-    #header-component[data-menu-style='menu'] :is(.header-menu, .dropdown-localization) {
+    /* Desktop menu is the default at this width; JS only overrides to 'drawer'
+       for touch devices. Using :not([drawer]) keeps first paint correct with no
+       attribute set yet (no hydration flash). */
+    #header-component:not([data-menu-style='drawer']) :is(.header-menu, .dropdown-localization) {
       display: flex;
     }
   }
@@ -457,7 +475,7 @@
   }
 
   @media screen and (min-width: 750px) {
-    #header-component[data-menu-style='menu'] .header__navigation-bar-row {
+    #header-component:not([data-menu-style='drawer']) .header__navigation-bar-row {
       display: none;
     }
   }

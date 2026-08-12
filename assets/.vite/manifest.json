@@ -42,7 +42,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.DONKBupE.js",
+    "file": "wb-main.CxvXM455.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -78,7 +78,7 @@
       "frontend/scripts/components/reviewCarouselBlock.ts"
     ],
     "css": [
-      "wb-main.DYx6_So0.css"
+      "wb-main.D3mcECyg.css"
     ]
   },
   "frontend/scripts/components/accordion.ts": {
@@ -151,7 +151,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "wb-media-gallery-bundle.oyP7LLLh.js",
+    "file": "wb-media-gallery-bundle.BNa3jTP1.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
@@ -204,7 +204,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/productsSlider.ts": {
-    "file": "wb-productsSlider.C2gLIhqO.js",
+    "file": "wb-productsSlider.BJyx9mX2.js",
     "name": "productsSlider",
     "src": "frontend/scripts/components/productsSlider.ts",
     "isDynamicEntry": true,
@@ -215,7 +215,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarousel.ts": {
-    "file": "wb-reviewCarousel.CaLzhHiz.js",
+    "file": "wb-reviewCarousel.B40jvTBd.js",
     "name": "reviewCarousel",
     "src": "frontend/scripts/components/reviewCarousel.ts",
     "isDynamicEntry": true,
@@ -226,7 +226,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarouselBlock.ts": {
-    "file": "wb-reviewCarouselBlock.DwdDFHDH.js",
+    "file": "wb-reviewCarouselBlock.DPCUF7o_.js",
     "name": "reviewCarouselBlock",
     "src": "frontend/scripts/components/reviewCarouselBlock.ts",
     "isDynamicEntry": true,
@@ -237,7 +237,7 @@
     ]
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.DG1jpVN9.js",
+    "file": "wb-swiperSlider.Dkbveo06.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,

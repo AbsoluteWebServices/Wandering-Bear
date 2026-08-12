@@ -10,7 +10,10 @@
 } */
 
 @media screen and (min-width: 749px) {
-  header-component[data-menu-style='menu'] .header-drawer-icon--open {
+  /* Hide the hamburger by default at desktop widths; JS only re-shows it by
+     setting data-menu-style='drawer' for touch devices. :not([drawer]) avoids a
+     hydration flash where the hamburger flashes before the attribute is set. */
+  header-component:not([data-menu-style='drawer']) .header-drawer-icon--open {
     display:  none;
   }
 }
