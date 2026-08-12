@@ -263,6 +263,13 @@
     "okendo_reviews_widget_BgAa77": {
       "type": "okendo-reviews-widget",
       "blocks": {
+        "okendo_reviews_widget_iG3yTb": {
+          "type": "shopify://apps/okendo/blocks/reviews-widget/bb689e69-ea70-4661-8fb7-ad24a2e23c29",
+          "settings": {
+            "product": "{{ product }}",
+            "widget_type": "reviews_widget"
+          }
+        },
         "heading_wexxTr": {
           "type": "_heading",
           "settings": {
@@ -303,6 +310,7 @@
         }
       },
       "block_order": [
+        "okendo_reviews_widget_iG3yTb",
         "heading_wexxTr"
       ],
       "name": "Okendo Reviews Widget",
