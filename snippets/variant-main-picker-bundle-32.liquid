@@ -104,15 +104,22 @@
               {%- case i -%}
                 {%- when 1 -%}
                   {%- assign autoship_price = tier_one_unit_price_autoship -%}
+                  {%- assign otp_price = tier_one_unit_price_otp -%}
                 {%- when 2 -%}
                   {%- assign autoship_price = tier_two_unit_price_autoship -%}
+                  {%- assign otp_price = tier_two_unit_price_otp -%}
               {%- endcase -%}
               {% assign qty = i | times: 3 %}
               {% if discount_type == 'Percentage' %}
-                {% assign difference = compare_at_price | minus: autoship_price %}
-                {% assign savings = difference | times: 100.0 | divided_by: compare_at_price | round | append: '%' %}
+                {% assign autoship_savings_raw = compare_at_price | minus: autoship_price | times: 100.0 | divided_by: compare_at_price | round %}
+                {% assign otp_savings_raw = compare_at_price | minus: otp_price | times: 100.0 | divided_by: compare_at_price | round %}
+                {% assign autoship_savings = autoship_savings_raw | append: '%' %}
+                {% assign otp_savings = otp_savings_raw | append: '%' %}
               {% else %}
-                {% assign savings = compare_at_price | minus: autoship_price_qty | money %}
+                {% assign autoship_savings_raw = compare_at_price | minus: autoship_price %}
+                {% assign otp_savings_raw = compare_at_price | minus: otp_price %}
+                {% assign autoship_savings = autoship_savings_raw | money %}
+                {% assign otp_savings = otp_savings_raw | money %}
               {% endif %}
 
               <fieldset class="flex flex-col h-full w-full justify-center items-center">
@@ -123,11 +130,13 @@
                  type="radio" name="bundle-qty" id="bundle-qty-{{ i }}" value="{{ qty }}" {% if forloop.first %}checked{% endif %}>
                 <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-qty-{{ i }}">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">{{ qty }} Cartons</span>
-                  <span class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
-                  {% if qty == 3 %}
-                      <span x-show="purchaseOption == 'autoship'" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ savings }}</span>
-                  {% else %}
-                      <span class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ savings }}</span>
+                  <span x-show="purchaseOption === 'autoship'" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
+                  <span x-cloak x-show="purchaseOption !== 'autoship'" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ otp_price | money }}/carton</span>
+                  {% if autoship_savings_raw > 0 %}
+                    <span x-show="purchaseOption === 'autoship'" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ autoship_savings }}</span>
+                  {% endif %}
+                  {% if otp_savings_raw > 0 %}
+                    <span x-cloak x-show="purchaseOption !== 'autoship'" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ otp_savings }}</span>
                   {% endif %}
                 </label>
             </fieldset>
@@ -247,6 +256,38 @@
             {% if child_product.metafields.custom.flavor_name != blank %}
               "flavor_name": "{{- child_product.metafields.custom.flavor_name -}}",
             {% endif %}
+            {%- liquid
+              assign sf_product = child_product.metafields.custom["32oz_single_flavor"].value
+              assign sf_sixpack = blank
+              if sf_product != blank
+                for sf_variant in sf_product.variants
+                  if sf_variant.title contains '6 Pack'
+                    assign sf_sixpack = sf_variant
+                    break
+                  endif
+                endfor
+              endif
+            -%}
+            {%- if sf_sixpack != blank -%}
+              {%- if sf_sixpack.compare_at_price > sf_sixpack.price -%}
+                {%- assign sf_compare = sf_sixpack.compare_at_price -%}
+              {%- else -%}
+                {%- assign sf_compare = sf_sixpack.price -%}
+              {%- endif -%}
+              "single_flavor_6pk": {
+                "id": {{- sf_sixpack.id -}},
+                "price": {{- sf_sixpack.price -}},
+                "compare_at_price": {{- sf_compare -}},
+                "title": {{ sf_sixpack.title | json }}
+                {%- for allocation in sf_sixpack.selling_plan_allocations -%}
+                  {%- if allocation.selling_plan.name contains '1 Month' -%}
+                    ,"selling_plan_id": {{ allocation.selling_plan.id | json }},
+                    "selling_plan_price": {{ allocation.price | json }}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              },
+            {%- endif -%}
             "variants": {
                 {% for child_variant in child_product.variants %}
                     "{{- forloop.index0 -}}": {

@@ -117,14 +117,16 @@ export default (Alpine: AlpineType) => {
         
         get assignedBundleProducts() {
 
+          // 6 Carton + Single Flavor is fulfilled by a single pre-made 6-pack
+          if (this._is6packSingle()) {
+            return this._sixPackSingleLine();
+          }
+
           const variantIndex = this.bundleType === '32oz'
             ? this._mapTo32ozBundle()
             : this._mapToBundle();
 
-            // Preserve the order flavors were added in. Object key enumeration
-            // does NOT preserve insertion order for numeric-string keys (product
-            // IDs below 2^32 are hoisted and sorted ascending), so sort by the
-            // explicit `_order` stamp recorded at insertion time instead.
+            // Preserve the order flavors were added in.
             const orderedProductIds = Object.keys(this.selectedBundleProducts).sort(
               (a, b) => (this.selectedBundleProducts[a]?._order ?? 0) - (this.selectedBundleProducts[b]?._order ?? 0)
             )
@@ -326,6 +328,55 @@ export default (Alpine: AlpineType) => {
             return 0;
           }
           return 1;
+        },
+
+        // The flavor id currently selected in single-flavor mode.
+        _currentSingleFlavorId() {
+          const keys = Object.keys(this.selectedBundleProducts);
+          if (keys.length) return String(keys[0]);
+          return this._resolveSingleFlavorId();
+        },
+
+        // True only when the shopper picked 6 Carton + Single Flavor AND the
+        // selected flavor actually has a 6-pack SKU wired up. When the 6-pack is
+        // missing we fall back to the legacy "6 x bundle unit" path so add-to-cart
+        // never breaks.
+        _is6packSingle() {
+          if (this.bundleType !== '32oz') return false;
+          if (this.flavorType !== 'single') return false;
+          if (Number(this.bundleQty) !== 6) return false;
+
+          const product = this.bundleProducts[this._currentSingleFlavorId()];
+          return !!(product && product.single_flavor_6pk && product.single_flavor_6pk.id);
+        },
+
+        // Build the single cart line for the 6 Carton + Single Flavor case.
+        _sixPackSingleLine() {
+          const product = this.bundleProducts[this._currentSingleFlavorId()];
+          const sixpack = product?.single_flavor_6pk;
+          if (!sixpack) return [];
+
+          const originalPrice = Number(sixpack.compare_at_price ?? sixpack.price);
+          const sellingPlanPrice = Number(sixpack.selling_plan_price ?? sixpack.price);
+
+          return [{
+            id: Number(sixpack.id),
+            quantity: 1,
+            flavorName: product.flavor_name ? product.flavor_name : '',
+            bundleName: product.bundle_name ? product.bundle_name : '',
+            collectionHandle: product.collection_handle ? product.collection_handle : '',
+            image: product.image ? product.image : '',
+            title: product.title,
+            otpPrice: Number(sixpack.price),
+            originalPrice,
+            sellingPlanPrice,
+            selling_plan: this.purchaseOption === 'autoship' && sixpack.selling_plan_id
+              ? Number(sixpack.selling_plan_id)
+              : null,
+            // Plain standalone SKU — no bundle grouping properties.
+            properties: {},
+            _plainLine: true,
+          }];
         },
 
         getOneTimePrice() {
@@ -625,6 +676,50 @@ export default (Alpine: AlpineType) => {
 
             let bundleCart = {
               items: [],
+            }
+
+            // 6 Carton + Single Flavor: add ONE plain 6-pack line. No bundle
+            // parent wrapper, no _bundle_* grouping, no child lines.
+            if (this._is6packSingle()) {
+              const line = this.assignedBundleProducts[0];
+
+              if (!line) {
+                this.loading = false;
+                return;
+              }
+
+              bundleCart.items.push({
+                id: line.id,
+                quantity: 1,
+                selling_plan: this.purchaseOption === 'autoship' ? line.selling_plan : null,
+              });
+
+              const res = await fetch('/cart/add.js', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                },
+                body: JSON.stringify(bundleCart),
+              })
+
+              if (!res.ok) {
+                const errorText = await res.text()
+                document.dispatchEvent(
+                  new CartErrorEvent('bundle-atc', 'ATC failed', errorText)
+                )
+                this.loading = false;
+                return
+              }
+
+              const cart = await fetch('/cart.js').then((response) => response.json())
+              document.dispatchEvent(
+                new CartAddEvent({}, 'bundle-atc', { resource: cart })
+              )
+
+              this.selectedBundleProducts = {};
+              this.loading = false;
+              return;
             }
 
             let collectionHandle = ''
