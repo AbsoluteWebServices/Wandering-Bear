@@ -193,7 +193,7 @@
         }
       },
       "settings": {
-        "bundle_collection": "32oz-bundle",
+        "bundle_collection": "site-v2-32oz",
         "bundle_add_to_cart_text": "Add",
         "bundle_placeholder_image": "shopify://shop_images/image_88.png",
         "oos_badge_text": "Out of Stock",
