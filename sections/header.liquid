@@ -623,9 +623,13 @@
   .header__underlay-closed {
     height: var(--closed-underlay-height, 100%);
     z-index: var(--layer-lowest);
+    /* --top-row-height / --header-height are set by JS (ResizeObserver). Without
+       fallbacks the gradient is invalid until then, so the underlay renders
+       transparent and the page background flashes through before the color
+       paints. The 100% fallbacks make it paint the top-row color immediately. */
     background: linear-gradient(
-      var(--color-scheme-top-row) 0 var(--top-row-height),
-      var(--color-scheme-bottom-row) var(--top-row-height) var(--header-height)
+      var(--color-scheme-top-row) 0 var(--top-row-height, 100%),
+      var(--color-scheme-bottom-row) var(--top-row-height, 100%) var(--header-height, 100%)
     );
     transition: height var(--animation-speed-slow) var(--ease-out-cubic);
   }
@@ -633,9 +637,9 @@
   .header__underlay-open {
     height: var(--full-open-header-height);
     background: linear-gradient(
-      var(--color-scheme-top-row) 0 var(--top-row-height),
-      var(--color-scheme-bottom-row) var(--top-row-height) var(--header-height),
-      var(--color-submenu) var(--header-height) 100%
+      var(--color-scheme-top-row) 0 var(--top-row-height, 100%),
+      var(--color-scheme-bottom-row) var(--top-row-height, 100%) var(--header-height, 100%),
+      var(--color-submenu) var(--header-height, 100%) 100%
     );
     /* header-height is updated via js, the transition works automagically */
     transition: height var(--submenu-animation-speed) var(--ease-out-cubic);
