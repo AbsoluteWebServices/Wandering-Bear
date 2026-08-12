@@ -78,6 +78,7 @@
   assign group_name = group.display_name | handleize
   assign selling_plan_keywords = group.selling_plan_keywords.value
   assign discount_type = group.discount_type.value | default: group.discount_type | default: 'percentage'
+  assign collection = group.collection_handle.value
   assign col_width = 70
   assign multi_unit_product = false
   assign multi_unit_quantity = 0
