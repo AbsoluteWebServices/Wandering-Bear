@@ -462,21 +462,21 @@
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226586_4387d08b-9ccc-456b-bb51-886c3448c5b4.svg",
-            "text": "The best premium cold brew or lattes, at home and on the go!"
+            "text": "Our premium ingredients and precise brewing process deserve packaging that can deliver."
           }
         },
         "icon_item_w3HbfU": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226587.svg",
-            "text": "Our 32oz packs are meant for ease of use: bring them to the office, to your next AirBnB, or to your mom’s house"
+            "text": "Our cartons are specifically designed to keep light and air out — so your last pour tastes as fresh as your first."
           }
         },
         "icon_item_bgBnVE": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226588.svg",
-            "text": "Product is shelf stable before opening and lasts 30 days once opened"
+            "text": "Shelf stable before opening and fresh for 7 days after opening. Keep it wherever you've got room — slots perfectly into your fridge door."
           }
         }
       },
@@ -504,7 +504,7 @@
         "font_size": 24,
         "font_size_mobile": 24,
         "title_alt": "",
-        "title_image": "shopify://shop_images/Group_1327226589.svg",
+        "title_image": "shopify://shop_images/32oz_BOX_HEADLINE.svg",
         "large_image": "shopify://shop_images/02182022_Chelsea-Klye_WANDERING-BEAR_Billboard-Side-Straight-Black-Pour_072-HERO_R1_1_1.jpg",
         "padding-block-start": 95,
         "padding-block-end": 64,
