@@ -21,6 +21,8 @@
 
   assign oos_badge_text = section.settings.oos_badge_text | default: 'Out of Stock'
   assign oos_button_text = section.settings.oos_button_text | default: 'Get Notified'
+
+  assign flavor = child_product.metafields.custom.flavor.value.name
 %}
 
 <div @click="selectProduct({{ child_product.id }},'{{ child_product.handle }}')" data-product-id="{{ child_product.id }}"
@@ -52,8 +54,8 @@
   <div class="wb-flex items-center w-full h-auto min-w-0 self-stretch py-2 pl-3 pr-2 gap-1 smd:gap-2.5">
     <div class="wb-flex flex-col !gap-2 lg:!gap-0.5 w-full">
       <div class="wb-flex items-center gap-1 w-full flex-wrap">
-        <span class="text-lg/none! lg:text-base/none! font-extrabold! uppercase text-bear-black font-gothic_condensed">{{
-          title }}
+        <span class="text-lg/none! lg:text-base/none! font-extrabold! uppercase text-bear-black font-gothic_condensed">
+        {{ flavor | default: title }}
         </span>
 
         {% if is_oos %}
