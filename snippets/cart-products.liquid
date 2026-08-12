@@ -647,12 +647,16 @@
                     <p>
                       <a
                         href="{{ item.url }}"
-                        class="font-kurdis-semi-condensed text-bear-black font-bold uppercase text-lg"
+                        class=""
                         {% if item.parent_relationship.parent != null %}
                           aria-label="{{ 'accessibility.nested_product' | t: product_title: item.product.title, parent_title: item.parent_relationship.parent.title | escape }}"
                         {% endif %}
                       >
-                        {{- item.product.title -}}
+                        <span class="font-kurdis-semi-condensed text-bear-black font-bold uppercase text-lg">{{- item.product.title -}}</span>
+                        <br>
+                        {% unless item.title contains 'Concentrate' %}
+                          <span class="font-kurdis-semi-condensed text-espresso text-base">{{ item.variant.title }}</span>
+                        {% endunless %}
                       </a>
                     </p>
                     <div class="font-kurdis-semi-condensed text-espresso font-bold text-sm">
@@ -1114,7 +1118,7 @@
 
   .cart-items__media-image {
     aspect-ratio: inherit;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
     width: 100%;
     height: auto;
