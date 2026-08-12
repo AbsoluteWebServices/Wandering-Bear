@@ -9,7 +9,7 @@
   assign is_oos = false
 
   assign is_member_unlocked = false
-  if member_tier == 'Elite'
+  if member_tier == 'Elite' or member_tier == 'VIP'
     assign is_member_unlocked = true
   endif
 
