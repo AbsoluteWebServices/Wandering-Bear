@@ -25,6 +25,10 @@ export default (Alpine: AlpineType) => {
         bundleParentProducts: {},
         modal: null,
         qtyLimit: 6,
+        _seq: 0,
+        // Remembers the last flavor chosen while in single-flavor mode so
+        // toggling flavor type (or quantity) doesn't reset to the default product.
+        lastSingleFlavorId: null,
 
         get qtyLimitReached() {
           return this.bundleSize >= this.qtyLimit;
@@ -117,7 +121,15 @@ export default (Alpine: AlpineType) => {
             ? this._mapTo32ozBundle()
             : this._mapToBundle();
 
-            const assignedBundleProducts = Object.keys(this.selectedBundleProducts).map((productId) => {
+            // Preserve the order flavors were added in. Object key enumeration
+            // does NOT preserve insertion order for numeric-string keys (product
+            // IDs below 2^32 are hoisted and sorted ascending), so sort by the
+            // explicit `_order` stamp recorded at insertion time instead.
+            const orderedProductIds = Object.keys(this.selectedBundleProducts).sort(
+              (a, b) => (this.selectedBundleProducts[a]?._order ?? 0) - (this.selectedBundleProducts[b]?._order ?? 0)
+            )
+
+            const assignedBundleProducts = orderedProductIds.map((productId) => {
                 const product = this.bundleProducts[productId]
                 const selectedProduct = this.selectedBundleProducts[productId]
             
@@ -387,7 +399,10 @@ export default (Alpine: AlpineType) => {
             url.searchParams.delete('bundle');
 
             let hasSelection = false;
-            Object.entries(this.selectedBundleProducts).forEach(([id, product]: [string, any]) => {
+            const orderedEntries = Object.entries(this.selectedBundleProducts).sort(
+                ([, a]: [string, any], [, b]: [string, any]) => (a?._order ?? 0) - (b?._order ?? 0)
+            );
+            orderedEntries.forEach(([id, product]: [string, any]) => {
                 const quantity = Number(product?.quantity || 0);
                 if (quantity > 0) {
                     url.searchParams.append('bundle', `${id}_${quantity}`);
@@ -431,7 +446,7 @@ export default (Alpine: AlpineType) => {
             const entries = params.getAll('bundle');
             if (entries.length === 0) return;
 
-            const restored: Record<string, { id: string; quantity: number }> = {};
+            const restored: Record<string, { id: string; quantity: number; _order: number }> = {};
             let total = 0;
 
             for (const raw of entries) {
@@ -445,12 +460,18 @@ export default (Alpine: AlpineType) => {
                 if (remaining <= 0) break;
 
                 const clamped = Math.min(quantity, remaining);
-                restored[id] = { id, quantity: clamped };
+                restored[id] = { id, quantity: clamped, _order: this._seq++ };
                 total += clamped;
             }
 
             if (Object.keys(restored).length > 0) {
                 this.selectedBundleProducts = restored;
+
+                // Remember the restored single-flavor choice so toggling flavor
+                // type later re-selects it instead of the default product.
+                if (this.flavorType === 'single') {
+                    this.lastSingleFlavorId = Object.keys(restored)[0];
+                }
             }
         },
 
@@ -462,21 +483,29 @@ export default (Alpine: AlpineType) => {
             const id = String(productId)
 
             if (type === '32oz' && this.flavorType === 'single') {
+              this.lastSingleFlavorId = id;
               this.selectedBundleProducts = {};
               this.selectedBundleProducts = {
                 [id]: {
                   id,
                   quantity: this.bundleQty,
+                  _order: this._seq++,
                 },
               }
               return;
             }
-          
+
+            // Keep the existing `_order` if this flavor is already in the bundle
+            // so re-clicking doesn't jump it to the end; only new entries get a
+            // fresh stamp.
+            const existingOrder = this.selectedBundleProducts[id]?._order;
+
             this.selectedBundleProducts = {
               ...this.selectedBundleProducts,
               [id]: {
                 id,
                 quantity: 1,
+                _order: existingOrder ?? this._seq++,
               },
             }
 
@@ -517,10 +546,30 @@ export default (Alpine: AlpineType) => {
             })
         },
 
+        // Resolve which product the single-flavor selection should use: the last
+        // one the shopper picked in single mode, otherwise the default product.
+        _resolveSingleFlavorId() {
+            const id = String(this.lastSingleFlavorId ?? this.selectedProductId);
+            return this.bundleProducts[id] ? id : String(this.selectedProductId);
+        },
+
         changeFlavorType(type) {
             this.flavorType = type;
             this._clearBundle();
-            this.selectedBundleProducts = {};
+
+            if (type === 'single') {
+                const id = this._resolveSingleFlavorId();
+                this.lastSingleFlavorId = id;
+                this.selectedBundleProducts = {
+                    [id]: {
+                        id,
+                        quantity: this.bundleQty,
+                        _order: this._seq++,
+                    },
+                };
+            } else {
+                this.selectedBundleProducts = {};
+            }
         },
 
         changeBundleQuantity(quantity) {
@@ -528,10 +577,13 @@ export default (Alpine: AlpineType) => {
           this.qtyLimit = this.bundleQty;
         
           if (this.flavorType === 'single') {
+            const id = this._resolveSingleFlavorId();
+            this.lastSingleFlavorId = id;
             this.selectedBundleProducts = {
-              [this.selectedProductId]: {
-                id: this.selectedProductId,
+              [id]: {
+                id,
                 quantity: this.bundleQty,
+                _order: this._seq++,
               },
             };
             return;
