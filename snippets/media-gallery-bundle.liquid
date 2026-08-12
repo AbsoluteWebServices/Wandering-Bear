@@ -50,8 +50,8 @@
                         class="swiper-slide relative rounded-[5px] lg:max-h-[540px] overflow-hidden{% if disable_gallery_background != true %} before:content-[''] before:absolute before:left-0 before:top-0 before:w-full before:h-full before:bg-kraft/15 before:rounded-[5px] before:-z-1{% endif %}{% if media.height > media.width or media.height < media.width %}{% endif %}"
                         style="{{ slide_styles }}"
                     >
-                     <div class="swiper-zoom-container">
-                        {% render 'picture', source: media, class: 'w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt %}
+                     <div class="swiper-zoom-container max-w-full max-h-full lg:max-h-[540px] flex">
+                        {% render 'picture', source: media, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt %}
                      </div>
                      <div class="zoom-toggle absolute bottom-4 right-4 w-6 h-6 cursor-pointer z-[2]">
                         {% render 'icons', icon: 'zoom-in', class: 'zoom-toggle__icon zoom-toggle__in' %}
