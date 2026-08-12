@@ -179,7 +179,11 @@
             {% if product_option.name == 'Size' or product_option.name == 'Color' or product_option.name == 'Value' %}
               Select
             {% endif %}
+            {% if product_option.name == 'Value' %}
+              Amount
+            {% else %}
               {{- product_option.name | escape -}}
+            {% endif %}
             </span>
  
             <div

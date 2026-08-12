@@ -114,7 +114,11 @@
         {%- if block_settings.show_number -%}
           {% comment %} Mimic delimiter filter logic {% endcomment %}
           {{- rating_count | times: 100 | money_without_currency | remove: ".00" | remove: ",00" }}
-          {{ 'content.reviews' | t }}
+          {% if rating_count == 1 %}
+            Review
+          {% else %}
+            {{ 'content.reviews' | t }}
+          {% endif %}
         {%- endif -%}
       </p>
     {%- endif -%}
