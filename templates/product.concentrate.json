@@ -162,6 +162,7 @@
               "settings": {
                 "variant_style": "buttons",
                 "show_swatches": false,
+                "savings_display": "percent",
                 "alignment": "left",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
@@ -204,6 +205,7 @@
         "gap": 20,
         "gap_mobile": 20,
         "hide_thumbnails_desktop": false,
+        "disable_gallery_background": false,
         "color_scheme": "",
         "padding-block-start": 44,
         "padding-block-end": 0,
@@ -285,7 +287,7 @@
         "background_gradient_mobile": "",
         "background_image_fit_mobile": "cover",
         "background_image_overflow_mobile": false,
-        "line_color": "#75BDF4",
+        "line_color": "#75bdf4",
         "arc_strength": 16,
         "crown_icon": "shopify://shop_images/Crown_56282b3e-67e8-4242-99b0-ad6531be14e5.svg",
         "title": "3:1 COLD BREW CONCENTRATE",
@@ -456,10 +458,18 @@
             "padding-inline-end-mobile": 0
           },
           "blocks": {}
+        },
+        "okendo_reviews_widget_nQBHaA": {
+          "type": "shopify://apps/okendo/blocks/reviews-widget/bb689e69-ea70-4661-8fb7-ad24a2e23c29",
+          "settings": {
+            "product": "{{ product }}",
+            "widget_type": "reviews_widget"
+          }
         }
       },
       "block_order": [
-        "heading_VJVmPd"
+        "heading_VJVmPd",
+        "okendo_reviews_widget_nQBHaA"
       ],
       "name": "Okendo Reviews Widget",
       "settings": {
@@ -623,7 +633,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-11oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -636,7 +647,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Mocha-Latte-8oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -649,7 +661,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/3-1-Concentrate-32oz_bd218ab7-f7e2-4a56-a053-4b1b50efd297.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         },
@@ -662,7 +675,8 @@
             "show_badge": true,
             "badge_text": "",
             "image": "shopify://shop_images/Original-Black-32oz.png",
-            "card_background_color": ""
+            "card_background_color": "",
+            "custom_price_text": ""
           },
           "blocks": {}
         }
