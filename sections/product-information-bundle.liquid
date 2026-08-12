@@ -12,7 +12,11 @@
   assign first_product = bundle_collection.products.first
 
   for bundle_product in bundle_collection.products
-    if bundle_product.id == product_id
+    if template.suffix == '32oz'
+      if product.metafields.custom.bundle_product != blank
+        assign selected_product = product.metafields.custom.bundle_product.value
+      endif
+    elsif bundle_product.id == product_id
       assign selected_product = bundle_product
       break
     endif
