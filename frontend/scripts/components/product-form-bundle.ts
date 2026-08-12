@@ -364,12 +364,98 @@ export default (Alpine: AlpineType) => {
             if (this.bundleQty) {
               this.qtyLimit = this.bundleQty;
             }
+
+
+            this._restoreBundleFromUrl();
+
+
+            this.$watch('selectedBundleProducts', () => this._persistBundleToUrl());
+            this.$watch('purchaseOption', () => this._persistBundleToUrl());
+            // 32oz mix/single
+            this.$watch('flavorType', () => this._persistBundleToUrl());
+            this.$watch('bundleQty', () => this._persistBundleToUrl());
+
             this._setProgressBarPrices();
+        },
+
+        /**
+         * Serialize the current selection into the URL as `bundle=<id>_<qty>`
+         * params (+ `bundle_interval`)
+         */
+        _persistBundleToUrl() {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('bundle');
+
+            let hasSelection = false;
+            Object.entries(this.selectedBundleProducts).forEach(([id, product]: [string, any]) => {
+                const quantity = Number(product?.quantity || 0);
+                if (quantity > 0) {
+                    url.searchParams.append('bundle', `${id}_${quantity}`);
+                    hasSelection = true;
+                }
+            });
+
+            if (hasSelection) {
+                url.searchParams.set('bundle_interval', this.purchaseOption === 'autoship' ? 'sub' : 'otp');
+ 
+                if (this.bundleType === '32oz') {
+                    if (this.flavorType) url.searchParams.set('bundle_flavor', this.flavorType);
+                    else url.searchParams.delete('bundle_flavor');
+                    url.searchParams.set('bundle_qty', String(this.bundleQty));
+                }
+            } else {
+                url.searchParams.delete('bundle_interval');
+                url.searchParams.delete('bundle_flavor');
+                url.searchParams.delete('bundle_qty');
+            }
+
+            window.history.replaceState(window.history.state, '', url.toString());
+        },
+
+        _restoreBundleFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+
+            const interval = params.get('bundle_interval');
+            if (interval === 'sub') this.purchaseOption = 'autoship';
+            else if (interval === 'otp') this.purchaseOption = 'one_time';
+
+            const flavor = params.get('bundle_flavor');
+            if (flavor === 'mix' || flavor === 'single') this.flavorType = flavor;
+
+            const limit = Number(params.get('bundle_qty'));
+            if (Number.isFinite(limit) && limit > 0) {
+                this.bundleQty = limit;
+                this.qtyLimit = limit;
+            }
+
+            const entries = params.getAll('bundle');
+            if (entries.length === 0) return;
+
+            const restored: Record<string, { id: string; quantity: number }> = {};
+            let total = 0;
+
+            for (const raw of entries) {
+                const [id, qtyRaw] = raw.split('_');
+                const quantity = Number(qtyRaw);
+                if (!id || !Number.isFinite(quantity) || quantity <= 0) continue;
+
+                if (!this.bundleProducts[id]) continue;
+
+                const remaining = this.qtyLimit - total;
+                if (remaining <= 0) break;
+
+                const clamped = Math.min(quantity, remaining);
+                restored[id] = { id, quantity: clamped };
+                total += clamped;
+            }
+
+            if (Object.keys(restored).length > 0) {
+                this.selectedBundleProducts = restored;
+            }
         },
 
         onPurchaseOptionChange() {
             this._setProgressBarPrices();
-            this._updateQueryString();
         },
 
         addToBundle(productId, type = null) {
