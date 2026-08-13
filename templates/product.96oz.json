@@ -739,7 +739,7 @@
           "type": "product-card",
           "name": "t:names.product_card",
           "settings": {
-            "product": "32oz-cold-brew-carton-bundle-unit-straight-black",
+            "product": "cold-brew-8-oz-can",
             "product_card_gap": 4,
             "inherit_color_scheme": true,
             "color_scheme": "",
