@@ -207,7 +207,7 @@
 {% endif %}
 
 
-<div x-data="productFormBundle({{ selected_product.id }},{{ params }})">
+<div id="shop-autoship" x-data="productFormBundle({{ selected_product.id }},{{ params }})">
   {% render 'product-information-content',
     product_media_size: closest.product.media.size,
     section_id: section.id,
