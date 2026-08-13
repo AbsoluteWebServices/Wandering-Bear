@@ -334,6 +334,7 @@
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226589-2.svg",
         "title_image_mobile": "shopify://shop_images/Group_1327226589-2-mobile.png",
+        "media_type": "image",
         "large_image": "shopify://shop_images/gif_29fb036f-071c-4666-913e-2d3e1640733b.png",
         "padding-block-start": 32,
         "padding-block-end": 54,
@@ -590,7 +591,7 @@
         "cart_product_slider_nATbyK": {
           "type": "cart_product_slider",
           "settings": {
-            "product": "cold-brew-latte-8oz",
+            "product": "cold-brew-latte-8-oz-double-latte-mocha",
             "title": "Mocha Latte",
             "title_small": "8oz",
             "show_badge": true,
