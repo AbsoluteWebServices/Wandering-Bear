@@ -1,0 +1,199 @@
+{%- doc -%}
+  Nutrition Facts modal for flavored products.
+
+  Opened by any link with href="#nutrition-facts" (see main.js). Lists every flavor
+  in the product's flavor group and switches the Nutrition Facts label + ingredients
+  via a dropdown (custom listbox on desktop, native <select> on mobile).
+
+  Data model:
+    product.metafields.custom.product_group.value.collection_handle -> collection of flavor products
+    each flavor product's metafields.custom.flavor.value -> { name, nutrition_facts_label, ingredients }
+
+  Renders nothing when the product has no flavor group, so it's safe to include on any PDP.
+
+  @param {object} product - The current product (defaults to the global `product`).
+{%- enddoc -%}
+
+{%- liquid
+  assign nf_product = product
+  assign nf_group = nf_product.metafields.custom.product_group.value
+
+  # Prefer the collection the PDP itself uses for flavor selection (bundle_collection),
+  # which reliably contains the current product, so the default resolves by exact handle.
+  # Fall back to the flavor group's collection for non-bundle templates.
+  assign nf_collection = collection
+  if nf_collection == blank
+    assign nf_collection = nf_group.collection_handle.value
+  endif
+  assign nf_flavors = nf_collection.products
+  assign nf_display_name = nf_group.display_name
+  if nf_display_name == blank
+    assign nf_display_name = nf_product.title
+  endif
+
+  # Default the dropdown to the flavor of the product being viewed. The flavor
+  # group collection may not contain this exact product (e.g. bundle templates),
+  # so match by flavor identity: exact handle first, then flavor metaobject name.
+  assign nf_initial = ''
+  assign nf_current_flavor_name = nf_product.metafields.custom.flavor.value.name
+
+  for nf_flavor in nf_flavors
+    if nf_flavor.handle == nf_product.handle
+      assign nf_initial = nf_flavor.handle
+      break
+    endif
+  endfor
+
+  if nf_initial == blank and nf_current_flavor_name != blank
+    for nf_flavor in nf_flavors
+      assign nf_loop_flavor_name = nf_flavor.metafields.custom.flavor.value.name
+      if nf_loop_flavor_name == nf_current_flavor_name
+        assign nf_initial = nf_flavor.handle
+        break
+      endif
+    endfor
+  endif
+
+  if nf_initial == blank
+    assign nf_initial = nf_product.handle
+  endif
+-%}
+
+{%- if nf_flavors.size > 0 -%}
+  {%- capture nf_content -%}
+    <div
+      x-data="nutritionFacts({ initial: '{{ nf_initial }}' })"
+      class="w-full text-left font-kurdis-semi-condensed text-bear-black"
+    >
+      {%- comment -%} Header {%- endcomment -%}
+      <p class="text-lg font-extrabold uppercase font-gothic_condensed leading-none">
+        Nutritional Info
+      </p>
+      {%- if nf_display_name != blank -%}
+        <p class="text-sm font-semibold mt-1.5">{{ nf_display_name }}</p>
+      {%- endif -%}
+
+      {%- comment -%} Flavor dropdown {%- endcomment -%}
+      <div class="mt-4 mb-5">
+        {%- comment -%} Mobile: native select (iOS wheel picker) {%- endcomment -%}
+        <div class="relative md:hidden">
+          <select
+            x-model="selected"
+            aria-label="Choose flavor"
+            class="appearance-none w-full border border-[#CFBDB1] rounded-[5px] py-3 pl-4 pr-10 text-[14px] font-bold uppercase font-gothic_condensed bg-white cursor-pointer"
+          >
+            {%- for nf_flavor in nf_flavors -%}
+              {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
+              {%- assign nf_name = nf_meta.name | default: nf_flavor.title -%}
+              <option value="{{ nf_flavor.handle }}">{{ nf_name }}</option>
+            {%- endfor -%}
+          </select>
+          <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
+            {%- render 'icons', icon: 'chevron-down', class: 'w-4 h-4' -%}
+          </span>
+        </div>
+
+        {%- comment -%} Desktop: custom accessible listbox {%- endcomment -%}
+        <div
+          class="relative hidden md:block"
+          @click.outside="close()"
+        >
+          <button
+            type="button"
+            x-ref="trigger"
+            @click="toggle()"
+            @keydown="onTriggerKey($event)"
+            aria-haspopup="listbox"
+            :aria-expanded="open"
+            :class="open && '!rounded-b-none'"
+            class="relative z-40 flex items-center justify-between gap-2 w-full border border-[#CFBDB1] rounded-[5px] py-3 px-4 text-[14px] font-bold uppercase font-gothic_condensed bg-white cursor-pointer transition-[filter] duration-200 hover:brightness-95"
+          >
+            <span>
+              {%- for nf_flavor in nf_flavors -%}
+                {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
+                {%- assign nf_name = nf_meta.name | default: nf_flavor.title -%}
+                <span x-show="selected === '{{ nf_flavor.handle }}'">{{ nf_name }}</span>
+              {%- endfor -%}
+            </span>
+            <span class="shrink-0 transition-transform duration-200" :class="open && 'rotate-180'">
+              {%- render 'icons', icon: 'chevron-down', class: 'w-4 h-4' -%}
+            </span>
+          </button>
+
+          <ul
+            x-ref="listbox"
+            x-show="open"
+            x-transition.opacity.duration.150ms
+            role="listbox"
+            aria-label="Choose flavor"
+            class="absolute left-0 right-0 top-full -mt-px z-30 max-h-64 overflow-auto bg-white border border-[#CFBDB1] rounded-b-[5px] divide-y divide-[#CFBDB1] shadow-[0px_8px_12px_0px_rgba(0,0,0,0.12)]"
+            style="display: none;"
+          >
+            {%- for nf_flavor in nf_flavors -%}
+              {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
+              {%- assign nf_name = nf_meta.name | default: nf_flavor.title -%}
+              <li
+                role="option"
+                tabindex="-1"
+                data-flavor-slug="{{ nf_flavor.handle }}"
+                data-flavor-id="{{ nf_flavor.id }}"
+                :aria-selected="selected === '{{ nf_flavor.handle }}'"
+                @click="select('{{ nf_flavor.handle }}')"
+                @keydown="onOptionKey($event, '{{ nf_flavor.handle }}')"
+                class="px-4 py-4 text-[14px] font-bold uppercase font-gothic_condensed cursor-pointer outline-none hover:bg-foam focus-visible:bg-foam"
+                :class="selected === '{{ nf_flavor.handle }}' ? 'bg-foam' : ''"
+              >{{ nf_name }}</li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+
+      {%- comment -%} Nutrition Facts label (one per flavor) {%- endcomment -%}
+      {%- for nf_flavor in nf_flavors -%}
+        {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
+        {%- assign nf_label = nf_meta.nutrition_facts_label -%}
+        {%- if nf_label != blank -%}
+          {%- assign nf_name = nf_meta.name | default: nf_flavor.title -%}
+          <div x-show="selected === '{{ nf_flavor.handle }}'"
+          class="flex justify-start">
+            {{ nf_label | image_url: width: 720 | image_tag: loading: 'lazy', class: 'h-auto max-h-[339px] w-auto object-contain', alt: nf_name }}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- comment -%} Ingredients (one per flavor) {%- endcomment -%}
+      {%- assign nf_has_ingredients = false -%}
+      {%- for nf_flavor in nf_flavors -%}
+        {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
+        {%- if nf_meta.ingredients != blank -%}
+          {%- assign nf_has_ingredients = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if nf_has_ingredients -%}
+        <p class="text-base font-extrabold uppercase font-gothic_condensed leading-none mt-5 mb-1.5">
+          Ingredients
+        </p>
+        {%- for nf_flavor in nf_flavors -%}
+          {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
+          {%- if nf_meta.ingredients != blank -%}
+            <div
+              x-show="selected === '{{ nf_flavor.handle }}'"
+              class="text-[10px] font-semibold leading-[150%] [&_a]:underline"
+            >
+              {{ nf_meta.ingredients }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  {%- endcapture -%}
+
+  {%- render 'modal',
+    handle: 'nutrition-facts',
+    content: nf_content,
+    body_class: '!items-stretch !py-6 !px-6 md:!px-7 md:!pt-7 md:!pb-7',
+    wrapper_class: 'max-w-full w-full smd:!min-w-[375px] smd:!max-w-[420px]'
+  -%}
+{%- endif -%}

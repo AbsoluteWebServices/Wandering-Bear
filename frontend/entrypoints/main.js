@@ -56,11 +56,11 @@ const positionBadges = () => {
       // badge.style.top = `${anchorRect.bottom - parentRect.top + y}px`
       badge.style.opacity = '1'
     })
-  }
+}
   
-  document.addEventListener('DOMContentLoaded', positionBadges)
-  window.addEventListener('load', positionBadges)
-  window.addEventListener('resize', positionBadges)
+document.addEventListener('DOMContentLoaded', positionBadges)
+window.addEventListener('load', positionBadges)
+window.addEventListener('resize', positionBadges)
 
 let loaded = false
 
@@ -94,9 +94,9 @@ const init = async () => {
     const { default: OverlayScrollbar } = await import("~/scripts/components/overlayScrollbar")
     const { default: Cart } = await import("~/scripts/components/cart")
     const { default: ReviewCarouselBlock } = await import("~/scripts/components/reviewCarouselBlock")
+    const { default: NutritionFacts } = await import("~/scripts/components/nutrition-facts")
 
     Alpine.plugin(morph)
-
     Alpine.plugin(SwiperSlider)
     Alpine.plugin(VideoPlayer)
     Alpine.plugin(Header)
@@ -121,9 +121,28 @@ const init = async () => {
     Alpine.plugin(OverlayScrollbar)
     Alpine.plugin(Cart)
     Alpine.plugin(ReviewCarouselBlock)
-    
+    Alpine.plugin(NutritionFacts)
+
     Alpine.start()
     window.Alpine = Alpine
+
+    // Nutrition Facts Modal
+    // Open the modal when clicking on the #nutrition-facts anchor.
+    // Uses capture phase so the click is handled before any ancestor
+    // (e.g. the accordion's toggleAccordion) can stopPropagation() it.
+    document.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[href="#nutrition-facts"]')
+        if (!trigger) return
+
+        event.preventDefault()
+        event.stopPropagation()
+
+        window.dispatchEvent(
+            new CustomEvent('modal-open', {
+                detail: { modal: 'nutrition-facts' },
+            })
+        )
+    }, true)
 }
 
 document.addEventListener("mousedown", init, { once: true })

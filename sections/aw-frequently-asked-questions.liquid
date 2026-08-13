@@ -43,11 +43,13 @@
                     <div x-data="accordion">
                         {% for faq in metaobject.value %}
                             {% assign title = faq.question %}
-                            {% assign content = faq.answer | metafield_tag %}
+                            {% capture content %}
+                                {{ faq.answer | metafield_tag }}
+                            {% endcapture %}
                             {% assign open = '' %}
                             {% assign class = 'border-b border-bear-black w-full text-black-bear' %}
                             {% assign title_class = 'text-bear-black text-[20px]/none font-extrabold font-gothic_condensed uppercase md:text-base/none' %}
-                            {% assign content_class = 'body text-sm/[130%] text-bear-black font-kurdis-semi-condensed pb-6 lg:pr-19' %}
+                            {% assign content_class = 'body text-sm/[130%] text-bear-black font-kurdis-semi-condensed pb-6 lg:pr-19 [&_a]:underline' %}
                             {% if forloop.first %}
                                 {% assign open = 'open' %}
                                 {% assign class = class | append: ' border-t' %}
