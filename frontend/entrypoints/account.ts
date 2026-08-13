@@ -370,15 +370,15 @@ function dateTypeCell(t: CreditTxn, tbody: HTMLElement, nowMs: number, order: Or
 
   // The order line only appears when the worker actually resolved one (see orderRef() — the
   // Inveterate ledger's order field is undocumented, so it is often null).
-  if (t.order_name) {
-    const order = document.createElement(t.order_url ? 'a' : 'span');
-    order.className = 'wb-credit-history__order';
-    order.textContent = `${tbody.getAttribute('data-wb-order-label') || 'Order'} ${t.order_name}`;
-    // No .hover-underline here, unlike every other portal link: the order line is a dense run of
-    // digits and an underline under it made the row hard to read. Weight carries it instead
-    // (.wb-credit-history__order), and hover still gives the colour shift.
-    if (t.order_url && order instanceof HTMLAnchorElement) order.href = t.order_url;
-    td.appendChild(order);
+  // `order` is what resolveOrder() settled on — the Liquid map's name and tokened URL. Never
+  // t.order_name / t.order_url directly: those still carry the ledger's raw id on a worker older
+  // than this theme, which is the bug QA reported.
+  if (order) {
+    const orderEl = document.createElement(order.url ? 'a' : 'span');
+    orderEl.className = 'wb-credit-history__order';
+    orderEl.textContent = `${tbody.getAttribute('data-wb-order-label') || 'Order'} ${order.name}`;
+    if (order.url && orderEl instanceof HTMLAnchorElement) orderEl.href = order.url;
+    td.appendChild(orderEl);
   }
 
   // "Expires on Aug 2, 2026" while the credits are live, "Expired" once they are gone.
