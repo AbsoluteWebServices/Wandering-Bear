@@ -103,6 +103,30 @@
       {%- render 'customer-credit-redeem', label: t_redeem, link: redeem_url, balance_formatted: credits_formatted, class: 'shrink-0 shadow-button !h-[40px] !text-[15px]' -%}
     </div>
 
+    {%- comment -%}
+      Order lookup for the history table, built from Liquid rather than from the worker.
+
+      Inveterate's ledger carries only a numeric `orderId`. Two things the customer needs are NOT
+      derivable from it: the order NAME they recognise ("#1042"), and the order page URL — that page
+      is keyed by a per-order token, so /account/orders/<id> does not resolve and Shopify bounces it
+      to /account. QA hit exactly that.
+
+      Shopify answers both here for free: this page only ever renders for the logged-in customer, and
+      `customer.orders` gives id → name → customer_url with the real token. No Admin API, no token to
+      keep valid, and no way to address an order that isn't the viewer's own.
+
+      Orders older than the window Liquid exposes simply won't be in the map; account.ts then leaves
+      the row without an order line rather than printing a raw id or a dead link.
+    {%- endcomment -%}
+    <script type="application/json" data-wb-order-map>
+      {
+        {%- for order in customer.orders -%}
+          {%- unless forloop.first %},{% endunless -%}
+          "{{ order.id }}": { "name": {{ order.name | json }}, "url": {{ order.customer_url | json }} }
+        {%- endfor -%}
+      }
+    </script>
+
     {%- comment -%} ---------- Transaction history (worker /credits, filled by account.ts) ---------- {%- endcomment -%}
     <div class="{{ card }} p-5 md:!p-6" data-wb-credit-history>
       {%- comment -%} Mixed case at 18px, not the portal's uppercase .tag: both frames set this
