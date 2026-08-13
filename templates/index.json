@@ -198,7 +198,7 @@
           "type": "collection",
           "settings": {
             "collection": "32oz-cartons",
-            "title": "32oz Multi Serves",
+            "title": "32oz Cartons",
             "accent_text": ""
           }
         },
@@ -206,7 +206,7 @@
           "type": "collection",
           "settings": {
             "collection": "grouped-cold-brew-latte-8oz-cans",
-            "title": "Single Serves",
+            "title": "8oz Cans",
             "accent_text": ""
           }
         }
