@@ -338,7 +338,7 @@
         "title_image": "shopify://shop_images/PROUDLY_AVAILABLE_WHERE_YOU_SHOP.svg",
         "title_image_mobile": "shopify://shop_images/PROUDLY_AVAILABLE_WHERE_YOU_SHOP.svg",
         "button_text": "Check us out in-store",
-        "button_url": "shopify://pages/find-wandering-bear-cold-brew-in-stores",
+        "button_url": "shopify://pages/store-locator",
         "button_style": "secondary",
         "button_size": "small",
         "button_bg": "#af7404",
