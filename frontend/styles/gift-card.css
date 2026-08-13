@@ -60,3 +60,7 @@ h2.gvlo-heading {
 .gvlo-left.gvlo-arrow-btn .rotate-180 {
     transform: rotate(0) !important;
 }
+
+.gvlo-field .gvlo-input-toggle, .gvlo-field select {
+    background: white !important;
+}
