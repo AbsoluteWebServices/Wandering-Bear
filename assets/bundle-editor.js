@@ -233,18 +233,35 @@ class BundleEditorComponent extends Component {
       const add = row.el.querySelector('[data-bundle-add]');
       const selected = row.el.querySelector('[data-bundle-selected]');
       const stepper = row.el.querySelector('[data-bundle-stepper]');
+      const increment = row.el.querySelector('[data-bundle-increment]');
+      // Member-only flavors an ineligible customer can't freely add render an
+      // Unlock button alongside a hidden Add. A selling plan (subscription)
+      // unlocks them, so they behave like any other flavor. Elite/VIP rows are
+      // never marked member-only (server renders them normally).
+      const unlock = row.el.querySelector('[data-bundle-unlock]');
+      const memberOnly = row.el.hasAttribute('data-bundle-member-only');
+      const locked = memberOnly && !hasSellingPlan;
       const active = row.quantity > 0;
 
       if (this.#isSingle) {
         // Single-select: no stepper; the chosen flavor shows the SELECTED state.
         if (stepper instanceof HTMLElement) stepper.style.display = 'none';
-        if (add instanceof HTMLElement) add.style.display = active ? 'none' : '';
         if (selected instanceof HTMLElement) selected.style.display = active ? '' : 'none';
+        if (unlock instanceof HTMLElement) unlock.style.display = locked && !active ? '' : 'none';
+        if (add instanceof HTMLElement) add.style.display = !locked && !active ? '' : 'none';
       } else {
         if (selected instanceof HTMLElement) selected.style.display = 'none';
-        if (add instanceof HTMLElement) add.style.display = active ? 'none' : '';
         if (stepper instanceof HTMLElement) stepper.style.display = active ? '' : 'none';
+        // Empty row: Unlock when locked, otherwise Add.
+        if (unlock instanceof HTMLElement) unlock.style.display = locked && !active ? '' : 'none';
+        if (add instanceof HTMLElement) add.style.display = !locked && !active ? '' : 'none';
       }
+
+      // A locked flavor already in the bundle may only be removed: keep the "+"
+      // visible but disabled so the only action is decrement. When qty hits 0
+      // the stepper hides and Unlock returns (handled above). The mix-mode cap
+      // loop below also respects `locked`.
+      if (increment instanceof HTMLButtonElement) increment.disabled = locked;
 
       const price = row.el.querySelector('[data-bundle-price]');
       const variant = row.variants[variantIndex];
@@ -253,9 +270,13 @@ class BundleEditorComponent extends Component {
     }
 
     // Mix mode caps the total at the carton count; block adding beyond it.
+    // Locked (member-only, no selling plan) rows stay disabled regardless.
     if (this.#isMix) {
       for (const b of this.querySelectorAll('[data-bundle-increment], [data-bundle-add]')) {
-        if (b instanceof HTMLButtonElement) b.disabled = atCap;
+        if (!(b instanceof HTMLButtonElement)) continue;
+        const bRow = b.closest('[data-bundle-row]');
+        const bLocked = !!bRow?.hasAttribute('data-bundle-member-only') && !hasSellingPlan;
+        b.disabled = atCap || bLocked;
       }
     }
 
@@ -459,6 +480,12 @@ class BundleEditorComponent extends Component {
   increment(event) {
     const row = this.#rowFromEvent(event);
     if (!row) return;
+
+    // Member-only flavors an ineligible customer can't add — unless a selling
+    // plan (subscription) is selected, which unlocks them. Without one, adding
+    // is never allowed even if the flavor is already in the bundle; only removal.
+    const hasSellingPlan = this.#state?.sellingPlan && this.#state?.sellingPlan !== null;
+    if (row.el.hasAttribute('data-bundle-member-only') && !hasSellingPlan) return;
 
     if (this.#isSingle) {
       this.#selectSingle(row);

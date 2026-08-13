@@ -294,6 +294,10 @@ class CartDrawerComponent extends DialogComponent {
   open() {
     this.showDialog();
 
+    document.dispatchEvent(
+      new CustomEvent('cart-drawer:open', { bubbles: true })
+    );
+
     customElements
       .whenDefined('shopify-payment-terms')
       .then(() => {

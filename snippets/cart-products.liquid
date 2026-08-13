@@ -542,11 +542,21 @@
                   endif
                  endfor
 
+                assign cart_level_discount = 0
+                for cart_discount in cart.cart_level_discount_applications
+                  assign cart_level_discount = cart_level_discount | plus: cart_discount.total_allocated_amount
+                endfor
+
                 assign price = item.final_line_price
+                if cart_level_discount > 0 and cart.items_subtotal_price > 0
+                  assign line_discount_share = item.final_line_price | times: cart_level_discount | times: 1.0 | divided_by: cart.items_subtotal_price | round
+                  assign price = item.final_line_price | minus: line_discount_share
+                endif
+
                 if quantified
                   assign original_price = item.product.variants[0].price | times: item.quantity
-                elsif item.compare_at_price > item.final_line_price
-                  assign original_price = item.compare_at_price
+                elsif item.compare_at_price > item.price
+                  assign original_price = item.compare_at_price | times: item.quantity
                 else
                   assign original_price = item.original_line_price
                 endif
@@ -847,9 +857,9 @@
                 <td class="w-full font-kurdis-semi-condensed col-span-full flex justify-end items-center gap-1 text-sm font-bold text-bear-black py-3 px-4 relative">
                   <div class="absolute top-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
                   {% if original_price > price %}
-                    <span class="line-through opacity-50">{{ original_price | money }}</span>
+                    <span data-original-price class="line-through opacity-50">{{ original_price | money }}</span>
                   {% endif %}
-                  <span>{{ price | money}}</span>
+                  <span data-price>{{ price | money}}</span>
                 </td>
               </tr>
               {% endunless %}

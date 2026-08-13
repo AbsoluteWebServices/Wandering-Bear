@@ -30,6 +30,13 @@
     endif
   endfor
 -%}
-{%- if is_member and cart.item_count > 0 and member_discount_applied == false -%}
+{%- comment -%}
+  Load for any member with items (not only when the discount is missing) so the
+  script can also refresh the cart section when the drawer opens. The server's
+  current applied-state is passed to JS so the on-load poke still only fires when
+  the discount hasn't been applied yet.
+{%- endcomment -%}
+{%- if is_member and cart.item_count > 0 -%}
+  <script>window.__memberDiscountApplied = {{ member_discount_applied | json }};</script>
   <script src="{{ 'member-cart-refresh.js' | asset_url }}" type="module" fetchpriority="low"></script>
 {%- endif -%}
