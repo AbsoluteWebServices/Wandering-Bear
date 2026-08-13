@@ -65,6 +65,9 @@ type CreditTxn = {
   date: string;
   order_name: string | null;
   order_url: string | null;
+  // Bare Shopify order id. Optional: a worker older than this theme does not send it, and the id is
+  // then recovered from order_name.
+  order_id?: string | null;
   description: string;
   // This entry's own expiry (earn rows only) — drives the row's "Expires on …" / "Expired" note.
   expires_at: string | null;
@@ -302,13 +305,52 @@ function formatDate(iso: string): string {
   return m ? `${MONTHS[+m[2] - 1]} ${+m[3]}, ${m[1]}` : iso;
 }
 
+type OrderRef = { name: string; url: string | null };
+
+/**
+ * id → { name, url } for the logged-in customer's orders, rendered into the page by
+ * sections/customer-credits.liquid.
+ *
+ * The worker cannot supply either value from Inveterate alone: the ledger holds a numeric order id,
+ * while the customer knows the NAME ("#1042") and the order page is addressed by a token. Liquid has
+ * both, for this customer only, so the lookup happens here.
+ */
+function readOrderMap(): Map<string, OrderRef> {
+  const el = document.querySelector('[data-wb-order-map]');
+  if (!el?.textContent) return new Map();
+  try {
+    return new Map(Object.entries(JSON.parse(el.textContent) as Record<string, OrderRef>));
+  } catch {
+    return new Map();
+  }
+}
+
+/**
+ * The order line for a transaction, or null when it cannot be shown honestly.
+ *
+ * The Liquid map wins: it is the only source with the customer-facing URL. Failing that, the
+ * worker's own name is used — but only when it is a NAME. A worker older than this theme echoes the
+ * ledger's raw id as "#6750479450209", which reads like an order number without being one and links
+ * to a page that redirects to /account. Shopify order ids run 10+ digits and order names do not, so
+ * the shape tells them apart; anything that looks like a bare id is dropped rather than shown.
+ */
+function resolveOrder(t: CreditTxn, orders: Map<string, OrderRef>): OrderRef | null {
+  const name = t.order_name ?? '';
+  const looksLikeRawId = /^#?\d{10,}$/.test(name);
+  const id = (t.order_id ?? (looksLikeRawId ? name : '')).replace(/\D/g, '');
+  const known = id ? orders.get(id) : undefined;
+  if (known) return known;
+  if (name && !looksLikeRawId) return { name, url: t.order_url };
+  return null;
+}
+
 /** Is this entry's own expiry already past? Earn rows only — a debit has no expiry of its own. */
 function isExpired(t: CreditTxn, nowMs: number): boolean {
   return t.type === 'EXPIRED' || (t.expires_at != null && Date.parse(t.expires_at) <= nowMs);
 }
 
 /** Build the "Date and type" cell: date, description, order link, expiry note (Figma 1:1208). */
-function dateTypeCell(t: CreditTxn, tbody: HTMLElement, nowMs: number): HTMLTableCellElement {
+function dateTypeCell(t: CreditTxn, tbody: HTMLElement, nowMs: number, order: OrderRef | null): HTMLTableCellElement {
   const td = document.createElement('td');
 
   const date = document.createElement('div');
@@ -397,6 +439,7 @@ function renderCredits(d: Credits): void {
   }
 
   const nowMs = Date.now();
+  const orders = readOrderMap();
   tbody.textContent = '';
   txns.forEach((t) => {
     // EARNED always credits, REDEEMED/EXPIRED always debit; ADJUSTED goes either way, so take the
@@ -425,7 +468,7 @@ function renderCredits(d: Credits): void {
     // column then reads as a styling bug instead of missing data. A dash says which it is.
     balance.textContent = t.balance_after_formatted || '—';
 
-    tr.append(dateTypeCell(t, tbody, nowMs), amount, balance);
+    tr.append(dateTypeCell(t, tbody, nowMs, resolveOrder(t, orders)), amount, balance);
     tbody.appendChild(tr);
   });
 
@@ -487,7 +530,9 @@ function qaCredits(): Credits | null {
     order: string | null, expires: string | null, balance: string,
   ): CreditTxn => ({
     id: `qa-${date}`, type, amount: 0, amount_formatted: amount, date, description,
-    order_name: order, order_url: order ? `/account/orders/${order.replace('#', '')}` : null,
+    // An order NAME, as the customer knows it — not the ledger's numeric id. The URL is left null
+    // because only Liquid can produce the tokened one, and the preview has no logged-in customer.
+    order_name: order, order_url: null,
     expires_at: expires, balance_after: 0, balance_after_formatted: balance,
   });
   // A live "Expires on …" row has to sit in the future or it renders as expired, so the two earn
@@ -497,9 +542,9 @@ function qaCredits(): Credits | null {
   // than the frame's tidy "+$5": at 375 a real balance is what pushes the three columns off the
   // panel, so the preview has to show that case, not hide it.
   const transactions = p.get('wb_rows') === '0' ? [] : [
-    row('EARNED', '$2000.00', '2026-06-03', 'Earned from purchase', '#6639365292129', inDays(60), '$2120.00'),
-    row('EXPIRED', '$100.00', '2026-06-02', 'Earned from purchase', '#6535708704865', null, '$120.00'),
-    row('EARNED', '$20.00', '2026-05-03', 'Earned from purchase', '#6579355549793', inDays(30), '$20.00'),
+    row('EARNED', '$2000.00', '2026-06-03', 'Earned from purchase', '#1042', inDays(60), '$2120.00'),
+    row('EXPIRED', '$100.00', '2026-06-02', 'Earned from purchase', '#1038', null, '$120.00'),
+    row('EARNED', '$20.00', '2026-05-03', 'Earned from purchase', '#1031', inDays(30), '$20.00'),
     row('REDEEMED', '$1000.00', '2026-05-02', 'Redeemed at checkout', null, null, '$0.00'),
   ];
   return {

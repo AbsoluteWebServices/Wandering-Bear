@@ -740,7 +740,11 @@ body.no-scroll {
 .wb-credit-history {
     --wb-credit-ink: #000000;
     --wb-credit-muted: #767676;
-    border: 1px solid color-mix(in srgb, var(--color-espresso) 20%, transparent);
+    /* Neutral greys, sampled off the same capture (panel #E3E3E3, rules #E7E7E7). The espresso-tinted
+       borders they replace read brown against the black text this block borrowed. */
+    --wb-credit-border: #E3E3E3;
+    --wb-credit-rule: #E7E7E7;
+    border: 1px solid var(--wb-credit-border);
     border-radius: 8px;
     overflow: hidden;
 }
@@ -782,8 +786,10 @@ body.no-scroll {
 .wb-credit-history__table th,
 .wb-credit-history__table td {
     text-align: left;
-    /* Frame row pitch is 87: four 15px lines plus 27 of padding, split over the row's own edges. */
-    padding: 13px 16px;
+    /* Asymmetric on purpose: 13 above, 8 below. The cell's last line is the muted expiry note, and
+       the 1.5 line-height already leaves half-leading under it, so an equal 13 read as a gap
+       between the note and the rule rather than as the row closing. */
+    padding: 13px 16px 8px;
     vertical-align: top;
 }
 /* Column headers sit a weight above the rows so the header row reads as a header and not as a
@@ -794,7 +800,7 @@ body.no-scroll {
     font-size: 12px;
     line-height: 1;
     color: var(--wb-credit-ink);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-espresso) 20%, transparent);
+    border-bottom: 1px solid var(--wb-credit-rule);
     white-space: nowrap;
 }
 /* The two numeric columns shrink to their content ("width: 1%" + nowrap is the standard way to
@@ -826,7 +832,7 @@ body.no-scroll {
     }
 }
 .wb-credit-history__table tbody td {
-    border-bottom: 1px solid color-mix(in srgb, var(--color-espresso) 12%, transparent);
+    border-bottom: 1px solid var(--wb-credit-rule);
 }
 /* Last row sits on the panel's own border — a second line under it reads as an empty row. Marked
    by account.ts rather than matched with :last-child, because a filter tab can hide the real last
@@ -934,7 +940,7 @@ a.wb-credit-history__order:hover {
     }
     .wb-credit-history__table th,
     .wb-credit-history__table td {
-        padding: 13px 0 13px 11px;
+        padding: 13px 0 8px 11px;
     }
     /* The numeric columns give up their side padding entirely: at 375 the panel is ~303 and
        "Credits balance" alone claims ~100 of it, which pushed "Earned from purchase" onto a second
