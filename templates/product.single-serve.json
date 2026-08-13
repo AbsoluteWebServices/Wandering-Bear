@@ -382,16 +382,16 @@
             "text_background_color": "#f2e6dc",
             "text_background_opacity": 80,
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
-            "title_1": "BEAN QUALITY",
-            "description_1": "Our cold brew is made with a lot of organic, speciality-grade 100% arabica beans for a smooth yet bold coffee shop inspired cup of cold brew",
+            "title_1": "BETTER BEANS",
+            "description_1": "We use the highest quality beans we can source: organic, specialty-grade, 100% Arabica beans to deliver a smooth, bold, coffee shop inspired cold brew you'll crave.",
             "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226584.svg",
-            "title_2": "MORE COFFEE",
-            "description_2": "There’s simply more coffee in our coffee. More beans means you get more flavor and more caffeine.",
+            "title_2": "MORE BEANS",
+            "description_2": "Wandering Bear is made with MORE beans than most brews out there. We start with high quality ingredients, then we add MORE of them. More beans means you get more flavor and more caffeine.",
             "order_mobile_2": 1,
             "icon_3": "shopify://shop_images/Group_1327226583.svg",
-            "title_3": "COLD BREW PROCESS",
-            "description_3": "Our cold-brewing and precision-filtering process ensures our cold brew is always smooth, not bitter or acidic",
+            "title_3": "COLD-BREWED FOR PEAK TASTE",
+            "description_3": "We've refined our cold-brewing and precision-filtering process over a decade to ensure consistent quality with every batch. This process makes Wandering Bear cold brew always smooth, never bitter or acidic.",
             "order_mobile_3": 3
           }
         },
@@ -466,21 +466,21 @@
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226586_4387d08b-9ccc-456b-bb51-886c3448c5b4.svg",
-            "text": "The best premium cold brew latte, at home and on the go!"
+            "text": "Coffee shop quality in a can — just grab one and go."
           }
         },
         "icon_item_w3HbfU": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226587.svg",
-            "text": "Our single servings are meant for ease of use: bring them to the office, to your next AirBnB, or to your friend’s house."
+            "text": "Toss one in your bag, your car, your cooler — it's ready when you are."
           }
         },
         "icon_item_bgBnVE": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226588.svg",
-            "text": "Product is shelf stable before opening and lasts 30 days once opened"
+            "text": "Shelf stable until you're ready — once opened, best enjoyed within 24 hours."
           }
         }
       },
