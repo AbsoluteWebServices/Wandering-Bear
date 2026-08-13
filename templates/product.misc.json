@@ -451,7 +451,7 @@
         "cart_product_slider_fKemiG": {
           "type": "cart_product_slider",
           "settings": {
-            "product": "cold-brew-latte-8-oz-double-latte-mocha",
+            "product": "cold-brew-latte-8oz",
             "title": "Mocha Latte",
             "title_small": "8oz",
             "show_badge": true,
