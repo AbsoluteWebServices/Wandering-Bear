@@ -16,7 +16,7 @@
           "type": "text",
           "name": "Title",
           "settings": {
-            "block_class": "text-[60px]",
+            "block_class": "h1",
             "text": "<h1>GET IN TOUCH</h1>",
             "width": "100%",
             "max_width": "normal",
