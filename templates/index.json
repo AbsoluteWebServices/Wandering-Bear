@@ -190,7 +190,7 @@
           "type": "collection",
           "settings": {
             "collection": "on-tap-cold-brew",
-            "title": "Cold Brew Box",
+            "title": "Cold Brew Boxes",
             "accent_text": "Bestseller!"
           }
         },
@@ -198,7 +198,7 @@
           "type": "collection",
           "settings": {
             "collection": "32oz-cartons",
-            "title": "32oz Cartons",
+            "title": "32oz Multi Serves",
             "accent_text": ""
           }
         },
@@ -206,7 +206,7 @@
           "type": "collection",
           "settings": {
             "collection": "grouped-cold-brew-latte-8oz-cans",
-            "title": "Single Servings",
+            "title": "Single Serves",
             "accent_text": ""
           }
         }
