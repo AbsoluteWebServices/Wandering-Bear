@@ -22,7 +22,7 @@
             "custom_width_mobile": 100,
             "height": "fit",
             "details_position": "flex-start",
-            "gap": 28,
+            "gap": 0,
             "gap_tablet": 0,
             "gap_mobile": 12,
             "sticky_details_desktop": true,
@@ -114,8 +114,8 @@
                   "type": "product-title-bundle",
                   "name": "Product Title Bundle",
                   "settings": {
-                    "product_title": "{{ closest.product.metafields.custom.product_group.value.headline.value }}",
-                    "product_title_small": "{{ closest.product.metafields.custom.product_group.value.size.value }}"
+                    "product_title": "{{ closest.product.title }}",
+                    "product_title_small": "{{ closest.product.metafields.custom.size.value.product_size.value }}"
                   },
                   "blocks": {}
                 },
@@ -124,7 +124,7 @@
                   "name": "Product description",
                   "settings": {
                     "block_class": "product-description",
-                    "text": "{{ closest.product.metafields.custom.product_group.value.description | metafield_tag }}",
+                    "text": "{{ closest.product.description }}",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
