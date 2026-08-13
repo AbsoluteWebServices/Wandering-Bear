@@ -611,7 +611,7 @@
             "background_color": "#fdede0",
             "button_label": "BROWSE AUTOSHIP",
             "button_action": "link",
-            "button_link": "shopify://collections"
+            "button_link": "#shop-autoship"
           }
         },
         "tier_item_xg8KDw": {
