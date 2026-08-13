@@ -33,6 +33,17 @@
       break
     endif
   endfor
+
+  comment
+    Base the member-discount mirror only on eligible lines. Exclude gift cards and membership lines.
+  endcomment
+  assign member_discount_eligible_subtotal = 0
+  for item in cart.items
+    assign discount_title_check = item.title | downcase
+    unless discount_title_check contains 'elite' or discount_title_check contains 'gift card'
+      assign member_discount_eligible_subtotal = member_discount_eligible_subtotal | plus: item.final_line_price
+    endunless
+  endfor
 %}
 
 
@@ -547,9 +558,15 @@
                   assign cart_level_discount = cart_level_discount | plus: cart_discount.total_allocated_amount
                 endfor
 
+                assign discount_title_check = item.title | downcase
+                assign discount_excluded = false
+                if discount_title_check contains 'elite' or discount_title_check contains 'gift card'
+                  assign discount_excluded = true
+                endif
+
                 assign price = item.final_line_price
-                if cart_level_discount > 0 and cart.items_subtotal_price > 0
-                  assign line_discount_share = item.final_line_price | times: cart_level_discount | times: 1.0 | divided_by: cart.items_subtotal_price | round
+                if cart_level_discount > 0 and member_discount_eligible_subtotal > 0 and discount_excluded == false
+                  assign line_discount_share = item.final_line_price | times: cart_level_discount | times: 1.0 | divided_by: member_discount_eligible_subtotal | round
                   assign price = item.final_line_price | minus: line_discount_share
                 endif
 
