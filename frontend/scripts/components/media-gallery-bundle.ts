@@ -160,12 +160,18 @@ export default (Alpine: typeof AlpineType) => {
           this._initSwiperThumbs(thumbsEl)
         }
 
+        // Only loop when the real slide count allows it.
+        const slideCount = mainEl.querySelectorAll(
+          '.swiper-slide:not(.swiper-slide-duplicate)'
+        ).length
+        const enableLoop = slideCount > 2
+
         this.swiper = new Swiper(mainEl, {
           slidesPerView: 1.12,
           centeredSlides: true,
           modules: [Keyboard, Zoom],
           keyboard: true,
-          loop: true,
+          loop: enableLoop,
           spaceBetween: 10,
           zoom: {
             maxRatio: 2,
