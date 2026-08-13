@@ -25,6 +25,7 @@ import '../styles/inveterate.css';
 import '../styles/stay-ai.css';
 import '../styles/gift-card.css';
 import '../styles/landing-pages.css';
+import '../styles/okendo.css';
 
 export {}
 

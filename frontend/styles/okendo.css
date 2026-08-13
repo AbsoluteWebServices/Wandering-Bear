@@ -1,0 +1,15 @@
+/* OKENDO */
+.oke-w,
+.oke-modal {
+  font-family: "Kurdis SemiCondensed", sans-serif !important;
+  --oke-title-fontFamily: "Gothic Condensed", sans-serif !important;
+  --oke-bodyText-fontFamily: "Kurdis SemiCondensed", sans-serif !important;
+  --oke-text-fontFamily: "Kurdis SemiCondensed", sans-serif !important;
+  --oke-button-fontFamily: "Kurdis SemiCondensed", sans-serif !important;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--oke-title-fontFamily) !important;
+  }
+  p, span, a, button, input, textarea, select, option {
+    font-family: var(--oke-text-fontFamily) !important;
+  }
+}

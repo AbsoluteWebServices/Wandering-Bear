@@ -66,3 +66,13 @@
 #chat-button {
     bottom: 80px !important;
 }
+
+.page-title h1 {
+    font-family: var(--font-gothic-condensed) !important;
+    font-weight: 800 !important;
+    font-size: 60px !important;
+
+    @media (max-width: 768px) {
+        font-size: 45px !important;
+    }
+}
