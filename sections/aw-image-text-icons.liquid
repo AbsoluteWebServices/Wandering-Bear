@@ -11,6 +11,8 @@
     assign large_image = section_settings.large_image
     assign large_image_tablet = section_settings.large_image_tablet
     assign large_image_mobile = section_settings.large_image_mobile
+    assign video = section_settings.video
+    assign media_type = section_settings.media_type
 %}
 
 {% capture title_styles %}
@@ -50,8 +52,14 @@
             </div>
             </div>
             <div class="order-1 smd:order-2! smd:pr-7.5 lg:pr-0 md:max-w-[500px] md:ml-auto">
-                {% if large_image != blank %}
-                    {% render 'picture', source: large_image, tablet_source: large_image_tablet, mobile_source: large_image_mobile, class: 'w-full h-full rounded-[5px]', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+                {% if media_type == 'image' %}
+                  {% if large_image != blank %}
+                      {% render 'picture', source: large_image, tablet_source: large_image_tablet, mobile_source: large_image_mobile, class: 'w-full h-full rounded-[5px]', alt: large_image.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy' %}
+                  {% endif %}
+                {% elsif media_type == 'video' %}
+                  {% if video != blank %}
+                    {% render 'video', video: video, class: 'w-full h-full rounded-[5px]', alt: video.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy', video_autoplay: true, video_loop: true, disable_controls: true %}
+                  {% endif %}
                 {% endif %}
             </div>
     </div>
@@ -296,19 +304,44 @@
       "visible_if": "{{ section.settings.title_type == 'image' }}"
     },
     {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media Type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "visible_if": "{{ section.settings.media_type == 'video' }}"
+    },
+    {
       "type": "image_picker",
       "id": "large_image",
-      "label": "Image"
+      "label": "Image",
+      "visible_if": "{{ section.settings.media_type == 'image' }}"
     },
     {
       "type": "image_picker",
       "id": "large_image_tablet",
-      "label": "Image Tablet"
+      "label": "Image Tablet",
+      "visible_if": "{{ section.settings.media_type == 'image' }}"
     },
     {
       "type": "image_picker",
       "id": "large_image_mobile",
-      "label": "Image Mobile"
+      "label": "Image Mobile",
+      "visible_if": "{{ section.settings.media_type == 'image' }}"
     },
 
     {
