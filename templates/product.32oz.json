@@ -505,6 +505,7 @@
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/32oz_BOX_HEADLINE.svg",
+        "media_type": "image",
         "large_image": "shopify://shop_images/02182022_Chelsea-Klye_WANDERING-BEAR_Billboard-Side-Straight-Black-Pour_072-HERO_R1_1_1.jpg",
         "padding-block-start": 95,
         "padding-block-end": 64,
@@ -761,7 +762,7 @@
         "cart_product_slider_nATbyK": {
           "type": "cart_product_slider",
           "settings": {
-            "product": "cold-brew-latte-8oz",
+            "product": "cold-brew-latte-8-oz-double-latte-mocha",
             "title": "Mocha Latte",
             "title_small": "8oz",
             "show_badge": true,
