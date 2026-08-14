@@ -16,7 +16,7 @@
 
 <div
     x-data="diagramToggle(0)"
-    class="aw-diagram-toggle relative spacing-style wb-section-bg{% if template.suffix == 'single-serve' %} mt-12.5 md:mt-14{% endif %}"
+    class="aw-diagram-toggle relative spacing-style wb-section-bg{% if template.suffix == 'single-serve' %} aw-diagram-toggle--single-serve mt-12.5 md:mt-14{% endif %}"
     style="{% render 'section-background', settings: section.settings, part: 'style' %} {% render 'spacing-style', settings: section.settings %}"
 >
     {% render 'section-background', settings: section.settings, part: 'media' %}
@@ -174,7 +174,13 @@
                                     endif
                                 endif
 
-                                assign class = 'md:!mb-0 md:!mt-0 order-4 md:absolute md:left-[75%] md:top-[54%] lg:top-[55%] lg:left-[75%] xl:top-[60%] xl:left-[69%]' | append: class_width
+                            
+                                assign bottom_top = 'lg:top-[55%] xl:top-[60%]'
+                                if template.suffix == 'single-serve'
+                                    assign bottom_top = 'lg:top-[50%] xl:top-[50%]'
+                                endif
+
+                                assign class = 'md:!mb-0 md:!mt-0 order-4 md:absolute md:left-[75%] md:top-[54%] lg:left-[75%] xl:left-[69%] ' | append: bottom_top | append: class_width
                                 assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-4!' | append: icon_class_width
                             %}
                     {% endcase %}
@@ -215,7 +221,11 @@
             {% endcapture %}
 
             <div
-                class="wb-flex flex-col relative {% if title_image != blank and title_type == 'image' or title != blank and title_type == 'text' %}gap-4{% endif %}"
+                class="wb-flex flex-col relative 
+                {% if template.suffix == 'single-serve' %}
+                  md:pb-20 lg:pb-0
+                {% endif %}
+                {% if title_image != blank and title_type == 'image' or title != blank and title_type == 'text' %}gap-4{% endif %}"
             >
                 {% if title_image != blank and title_type == 'image' %}
                     <div class="wb-flex flex-col mx-auto relative z-[1]">
@@ -231,7 +241,11 @@
                     </div>
                 {% endif %}
 
-                <div data-line-wrapper class="wb-flex flex-col lg:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0 mt-2.5 md:mt-0">
+                <div data-line-wrapper class="wb-flex flex-col lg:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0 mt-2.5 md:mt-0
+                {% if template.suffix == 'single-serve' %}
+                  md:pt-20 lg:py-0
+                {% endif %}
+                ">
 
                     <!-- SVG LINES -->
                     <svg class="diagram-lines hidden lg:!block absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">
@@ -287,6 +301,7 @@
                               image: diagram_image,
                               image_mobile: diagram_image_mobile,
                               alt: title_alt,
+                              loading: 'eager',
                               class: 'diagram-image h-full max-h-[355px]! lg:!h-[573px] lg:max-h-[initial]! !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto',
                               img_attributes: 'data-diagram-image'
                             %}
@@ -370,6 +385,21 @@
 
         .aw-diagram-toggle .diagram-text-background {
             display: contents;
+        }
+    }
+
+    /*
+      Tablet (1024–1279px): the can image is width-capped at 355px here, and all
+      three callouts already sit inside it. The only overlap is the following
+      aw-image-text-icons section pulling up -74px onto the diagram's bottom.
+      Below 1024px that pull is already 0 (mobile); this extends the same
+      behaviour to the tablet band so the spokes stay exactly where the design
+      places them, with a clean ~33px gap. Scoped to single-serve and to the
+      section that immediately follows this diagram.
+    */
+    @media screen and (min-width: 1024px) and (max-width: 1279px) {
+        .shopify-section:has(> .aw-diagram-toggle--single-serve) + .shopify-section {
+            margin-top: 0 !important;
         }
     }
 {% endstylesheet %}
