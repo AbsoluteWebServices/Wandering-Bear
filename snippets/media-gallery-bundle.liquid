@@ -27,7 +27,8 @@
         assign simple_template = true
     endif
 
-    if simple_template
+
+    if simple_template or template.suffix == 'single-serve'
         assign media_fit = 'contain'
     else
         assign media_fit = 'cover'

@@ -58,7 +58,23 @@
                   {% endif %}
                 {% elsif media_type == 'video' %}
                   {% if video != blank %}
-                    {% render 'video', video: video, class: 'w-full h-full rounded-[5px]', alt: video.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy', video_autoplay: true, video_loop: true, disable_controls: true %}
+                    {% for source in video.sources %}
+                      {% if source.mime_type == 'video/mp4' %}
+                          <video
+                              class="h-full w-full object-cover lg:rounded-[5px]"
+                              autoplay
+                              muted
+                              loop
+                              playsinline
+                              webkit-playsinline
+                              preload="auto"
+                          >
+                              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                          </video>
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}  
+                    {% comment %} {% render 'video', video: video, class: 'w-full h-full rounded-[5px]', alt: video.alt, width: 1920, height: 1080, preload: 'lazy', loading: 'lazy', video_autoplay: true, video_loop: true, disable_controls: true %} {% endcomment %}
                   {% endif %}
                 {% endif %}
             </div>
