@@ -1139,3 +1139,27 @@ a.wb-credit-history__order:hover {
         font-size: 22px;
     }
 }
+
+/* Phone: the row separator stops 5px short of each edge instead of running the full width, so the
+   rows read as one list rather than as boxed cells. Drawn as a gradient on the ROW, not a border on
+   the cells — a border always spans its whole cell and cannot be inset. The row that closes the
+   table keeps no line, same as the border version (account.ts marks it). */
+@media (max-width: 749px) {
+    .wb-credit-history__table tbody td {
+        border-bottom: 0;
+    }
+    .wb-credit-history__table tbody tr {
+        background-image: linear-gradient(
+            to right,
+            transparent 0 5px,
+            var(--wb-credit-rule) 5px calc(100% - 5px),
+            transparent calc(100% - 5px)
+        );
+        background-repeat: no-repeat;
+        background-size: 100% 1px;
+        background-position: bottom left;
+    }
+    .wb-credit-history__table tbody tr[data-wb-last] {
+        background-image: none;
+    }
+}
