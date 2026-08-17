@@ -14,6 +14,7 @@
       "blocks": {
         "button_9fyEpA": {
           "type": "button",
+          "disabled": true,
           "settings": {
             "style": "secondary-gold",
             "label": "Shop Lattes",
@@ -23,10 +24,9 @@
         },
         "button_TMm9rL": {
           "type": "button",
-          "disabled": true,
           "settings": {
-            "style": "secondary-cream",
-            "label": "Shop Cold Brew",
+            "style": "secondary-gold",
+            "label": "SHOP ALL",
             "link": "shopify://collections/on-tap-cold-brew"
           }
         }
