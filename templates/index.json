@@ -16,8 +16,8 @@
           "type": "button",
           "disabled": true,
           "settings": {
-            "style": "secondary-gold",
-            "label": "Shop Lattes",
+            "style": "secondary-cream",
+            "label": "Shop ALL",
             "link": "shopify://collections/single-serve",
             "badge": "shopify://shop_images/NEW_BADGE_7969493a-55da-47d4-9826-d2c57b89e2c5.svg"
           }
@@ -25,7 +25,7 @@
         "button_TMm9rL": {
           "type": "button",
           "settings": {
-            "style": "secondary-gold",
+            "style": "secondary-cream",
             "label": "SHOP ALL",
             "link": "shopify://collections/on-tap-cold-brew"
           }
