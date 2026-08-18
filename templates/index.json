@@ -39,7 +39,7 @@
       "settings": {
         "color_scheme": "",
         "foreground_image": "shopify://shop_images/WB_FRIDGE_GROUP_FULL_SOLO_1.png",
-        "foreground_image_mobile": "shopify://shop_images/WB_FRIDGE_GROUP_FULL_SOLO.png",
+        "foreground_image_mobile": "shopify://shop_images/WB_FRIDGE_GROUP_MOBILE.png",
         "background_image": "shopify://shop_images/Latte_section.png",
         "background_image_tablet": "shopify://shop_images/Latte_section.png",
         "background_image_mobile": "shopify://shop_images/Latte_section.png",
@@ -265,7 +265,7 @@
         "title_alt": "Our members unlock better prices with every sip",
         "subtitle": "<p>Start earning $5 for every $50 spent. The best part is – you can join for free.  <br/>Upgrade to VIP or Elite anytime for exclusive flavors, bigger discounts, and more perks.</p>",
         "foreground_image": "shopify://shop_images/Group_1327226595.svg",
-        "foreground_image_mobile": "shopify://shop_images/Group_1327226610.svg",
+        "foreground_image_mobile": "shopify://shop_images/Group_1327226595.svg",
         "description": "Join 100k+ members earning rewards with every order.",
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
