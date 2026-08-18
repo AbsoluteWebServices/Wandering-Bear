@@ -47,7 +47,7 @@
                 {% endif %}
             </div>
             {% if foreground_image != blank or foreground_image_mobile != blank %}
-                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'relative min-h-full left-0 bottom-0 md:static w-fit h-full object-contain z-1 object-bottom md:mt-12', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'relative min-h-full left-0 bottom-0 md:static w-full lg:w-auto h-full object-contain z-1 object-bottom md:mt-12', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
                 {% endif %}
                
             </div>
