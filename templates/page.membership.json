@@ -29,7 +29,7 @@
         "badge_offset_x": 0,
         "badge_offset_y": 0,
         "badge_rotate": 0,
-        "description": "<p>Earn $5 in credit for every $50 you spend. Join for free, then level up to VIP or Elite for exclusive flavors, bigger discounts, and perks worth waking up for.</p>",
+        "description": "<p>Earn $5 in credit for every $50 you spend per order. Join for free, then level up to VIP or Elite for perks worth waking up for, including exclusive flavor access and bigger discounts. </p>",
         "description_color": "#ffffff",
         "join_button_label": "JOIN FOR FREE",
         "join_button_style": "secondary",
@@ -73,7 +73,7 @@
           "type": "step",
           "settings": {
             "title": "Sign up",
-            "description": "<p>Join for free in seconds and get $5 off your first order. Just for signing up!</p>",
+            "description": "<p>Join for free in seconds and get $5 off your first order. </p>",
             "action_type": "join",
             "join_label": "JOIN FOR FREE",
             "custom_button_label": "",
@@ -87,7 +87,7 @@
           "type": "step",
           "settings": {
             "title": "Sip & Earn",
-            "description": "<p>Earn $5 for every $50 you spend. The more you sip, the more you earn! \\nPlus, VIP and Elite members can access exclusive flavors and even bigger discounts.</p>",
+            "description": "<p>Earn $5 for every $50 you spend per order, regardless of which tier you're in. The more you sip, the more you save!</p>",
             "action_type": "link",
             "join_label": "JOIN FOR FREE",
             "custom_button_label": "",
@@ -119,7 +119,7 @@
       ],
       "custom_css": [
         "@media screen and (min-width: 750px) {.aw-how-it-works__card:nth-child(3) .rte {max-width: 400px; }}",
-        "@media screen and (max-width: 749px) {.aw-how-it-works__card:nth-child(2) .aw-how-it-works__description br {display: none;} .aw-how-it-works__card:nth-child(2) .aw-how-it-works__description, .aw-how-it-works__card:nth-child(2) .aw-how-it-works__action {padding-inline: 18px;}}"
+        "@media screen and (max-width: 749px) {.aw-how-it-works__card:nth-child(2) .aw-how-it-works__description br {display: none; } .aw-how-it-works__card:nth-child(2) .aw-how-it-works__description, .aw-how-it-works__card:nth-child(2) .aw-how-it-works__action {padding-inline: 18px; }}"
       ],
       "settings": {
         "subtitle": "REWARDS, MADE RIDICULOUSLY EASY",
