@@ -696,7 +696,7 @@
                       >
                         <span class="font-kurdis-semi-condensed text-bear-black font-bold uppercase text-lg">{{- item.product.title -}}</span>
                         <br>
-                        {% unless item.title contains 'Concentrate' or item.variant.title == 'Default Title' %}
+                        {% unless or item.variant.title == 'Default Title' %}
                           <span class="font-kurdis-semi-condensed text-espresso text-base">{{ item.variant.title }}</span>
                         {% endunless %}
                       </a>
