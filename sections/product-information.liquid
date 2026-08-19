@@ -200,6 +200,7 @@
   endif
 -%}
 <div
+id="shop-autoship"
 {% unless uses_default_variant_wiring %}
   x-data="productForm({{ product.id }},{{ product.selected_or_first_available_variant.id }},{% if selling_plan_id %}{{ selling_plan_id }}{% else %}null{% endif %}, {{ landing_page }})"
 {% endunless %}
