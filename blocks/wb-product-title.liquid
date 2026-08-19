@@ -12,7 +12,7 @@
     {% assign product_title = '<p role="heading" aria-level="3"><span class="!font-bold">' | append: closest.product.title | append: '</span></p>' %}
   {% endif %}
   <a
-    class="contents user-select-text font-bold wb-product-card-title"
+    class="contents user-select-text font-bold product-title"
     ref="productTitleLink"
     href="{{ closest.product.selected_or_first_available_variant.url }}"
   >
