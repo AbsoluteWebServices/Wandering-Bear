@@ -197,7 +197,7 @@
                     <span x-text="variantPriceFormatted('{{ product_option_value.variant.id }}', '/{{ box_text }}')" class="text-xs text-bear-black font-kurdis-semi-condensed font-semibold">{{- option_price | money -}}/{{ box_text }}</span>
                     <span x-text="{% if savings_display == 'amount' %}variantSavingsAmountFormatted{% else %}variantSavingsFormatted{% endif %}('{{ product_option_value.variant.id }}')"
                     :class="variantSavingsPercentage('{{ product_option_value.variant.id }}') > 0 ? '!block' : '!hidden'"
-                    class="font-kurdis-semi-condensed font-semibold text-kraft !text-xs{% if option_savings > 0 %}block{% else %}hidden{% endif %}">{{- option_savings_text | escape -}}</span>
+                    class="font-kurdis-semi-condensed font-semibold text-kraft !text-xs {% if option_savings > 0 %}block{% else %}hidden{% endif %}">{{- option_savings_text | escape -}}</span>
                   </div>
               </label>
             {%- endfor -%}
