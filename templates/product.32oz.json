@@ -1176,7 +1176,7 @@
           "name": "WB Product Card",
           "settings": {
             "product": "cold-brew-8-oz-can",
-            "product_card_gap": 4,
+            "product_card_gap": 12,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "width": "fill",
