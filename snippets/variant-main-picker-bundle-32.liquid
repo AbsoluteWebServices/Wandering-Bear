@@ -161,13 +161,13 @@
                  type="radio" name="bundle-qty" id="bundle-qty-{{ i }}" value="{{ qty }}" {% if forloop.first %}checked{% endif %}>
                 <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-qty-{{ i }}">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">{{ qty }} Cartons</span>
-                  <span x-show="purchaseOption === 'autoship'" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
-                  <span x-cloak x-show="purchaseOption !== 'autoship'" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ otp_price | money }}/carton</span>
+                  <span x-show="purchaseOption === 'autoship' || hasEliteItem" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
+                  <span x-cloak x-show="purchaseOption !== 'autoship' && !hasEliteItem" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ otp_price | money }}/carton</span>
                   {% if autoship_savings_raw > 0 %}
-                    <span x-show="purchaseOption === 'autoship'" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ autoship_savings }}</span>
+                    <span x-show="purchaseOption === 'autoship' || hasEliteItem" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ autoship_savings }}</span>
                   {% endif %}
                   {% if otp_savings_raw > 0 %}
-                    <span x-cloak x-show="purchaseOption !== 'autoship'" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ otp_savings }}</span>
+                    <span x-cloak x-show="purchaseOption !== 'autoship' && !hasEliteItem" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ otp_savings }}</span>
                   {% endif %}
                 </label>
             </fieldset>

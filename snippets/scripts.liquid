@@ -310,4 +310,11 @@
       name: '{{ template }}',
     },
   };
+
+  // Membership (Elite) product identity, consumed by the global `cart` Alpine store
+  // to track whether the cart contains a membership product.
+  window.WB_MEMBERSHIP = {
+    productId: {{ settings.elite_product.id | default: 'null' }},
+    variantId: {{ settings.elite_product.selected_or_first_available_variant.id | default: 'null' }},
+  };
 </script>

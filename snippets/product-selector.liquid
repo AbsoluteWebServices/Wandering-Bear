@@ -196,7 +196,7 @@
           A subscription (purchaseOption === 'autoship') — like VIP/Elite membership —
           unlocks the flavor so it can be added to the bundle.
         {%- endcomment -%}
-        <div x-show="purchaseOption !== 'autoship'" x-cloak class="wb-flex justify-end items-center">
+        <div x-show="purchaseOption !== 'autoship' && !hasEliteItem" x-cloak class="flex justify-end items-center">
           <button
             @click.prevent.stop="$dispatch('modal-open', { modal: 'membership' })"
             class="group h-10! w-20! flex flex-nowrap justify-center items-center relative whitespace-nowrap cursor-pointer shadow-button"
@@ -213,7 +213,7 @@
             </div>
           </button>
         </div>
-        <div x-show="purchaseOption === 'autoship'" class="contents">
+        <div x-show="purchaseOption === 'autoship' || hasEliteItem" class="contents">
           {{ add_to_bundle_buttons }}
         </div>
       {% elsif is_oos %}

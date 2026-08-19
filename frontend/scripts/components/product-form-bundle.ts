@@ -33,6 +33,10 @@ export default (Alpine: AlpineType) => {
         get qtyLimitReached() {
           return this.bundleSize >= this.qtyLimit;
         },
+
+        get hasEliteItem() {
+          return Alpine.store('cart').hasMembership;
+        },
         
         get totalPrice() {
           let totalOriginalPrice = 0;

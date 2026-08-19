@@ -124,6 +124,37 @@ const init = async () => {
     Alpine.plugin(ReviewCarouselBlock)
     Alpine.plugin(NutritionFacts)
 
+    // Global cart store: `hasMembership` tracks whether the cart contains the membership
+    // (Elite) product. Reactive in Alpine (`$store.cart.hasMembership`) and readable from
+    // plain JS (`Alpine.store('cart').hasMembership`). Refreshed on every `cart:update`.
+    Alpine.store('cart', {
+        hasMembership: false,
+        membershipProductId: (window.WB_MEMBERSHIP && window.WB_MEMBERSHIP.productId) || null,
+
+        init() {
+            this.refresh()
+            document.addEventListener('cart:update', () => this.refresh())
+        },
+
+        async refresh() {
+            try {
+                const cart = await fetch('/cart.js', { headers: { Accept: 'application/json' } }).then((r) => r.json())
+                this.hasMembership = this.detectMembership(cart)
+            } catch {
+                /* cart unreachable — keep the previous value */
+            }
+        },
+
+        detectMembership(cart) {
+            const items = Array.isArray(cart && cart.items) ? cart.items : []
+            const pid = this.membershipProductId
+            return items.some((item) =>
+                (pid != null && Number(item.product_id) === Number(pid)) ||
+                /membership/i.test(item.product_title || item.title || '')
+            )
+        },
+    })
+
     Alpine.start()
     window.Alpine = Alpine
 
