@@ -629,7 +629,7 @@
           "name": "WB Product Card",
           "settings": {
             "product": "extra-strong-cold-brew-coffee-32oz-straight-black",
-            "product_card_gap": 4,
+            "product_card_gap": 12,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "width": "fill",
@@ -771,7 +771,7 @@
           "name": "WB Product Card",
           "settings": {
             "product": "cold-brew-latte-8-oz-double-latte-mocha",
-            "product_card_gap": 4,
+            "product_card_gap": 12,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "width": "fill",
@@ -913,7 +913,7 @@
           "name": "WB Product Card",
           "settings": {
             "product": "3-1-coffee-concentrate",
-            "product_card_gap": 4,
+            "product_card_gap": 12,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "width": "fill",
@@ -1055,7 +1055,7 @@
           "name": "WB Product Card",
           "settings": {
             "product": "cold-brew-8-oz-can",
-            "product_card_gap": 4,
+            "product_card_gap": 12,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "width": "fill",
