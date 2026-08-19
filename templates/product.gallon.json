@@ -423,7 +423,7 @@
       ],
       "name": "Okendo Reviews Widget",
       "settings": {
-        "product": ""
+        "product": "{{ product }}"
       }
     },
     "aw_member_comparison_EAjQ8J": {
