@@ -123,7 +123,7 @@
                     ref="cards[]"
                   >
                     {% # theme-check-disable %}
-                    {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product, collection_image: true %}
+                    {% content_for 'block', type: '_wb-product-card', id: 'product-card', closest.product: product, collection_image: true %}
                     {% # theme-check-enable %}
                   </li>
                   {% assign card_index = card_index | plus: 1 %}
@@ -165,7 +165,7 @@
               ref="cards[]"
             >
               {% # theme-check-disable %}
-              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+              {% content_for 'block', type: '_wb-product-card', id: 'product-card', closest.product: product %}
               {% # theme-check-enable %}
             </li>
             {% assign card_index = card_index | plus: 1 %}

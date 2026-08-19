@@ -21,7 +21,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.css": {
-    "file": "wb-main.25hzK_aY.css",
+    "file": "wb-main.BaFXW16Z.css",
     "name": "main",
     "names": [
       "main.css"
@@ -30,7 +30,7 @@
     "isEntry": true
   },
   "frontend/entrypoints/main.js": {
-    "file": "wb-main.C5sni84O.js",
+    "file": "wb-main.DUTzaprF.js",
     "name": "main",
     "src": "frontend/entrypoints/main.js",
     "isEntry": true,
@@ -67,7 +67,7 @@
       "frontend/scripts/components/nutrition-facts.ts"
     ],
     "css": [
-      "wb-main.QlGesGmY.css"
+      "wb-main.KmOnsa5T.css"
     ]
   },
   "frontend/scripts/components/accordion.ts": {
@@ -140,7 +140,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/media-gallery-bundle.ts": {
-    "file": "wb-media-gallery-bundle.COHqQJpn.js",
+    "file": "wb-media-gallery-bundle.CRPwCFDT.js",
     "name": "media-gallery-bundle",
     "src": "frontend/scripts/components/media-gallery-bundle.ts",
     "isDynamicEntry": true,
@@ -199,7 +199,7 @@
     "isDynamicEntry": true
   },
   "frontend/scripts/components/productsSlider.ts": {
-    "file": "wb-productsSlider.DsplAbv2.js",
+    "file": "wb-productsSlider.DoGHvqxQ.js",
     "name": "productsSlider",
     "src": "frontend/scripts/components/productsSlider.ts",
     "isDynamicEntry": true,
@@ -210,7 +210,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarousel.ts": {
-    "file": "wb-reviewCarousel.PW4ggeKO.js",
+    "file": "wb-reviewCarousel.ClU1Y5ES.js",
     "name": "reviewCarousel",
     "src": "frontend/scripts/components/reviewCarousel.ts",
     "isDynamicEntry": true,
@@ -221,7 +221,7 @@
     ]
   },
   "frontend/scripts/components/reviewCarouselBlock.ts": {
-    "file": "wb-reviewCarouselBlock.49JlkTi_.js",
+    "file": "wb-reviewCarouselBlock.nhCqivrT.js",
     "name": "reviewCarouselBlock",
     "src": "frontend/scripts/components/reviewCarouselBlock.ts",
     "isDynamicEntry": true,
@@ -232,7 +232,7 @@
     ]
   },
   "frontend/scripts/components/swiperSlider.ts": {
-    "file": "wb-swiperSlider.B5pHmIbH.js",
+    "file": "wb-swiperSlider.B7Q8ow6e.js",
     "name": "swiperSlider",
     "src": "frontend/scripts/components/swiperSlider.ts",
     "isDynamicEntry": true,

@@ -1,0 +1,369 @@
+{%- doc -%}
+  Intended for use in a block similar to the text block.
+
+  @param {string} [class] - custom class to define in addition to text-block classes
+  @param {string} [fallback_text] - fallback text if settings.text does not exist
+  @param {object} [block] - The block object
+  @param {string} [width] - width of the text block
+  @param {string} [font_weight] - font weight of the text block
+{%- enddoc -%}
+
+{% liquid
+  assign block_settings = block.settings
+  assign plain_text = block_settings.text | strip_newlines | strip
+  assign visible_text = plain_text | strip_html
+  assign text_width = width | default: block_settings.width
+  assign mobile_alignment = block_settings.alignment_mobile | default: block_settings.alignment
+  assign mobile_preset = block_settings.type_preset_mobile | default: ''
+  assign mobile_custom_enabled = false
+  if mobile_preset == 'custom'
+    assign mobile_custom_enabled = true
+  endif
+
+  if block_settings.font_size contains 'heading-lg' or block_settings.font_size contains 'heading-xl'
+    assign type = 'display'
+  elsif block_settings.font_size contains 'heading'
+    assign type = 'heading'
+  else
+    assign type = 'body'
+  endif
+  if block_settings.type_preset == 'rte' or block_settings.type_preset == 'paragraph'
+    assign is_rte = true
+  endif
+
+  capture text_block_classes
+    if text_width == '100%'
+      echo 'text-block--align-' | append: block_settings.alignment
+      echo ' text-block--align-mobile-' | append: mobile_alignment
+      if block_settings.max_width == 'none'
+        echo ' text-block--full-width '
+      endif
+    endif
+    if mobile_preset != blank
+      echo ' text-block--mobile-' | append: mobile_preset
+    endif
+    if mobile_custom_enabled
+      echo ' custom-mobile-typography '
+    endif
+    if block_settings.type_preset == 'custom'
+      echo ' custom-typography '
+      if block_settings.font_size != ''
+        echo ' custom-font-size '
+      endif
+      if block_settings.color != ''
+        echo ' custom-color '
+      endif
+    endif
+    if block_settings.font_family != blank or block_settings.font_family_mobile != blank
+      echo ' text-block--font-family-override '
+    endif
+    if block_settings.background
+      echo ' text-block--background '
+    endif
+    if is_rte
+      echo ' rte '
+    endif
+  endcapture
+%}
+
+{% capture attributes %}
+  class="{{ class }} {{ block_settings.block_class }} spacing-style text-block text-block--{{ block.id }} {{ block_settings.type_preset }}
+    {{ text_block_classes }}
+  "
+
+  style="
+    {% render 'spacing-style', settings: block_settings %}
+    {% render 'typography-style', settings: block_settings %}
+    {% if block_settings.font_weight != blank %}--font-weight: {{ block_settings.font_weight }};{% endif %}
+    {% if block_settings.font_family != blank %}--font-family-override: {{ block_settings.font_family }};{% endif %}
+    {% if block_settings.font_family_mobile != blank %}--font-family-override-mobile: {{ block_settings.font_family_mobile }};{% endif %}
+    --width: {{ text_width }};
+    --max-width: var(--max-width--{{ type }}-{{ block_settings.max_width }});
+    {% if text_width == "100%" %}
+      --text-align: {{ block_settings.alignment }};
+      --text-align-mobile: {{ mobile_alignment }};
+    {% endif %}
+    {% if mobile_custom_enabled %}
+      {% if block_settings.font_mobile != blank %}--font-family-mobile: {{ block_settings.font_mobile }};{% endif %}
+      {% if block_settings.font_size_mobile != blank %}--font-size-mobile: {{ block_settings.font_size_mobile }};{% endif %}
+      {% if block_settings.line_height_mobile != blank %}--line-height-mobile: var(--line-height--{{ type }}-{{ block_settings.line_height_mobile }});{% endif %}
+      {% if block_settings.letter_spacing_mobile != blank %}--letter-spacing-mobile: var(--letter-spacing--{{ type }}-{{ block_settings.letter_spacing_mobile }});{% endif %}
+      {% if block_settings.case_mobile != blank %}--text-transform-mobile: {{ block_settings.case_mobile }};{% endif %}
+      {% if block_settings.wrap_mobile != blank %}--text-wrap-mobile: {{ block_settings.wrap_mobile }};{% endif %}
+      {% if block_settings.color_mobile != blank %}--color-mobile: {{ block_settings.color_mobile }};{% endif %}
+    {% endif %}
+    {% if block_settings.background %}
+      --text-background-color: {{ block_settings.background_color | default: 'rgb(255 255 255 / 1.0)' }};
+      --text-corner-radius: {{ block_settings.corner_radius }}px;
+      --text-padding: max(var(--padding-2xs), calc((var(--text-corner-radius) + var(--padding-xs)) * (1 - cos(45deg))));
+    {% endif %}
+  "
+
+  {{ block.shopify_attributes }}
+{% endcapture %}
+
+{% liquid
+  # {{ attributes }} must be on the immediate HTML parent of the text to preserve
+  # the click-to-edit connection in the theme editor. Any break between the text,
+  # including if-statements, will break the connection.
+
+  assign element = 'div'
+  if is_rte
+    assign element = 'rte-formatter'
+  endif
+%}
+
+{% if fallback_text != blank and visible_text == blank %}
+  <div {{ attributes | strip_newlines | strip }}>
+    {{ fallback_text }}
+  </div>
+{% elsif plain_text != blank %}
+  <{{ element }} {{ attributes | strip_newlines | strip }}>
+    {{ block.settings.text }}
+  </{{ element }}>
+{% endif %}
+
+{% stylesheet %}
+  :root {
+    --text-align-default: left;
+  }
+
+  [style*='--horizontal-alignment: center'] .text-block {
+    --text-align-default: center;
+  }
+
+  [style*='--horizontal-alignment: flex-end'] .text-block {
+    --text-align-default: right;
+  }
+
+  [style*='--horizontal-alignment: flex-start'] > .text-block {
+    --text-align-default: left;
+  }
+
+  [style*='--horizontal-alignment: center'] > .text-block {
+    --text-align-default: center;
+  }
+
+  [style*='--horizontal-alignment: flex-end'] > .text-block {
+    --text-align-default: right;
+  }
+
+  .text-block {
+    width: var(--width);
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: var(--horizontal-alignment);
+  }
+
+  .text-block > * {
+    width: var(--width);
+    max-inline-size: min(100%, var(--max-width, 100%));
+    text-align: var(--text-align, var(--text-align-default));
+    text-wrap: var(--text-wrap);
+  }
+
+  .text-block:not(.text-block--full-width).rte,
+  .text-block:not(.text-block--full-width).paragraph {
+    /* Safari doesn't support pretty, so fallback to balance */
+    text-wrap: balance;
+    text-wrap: pretty;
+  }
+
+  .text-block:not(.text-block--full-width):is(.h1, .h2, .h3, .h4, .h5, .h6) {
+    text-wrap: balance;
+  }
+
+  /* Hide underline unless text is using paragraph styles. */
+  .text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) a {
+    text-decoration-color: transparent;
+  }
+
+  .text-block h1,
+  .text-block.h1 > * {
+    margin-block: var(--font-h1--spacing);
+  }
+
+  .text-block h2,
+  .text-block.h2 > * {
+    margin-block: var(--font-h2--spacing);
+  }
+
+  .text-block h3,
+  .text-block.h3 > * {
+    margin-block: var(--font-h3--spacing);
+  }
+
+  .text-block h4,
+  .text-block.h4 > * {
+    margin-block: var(--font-h4--spacing);
+  }
+
+  .text-block h5,
+  .text-block.h5 > * {
+    margin-block: var(--font-h5--spacing);
+  }
+
+  .text-block h6,
+  .text-block.h6 > * {
+    margin-block: var(--font-h6--spacing);
+  }
+
+  .text-block p,
+  .text-block.p > * {
+    margin-block: var(--font-paragraph--spacing);
+  }
+
+  .text-block > *:first-child {
+    margin-block-start: 0;
+  }
+
+  .text-block > *:last-child {
+    margin-block-end: 0;
+  }
+
+  .text-block--align-center,
+  .text-block--align-center > * {
+    margin-inline: auto;
+  }
+
+  .text-block--align-right,
+  .text-block--align-right > * {
+    margin-inline-start: auto;
+  }
+
+  .text-block--background {
+    background-color: var(--text-background-color);
+    border-radius: var(--text-corner-radius);
+
+    /* To avoid text being cropped when using a border radius we add a minimum padding. */
+    padding-block-start: max(var(--text-padding), var(--padding-block-start, 0));
+    padding-block-end: max(var(--text-padding), var(--padding-block-end, 0));
+    padding-inline-start: max(var(--text-padding), var(--padding-inline-start, 0));
+    padding-inline-end: max(var(--text-padding), var(--padding-inline-end, 0));
+  }
+
+  .custom-color,
+  .custom-color > :is(h1, h2, h3, h4, h5, h6, p, *) {
+    color: var(--color);
+  }
+
+  .text-block--font-family-override > * {
+    font-family: var(--font-family-override);
+  }
+
+  .text-block--font-weight-bold > * {
+    font-weight: var(--font-weight) !important;
+  }
+
+  .text-block--font-weight-normal > * {
+    font-weight: var(--font-weight);
+  }
+
+  @media screen and (max-width: 749px) {
+    .text-block {
+      --text-align: var(--text-align-mobile, var(--text-align-default));
+    }
+
+    .text-block--align-mobile-center,
+    .text-block--align-mobile-center > * {
+      margin-inline: auto;
+    }
+
+    .text-block--align-mobile-right,
+    .text-block--align-mobile-right > * {
+      margin-inline-start: auto;
+      margin-inline-end: 0;
+    }
+
+    .text-block--align-mobile-left,
+    .text-block--align-mobile-left > * {
+      margin-inline-start: 0;
+      margin-inline-end: auto;
+    }
+
+    .text-block--mobile-paragraph > * {
+      font-family: var(--font-paragraph--family);
+      font-style: var(--font-paragraph--style);
+      font-weight: var(--font-paragraph--weight);
+      font-size: var(--font-paragraph--size);
+      line-height: var(--font-paragraph--line-height);
+      letter-spacing: var(--font-paragraph--letter-spacing);
+      text-transform: var(--font-paragraph--case);
+    }
+
+    .text-block--mobile-h1 > * {
+      font-family: var(--font-h1--family);
+      font-style: var(--font-h1--style);
+      font-weight: var(--font-h1--weight);
+      font-size: var(--font-h1--size);
+      line-height: var(--font-h1--line-height);
+      letter-spacing: var(--font-h1--letter-spacing);
+      text-transform: var(--font-h1--case);
+    }
+
+    .text-block--mobile-h2 > * {
+      font-family: var(--font-h2--family);
+      font-style: var(--font-h2--style);
+      font-weight: var(--font-h2--weight);
+      font-size: var(--font-h2--size);
+      line-height: var(--font-h2--line-height);
+      letter-spacing: var(--font-h2--letter-spacing);
+      text-transform: var(--font-h2--case);
+    }
+
+    .text-block--mobile-h3 > * {
+      font-family: var(--font-h3--family);
+      font-style: var(--font-h3--style);
+      font-weight: var(--font-h3--weight);
+      font-size: var(--font-h3--size);
+      line-height: var(--font-h3--line-height);
+      letter-spacing: var(--font-h3--letter-spacing);
+      text-transform: var(--font-h3--case);
+    }
+
+    .text-block--mobile-h4 > * {
+      font-family: var(--font-h4--family);
+      font-style: var(--font-h4--style);
+      font-weight: var(--font-h4--weight);
+      font-size: var(--font-h4--size);
+      line-height: var(--font-h4--line-height);
+      letter-spacing: var(--font-h4--letter-spacing);
+      text-transform: var(--font-h4--case);
+    }
+
+    .text-block--mobile-h5 > * {
+      font-family: var(--font-h5--family);
+      font-style: var(--font-h5--style);
+      font-weight: var(--font-h5--weight);
+      font-size: var(--font-h5--size);
+      line-height: var(--font-h5--line-height);
+      letter-spacing: var(--font-h5--letter-spacing);
+      text-transform: var(--font-h5--case);
+    }
+
+    .text-block--mobile-h6 > * {
+      font-family: var(--font-h6--family);
+      font-style: var(--font-h6--style);
+      font-weight: var(--font-h6--weight);
+      font-size: var(--font-h6--size);
+      line-height: var(--font-h6--line-height);
+      letter-spacing: var(--font-h6--letter-spacing);
+      text-transform: var(--font-h6--case);
+    }
+
+    .text-block--mobile-custom > * {
+      font-family: var(--font-family-mobile, var(--font-family));
+      font-size: var(--font-size-mobile, var(--font-size));
+      line-height: var(--line-height-mobile, var(--line-height));
+      letter-spacing: var(--letter-spacing-mobile, var(--letter-spacing));
+      text-transform: var(--text-transform-mobile, var(--text-transform));
+      text-wrap: var(--text-wrap-mobile, var(--text-wrap));
+      color: var(--color-mobile, var(--color));
+    }
+
+    .text-block--font-family-override > * {
+      font-family: var(--font-family-override-mobile, var(--font-family-override));
+    }
+  }
+{% endstylesheet %}
