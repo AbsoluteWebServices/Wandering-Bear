@@ -160,7 +160,7 @@
           "settings": {
             "title": "Free Member",
             "subtitle": "Sign up and start earning for free",
-            "description": "<p><strong>What's Included:</strong></p><ul><li>Get $5 off your first order</li><li>Earn $5 for every $50 spent</li></ul>",
+            "description": "<p><strong>What's Included:</strong></p><ul><li>Get $5 off your first order</li><li>Earn $5 for every $50 you spend per order</li></ul>",
             "background_color": "#FAF2ED",
             "button_label": "JOIN FOR FREE",
             "button_action": "join",
@@ -172,7 +172,7 @@
           "settings": {
             "title": "VIP Member",
             "subtitle": "Sign up for autoship on any product or spend $250 annually to join.",
-            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship discount on all orders</li><li>VIP Customer Service</li></ul>",
+            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free Member perks plus...</strong></li><li>Access exclusive flavors</li><li>Autoship pricing on all orders</li><li>VIP Customer Service</li></ul>",
             "background_color": "#FDEDE0",
             "button_label": "BROWSE AUTOSHIP",
             "button_action": "link",
@@ -183,8 +183,8 @@
           "type": "tier_item",
           "settings": {
             "title": "Elite Member",
-            "subtitle": "Pay $25 or spend $250 annually to join",
-            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free & VIP Member perks plus...</strong></li><li>Additional 5% off every order</li><li>Early access to sales and launches</li><li>Anniversary rewards</li></ul>",
+            "subtitle": "Pay $25 or spend $750 annually to join",
+            "description": "<p><strong>What's Included:</strong></p><ul><li><strong>All Free & VIP Member perks plus...</strong></li><li>Additional 5% off every order</li><li>Access to Exclusive Flavors and sales</li><li>$10 Anniversary Credit</li><li>Elite Customer Service</li></ul>",
             "background_color": "linear-gradient(85deg, rgba(234, 204, 179, 1) 39.27%, rgba(241, 228, 216, 1) 56.87%, rgba(234, 204, 179, 1) 78.36%)",
             "button_label": "ADD ELITE · $25",
             "button_action": "elite_add_to_cart",
@@ -253,7 +253,7 @@
       ],
       "settings": {
         "color_scheme": "",
-        "title": "Join XX+ members earning rewards with every order.",
+        "title": "Join 100,000 members earning rewards with every order.",
         "title_color": "#f4ece5",
         "font_size": 25,
         "font_size_mobile": 25,
