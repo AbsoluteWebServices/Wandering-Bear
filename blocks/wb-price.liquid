@@ -38,12 +38,34 @@
 
 {% assign product_data = product_resource.metafields.custom.product_group.value %}
 {% assign multi_unit_quantity = product_data.multi_unit_product_quantity %}
+{% assign last_variant_index = product_resource.variants.size | minus: 1 %}
+
+
+{%- liquid
+  # Minimum price across all variants with the Autoship selling plan applied.
+  # Shopify's `allocation.price` is already the discounted per-allocation price,
+  # matching the convention in snippets/purchase-option-selector.liquid.
+  # Falls back to the regular price_min when the product has no Autoship plan.
+  assign autoship_price_min = nil
+  for variant in product_resource.variants
+    for allocation in variant.selling_plan_allocations
+      if allocation.selling_plan.name contains '1 Month'
+        if autoship_price_min == nil or allocation.price < autoship_price_min
+          assign autoship_price_min = allocation.price
+        endif
+      endif
+    endfor
+  endfor
+  if autoship_price_min == nil
+    assign autoship_price_min = product_resource.price_min
+  endif
+-%}
 
   <product-price>
     {% if multi_unit_quantity > 1 %}
-      <span class="price">{{ multi_unit_quantity }} Pack from {{ product_resource.price_min | money }}</span>
+      <span class="price">{{ multi_unit_quantity }} Pack from {{ autoship_price_min | money }}</span>
     {% else %}
-      <span class="price">From {{ product_resource.price_min | money }}</span>
+      <span class="price">From {{ autoship_price_min | money }}</span>
     {% endif %}
   </product-price>
 {% schema %}
