@@ -885,7 +885,7 @@
           "name": "WB Product Card",
           "settings": {
             "product": "cold-brew-8-oz-can",
-            "product_card_gap": 4,
+            "product_card_gap": 8,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "width": "fill",
@@ -1030,7 +1030,7 @@
           "name": "WB Product Card",
           "settings": {
             "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
-            "product_card_gap": 4,
+            "product_card_gap": 8,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "width": "fill",
