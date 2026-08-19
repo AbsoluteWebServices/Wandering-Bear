@@ -91,6 +91,25 @@
     assign col_width = 121
   endif
 
+  ## A 32oz-style multi-serve bundle shows the per-carton variety indicator, not the generic
+  ## tier header. Detect it by the per-carton bundle_unit model (a variant references a
+  ## bundle_unit) OR the legacy handle, since group.collection_handle may not be '32oz-bundle'.
+  assign is_multi_serve = false
+  if collection.handle == '32oz-bundle'
+    assign is_multi_serve = true
+  endif
+  for bundle_check_product in collection.products
+    for bundle_check_variant in bundle_check_product.variants
+      if bundle_check_variant.metafields.custom.bundle_unit != blank
+        assign is_multi_serve = true
+        break
+      endif
+    endfor
+    if is_multi_serve
+      break
+    endif
+  endfor
+
   if collection.products.first.selected_or_first_available_variant.compare_at_price > collection.products.first.selected_or_first_available_variant.price
     assign compare_at_price = collection.products.first.selected_or_first_available_variant.compare_at_price
   else
@@ -175,7 +194,7 @@
   data-tiers="{{ tiers_json | strip | escape }}"
 >
   <div data-bundle-editor-header class="flex flex-col pt-6 px-4.5 pb-1">
-    <div class="flex justify-between items-center {% if collection.handle == '32oz-bundle' %} mb-6.5 {% endif %}">
+    <div class="flex justify-between items-center {% if is_multi_serve %} mb-6.5 {% endif %}">
       <button
         type="button"
         class="cursor-pointer flex items-center gap-3 font-kurdis-semi-condensed text-xs text-espresso font-bold hover:!text-gold"
@@ -191,7 +210,7 @@
     </div>
     <div>
       {% comment %} Progress / tier indicator {% endcomment %}
-      {% if tier_count > 0 and collection.handle != '32oz-bundle' %}
+      {% if tier_count > 0 and is_multi_serve == false %}
         <div class="mt-5.5 mb-4 relative">
         {% render 'progress-indicator', 
           multi_unit_product: multi_unit_product,
@@ -220,7 +239,7 @@
 
       {% comment %} 32oz Multi-Serve Variety Indicator — populated client-side by
         bundle-editor.js in mix mode (one carton card per selected serving). {% endcomment %}
-      {% if tier_count > 0 and collection.handle == '32oz-bundle' %}
+      {% if tier_count > 0 and is_multi_serve %}
         <div
           data-32oz-multi-serve-container
           class="justify-center gap-2 flex-wrap mb-5.5"
@@ -262,7 +281,39 @@
                     {%- break -%}
                   {%- endif -%}
                 {%- endfor -%}
-                {"id":{{ variant.id | json }},"price":{{ variant.price | money | json }},"price_cents":{{ variant.price | json }},"selling_plan_price":{% if variant_selling_plan_price %}{{ variant_selling_plan_price | money | json }}{% else %}null{% endif %},"selling_plan_price_cents":{% if variant_selling_plan_price %}{{ variant_selling_plan_price | json }}{% else %}null{% endif %},"selling_plan_id":{% if variant_selling_plan_id %}{{ variant_selling_plan_id | json }}{% else %}null{% endif %}}{%- unless forloop.last -%},{%- endunless -%}
+                {%- assign bu = variant.metafields.custom.bundle_unit.value -%}
+                {%- assign bu_sp_price = null -%}
+                {%- assign bu_sp_id = null -%}
+                {%- if bu != blank -%}
+                  {%- for allocation in bu.selling_plan_allocations -%}
+                    {%- if allocation.selling_plan.name contains '1 month' or allocation.selling_plan.name contains '1 Month' -%}
+                      {%- assign bu_sp_price = allocation.per_delivery_price -%}
+                      {%- assign bu_sp_id = allocation.selling_plan.id -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- if bu.compare_at_price > bu.price -%}{%- assign bu_compare = bu.compare_at_price -%}{%- else -%}{%- assign bu_compare = bu.price -%}{%- endif -%}
+                {%- endif -%}
+                {%- assign bu6 = blank -%}
+                {%- assign bu6_sp_price = null -%}
+                {%- assign bu6_sp_id = null -%}
+                {%- if bu != blank -%}
+                  {%- for sib in bu.product.variants -%}
+                    {%- assign sib_t = sib.title | downcase -%}
+                    {%- if sib_t contains '6' -%}{%- assign bu6 = sib -%}{%- break -%}{%- endif -%}
+                  {%- endfor -%}
+                  {%- if bu6 != blank -%}
+                    {%- for allocation in bu6.selling_plan_allocations -%}
+                      {%- if allocation.selling_plan.name contains '1 month' or allocation.selling_plan.name contains '1 Month' -%}
+                        {%- assign bu6_sp_price = allocation.per_delivery_price -%}
+                        {%- assign bu6_sp_id = allocation.selling_plan.id -%}
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- if bu6.compare_at_price > bu6.price -%}{%- assign bu6_compare = bu6.compare_at_price -%}{%- else -%}{%- assign bu6_compare = bu6.price -%}{%- endif -%}
+                  {%- endif -%}
+                {%- endif -%}
+                {"id":{{ variant.id | json }},"price":{{ variant.price | money | json }},"price_cents":{{ variant.price | json }},"selling_plan_price":{% if variant_selling_plan_price %}{{ variant_selling_plan_price | money | json }}{% else %}null{% endif %},"selling_plan_price_cents":{% if variant_selling_plan_price %}{{ variant_selling_plan_price | json }}{% else %}null{% endif %},"selling_plan_id":{% if variant_selling_plan_id %}{{ variant_selling_plan_id | json }}{% else %}null{% endif %},"bundle_unit":{% if bu != blank %}{"id":{{ bu.id | json }},"price":{{ bu.price | money | json }},"price_cents":{{ bu.price | json }},"compare_at_price_cents":{{ bu_compare | json }},"selling_plan_price":{% if bu_sp_price %}{{ bu_sp_price | money | json }}{% else %}null{% endif %},"selling_plan_price_cents":{% if bu_sp_price %}{{ bu_sp_price | json }}{% else %}null{% endif %},"selling_plan_id":{% if bu_sp_id %}{{ bu_sp_id | json }}{% else %}null{% endif %}}{% else %}null{% endif %},"bundle_unit_6":{% if bu6 != blank %}{"id":{{ bu6.id | json }},"price":{{ bu6.price | money | json }},"price_cents":{{ bu6.price | json }},"compare_at_price_cents":{{ bu6_compare | json }},"selling_plan_price":{% if bu6_sp_price %}{{ bu6_sp_price | money | json }}{% else %}null{% endif %},"selling_plan_price_cents":{% if bu6_sp_price %}{{ bu6_sp_price | json }}{% else %}null{% endif %},"selling_plan_id":{% if bu6_sp_id %}{{ bu6_sp_id | json }}{% else %}null{% endif %}}{% else %}null{% endif %}}{%- unless forloop.last -%},{%- endunless -%}
               {%- endfor -%}
               ]
             {%- endcapture -%}

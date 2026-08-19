@@ -118,7 +118,7 @@
              the table inside `.cart-items`. {% endcomment %}
 
             {% assign bundle_parent_ids = '' %}
-
+            
             {% for item in cart.items %}
               {% if item.properties._bundle_id != blank and item.properties._bundle_parent == 'true' %}
                 {% assign bundle_parent_ids = bundle_parent_ids
@@ -140,13 +140,21 @@
                   {% assign bundle_id = item.properties._bundle_id %}
                   {% break %}
                 {% endif %}
+                {% assign is_concentrate = false %}
+                {% if item.properties._collection_handle == 'concentrate' %}
+                  {% assign is_concentrate = true %}
+                {% endif %}
               {% endfor %}
 
               <div class="bg-[#F9F3ED] font-kurdis-semi-condensed rounded-[5px] overflow-hidden">
                 {% if parent_item != blank %}
                   {% assign collection_handle = parent_item.properties._collection_handle %}
                   {% assign product_object = parent_item.product.metafields.custom.product_group.value %}
-                  {% assign product_title = product_object.headline | append: ' · ' | append: product_object.size %}
+                  {% if is_concentrate %}
+                    {% assign product_title = 'Concentrate' | append: ' · ' | append: product_object.size %}
+                  {% else %}
+                    {% assign product_title = product_object.headline | append: ' · ' | append: product_object.size %}
+                  {% endif %}
                   <div class="flex font-gothic_condensed text-bear-black font-bold uppercase text-lg justify-between items-center relative p-4">
                     {% if product_title != blank %}
                       {{ product_title }}
@@ -173,6 +181,9 @@
                   
                   {% if item.properties._bundle_id == bundle_id %}
                     {% unless item.properties._bundle_parent == 'true' %}
+                      {% if item.product.title contains 'Concentrate' %}
+                        {% assign is_concentrate = true %}
+                      {% endif %}
                     {% assign compare_at_price = item.compare_at_price | default: item.original_price %}
                     {% assign bundle_line_price = item.price | times: item.quantity %}
                     {% assign original_line_price = compare_at_price | times: item.quantity %}
@@ -457,23 +468,27 @@
 
                   <div class="flex items-center justify-between relative p-4">
                     <div class="absolute top-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
-                    <button
-                      type="button"
-                      class="inline-flex items-center gap-1 cursor-pointer text-kraft underline text-sm font-kurdis-semi-condensed font-bold hover:!text-gold transition-all duration-300"
-                      data-bundle-edit-trigger
-                      {% if parent_item.properties._bundle_type == '32oz' %}
-                        data-bundle-type="{{ parent_item.properties._bundle_type }}"
-                        data-bundle-size="{{ parent_item.properties._bundle_size }}"
-                        data-flavor-type="{{ parent_item.properties._flavor_type }}"
-                      {% endif %}
-                      data-bundle-id="{{ bundle_id | escape }}"
-                      data-selling-plan="{{ parent_item.selling_plan_allocation.selling_plan.id }}"
-                      data-collection-handle="{{ collection_handle | escape }}"
-                      data-bundle-name="{{ parent_item.properties._bundle_name | handleize }}"
-                    >
-                      {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %}
-                      Add/Modify Flavors
-                    </button>
+                    {% if is_concentrate %}
+                      <div></div>
+                    {% else %}
+                      <button
+                        type="button"
+                        class="inline-flex items-center gap-1 cursor-pointer text-kraft underline text-sm font-kurdis-semi-condensed font-bold hover:!text-gold transition-all duration-300"
+                        data-bundle-edit-trigger
+                        {% if parent_item.properties._bundle_type == '32oz' %}
+                          data-bundle-type="{{ parent_item.properties._bundle_type }}"
+                          data-bundle-size="{{ parent_item.properties._bundle_size }}"
+                          data-flavor-type="{{ parent_item.properties._flavor_type }}"
+                        {% endif %}
+                        data-bundle-id="{{ bundle_id | escape }}"
+                        data-selling-plan="{{ parent_item.selling_plan_allocation.selling_plan.id }}"
+                        data-collection-handle="{{ collection_handle | escape }}"
+                        data-bundle-name="{{ parent_item.properties._bundle_name | handleize }}"
+                      >
+                        {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %}
+                        Add/Modify Flavors
+                      </button>
+                    {% endif %}
                   {% comment %} Total bundle price {% endcomment %}
                   <div class="flex items-center gap-1">
                     {% if total_original_price > total_bundle_price %}

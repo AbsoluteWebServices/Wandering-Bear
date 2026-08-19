@@ -134,10 +134,15 @@ export default (Alpine: AlpineType) => {
             const assignedBundleProducts = orderedProductIds.map((productId) => {
                 const product = this.bundleProducts[productId]
                 const selectedProduct = this.selectedBundleProducts[productId]
-            
+
                 const variants = Object.values(product.variants)
-                const variant = variants[variantIndex]
-            
+                const regularVariant = variants[variantIndex]
+
+                const bundleUnit = this.bundleType === '32oz'
+                  ? ((Number(this.bundleQty) === 6 ? variants[0]?.bundle_unit_6 : variants[0]?.bundle_unit) ?? variants[0]?.bundle_unit)
+                  : null;
+                const variant = bundleUnit ?? regularVariant;
+
                 return {
                   id: Number(variant.id),
                   quantity: selectedProduct.quantity,
@@ -147,7 +152,7 @@ export default (Alpine: AlpineType) => {
                   image: product.image ? product.image : '',
                   title: product.title,
                   otpPrice: Number(variant.price),
-                  originalPrice: Number(product.variants[0].price),
+                  originalPrice: Number(variant.compare_at_price ?? product.variants[0].price),
                   sellingPlanPrice: Number(variant.selling_plan_price),
                   selling_plan: this.purchaseOption === 'autoship' ? Number(variant.selling_plan_id) : null,
                   properties: {
@@ -337,23 +342,25 @@ export default (Alpine: AlpineType) => {
           return this._resolveSingleFlavorId();
         },
 
-        // True only when the shopper picked 6 Carton + Single Flavor AND the
-        // selected flavor actually has a 6-pack SKU wired up. When the 6-pack is
-        // missing we fall back to the legacy "6 x bundle unit" path so add-to-cart
-        // never breaks.
+        _sixPackVariant() {
+          const product = this.bundleProducts[this._currentSingleFlavorId()];
+          const variants = product ? Object.values(product.variants) : [];
+          return variants[1] ?? null;
+        },
+
         _is6packSingle() {
           if (this.bundleType !== '32oz') return false;
           if (this.flavorType !== 'single') return false;
           if (Number(this.bundleQty) !== 6) return false;
 
-          const product = this.bundleProducts[this._currentSingleFlavorId()];
-          return !!(product && product.single_flavor_6pk && product.single_flavor_6pk.id);
+          const sixpack = this._sixPackVariant();
+          return !!(sixpack && sixpack.id);
         },
 
         // Build the single cart line for the 6 Carton + Single Flavor case.
         _sixPackSingleLine() {
           const product = this.bundleProducts[this._currentSingleFlavorId()];
-          const sixpack = product?.single_flavor_6pk;
+          const sixpack = this._sixPackVariant();
           if (!sixpack) return [];
 
           const originalPrice = Number(sixpack.compare_at_price ?? sixpack.price);
@@ -422,6 +429,12 @@ export default (Alpine: AlpineType) => {
         init() {
             this.bundleProducts = JSON.parse(this.$refs.productObject.textContent);
             this.bundleParentProducts = JSON.parse(this.$refs.bundleParentProducts.textContent);
+
+            if (!this.bundleProducts[this.selectedProductId]) {
+              const firstKey = Object.keys(this.bundleProducts)[0];
+              if (firstKey) this.selectedProductId = firstKey;
+            }
+
             this.selectedProduct = this.bundleProducts[this.selectedProductId];
 
             if (this.bundleQty) {
@@ -530,7 +543,22 @@ export default (Alpine: AlpineType) => {
             this._setProgressBarPrices();
         },
 
+        incrementQty(selectedProductId) {
+          if (this.bundleSize >= this.qtyLimit) {
+            return;
+          }
+          this.selectedBundleProducts[selectedProductId].quantity++;
+        },
+
+        decrementQty(selectedProductId) {
+          if (this.bundleSize == 0) {
+            return;
+          }
+          this.selectedBundleProducts[selectedProductId].quantity--;
+        },
+
         addToBundle(productId, type = null) {
+
             const id = String(productId)
 
             if (type === '32oz' && this.flavorType === 'single') {
@@ -738,6 +766,7 @@ export default (Alpine: AlpineType) => {
                     _bundle_name: bundleName,
                     _flavor: item.flavorName,
                     _collection_handle: collectionHandle,
+                    _bundle_product_id: item.properties?._bundle_product_id,
                   },
                 }
 

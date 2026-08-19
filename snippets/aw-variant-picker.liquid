@@ -22,7 +22,7 @@
       assign selected_index = 1
     endif
     assign quantified = false
-    if variant.metafields.custom.quantified_units != blank
+    if variant.metafields.custom.custom_quantity_rule != blank
       if is_concentrate_template or product_object.quantified or is_landing_page_template
         assign quantified = true
       endif
@@ -33,7 +33,7 @@
             assign one_month_allocation = allocation
             assign selling_plan_price = allocation.price
             if quantified
-                assign selling_plan_price = selling_plan_price | times: variant.metafields.custom.quantified_units
+                assign selling_plan_price = selling_plan_price | times: variant.metafields.custom.custom_quantity_rule
             endif
             break
         endif
@@ -47,7 +47,7 @@
 
     assign price = variant.price 
     if quantified
-        assign price = price | times: variant.metafields.custom.quantified_units
+        assign price = price | times: variant.metafields.custom.custom_quantity_rule
     endif
 
     assign choose_quantity_text = 'products.product.choose_quantity' | t
@@ -121,6 +121,7 @@
             </legend>
             <div class="wb-flex rounded-[5px] outline outline-[#CFBDB1] bg-transparent relative">
             {%- for product_option_value in product_option.values -%}
+              {%- if product_option_value.variant.metafields.custom.hide_variant -%}{%- continue -%}{%- endif -%}
               {% if product_option_value.size > longest_value and option_id_attribute %}
                 {% assign longest_value = product_option_value.size %}
               {% endif %}
@@ -221,6 +222,40 @@
 
   {% render 'purchase-options', product_resource: product_resource, section: section, variant_picker_blocks: variant_picker_blocks %}
 
+  {%- comment -%}
+    Bundle parent products (the $0 grouping SKUs) for variants that add a bundle_unit as a
+    parent+child bundle. Same source the 32oz picker uses: product_group.bundle_products.
+  {%- endcomment -%}
+  <script x-ref="bundleParents" type="application/json">
+  [
+    {%- assign bundle_parents = product_resource.metafields.custom.product_group.value.bundle_products.value -%}
+    {%- for parent in bundle_parents -%}
+      {%- assign parent_variant = parent.selected_or_first_available_variant -%}
+      {
+        "id": {{ parent.id | json }},
+        "handle": {{ parent.handle | json }},
+        "title": {{ parent.title | json }},
+        "variant_id": {{ parent_variant.id | json }}
+        {%- for allocation in parent_variant.selling_plan_allocations -%}
+          {%- if allocation.selling_plan.name contains '1 Month' -%}
+            ,"selling_plan_id": {{ allocation.selling_plan.id | json }}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+  </script>
+
+  <script x-ref="bundleMeta" type="application/json">
+  {
+    "product_id": {{ product_resource.id | json }},
+    "bundle_name": {{ product_resource.metafields.custom.product_group.value.display_name | default: product_resource.title | json }},
+    "collection_handle": {{ product_resource.metafields.custom.product_group.value.collection_handle.value.handle | json }},
+    "flavor_name": {{ product_resource.metafields.custom.flavor_name | default: product_resource.title | json }}
+  }
+  </script>
+
 {% if template.suffix == 'overview-2' %}
   <script x-ref="productObject" type="application/json">
   {
@@ -231,7 +266,7 @@
                   assign one_month_allocation = blank
                   assign product_object = product_resource.metafields.custom.product_group.value
                   assign quantified = true
-                  assign quantified_units = variant.metafields.custom.quantified_units
+                  assign quantified_units = variant.metafields.custom.custom_quantity_rule
 
                   if quantified_units != blank and quantified_units > 0
                     if is_concentrate_template or product_object.quantified
@@ -258,7 +293,7 @@
 
                   assign price = variant.price 
                   #if quantified
-                  #    assign price = price | times: variant.metafields.custom.quantified_units
+                  #    assign price = price | times: variant.metafields.custom.custom_quantity_rule
                   #endif
               %}
 
@@ -298,7 +333,7 @@
               assign one_month_allocation = blank
               assign product_object = product_resource.metafields.custom.product_group.value
               assign quantified = false
-              assign quantified_units = variant.metafields.custom.quantified_units
+              assign quantified_units = variant.metafields.custom.custom_quantity_rule
 
               if quantified_units != blank and quantified_units > 0
                 if is_concentrate_template or product_object.quantified
@@ -323,16 +358,50 @@
                   assign compare_at_price = variant.price
               endif
 
-              assign price = variant.price 
+              assign price = variant.price
               #if quantified
-              #    assign price = price | times: variant.metafields.custom.quantified_units
+              #    assign price = price | times: variant.metafields.custom.custom_quantity_rule
               #endif
+
+              ## When the variant references a bundle_unit variant, that SKU drives BOTH the
+              ## displayed price and what gets added to cart. It's a fixed pre-bundled SKU,
+              ## so it is added as quantity 1 (not quantified).
+              assign cart_variant = variant
+              assign bundle_unit_variant = variant.metafields.custom.bundle_unit.value
+              if bundle_unit_variant != blank
+                assign cart_variant = bundle_unit_variant
+                assign quantified = false
+                assign price = bundle_unit_variant.price
+                if bundle_unit_variant.compare_at_price > bundle_unit_variant.price
+                  assign compare_at_price = bundle_unit_variant.compare_at_price
+                else
+                  assign compare_at_price = bundle_unit_variant.price
+                endif
+                assign one_month_allocation = blank
+                for allocation in bundle_unit_variant.selling_plan_allocations
+                  if allocation.selling_plan.name contains '1 Month'
+                    assign one_month_allocation = allocation
+                    assign selling_plan_price = allocation.price
+                    break
+                  endif
+                endfor
+              endif
+
+              ## custom_quantity_rule (a number) is the cart-line multiplier. When set it
+              ## overrides the default of 1 — e.g. a "3 Pack" bundle adds its SKU x3.
+              assign cart_quantity = variant.metafields.custom.custom_quantity_rule
+              if cart_quantity == blank or cart_quantity < 1
+                assign cart_quantity = 1
+              endif
           %}
 
           "{{ variant.id }}": {
             "available": {{ variant.available | json }},
             "title": {{ variant.title | json }},
             "id": {{ variant.id | json }},
+            "cart_variant_id": {{ cart_variant.id | json }},
+            "cart_quantity": {{ cart_quantity | json }},
+            {% if bundle_unit_variant != blank %}"is_bundle": true,{% else %}"is_bundle": false,{% endif %}
             "flavor_name": "{{- product_resource.metafields.custom.flavor_name -}}",
             "quantified": {{ quantified | json }},
             {% if quantified %}
@@ -350,7 +419,7 @@
               "selling_plan_id": {{ one_month_allocation.selling_plan.id | json }},
               "selling_plan_name": {{ one_month_allocation.selling_plan.name | json }},
               "selling_plan_price": {{ selling_plan_price | json }},
-              "selling_plan_savings": {{ variant.price | minus: one_month_allocation.price | json }}
+              "selling_plan_savings": {{ cart_variant.price | minus: one_month_allocation.price | json }}
             {% endif %}
           }{% unless forloop.last %},{% endunless %}
         {% endfor %}
