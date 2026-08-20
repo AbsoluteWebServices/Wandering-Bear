@@ -426,7 +426,7 @@ class BundleEditorComponent extends Component {
           `</div>`;
       } else {
         html +=
-          `<div class="wb-flex flex-col justify-center items-center p-2 rounded-[5px] h-[71px] border border-dashed border-[#CFBDB1] w-[51px] min-w-[51px] max-w-[51px]"><div class="!h-10"></div></div>`;
+          `<div class="wb-flex flex-col justify-center items-center p-2 rounded-[5px] h-auto min-h-[71px] border border-dashed border-[#CFBDB1] w-[51px] min-w-[51px] max-w-[51px]"><div class="!h-10"></div></div>`;
       }
     }
 
