@@ -258,10 +258,17 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {}
+                },
+                "cart_drawer_kXBqVt": {
+                  "type": "cart-drawer",
+                  "name": "Cart Drawer",
+                  "settings": {},
+                  "blocks": {}
                 }
               },
               "block_order": [
-                "logo_keqPmw"
+                "logo_keqPmw",
+                "cart_drawer_kXBqVt"
               ]
             }
           },

@@ -206,7 +206,7 @@
                   },
                   "blocks": {}
                 },
-                "cart_drawer_cQqBNV": {
+                "cart_drawer_7zrqBg": {
                   "type": "cart-drawer",
                   "name": "Cart Drawer",
                   "settings": {},
@@ -215,7 +215,7 @@
               },
               "block_order": [
                 "logo_KwDxLq",
-                "cart_drawer_cQqBNV"
+                "cart_drawer_7zrqBg"
               ]
             }
           },
