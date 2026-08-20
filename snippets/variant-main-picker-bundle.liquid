@@ -154,6 +154,10 @@
             "flavor_name": "{{- child_product.metafields.custom.flavor_name -}}",
             "bundle_name": "{{- child_product.metafields.custom.product_group.value.display_name | handleize -}}",
             "collection_handle": "{{- child_product.metafields.custom.product_group.value.collection_handle.value.handle -}}",
+            {% if child_product.metafields.custom.type != blank %}
+              "type": "{{- child_product.metafields.custom.type.value.name | default: '' -}}",
+              "type_color": "{{- child_product.metafields.custom.type.value.background_color | default: '' -}}",
+            {% endif %}
             "variants": {
                 {% for child_variant in child_product.variants %}
                     "{{- forloop.index0 -}}": {

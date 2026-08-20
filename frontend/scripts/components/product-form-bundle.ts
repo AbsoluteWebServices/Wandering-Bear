@@ -159,6 +159,7 @@ export default (Alpine: AlpineType) => {
                   originalPrice: Number(variant.compare_at_price ?? product.variants[0].price),
                   sellingPlanPrice: Number(variant.selling_plan_price),
                   selling_plan: this.purchaseOption === 'autoship' ? Number(variant.selling_plan_id) : null,
+                 
                   properties: {
                     _bundle_product_id: productId,
                     _bundle_size: this.bundleSize,
@@ -167,6 +168,8 @@ export default (Alpine: AlpineType) => {
                     _product_badge: product.badge ? product.badge : '',
                     _flavor_type: this.flavorType ? this.flavorType : '',
                     _bundle_type: this.bundleType ? this.bundleType : '',
+                    _type: product.type ? product.type : '',
+                    _typeColor: product.background_color ? product.background_color : '',
                   },
                 }
               })
@@ -771,6 +774,8 @@ export default (Alpine: AlpineType) => {
                     _flavor: item.flavorName,
                     _collection_handle: collectionHandle,
                     _bundle_product_id: item.properties?._bundle_product_id,
+                    _type: item.properties?._type,
+                    _typeColor: item.properties?._typeColor,
                   },
                 }
 
