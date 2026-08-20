@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
     "main": {
       "type": "product-information-bundle",
@@ -206,7 +206,7 @@
         }
       },
       "settings": {
-        "bundle_collection": "site-v2-groupedpdp-96oz",
+        "bundle_collection": "96oz-test",
         "bundle_add_to_cart_text": "Add",
         "oos_badge_text": "Out of Stock",
         "oos_button_text": "Get Notified",
