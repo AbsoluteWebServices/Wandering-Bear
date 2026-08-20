@@ -862,9 +862,9 @@
                      data-action="change-frequency"
                      data-key="{{ item.key }}"
                      data-selling-plan-id="{{ item_month_plan }}">
-                     Upgrade to Autoship and Save
+                     Upgrade to Autoship 
                      {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
-                      {{ item_autoship_savings_percentage }}
+                      and Save {{ item_autoship_savings_percentage }}
                      {% endunless %}
                    </button>
                  </div>
