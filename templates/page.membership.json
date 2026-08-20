@@ -121,8 +121,7 @@
         "step_3"
       ],
       "custom_css": [
-        "@media screen and (min-width: 750px) {.aw-how-it-works__card:nth-child(3) .rte {max-width: 400px; }}",
-        "@media screen and (max-width: 749px) {.aw-how-it-works__card:nth-child(2) .aw-how-it-works__description br {display: none; } .aw-how-it-works__card:nth-child(2) .aw-how-it-works__description, .aw-how-it-works__card:nth-child(2) .aw-how-it-works__action {padding-inline: 18px; }}"
+        "/* @media screen and (min-width: 750px) {.aw-how-it-works__card:nth-child(3) .rte {max-width: 400px; }} */@media screen and (max-width: 749px) {.aw-how-it-works__card:nth-child(2) .aw-how-it-works__description br {display: none; } .aw-how-it-works__card:nth-child(2) .aw-how-it-works__description, .aw-how-it-works__card:nth-child(2) .aw-how-it-works__action {padding-inline: 18px; }}"
       ],
       "settings": {
         "subtitle": "REWARDS, MADE RIDICULOUSLY EASY",
