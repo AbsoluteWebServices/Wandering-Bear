@@ -247,7 +247,7 @@
               Shown via :has() when cart-products-component sets
              its .cart-items-disabled busy class (remove / selling-plan change) —
              no JS needed. High z-index so it sits above the frequency selects. {%- endcomment -%}
-          <span class="cart-loading-overlay" aria-hidden="true">
+          <span class="cart-loading-overlay" aria-hidden="true" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;">
             <span class="animate-spin rounded-full border-2 border-dashed border-espresso" style="width: 2rem; height: 2rem;"></span>
           </span>
           <div class="w-full">
@@ -485,10 +485,11 @@
     pointer-events: none;
   }
 
+  /* !important beats the inline opacity:0 fallback on the element. */
   .cart-drawer__inner:has(.cart-items-disabled) .cart-loading-overlay {
-    opacity: 1;
+    opacity: 1 !important;
     visibility: visible;
-    pointer-events: auto;
+    pointer-events: auto !important;
   }
 
   .cart-loading-overlay > span {
