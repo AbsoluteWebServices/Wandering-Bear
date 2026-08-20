@@ -80,7 +80,8 @@
             "custom_button_link": "",
             "custom_button_style": "secondary",
             "link_label": "",
-            "link_url": ""
+            "link_url": "",
+            "disclaimer_text": "*$5 off discount code will be sent via email after signup"
           }
         },
         "step_2": {
@@ -94,7 +95,8 @@
             "custom_button_link": "",
             "custom_button_style": "secondary",
             "link_label": "View all member tiers",
-            "link_url": "#membership-tiers"
+            "link_url": "#membership-tiers",
+            "disclaimer_text": ""
           }
         },
         "step_3": {
@@ -108,7 +110,8 @@
             "custom_button_link": "",
             "custom_button_style": "secondary",
             "link_label": "",
-            "link_url": ""
+            "link_url": "",
+            "disclaimer_text": ""
           }
         }
       },
