@@ -89,8 +89,10 @@
             </div>
         </div>
         {% if media_type == 'video' %}
-          <div>
+          <div class="w-full flex justify-center">
+            <div class="recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]">
             {% render 'video-player', video_sources: video.sources %}
+            </div>
           </div>
         {% elsif media_type == 'image' %}
           <div class="w-full h-full mx-auto smd:max-w-[500px] lg:mx-0">
