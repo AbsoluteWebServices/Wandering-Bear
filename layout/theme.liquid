@@ -169,7 +169,7 @@
     </main>
     {% section 'aw-membership-modal' %}
     {% unless customer %}
-      {% render 'member-login-modal' %}
+      {%- comment -%} Combined signup/login modal — hosts the login view too (was member-login-modal). {%- endcomment -%}
       {% section 'aw-membership-signup-modal' %}
     {% endunless %}
 

@@ -1,3 +1,22 @@
+{%- comment -%}
+  Combined member auth modal — SIGN UP and LOG IN as two alternate views of one
+  eager <dialog>.
+
+  Both forms are rendered ONCE per page in the real DOM (not inside an Alpine
+  `x-if`/`<template>`) and are toggled with `x-show` only. This is required for the
+  login form: the store gates `customer_login` behind an invisible CAPTCHA that
+  Shopify binds to forms present at page load, and a form cloned in after load (or a
+  fetch-intercepted submit) is rejected with "Missing CAPTCHA token". So the login
+  form submits NATIVELY — Shopify runs the CAPTCHA, then 302s to `return_url` on
+  success, or re-renders the themed /account/login page on failure.
+
+  Views:
+  - signup ({% form 'create_customer' %})   opened by `modal-open` { modal: 'membership-signup' }
+  - login  ({% form 'customer_login' %})     opened by the `open-member-login` window event
+  In-modal links switch `view` without navigating. Signup errors reopen the modal on
+  the signup view (login errors land on the themed /account/login page by design).
+{%- endcomment -%}
+
 {% liquid
   assign membership_signup_has_errors = false
   assign title = section.settings.title | default: 'SIGN UP TO BE A FREE MEMBER!'
@@ -5,14 +24,21 @@
   assign benefit_2 = section.settings.benefit_2 | default: 'Earn $5 for every $50 spent'
   assign checkbox_text = section.settings.checkbox_text | default: 'Check to receive information about your membership, marketing messages, & $5 off your first order via email'
   assign button_label = section.settings.button_label | default: 'SIGN UP FOR MEMBERSHIP'
-  assign login_heading = section.settings.login_heading | default: 'Already a member?'
-  assign login_text = section.settings.login_text | default: ' to access all your exclusive flavors.'
-  assign login_label = section.settings.login_label | default: 'Login'
+  assign login_link_heading = section.settings.login_heading | default: 'Already a member?'
+  assign login_link_text = section.settings.login_text | default: ' to access all your exclusive flavors.'
+  assign login_link_label = section.settings.login_label | default: 'Login'
   assign return_to = section.settings.return_to | default: '/pages/membership'
   assign customer_tag = section.settings.customer_tag | default: 'Membership Signup'
+  assign login_view_heading = section.settings.login_view_heading | default: 'Member Login'
+  assign login_view_subtitle = section.settings.login_view_subtitle | default: 'Sign in to unlock your exclusive flavors.'
+  assign login_view_button = section.settings.login_view_button | default: 'Log in'
+  assign signup_link_heading = section.settings.signup_link_heading | default: 'Not a member?'
+  assign signup_link_label = section.settings.signup_link_label | default: 'Create account'
+  assign signup_link_text = section.settings.signup_link_text | default: ' to unlock your exclusive flavors.'
 %}
 
-{% capture membership_signup_content %}
+{%- comment -%} SIGN-UP VIEW — capture first so `form.errors` can set the reopen flag. {%- endcomment -%}
+{% capture signup_view %}
   {% form 'create_customer',
     id: 'membership-signup-form',
     return_to: return_to,
@@ -119,36 +145,171 @@
         {% endif %}
       </div>
     </div>
-
-    <div class="bg-[#BFD7E9] w-full px-4 py-4">
-      <p class="font-kurdis-semi-condensed text-[14px] leading-[1.6] text-center text-[#4E2C1A] mb-0">
-        {% if login_heading != blank %}
-          <span class="font-bold">{{ login_heading }}</span>
-          <br>
-        {% endif %}
-        <a href="{{ routes.account_login_url }}" class="font-bold underline underline-offset-2 text-[#4E2C1A] hover:text-dark-gold">{{ login_label }}</a>
-        {% if login_text != blank %}
-          <span>{{ login_text }}</span>
-        {% endif %}
-      </p>
-    </div>
   {% endform %}
+
+  {%- comment -%} Switch to the login view (no navigation). {%- endcomment -%}
+  <div class="bg-[#BFD7E9] w-full px-4 py-4">
+    <p class="font-kurdis-semi-condensed text-[14px] leading-[1.6] text-center text-[#4E2C1A] mb-0">
+      {% if login_link_heading != blank %}
+        <span class="font-bold">{{ login_link_heading }}</span>
+        <br>
+      {% endif %}
+      <a
+        href="{{ routes.account_login_url }}"
+        @click.prevent="view = 'login'"
+        class="font-bold underline underline-offset-2 text-[#4E2C1A] hover:text-dark-gold cursor-pointer"
+      >{{ login_link_label }}</a>
+      {% if login_link_text != blank %}
+        <span>{{ login_link_text }}</span>
+      {% endif %}
+    </p>
+  </div>
 {% endcapture %}
 
-{% render 'modal',
-  handle: 'membership-signup',
-  content: membership_signup_content,
-  initially_open: membership_signup_has_errors,
-  panel_class: '!bg-[#F2E6DC]',
-  body_class: '!p-0 !items-stretch',
-  content_class: '!w-full',
-  wrapper_class: '!max-w-[calc(100%-24px)] smd:!max-w-[481px] w-full'
+{%- comment -%}
+  LOG-IN VIEW — styled to match the signup view (same #F2E6DC panel, bg-foam inputs,
+  espresso/#431A03 text, blue footer bar). The customer_login form itself is kept
+  intact so Shopify's CAPTCHA stays bound; only presentation changed.
+{%- endcomment -%}
+{% capture login_view %}
+  <div class="flex flex-col items-center w-full px-3 pt-10 pb-6 smd:px-8">
+    <div class="flex flex-col items-center w-full max-w-[352px]">
+      {% if login_view_heading != blank %}
+        <h2 class="font-gothic_condensed font-extrabold uppercase text-center text-[25px] leading-none text-espresso mb-2.5">
+          {{ login_view_heading }}
+        </h2>
+      {% endif %}
+      {% if login_view_subtitle != blank %}
+        <span class="font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.6] text-center text-[#431A03] mb-5 max-w-[290px]">{{ login_view_subtitle }}</span>
+      {% endif %}
+
+      {%- form 'customer_login', novalidate: 'novalidate', class: 'flex flex-col items-center w-full' -%}
+        {%- comment -%} Server default is the bare path; JS upgrades it to include the query string (variant/flavor, preview_theme_id, …) when the login view opens. {%- endcomment -%}
+        <input type="hidden" name="return_url" value="{{ request.path }}" x-ref="loginReturnUrl">
+
+        <div class="flex flex-col gap-2.5 w-full mb-4">
+          <label for="MemberLoginEmail" class="sr-only">Email</label>
+          <input
+            type="email"
+            id="MemberLoginEmail"
+            name="customer[email]"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+            class="w-full h-[51px] px-5.5 rounded-[5px] bg-foam border-0 font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.6] text-[#431A03] placeholder:text-[#431A03]/70 outline-none"
+          >
+          <label for="MemberLoginPassword" class="sr-only">Password</label>
+          <input
+            type="password"
+            id="MemberLoginPassword"
+            name="customer[password]"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+            class="w-full h-[51px] px-5.5 rounded-[5px] bg-foam border-0 font-kurdis-semi-condensed font-semibold text-[14px] leading-[1.6] text-[#431A03] placeholder:text-[#431A03]/70 outline-none"
+          >
+        </div>
+
+        {%- render 'customer-form-button',
+          label: login_view_button, style: 'secondary-gold',
+          class: '!w-full !h-[43px] !text-[20px]' -%}
+      {%- endform -%}
+
+      <a href="{{ routes.account_login_url }}#recover" class="font-kurdis-semi-condensed font-bold text-[12px] text-[#431A03] underline underline-offset-2 hover:text-dark-gold mt-4">Forgot password?</a>
+    </div>
+  </div>
+
+  {%- comment -%} Switch back to the signup view (no navigation). {%- endcomment -%}
+  <div class="bg-[#BFD7E9] w-full px-4 py-4">
+    <p class="font-kurdis-semi-condensed text-[14px] leading-[1.6] text-center text-[#4E2C1A] mb-0">
+      {% if signup_link_heading != blank %}
+        <span class="font-bold">{{ signup_link_heading }}</span>
+        <br>
+      {% endif %}
+      <a
+        href="{{ routes.account_register_url }}"
+        @click.prevent="view = 'signup'"
+        class="font-bold underline underline-offset-2 text-[#4E2C1A] hover:text-dark-gold cursor-pointer"
+      >{{ signup_link_label }}</a>
+      {% if signup_link_text != blank %}
+        <span>{{ signup_link_text }}</span>
+      {% endif %}
+    </p>
+  </div>
+{% endcapture %}
+
+{% liquid
+  assign open_on_load = 'false'
+  assign initial_view = 'signup'
+  if membership_signup_has_errors
+    assign open_on_load = 'true'
+    assign initial_view = 'signup'
+  endif
 %}
+
+<div
+  x-data="{ open: {{ open_on_load }}, view: '{{ initial_view }}' }"
+  x-on:modal-open.window="if ($event.detail && $event.detail.modal === 'membership-signup') { view = 'signup'; open = true; $nextTick(() => $refs.dialog.showModal()) }"
+  x-on:open-member-login.window="view = 'login'; open = true; $nextTick(() => { $refs.loginReturnUrl.value = window.location.pathname + window.location.search; $refs.dialog.showModal() })"
+  x-on:open-member-signup.window="view = 'signup'; open = true; $nextTick(() => $refs.dialog.showModal())"
+  x-on:close-member-login.window="$refs.dialog && $refs.dialog.close()"
+  x-init="if (open) $nextTick(() => $refs.dialog.showModal())"
+>
+  <dialog
+    x-ref="dialog"
+    x-on:close="open = false"
+    x-on:click.self="$refs.dialog.close()"
+    x-effect="if (view === 'login' && open) { $refs.loginReturnUrl.value = window.location.pathname + window.location.search }"
+    class="member-auth-dialog"
+  >
+    <div
+      class="w-[90vw] smd:w-[481px] max-w-[calc(100%-24px)] smd:max-w-[481px] rounded-[5px] overflow-hidden relative bg-[#F2E6DC]"
+    >
+      <button
+        type="button"
+        aria-label="Close"
+        @click="$refs.dialog.close()"
+        class="cursor-pointer flex justify-center items-center text-bear-black shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-full w-9.5 h-9.5 absolute top-4 right-3 bg-foam hover:bg-gold hover:!text-white transition-all duration-300 z-10"
+      >
+        {% render 'icons', icon: 'close', class: 'w-4 h-4 relative' %}
+      </button>
+
+      <div x-cloak x-show="view === 'signup'">
+        {{ signup_view }}
+      </div>
+
+      <div x-cloak x-show="view === 'login'">
+        {{ login_view }}
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  dialog.member-auth-dialog {
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
+    margin: auto auto;
+  }
+
+  dialog.member-auth-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+</style>
 
 {% schema %}
 {
   "name": "AW Membership Signup",
   "settings": [
+    {
+      "type": "header",
+      "content": "Sign-up view"
+    },
     {
       "type": "textarea",
       "id": "title",
@@ -182,7 +343,7 @@
     {
       "type": "text",
       "id": "login_heading",
-      "label": "Login heading",
+      "label": "Login link heading",
       "default": "Already a member?"
     },
     {
@@ -194,7 +355,7 @@
     {
       "type": "text",
       "id": "login_text",
-      "label": "Login supporting text",
+      "label": "Login link supporting text",
       "default": " to access all your exclusive flavors."
     },
     {
@@ -209,6 +370,46 @@
       "id": "customer_tag",
       "label": "Customer tag",
       "default": "Membership Signup"
+    },
+    {
+      "type": "header",
+      "content": "Log-in view"
+    },
+    {
+      "type": "text",
+      "id": "login_view_heading",
+      "label": "Heading",
+      "default": "Member Login"
+    },
+    {
+      "type": "text",
+      "id": "login_view_subtitle",
+      "label": "Subtitle",
+      "default": "Sign in to unlock your exclusive flavors."
+    },
+    {
+      "type": "text",
+      "id": "login_view_button",
+      "label": "Submit button label",
+      "default": "Log in"
+    },
+    {
+      "type": "text",
+      "id": "signup_link_heading",
+      "label": "Back-to-signup heading",
+      "default": "Not a member?"
+    },
+    {
+      "type": "text",
+      "id": "signup_link_label",
+      "label": "Back-to-signup link label",
+      "default": "Create account"
+    },
+    {
+      "type": "text",
+      "id": "signup_link_text",
+      "label": "Back-to-signup supporting text",
+      "default": " to unlock your exclusive flavors."
     }
   ],
   "presets": [
