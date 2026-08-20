@@ -366,7 +366,7 @@ class BundleEditorComponent extends Component {
       const headerHeight = header.offsetHeight;
       const footerHeight = footer.offsetHeight;
       const content = this.querySelector('[data-bundle-editor-content]');
-      content.style.height = `calc(100vh - ${headerHeight + footerHeight}px)`;
+      content.style.height = `calc(100dvh - ${headerHeight + footerHeight}px)`;
     }
 
 
