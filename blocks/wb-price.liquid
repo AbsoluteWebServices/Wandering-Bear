@@ -42,20 +42,37 @@
 
 
 {%- liquid
-  # Minimum price across all variants with the Autoship selling plan applied.
-  # Shopify's `allocation.price` is already the discounted per-allocation price,
-  # matching the convention in snippets/purchase-option-selector.liquid.
-  # Falls back to the regular price_min when the product has no Autoship plan.
+  # "N Pack from" price. For 32oz bundles the pack is built from the per-carton
+  # bundle_unit SKU (variants.first.metafields.custom.bundle_unit), so the correct
+  # figure is that SKU's Autoship (1 Month) price × the pack quantity — NOT the
+  # pack variant's own allocation, which rounds a cent or two differently. This
+  # matches the per-carton source used in variant-main-picker-bundle-32.liquid.
+  assign autoship_qty = multi_unit_quantity | default: 1
   assign autoship_price_min = nil
-  for variant in product_resource.variants
-    for allocation in variant.selling_plan_allocations
+  assign bundle_unit_variant = product_resource.variants.first.metafields.custom.bundle_unit.value
+  if bundle_unit_variant != blank
+    for allocation in bundle_unit_variant.selling_plan_allocations
       if allocation.selling_plan.name contains '1 Month'
-        if autoship_price_min == nil or allocation.price < autoship_price_min
-          assign autoship_price_min = allocation.price
+        assign candidate = allocation.price | times: autoship_qty
+        if autoship_price_min == nil or candidate < autoship_price_min
+          assign autoship_price_min = candidate
         endif
       endif
     endfor
-  endfor
+  endif
+  # Fallback for products without a bundle_unit: cheapest 1 Month allocation, then
+  # the regular price_min.
+  if autoship_price_min == nil
+    for variant in product_resource.variants
+      for allocation in variant.selling_plan_allocations
+        if allocation.selling_plan.name contains '1 Month'
+          if autoship_price_min == nil or allocation.price < autoship_price_min
+            assign autoship_price_min = allocation.price
+          endif
+        endif
+      endfor
+    endfor
+  endif
   if autoship_price_min == nil
     assign autoship_price_min = product_resource.price_min
   endif
