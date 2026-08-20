@@ -243,6 +243,13 @@
           class="cart-drawer__inner"
           data-hydration-key="cart-drawer-inner"
         >
+          {%- comment -%} Cart loading overlay.
+              Shown via :has() when cart-products-component sets
+             its .cart-items-disabled busy class (remove / selling-plan change) —
+             no JS needed. High z-index so it sits above the frequency selects. {%- endcomment -%}
+          <span class="cart-loading-overlay" aria-hidden="true">
+            <span class="animate-spin rounded-full border-2 border-dashed border-espresso" style="width: 2rem; height: 2rem;"></span>
+          </span>
           <div class="w-full">
             {% capture cart_items_children %}
               {%- if cart.empty? -%}
@@ -461,6 +468,35 @@
   .cart-drawer__inner {
     height: 100%;
     overflow: hidden;
+    position: relative;
+  }
+
+  .cart-loading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(249 243 237 / 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+  }
+
+  .cart-drawer__inner:has(.cart-items-disabled) .cart-loading-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .cart-loading-overlay > span {
+    animation-play-state: paused;
+  }
+
+  .cart-drawer__inner:has(.cart-items-disabled) .cart-loading-overlay > span {
+    animation-play-state: running;
   }
 
   .cart-drawer__content {

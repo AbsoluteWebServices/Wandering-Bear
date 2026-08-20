@@ -280,16 +280,7 @@ class CartProductsComponent extends HTMLElement {
           );
         }
 
-        // Apply the frequency to every line in the bundle (parent + flavors).
-        // Changing only the parent leaves the flavor lines on the old plan,
-        // producing a half-subscription bundle. All dropdown options are "1
-        // Month" plans, so for a subscription each line uses its OWN mapped
-        // monthly plan (a child can't accept the parent's plan); one-time drops
-        // every plan (null).
-        //
-        // Requests are serial on purpose: /cart/change.js rewrites whole-cart
-        // state, so concurrent calls clobber each other. Lines already on the
-        // target plan are skipped, which is what keeps big bundles quick.
+
         let updatedCart;
         let firstError = null;
 
@@ -299,7 +290,9 @@ class CartProductsComponent extends HTMLElement {
          * @param {object} item
          * @param {object} target
          */
+
         const isSameLine = (item, target) =>
+          String(item.properties?._bundle_id ?? '') === target.bundleId &&
           Number(item.variant_id) === Number(target.variant_id) &&
           (String(item.properties?._bundle_parent) === 'true') === target.isParent &&
           String(
@@ -307,6 +300,7 @@ class CartProductsComponent extends HTMLElement {
           ) === target.flavorId;
 
         const targets = targetLines.map((line) => ({
+          bundleId: String(line.properties?._bundle_id ?? ''),
           variant_id: line.variant_id,
           isParent: String(line.properties?._bundle_parent) === 'true',
           flavorId: String(
@@ -316,7 +310,7 @@ class CartProductsComponent extends HTMLElement {
 
         for (const target of targets) {
           const line = (currentCart.items ?? []).find((item) => isSameLine(item, target));
-          // The line may have merged/dropped out during a previous iteration.
+
           if (!line || !line.key) continue;
 
           const mappedPlan = planMap[line.variant_id];
