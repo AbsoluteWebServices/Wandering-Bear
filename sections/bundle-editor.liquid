@@ -324,7 +324,7 @@
               data-product-id="{{ product.id }}"
               data-variant-id="{{ product.variants.first.id }}"
               data-variants="{{ variants_json | strip | escape }}"
-              data-flavor-name="{{ product.metafields.custom.flavor_name | default: product.title | split: '- ' | last | escape }}"
+              data-flavor-name="{{ product.metafields.custom.flavor.value.name | escape }}"
               data-quantity="0"
               data-bundle-image="{{ product.metafields.custom.bundle_image | image_url: width: 200 }}"
               class="wb-flex bg-[#FFFFFF80] rounded-[5px] gap-1 overflow-hidden"
@@ -350,7 +350,7 @@
                   {% if product.metafields.product.product_badge.value.badge_text != blank %}
                     <span class="font-kurdis-semi-condensed text-[10px] text-espresso font-bold uppercase">{{ product.metafields.product.product_badge.value.badge_text }}</span>
                   {% endif %}
-                  <h3 class="font-gothic_condensed leading-[1.2] uppercase font-bold text-bear-black text-lg">{{ product.title | split: '- ' | last }}</h3>
+                  <h3 class="font-gothic_condensed leading-[1.2] uppercase font-bold text-bear-black text-lg">{{ product.metafields.custom.flavor.value.name }}</h3>
 
                   {% unless group.display_name == 'Single Serve' %}
                     <span class="font-kurdis-semi-condensed text-xs text-kraft font-bold lowercase">
