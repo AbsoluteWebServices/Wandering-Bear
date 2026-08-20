@@ -28,7 +28,7 @@
         </span>
     </div>
 
-    {% if cart.total_discounts > 0 %}
+    {% if cart.cart_level_discount_applications.size > 0 %}
         <div class="flex justify-between items-center">
             <span class="cart-totals__original-label">Discounts</span>
         </div>
