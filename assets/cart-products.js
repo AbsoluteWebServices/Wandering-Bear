@@ -293,7 +293,32 @@ class CartProductsComponent extends HTMLElement {
         let updatedCart;
         let firstError = null;
 
-        for (const line of targetLines) {
+        let currentCart = cart;
+
+        /**
+         * @param {object} item
+         * @param {object} target
+         */
+        const isSameLine = (item, target) =>
+          Number(item.variant_id) === Number(target.variant_id) &&
+          (String(item.properties?._bundle_parent) === 'true') === target.isParent &&
+          String(
+            item.properties?._bundle_product_id ?? item.properties?._flavor ?? ''
+          ) === target.flavorId;
+
+        const targets = targetLines.map((line) => ({
+          variant_id: line.variant_id,
+          isParent: String(line.properties?._bundle_parent) === 'true',
+          flavorId: String(
+            line.properties?._bundle_product_id ?? line.properties?._flavor ?? ''
+          ),
+        }));
+
+        for (const target of targets) {
+          const line = (currentCart.items ?? []).find((item) => isSameLine(item, target));
+          // The line may have merged/dropped out during a previous iteration.
+          if (!line || !line.key) continue;
+
           const mappedPlan = planMap[line.variant_id];
           const linePlan = isSubscription
             ? mappedPlan || parentPlanId || null
@@ -310,9 +335,8 @@ class CartProductsComponent extends HTMLElement {
               quantity: line.quantity,
               selling_plan: linePlan,
             });
+            currentCart = updatedCart;
           } catch (error) {
-            // Keep going: bailing here would strand the bundle half-converted,
-            // with no way back except another click at the same broken state.
             firstError ??= error;
           }
         }

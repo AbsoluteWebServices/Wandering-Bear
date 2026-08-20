@@ -24,6 +24,7 @@ class BundleEditorComponent extends Component {
    * @property {number} quantity
    * @property {number} originalQuantity
    * @property {string | null} key
+   * @property {number | null} cartVariantId
    * @property {string | null} flavorName
    */
 
@@ -124,6 +125,7 @@ class BundleEditorComponent extends Component {
         quantity: 0,
         originalQuantity: 0,
         key: null,
+        cartVariantId: null,
         flavorName: /** @type {HTMLElement} */ (el).dataset.flavorName || null,
       })),
     };
@@ -156,6 +158,7 @@ class BundleEditorComponent extends Component {
       row.quantity = cartItem?.quantity ?? 0;
       row.originalQuantity = row.quantity;
       row.key = cartItem?.key ?? null;
+      row.cartVariantId = cartItem ? Number(cartItem.variant_id ?? cartItem.id) : null;
       row.flavorName = cartItem?.properties?._flavor ?? row.flavorName;
     }
   }
@@ -696,7 +699,8 @@ class BundleEditorComponent extends Component {
       const childSellingPlan = isSubscription ? childVariant?.selling_plan_id || null : null;
 
       if (row.key) {
-        if (parentChanged) {
+        const variantChanged = Number(row.cartVariantId) !== Number(newChildVariantId);
+        if (variantChanged) {
           updates[row.key] = 0;
           addChild(row, newChildVariantId, childSellingPlan);
         } else {
@@ -711,14 +715,7 @@ class BundleEditorComponent extends Component {
     if (oldParentProduct && parentChanged) updates[oldParentProduct.key] = 0;
     if (!oldParentProduct || parentChanged) addParent();
 
-    if (Object.keys(updates).length) {
-      const response = await fetch('/cart/update.js', fetchConfig('json', { body: JSON.stringify({ updates }) }));
-      if (!response.ok) {
-        console.error(await response.text());
-        return;
-      }
-    }
-
+ 
     if (additions.length) {
       const response = await fetch('/cart/add.js', fetchConfig('json', { body: JSON.stringify({ items: additions }) }));
       if (!response.ok) {
@@ -727,7 +724,20 @@ class BundleEditorComponent extends Component {
       }
     }
 
-    const updatedCart = await fetch('/cart.js', { headers: { Accept: 'application/json' } }).then((r) => r.json());
+
+    let updatedCart = null;
+    if (Object.keys(updates).length) {
+      const response = await fetch('/cart/update.js', fetchConfig('json', { body: JSON.stringify({ updates }) }));
+      if (!response.ok) {
+        console.error(await response.text());
+        return;
+      }
+      updatedCart = await response.json();
+    }
+
+    if (!updatedCart) {
+      updatedCart = await fetch('/cart.js', { headers: { Accept: 'application/json' } }).then((r) => r.json());
+    }
 
     document.dispatchEvent(
       new CartUpdateEvent(updatedCart, 'bundle-editor', {

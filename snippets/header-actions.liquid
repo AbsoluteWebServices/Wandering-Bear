@@ -266,7 +266,7 @@
                       {% render 'aw-cart-summary', section_id: section.id, total_savings: total_savings, is_member: is_member, member_tier: member_tier, is_autoship: is_autoship %}
 
                       {% if total_savings > 0 %}
-                        <div class="flex justify-center items-start h-20 text-xs font-kurdis-semi-condensed font-bold text-gold">
+                        <div class="flex justify-center items-start text-xs font-kurdis-semi-condensed font-bold text-gold mb-5">
                               <span>{{ savings_text }}: {{ total_savings | money }}</span>
                         </div>
                       {% endif %}

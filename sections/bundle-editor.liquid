@@ -334,7 +334,7 @@
                   {{
                     cart_image
                     | image_url: width: 200
-                    | image_tag: width: 200, height: 67, alt: product.title, class: '!w-full !h-full object-contain min-w-[78px] min-h-[67px]'
+                    | image_tag: width: 200, height: 67, alt: product.title, class: '!w-full !h-full object-contain min-w-[78px] max-h-[78px] min-h-[67px]'
                   }}
                 {%- else -%}
                   {{ 'image' | placeholder_svg_tag: '!w-full !h-full object-cover' }}
