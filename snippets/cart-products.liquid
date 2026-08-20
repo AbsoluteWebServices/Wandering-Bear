@@ -450,16 +450,15 @@
 
                     {% if bundle_parent_month_plan != '' %}
                       <div class="py-3.5 px-4">
-                        <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                        <button type="button" class="w-full border border-espresso flex justify-center items-center font-bold py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed text-base cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
                         data-upgrade-to-autoship
                         data-action="change-frequency"
                         data-bundle-id="{{ bundle_id | escape }}"
                         data-selling-plan-id="{{ bundle_parent_month_plan }}"
                         data-subscription-plans="{{ bundle_subscription_plans | strip | escape }}">
-                          Upgrade to Autoship and Save 
-                          
+                          Upgrade to Autoship 
                           {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
-                            {{ bundle_total_autoship_savings_percentage }}
+                            and Save {{ bundle_total_autoship_savings_percentage }}
                           {% endunless %}
                         </button>
                       </div>
@@ -696,7 +695,7 @@
                       >
                         <span class="font-kurdis-semi-condensed text-bear-black font-bold uppercase text-lg">{{- item.product.title -}}</span>
                         <br>
-                        {% unless or item.variant.title == 'Default Title' %}
+                        {% unless item.variant.title == 'Default Title' %}
                           <span class="font-kurdis-semi-condensed text-espresso text-base">{{ item.variant.title }}</span>
                         {% endunless %}
                       </a>
@@ -871,7 +870,7 @@
                  {%- endcomment -%}
                  <div class="px-4 py-3 relative">
                    <div class="absolute top-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
-                   <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                   <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
                      data-upgrade-to-autoship
                      data-action="change-frequency"
                      data-key="{{ item.key }}"
