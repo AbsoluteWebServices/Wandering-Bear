@@ -85,13 +85,14 @@
   {% endif %}
 >
   {% if cart.empty? or force_empty %}
+    <button type="button" on:click="cart-drawer-component/close">
       {% assign button_text = 'actions.continue_shopping' | t %}
-      {% assign button_link = settings.empty_cart_button_link | default: routes.all_products_collection_url %}
       {% render 'wb-button', 
       label: button_text, 
-      link: button_link, 
+      link: '', 
       style: 'secondary',
       class: 'cart-items__empty-button !text-base' %}
+    </button>
   {%- else -%}
     <span
       class="visually-hidden"

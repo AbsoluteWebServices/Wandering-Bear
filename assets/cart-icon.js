@@ -60,12 +60,13 @@ class CartIcon extends Component {
         : count;
     }, 0);
 
-    this.refs.cartBubbleCount.classList.toggle('hidden', itemCount === 0);
-    this.refs.cartBubble.classList.toggle('visually-hidden', itemCount === 0);
-    this.classList.toggle(
-      'header-actions__cart-icon--has-cart',
-      itemCount > 0
-    );
+    // this.refs.cartBubbleCount.classList.toggle('hidden', itemCount === 0);
+    // this.refs.cartBubble.classList.toggle('visually-hidden', itemCount === 0);
+    this.classList.add('header-actions__cart-icon--has-cart');
+    // this.classList.toggle(
+    //   'header-actions__cart-icon--has-cart',
+    //   itemCount > 0
+    // );
 
     this.currentCartCount = itemCount;
 
@@ -77,7 +78,7 @@ class CartIcon extends Component {
       })
     );
 
-    if (!animate || itemCount === 0) return;
+    if (!animate) return;
 
     await new Promise((resolve) => requestAnimationFrame(resolve));
 

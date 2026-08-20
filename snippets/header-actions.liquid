@@ -249,7 +249,7 @@
                 {{ empty_cart_drawer_content }}
               {%- else -%}
     
-                <div data-cart-view>
+                <div data-cart-view class="max-h-[100dvh] overflow-y-auto">
                   {% render 'cart-header' %}
     
                   <scroll-hint

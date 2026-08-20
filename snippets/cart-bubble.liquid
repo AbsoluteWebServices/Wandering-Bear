@@ -19,7 +19,7 @@
 
 <div
   ref="cartBubble"
-  class="cart-bubble{% if cart == empty %} visually-hidden{% endif %}"
+  class="cart-bubble"
   {% assign item_count = cart.item_count %}
   {% if item_count <= 99 %}
     data-maintain-ratio
@@ -32,14 +32,12 @@
     class="cart-bubble__text"
   >
     <span
-      class="cart-bubble__text-count{% if cart == empty %} hidden{% endif %}"
+      class="cart-bubble__text-count"
       ref="cartBubbleCount"
       aria-hidden="true"
       data-testid="cart-bubble"
     >
-      {%- if limit == blank or cart.item_count < limit %}
-        {{- cart_item_count -}}
-      {%- endif -%}
+      {{- cart_item_count -}}
     </span>
   </span>
 </div>
