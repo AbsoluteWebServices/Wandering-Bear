@@ -476,7 +476,7 @@
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226588.svg",
-            "text": "Shelf stable before opening and fresh for 7 days after opening. Keep it wherever you've got room — slots perfectly into your fridge door."
+            "text": "Shelf stable before opening and fresh for 7 days after opening. Keep it anywhere there's room in your fridge."
           }
         }
       },
@@ -750,7 +750,7 @@
           "type": "wb-product-card",
           "name": "WB Product Card",
           "settings": {
-            "product": "extra-strong-cold-brew-coffee-32oz-straight-black",
+            "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
             "product_card_gap": 4,
             "inherit_color_scheme": true,
             "color_scheme": "",
@@ -892,7 +892,7 @@
           "type": "wb-product-card",
           "name": "WB Product Card",
           "settings": {
-            "product": "cold-brew-latte-8-oz-double-latte-mocha",
+            "product": "extra-strong-cold-brew-on-tap-128oz-straight-black",
             "product_card_gap": 4,
             "inherit_color_scheme": true,
             "color_scheme": "",
@@ -1033,6 +1033,7 @@
         "wb_product_card_eqwccc": {
           "type": "wb-product-card",
           "name": "WB Product Card",
+          "disabled": true,
           "settings": {
             "product": "3-1-coffee-concentrate",
             "product_card_gap": 4,
@@ -1342,7 +1343,7 @@
         "layout_type": "slider",
         "slides_per_view_mobile": "2.25",
         "slides_per_view_tablet": "3",
-        "slides_per_view_desktop": "4",
+        "slides_per_view_desktop": "3",
         "space_between_mobile": 14,
         "space_between_tablet": 24,
         "space_between_desktop": 44,
