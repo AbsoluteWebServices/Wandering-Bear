@@ -1,0 +1,1 @@
+var e=e=>{e.data(`membershipLogin`,()=>({onLoginLink(e){let t=e.target?.closest?.(`a`);if(!t)return;let n=t.getAttribute(`href`)||``;/\/account(\/login)?(?:[/?#]|$)/.test(n)&&(e.preventDefault(),window.dispatchEvent(new CustomEvent(`open-member-login`)),window.dispatchEvent(new CustomEvent(`modal-close`)))}}))};export{e as default};
