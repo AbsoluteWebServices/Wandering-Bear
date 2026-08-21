@@ -694,28 +694,28 @@
         "gap_between_elements": 24
       }
     },
-    "aw_review_carousel_YreQ8A": {
+    "aw_review_carousel_A43reA": {
       "type": "aw-review-carousel",
       "blocks": {
-        "review_rRg8Xf": {
+        "review_MLRBDJ": {
+          "type": "review",
+          "settings": {
+            "quote": "\"By far the best cold brew I have had. We started with 1 box, then 3 boxes... now reoccurring every 3 weeks. Is it fair to say we can't get enough of this stuff?!\""
+          }
+        },
+        "review_W9haUg": {
+          "type": "review",
+          "settings": {
+            "quote": "\"Liquid gold literally on tap. I can't see a day that you'll open my refrigerator and not see the box top right.\""
+          }
+        },
+        "review_hcxh6D": {
           "type": "review",
           "settings": {
             "quote": "“Loyal subscriber for 3+ years - Why? Because the brew is perfection. Love this brand, the team and most of all the brew!”"
           }
         },
-        "review_hgACJi": {
-          "type": "review",
-          "settings": {
-            "quote": "“Absolutely LOVE Wandering Bear! Not only is their coffee AMAZING but it ships quickly and if I ever have an issue, the staff takes care of me right away.”"
-          }
-        },
-        "review_tG73JH": {
-          "type": "review",
-          "settings": {
-            "quote": "“Loyal subscriber for 3+ years - Why? Because the brew is perfection. Love this brand, the team and most of all the brew!”"
-          }
-        },
-        "review_TCybcL": {
+        "review_WjRDzD": {
           "type": "review",
           "settings": {
             "quote": "“Absolutely LOVE Wandering Bear! Not only is their coffee AMAZING but it ships quickly and if I ever have an issue, the staff takes care of me right away.”"
@@ -723,10 +723,10 @@
         }
       },
       "block_order": [
-        "review_rRg8Xf",
-        "review_hgACJi",
-        "review_tG73JH",
-        "review_TCybcL"
+        "review_MLRBDJ",
+        "review_W9haUg",
+        "review_hcxh6D",
+        "review_WjRDzD"
       ],
       "settings": {
         "color_scheme": "",
@@ -850,7 +850,7 @@
     "aw_col_hero_DFqFUG",
     "lp_product_information_WPDjek",
     "marquee_8mdxLw",
-    "aw_review_carousel_YreQ8A",
+    "aw_review_carousel_A43reA",
     "aw_frequently_asked_questions_dwThL3"
   ]
 }
