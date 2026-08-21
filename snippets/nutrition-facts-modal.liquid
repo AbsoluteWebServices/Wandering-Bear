@@ -161,7 +161,7 @@
              while the new image loaded. Eager preloads them all when the modal opens,
              so switching just reveals an already-loaded image. {%- endcomment -%}
           <div x-show="selected === '{{ nf_flavor.handle }}'"
-          class="flex justify-start max-h-full">
+          class="flex justify-center max-h-full">
             {{ nf_label | image_url: width: 720 | image_tag: loading: 'eager', class: 'h-auto max-h-[400px] smd:max-h-[500px] w-auto object-contain', alt: nf_name }}
           </div>
         {%- endif -%}
