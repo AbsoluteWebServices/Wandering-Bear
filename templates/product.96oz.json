@@ -1029,7 +1029,7 @@
           "type": "wb-product-card",
           "name": "WB Product Card",
           "settings": {
-            "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
+            "product": "extra-strong-cold-brew-on-tap-128oz-straight-black",
             "product_card_gap": 12,
             "inherit_color_scheme": true,
             "color_scheme": "",

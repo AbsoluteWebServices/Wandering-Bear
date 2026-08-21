@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -114,8 +114,8 @@
                   "type": "product-title-bundle",
                   "name": "Product Title Bundle",
                   "settings": {
-                    "product_title": "COLD BREW ON-TAP",
-                    "product_title_small": "96 OZ"
+                    "product_title": "Single Serve",
+                    "product_title_small": "11 oz"
                   },
                   "blocks": {}
                 },
