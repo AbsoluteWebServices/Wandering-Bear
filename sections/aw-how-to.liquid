@@ -52,14 +52,29 @@
                 assign block_media_type = block.settings.media_type
                 assign block_video = block.settings.video
                 assign block_image = block.settings.image
+
+                assign is_image = false
+                if block_media_type == 'image' and block_image != blank
+                    assign is_image = true
+                endif
+
+                # Image on mobile: full-bleed, no radius. From smd it becomes the padded, rounded card
+                # like the video. Video keeps the card at every breakpoint.
+                if is_image
+                    assign media_wrap_class = 'recipe-media w-full mx-auto max-h-[488px] overflow-hidden smd:px-0 smd:max-w-[339px] rounded-none smd:rounded-[10px]'
+                    assign media_img_class = 'w-full h-full object-cover rounded-none smd:rounded-[5px]'
+                else
+                    assign media_wrap_class = 'recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]'
+                    assign media_img_class = 'w-full h-full object-cover rounded-[5px]'
+                endif
             %}
 
             <div class="w-full flex justify-center" x-cloak x-show="activeTitle === '{{ title_handleize }}'">
-                <div class="recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]">
+                <div class="{{ media_wrap_class }}">
                     {% if block_media_type == 'video' and block_video != blank %}
                         {% render 'video-player', video_sources: block_video.sources %}
                     {% elsif block_image != blank %}
-                        {{ block_image | image_url: width: 1000 | image_tag: class: 'w-full h-full object-cover rounded-[5px]' }}
+                        {{ block_image | image_url: width: 1000 | image_tag: class: media_img_class }}
                     {% endif %}
                 </div>
             </div>
