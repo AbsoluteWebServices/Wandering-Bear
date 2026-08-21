@@ -28,6 +28,40 @@
   }
 {% endstylesheet %}
 
+{%- if request.path contains 'community/membership' -%}
+  {%- comment -%}
+    Deep-link support: opening the portal with #change-plan jumps straight to the
+    "Change plan" (tier-selection) view. Inveterate has no native URL for this, so we
+    flip its reactive view state once the app has finished loading. See also the
+    #change-plan links in customer-dashboard.liquid.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      function ready() {
+        return window.inveterate
+          && window.inveterate.scriptsFinished
+          && window.inveterate.member
+          && window.inveterate.member.viewController;
+      }
+      function openChangePlan() {
+        if (location.hash !== '#change-plan') return;
+        var tries = 0;
+        (function poll() {
+          if (ready()) {
+            window.inveterate.member.viewController.currentView = 'tier-selection';
+          } else if (tries++ < 200) {
+            setTimeout(poll, 150);
+          }
+        })();
+      }
+      openChangePlan();
+      document.addEventListener('DOMContentLoaded', openChangePlan);
+      window.addEventListener('load', openChangePlan);
+      window.addEventListener('hashchange', openChangePlan);
+    })();
+  </script>
+{%- endif -%}
+
 {%- if customer -%}
   {%- if membership_tier == 'VIP' or membership_tier == 'ELITE' -%}
     {% style %}
