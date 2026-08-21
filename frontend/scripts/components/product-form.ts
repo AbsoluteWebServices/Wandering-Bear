@@ -12,6 +12,8 @@ export default (Alpine: AlpineType) => {
         landingPage: boolean = false
     ) => ({
         productObject: null,
+        bundleParents: [],
+        bundleMeta: null,
         productId: productId,
         currentProductId: String(productId),
         product: null,
@@ -311,6 +313,8 @@ export default (Alpine: AlpineType) => {
 
         init() {
             this.productObject = JSON.parse(this.$refs.productObject.textContent);
+            this.bundleParents = this.$refs.bundleParents ? JSON.parse(this.$refs.bundleParents.textContent) : [];
+            this.bundleMeta = this.$refs.bundleMeta ? JSON.parse(this.$refs.bundleMeta.textContent) : null;
 
             // Single-box regular price, used as the comparison base for volume discounts.
             // Read via _variantGroups because the LP nests variants under each product id,
@@ -381,6 +385,24 @@ export default (Alpine: AlpineType) => {
             window.location.href = url;
         },
 
+        _createGuid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+                const r = (Math.random() * 16) | 0;
+                return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+            });
+        },
+
+        _matchBundleParent(quantity: number) {
+            const parents = this.bundleParents ?? [];
+            if (parents.length === 0) return null;
+            if (parents.length === 1) return parents[0];
+
+            const matched = parents.find((p: any) =>
+                new RegExp(`(^|\\D)${quantity}(\\D|$)`).test(String(p?.title ?? ''))
+            );
+            return matched ?? parents[0];
+        },
+
         onPurchaseOptionChange(option: string) {
             this.purchaseOption = option;
             this.sellingPlanId = this.purchaseOption === 'autoship' ? this.selectedVariant.selling_plan_id : null;
@@ -445,18 +467,61 @@ export default (Alpine: AlpineType) => {
             this._syncSelectedVariant();
             this.loading = true;
 
-            const quantity = this._getCartQuantity(this.selectedVariant);
+
+            const quantity = this.selectedVariant.cart_quantity != null
+              ? Number(this.selectedVariant.cart_quantity)
+              : this._getCartQuantity(this.selectedVariant);
             const sectionIds = this._getCartSectionIds();
 
-            const cartItem: Record<string, unknown> = {
-              id: this.selectedVariant.id,
-              quantity,
-              selling_plan: this.purchaseOption === 'autoship' ? this.selectedVariant.selling_plan_id : null,
-            };
+            const autoship = this.purchaseOption === 'autoship';
+            const v = this.selectedVariant;
+            const cartVariantId = v.cart_variant_id ?? v.id;
+
+            let requestBody: Record<string, unknown>;
+
+            if (v.is_bundle) {
+              const guid = this._createGuid();
+              const meta = this.bundleMeta ?? {};
+              const parent = this._matchBundleParent(quantity);
+
+              const items: Array<Record<string, unknown>> = [];
+              if (parent) {
+                items.push({
+                  id: parent.variant_id,
+                  quantity: 1,
+                  selling_plan: autoship ? parent.selling_plan_id ?? null : null,
+                  properties: {
+                    _bundle_id: guid,
+                    _bundle_parent: 'true',
+                    _bundle_name: meta.bundle_name ?? '',
+                    _collection_handle: meta.collection_handle ?? '',
+                  },
+                });
+              }
+              items.push({
+                id: cartVariantId,
+                quantity,
+                selling_plan: autoship ? v.selling_plan_id : null,
+                properties: {
+                  _bundle_id: guid,
+                  _bundle_name: meta.bundle_name ?? '',
+                  _collection_handle: meta.collection_handle ?? '',
+                  _flavor: v.flavor_name ?? meta.flavor_name ?? '',
+                  _bundle_product_id: meta.product_id ?? this.currentProductId,
+                },
+              });
+              requestBody = { items };
+            } else {
+              requestBody = {
+                id: cartVariantId,
+                quantity,
+                selling_plan: autoship ? v.selling_plan_id : null,
+              };
+            }
 
             if (sectionIds.length > 0) {
-              cartItem.sections = sectionIds.join(',');
-              cartItem.sections_url = window.location.pathname + window.location.search;
+              requestBody.sections = sectionIds.join(',');
+              requestBody.sections_url = window.location.pathname + window.location.search;
             }
 
             try {
@@ -466,7 +531,7 @@ export default (Alpine: AlpineType) => {
                   'Content-Type': 'application/json',
                   'Accept': 'application/json',
                 },
-                body: JSON.stringify(cartItem),
+                body: JSON.stringify(requestBody),
               })
             
               const addResponse = await res.json();

@@ -54,13 +54,13 @@
             {% assign diagram_item_count = diagram_item_count | plus: 1 %}
             {% case diagram_item_count %}
                 {% when 1 %}
-                    {% assign class = 'md:!mb-0 md:!mt-0 order-2 md:!w-[215px] md:absolute md:left-[75%] md:top-[5%] lg:top-[-2%] lg:left-[78%] xl:top-[12%] xl:left-[71%]' %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-2 md:!max-w-[275px] md:absolute md:left-[71%] md:top-[-2%] lg:top-[-10%] lg:left-[71%] xl:top-[-30%] xl:left-[71%] 2xl:top-[-12%] 2xl:left-[78%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto' %}
                 {% when 2 %}
-                    {% assign class = 'order-3 md:!mb-0 md:!mt-0 md:!w-[215px] md:absolute md:right-[82%] md:top-[38%] lg:right-[79%] lg:top-[24%] xl:right-[67%] xl:top-[35%]' %}
+                    {% assign class = 'order-3 md:!mb-0 md:!mt-0 md:!max-w-[275px] md:absolute md:right-[70%] md:top-[30%] lg:right-[70%] lg:top-[16%] xl:right-[67%] xl:top-[4%] 2xl:right-[79%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-auto md:!mr-0 md:mr-12!'  %}
                 {% when 3 %}
-                    {% assign class = 'md:!mb-0 md:!mt-0 order-4 md:!w-[287px] md:absolute md:left-[75%] md:top-[58%] lg:top-[51%] lg:left-[75%] xl:top-[60%] xl:left-[69%]' %}
+                    {% assign class = 'md:!mb-0 md:!mt-0 order-4 md:!max-w-[350px] md:absolute md:left-[71%] md:top-[50%] lg:top-[43%] lg:left-[71%] xl:top-[32%] xl:left-[69%] 2xl:left-[75%]' %}
                     {% assign icon_class = '!w-[54px] !h-[54px] md:!ml-0 md:!mr-auto md:-mt-3!' %}
                 {% else %}
                     {% assign class = 'md:hidden' %}
@@ -96,8 +96,13 @@
     {% endfor %}
 {% endcapture %}
 
-<div class="aw-diagram wb-flex flex-col gap-4 relative spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
-    {% render 'section-background', settings: section.settings, part: 'media', image_class: 'w-full !h-full object-cover !max-w-none absolute inset-0 md:!-top-[77px]' %}
+<div class="aw-diagram wb-flex flex-col gap-4 relative spacing-style wb-section-bg {% if template.suffix == '96oz' %} md:mt-[77px] md:pb-[100px] lg:pb-0 {% endif %}" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
+  {% if template.suffix == '96oz' %}
+    {% assign image_class = 'w-full !h-full object-cover !max-w-none absolute inset-0 md:!-top-[40px]' %}
+  {% else %}
+    {% assign image_class = 'w-full !h-full object-cover !max-w-none absolute inset-0 md:!-top-[77px]' %}
+  {% endif %}
+    {% render 'section-background', settings: section.settings, part: 'media', image_class: image_class %}
    <div class="wb-flex flex-col mx-auto relative z-[1]">
     {% if title_type == 'image' %}
         {% if title_image != blank %}
@@ -112,7 +117,7 @@
     {% endif %}
    </div>
 
-   <div x-data="diagram()" class="wb-flex flex-col md:flex-row mx-auto relative max-w-[84vw] w-full justify-center px-0{% if template.suffix == '96oz' %} mt-2 md:mt-0{% endif %}">
+   <div x-data="diagram()" class="wb-flex flex-col md:flex-row mx-auto relative max-w-full px-5 2xl:max-w-[84vw] w-full justify-center 2xl:px-0{% if template.suffix == '96oz' %} mt-2 md:mt-0{% endif %}">
 
     <!-- SVG LINES -->
     <svg class="diagram-lines absolute inset-0 w-full h-full overflow-visible pointer-events-none z-[1]">

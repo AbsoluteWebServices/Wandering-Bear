@@ -1,0 +1,30 @@
+{%- comment -%}
+  Renders a collection's products as carousel slides, repeating the product
+  loop until at least `min_slides` are output. Swiper's loop mode clones
+  slides, and with a fractional slidesPerView (5.8 on desktop) it needs a
+  healthy pool of real slides or the wrap jumps. Padding short collections
+  here guarantees looping always has enough to clone from.
+
+  Accepts:
+    collection   - the collection whose products to render
+    slide_styles - inline styles passed through to each slide
+    min_slides   - minimum slides to render (optional, default 12)
+{%- endcomment -%}
+{%- assign min_slides = min_slides | default: 12 -%}
+{%- assign product_count = collection.products.size -%}
+{%- if product_count > 0 -%}
+    {%- assign repeat = min_slides | divided_by: product_count -%}
+    {%- assign remainder = min_slides | modulo: product_count -%}
+    {%- if remainder > 0 -%}
+        {%- assign repeat = repeat | plus: 1 -%}
+    {%- endif -%}
+    {%- if repeat < 1 -%}
+        {%- assign repeat = 1 -%}
+    {%- endif -%}
+
+    {%- for i in (1..repeat) -%}
+        {%- for product in collection.products -%}
+            {%- render 'multi-coll-carousel-slide', product: product, slide_styles: slide_styles -%}
+        {%- endfor -%}
+    {%- endfor -%}
+{%- endif -%}

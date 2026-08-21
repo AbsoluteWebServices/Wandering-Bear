@@ -93,7 +93,7 @@
           %}
         {% endif %}
       </div>
-      <span class="text-xs/[120%] font-kurdis-semi-condensed font-semibold text-bear-black md:mt-0.75 md:text-[10px]/[120%]">{{ flavor_description }}</span>
+      <span class="text-xs/[120%] font-kurdis-semi-condensed font-semibold text-bear-black md:mt-0.75 md:text-xs/[120%]">{{ flavor_description }}</span>
     </div>
     {%- comment -%}
       Add-to-bundle controls, captured once so they can be reused both for
@@ -146,7 +146,7 @@
         >
           <button
             class="group cursor-pointer relative shadow-button w-7.5 h-10!"
-            @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity--"
+            @click.prevent.stop="decrementQty({{ child_product.id }})"
           >
             <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pb-1.25">-</span>
             <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold hidden smd:inline-block"
@@ -170,7 +170,7 @@
             :disabled="getBundleProductQuantity({{ child_product.id }}) >= qtyLimit"
             :class="{ 'opacity-50 !cursor-default': disabled }"
             class="group cursor-pointer relative shadow-button  w-7.5 h-10!"
-            @click.prevent.stop="selectedBundleProducts[{{ child_product.id }}].quantity++"
+            @click.prevent.stop="incrementQty({{ child_product.id }})"
           >
             <span class="relative inline-block text-[12px] text-cream z-1 font-kurdis uppercase font-bold pb-1.25">+</span>
             <svg class="absolute top-0 left-0 w-full h-full fill-espresso group-hover:fill-gold hidden smd:inline-block"
@@ -196,7 +196,7 @@
           A subscription (purchaseOption === 'autoship') — like VIP/Elite membership —
           unlocks the flavor so it can be added to the bundle.
         {%- endcomment -%}
-        <div x-show="purchaseOption !== 'autoship'" x-cloak class="wb-flex justify-end items-center">
+        <div x-show="purchaseOption !== 'autoship' && !hasEliteItem" x-cloak class="flex justify-end items-center">
           <button
             @click.prevent.stop="$dispatch('modal-open', { modal: 'membership' })"
             class="group h-10! w-20! flex flex-nowrap justify-center items-center relative whitespace-nowrap cursor-pointer shadow-button"
@@ -213,7 +213,7 @@
             </div>
           </button>
         </div>
-        <div x-show="purchaseOption === 'autoship'" class="contents">
+        <div x-show="purchaseOption === 'autoship' || hasEliteItem" class="contents">
           {{ add_to_bundle_buttons }}
         </div>
       {% elsif is_oos %}

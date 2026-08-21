@@ -42,47 +42,76 @@
    endif
 
    ## Prices ##
+   ## Tier 1 = 3 cartons, Tier 2 = 6 cartons. Each tier is priced from the SKU that will
+   ## actually be added: the 3-carton tier from `variants[0].metafields.custom.bundle_unit`
+   ## (the mix / single-3 bundle unit), the 6-carton tier from the regular `variants[1]`
+   ## (single-6 = the plain 6-pack). Displayed values are per carton.
+   ## bundle_unit variants are already priced PER CARTON, so they need no division;
+   ## a plain regular variant is a per-pack total and is divided by its carton count.
+   assign t1_bu = first_product.variants[0].metafields.custom.bundle_unit.value
+   if t1_bu != blank
+    assign t1_src = t1_bu
+    assign t1_divisor = 1
+   else
+    assign t1_src = first_product.variants[0]
+    assign t1_divisor = 3
+   endif
 
-   assign tier_one_unit_price_otp = first_product.variants[0].price
-   assign tier_two_unit_price_otp = first_product.variants[1].price
-
-   for selling_plan in first_product.selling_plan_groups
-    for selling_plan_allocation in selling_plan.selling_plan_allocations
-      if selling_plan_allocation.selling_plan.name contains '1 Month'
-        assign tier_one_unit_price_autoship = selling_plan_allocation.selling_plan.price
-      endif
+   ## 6-carton tier: the 6-carton sibling of the 3-carton bundle_unit (already per carton,
+   ## the mix-6 price), else the regular 6-pack divided by its carton count.
+   assign t2_bu6 = blank
+   assign t1_bu_variant = first_product.variants[0].metafields.custom.bundle_unit.value
+   if t1_bu_variant != blank
+    for sib in t1_bu_variant.product.variants
+     assign sib_t = sib.title | downcase
+     if sib_t contains '6'
+      assign t2_bu6 = sib
+      break
+     endif
     endfor
+   endif
+   if t2_bu6 != blank
+    assign t2_src = t2_bu6
+    assign t2_divisor = 1
+   else
+    assign t2_src = first_product.variants[1]
+    assign t2_divisor = 6
+   endif
+
+   ## Per-carton one-time prices.
+   assign tier_one_unit_price_otp = t1_src.price | times: 1.0 | divided_by: t1_divisor | round
+   assign tier_two_unit_price_otp = t2_src.price | times: 1.0 | divided_by: t2_divisor | round
+
+   ## Per-carton autoship prices from the 1 Month plan (fall back to the one-time price).
+   assign t1_autoship_total = t1_src.price
+   for alloc in t1_src.selling_plan_allocations
+    if alloc.selling_plan.name contains '1 Month'
+     assign t1_autoship_total = alloc.price
+     break
+    endif
    endfor
+   assign tier_one_unit_price_autoship = t1_autoship_total | times: 1.0 | divided_by: t1_divisor | round
 
-   for variant in first_product.variants
-    assign variant_title = variant.title | downcase | split: ' discount' | first
-    assign variant_title = variant_title | split: ' ' | first
+   assign t2_autoship_total = t2_src.price
+   for alloc in t2_src.selling_plan_allocations
+    if alloc.selling_plan.name contains '1 Month'
+     assign t2_autoship_total = alloc.price
+     break
+    endif
+   endfor
+   assign tier_two_unit_price_autoship = t2_autoship_total | times: 1.0 | divided_by: t2_divisor | round
 
-    for allocation in variant.selling_plan_allocations
-      assign plan = allocation.selling_plan
-      assign plan_name = plan.name | downcase
-
-      if plan_name contains '1 month' and plan_name contains 'bundle'
-
-          assign adjustment = plan.price_adjustments[0]
-          assign discount_amount = adjustment.value
-          assign value_type = adjustment.value_type
-          if value_type == 'percentage'
-            assign difference = variant.price | times: discount_amount | divided_by: 100.0
-            assign autoship_price = variant.price | minus: difference
-          else
-          assign autoship_price = variant.price | minus: discount_amount
-          endif
-
-          case variant_title
-            when '3'
-              assign tier_one_unit_price_autoship = autoship_price
-            when '6'
-              assign tier_two_unit_price_autoship = autoship_price
-          endcase
-      endif
-    endfor
-  endfor
+   ## Per-carton compare-at, used as the savings base for each tier.
+   if t1_src.compare_at_price > t1_src.price
+    assign tier_one_compare = t1_src.compare_at_price | times: 1.0 | divided_by: t1_divisor | round
+   else
+    assign tier_one_compare = tier_one_unit_price_otp
+   endif
+   if t2_src.compare_at_price > t2_src.price
+    assign tier_two_compare = t2_src.compare_at_price | times: 1.0 | divided_by: t2_divisor | round
+   else
+    assign tier_two_compare = tier_two_unit_price_otp
+   endif
 %}
 
 {% capture col_width_styles %}
@@ -105,19 +134,21 @@
                 {%- when 1 -%}
                   {%- assign autoship_price = tier_one_unit_price_autoship -%}
                   {%- assign otp_price = tier_one_unit_price_otp -%}
+                  {%- assign tier_compare = tier_one_compare -%}
                 {%- when 2 -%}
                   {%- assign autoship_price = tier_two_unit_price_autoship -%}
                   {%- assign otp_price = tier_two_unit_price_otp -%}
+                  {%- assign tier_compare = tier_two_compare -%}
               {%- endcase -%}
               {% assign qty = i | times: 3 %}
               {% if discount_type == 'Percentage' %}
-                {% assign autoship_savings_raw = compare_at_price | minus: autoship_price | times: 100.0 | divided_by: compare_at_price | round %}
-                {% assign otp_savings_raw = compare_at_price | minus: otp_price | times: 100.0 | divided_by: compare_at_price | round %}
+                {% assign autoship_savings_raw = tier_compare | minus: autoship_price | times: 100.0 | divided_by: tier_compare | round %}
+                {% assign otp_savings_raw = tier_compare | minus: otp_price | times: 100.0 | divided_by: tier_compare | round %}
                 {% assign autoship_savings = autoship_savings_raw | append: '%' %}
                 {% assign otp_savings = otp_savings_raw | append: '%' %}
               {% else %}
-                {% assign autoship_savings_raw = compare_at_price | minus: autoship_price %}
-                {% assign otp_savings_raw = compare_at_price | minus: otp_price %}
+                {% assign autoship_savings_raw = tier_compare | minus: autoship_price %}
+                {% assign otp_savings_raw = tier_compare | minus: otp_price %}
                 {% assign autoship_savings = autoship_savings_raw | money %}
                 {% assign otp_savings = otp_savings_raw | money %}
               {% endif %}
@@ -130,13 +161,13 @@
                  type="radio" name="bundle-qty" id="bundle-qty-{{ i }}" value="{{ qty }}" {% if forloop.first %}checked{% endif %}>
                 <label class="{% if forloop.first %}rounded-tl-[5px] rounded-bl-[5px]{% else %}rounded-tr-[5px] rounded-br-[5px]{% endif %} peer-checked:bg-[#F9F3ED] relative h-full w-full wb-flex flex-col justify-center items-center hover:[&_.variant-option-name]:text-dark-gold hover:bg-foam! transition-colors duration-300" for="bundle-qty-{{ i }}">
                   <span class="variant-option-name font-gothic_condensed text-bear-black text-base font-bold uppercase transition-colors duration-300">{{ qty }} Cartons</span>
-                  <span x-show="purchaseOption === 'autoship'" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
-                  <span x-cloak x-show="purchaseOption !== 'autoship'" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ otp_price | money }}/carton</span>
+                  <span x-show="purchaseOption === 'autoship' || hasEliteItem" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ autoship_price | money }}/carton</span>
+                  <span x-cloak x-show="purchaseOption !== 'autoship' && !hasEliteItem" class="font-kurdis-semi-condensed text-[12px] text-bear-black font-semibold">From {{ otp_price | money }}/carton</span>
                   {% if autoship_savings_raw > 0 %}
-                    <span x-show="purchaseOption === 'autoship'" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ autoship_savings }}</span>
+                    <span x-show="purchaseOption === 'autoship' || hasEliteItem" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ autoship_savings }}</span>
                   {% endif %}
                   {% if otp_savings_raw > 0 %}
-                    <span x-cloak x-show="purchaseOption !== 'autoship'" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ otp_savings }}</span>
+                    <span x-cloak x-show="purchaseOption !== 'autoship' && !hasEliteItem" class="font-kurdis-semi-condensed text-xs text-kraft font-semibold">Save {{ otp_savings }}</span>
                   {% endif %}
                 </label>
             </fieldset>
@@ -250,6 +281,10 @@
             "handle": "{{- child_product.handle -}}",
             "bundle_name": "{{- child_product.metafields.custom.product_group.value.display_name | handleize -}}",
             "collection_handle": "{{- child_product.metafields.custom.product_group.value.collection_handle.value.handle -}}",
+            {% if child_product.metafields.custom.type != blank %}
+              "type": "{{- child_product.metafields.custom.type.value.name | default: '' -}}",
+              "type_color": "{{- child_product.metafields.custom.type.value.background_color | default: '' -}}",
+            {% endif %}
             {% if child_product.metafields.custom.bundle_image != blank %}
               "image": "{{- child_product.metafields.custom.bundle_image | image_url: width: 200 -}}",
             {% endif %}
@@ -305,6 +340,32 @@
                           else
                             assign compare_at_price = child_variant.price
                           endif
+
+                          ## The variant's bundle_unit — the 3-carton per-carton SKU (mix-3 / single-3).
+                          ## Its product also carries a 6-carton sibling used for mix-6.
+                          assign bu_variant = child_variant.metafields.custom.bundle_unit.value
+                          assign bu_variant_6 = blank
+                          if bu_variant != blank
+                            if bu_variant.compare_at_price > bu_variant.price
+                              assign bu_compare = bu_variant.compare_at_price
+                            else
+                              assign bu_compare = bu_variant.price
+                            endif
+                            for sib in bu_variant.product.variants
+                              assign sib_title = sib.title | downcase
+                              if sib_title contains '6'
+                                assign bu_variant_6 = sib
+                                break
+                              endif
+                            endfor
+                            if bu_variant_6 != blank
+                              if bu_variant_6.compare_at_price > bu_variant_6.price
+                                assign bu_6_compare = bu_variant_6.compare_at_price
+                              else
+                                assign bu_6_compare = bu_variant_6.price
+                              endif
+                            endif
+                          endif
                         %}
 
                         {% if child_product.metafields.custom.product_group.value.multi_unit_product_quantity != blank and child_product.metafields.custom.product_group.value.multi_unit_product_quantity > 0 %}
@@ -316,28 +377,47 @@
                         "discount_type": "{{- discount_type -}}",
                         "title": "{{- child_variant.title -}}",
                         "price": {{- child_variant.price -}},
-                        {%- assign printed_allocation = false -%}
                         {%- for allocation in child_variant.selling_plan_allocations -%}
-                          {%- assign selling_plan_name = allocation.selling_plan.name -%}
-                          {%- if selling_plan_name contains '1 Month' -%}
-                            {% if selling_plan_keywords != blank %}
-                              {% for word in selling_plan_keywords %}
-                                {% if selling_plan_name contains word %}
-                                  {% continue %}
-                                {% endif %}
-                              {% endfor %}
-                            {% endif %}
-                            {% if forloop.first %}
-                              {% continue %}
-                            {% endif %}
-                            {%- if printed_allocation -%},{%- endif -%}
-                              "selling_plan_id": {{ allocation.selling_plan.id | json }},
-                              "selling_plan_name": {{ allocation.selling_plan.name | json }},
-                              "selling_plan_price": {{ allocation.price | json }},
-                              "selling_plan_savings": {{ child_product.variants[0].price | minus: allocation.price | json }},
-                            {%- assign printed_allocation = true -%}
+                          {%- if allocation.selling_plan.name contains '1 Month' -%}
+                            "selling_plan_id": {{ allocation.selling_plan.id | json }},
+                            "selling_plan_name": {{ allocation.selling_plan.name | json }},
+                            "selling_plan_price": {{ allocation.price | json }},
+                            "selling_plan_savings": {{ child_variant.price | minus: allocation.price | json }},
+                            {%- break -%}
                           {%- endif -%}
                         {%- endfor -%}
+                        {%- if bu_variant != blank -%}
+                          "bundle_unit": {
+                            "id": {{ bu_variant.id | json }},
+                            "title": {{ bu_variant.title | json }},
+                            "price": {{ bu_variant.price | json }},
+                            "compare_at_price": {{ bu_compare | json }}
+                            {%- for allocation in bu_variant.selling_plan_allocations -%}
+                              {%- if allocation.selling_plan.name contains '1 Month' -%}
+                                ,"selling_plan_id": {{ allocation.selling_plan.id | json }},
+                                "selling_plan_price": {{ allocation.price | json }},
+                                "selling_plan_savings": {{ bu_variant.price | minus: allocation.price | json }}
+                                {%- break -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          },
+                        {%- endif -%}
+                        {%- if bu_variant_6 != blank -%}
+                          "bundle_unit_6": {
+                            "id": {{ bu_variant_6.id | json }},
+                            "title": {{ bu_variant_6.title | json }},
+                            "price": {{ bu_variant_6.price | json }},
+                            "compare_at_price": {{ bu_6_compare | json }}
+                            {%- for allocation in bu_variant_6.selling_plan_allocations -%}
+                              {%- if allocation.selling_plan.name contains '1 Month' -%}
+                                ,"selling_plan_id": {{ allocation.selling_plan.id | json }},
+                                "selling_plan_price": {{ allocation.price | json }},
+                                "selling_plan_savings": {{ bu_variant_6.price | minus: allocation.price | json }}
+                                {%- break -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          },
+                        {%- endif -%}
                         "id": {{- child_variant.id -}}
                     }{%- unless forloop.last -%},{%- endunless -%}
                 {%- endfor -%}

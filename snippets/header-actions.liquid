@@ -243,13 +243,20 @@
           class="cart-drawer__inner"
           data-hydration-key="cart-drawer-inner"
         >
+          {%- comment -%} Cart loading overlay.
+              Shown via :has() when cart-products-component sets
+             its .cart-items-disabled busy class (remove / selling-plan change) —
+             no JS needed. High z-index so it sits above the frequency selects. {%- endcomment -%}
+          <span class="cart-loading-overlay" aria-hidden="true" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;">
+            <span class="animate-spin rounded-full border-2 border-dashed border-espresso" style="width: 2rem; height: 2rem;"></span>
+          </span>
           <div class="w-full">
             {% capture cart_items_children %}
               {%- if cart.empty? -%}
                 {{ empty_cart_drawer_content }}
               {%- else -%}
     
-                <div data-cart-view>
+                <div data-cart-view class="">
                   {% render 'cart-header' %}
     
                   <scroll-hint
@@ -266,7 +273,7 @@
                       {% render 'aw-cart-summary', section_id: section.id, total_savings: total_savings, is_member: is_member, member_tier: member_tier, is_autoship: is_autoship %}
 
                       {% if total_savings > 0 %}
-                        <div class="flex justify-center items-start h-20 text-xs font-kurdis-semi-condensed font-bold text-gold">
+                        <div class="flex justify-center items-start text-xs font-kurdis-semi-condensed font-bold text-gold mb-5">
                               <span>{{ savings_text }}: {{ total_savings | money }}</span>
                         </div>
                       {% endif %}
@@ -461,6 +468,36 @@
   .cart-drawer__inner {
     height: 100%;
     overflow: hidden;
+    position: relative;
+  }
+
+  .cart-loading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(249 243 237 / 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+  }
+
+  /* !important beats the inline opacity:0 fallback on the element. */
+  .cart-drawer__inner:has(.cart-items-disabled) .cart-loading-overlay {
+    opacity: 1 !important;
+    visibility: visible;
+    pointer-events: auto !important;
+  }
+
+  .cart-loading-overlay > span {
+    animation-play-state: paused;
+  }
+
+  .cart-drawer__inner:has(.cart-items-disabled) .cart-loading-overlay > span {
+    animation-play-state: running;
   }
 
   .cart-drawer__content {

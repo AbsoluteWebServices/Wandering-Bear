@@ -102,6 +102,12 @@
             endif
           %}
 
+          {% capture disclaimer %}
+              <div class="flex justify-center smd:justify-right items-center text-xs text-espresso font-kurdis-condensed font-bold mt-5">
+                <span class="whitespace-nowrap text-center smd:text-right">{{ block.settings.disclaimer_text }}</span>
+              </div>
+          {% endcapture %}
+
           <div
             class="aw-how-it-works__card relative flex flex-col bg-[#FEF8F3] rounded-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] px-4.5 pt-1.25 smd:mb-0 smd:px-6 smd:flex-row smd:items-center smd:justify-between smd:gap-6{% if show_action and action_type == 'join' or show_action and action_type == 'custom_button' %} pb-6.5 mb-5 smd:pb-4{% elsif show_action and action_type == 'link' %} pb-4.5 smd:pb-5{% else %} pb-8 smd:pb-4{% endif %}"
             {{ block.shopify_attributes }}
@@ -109,7 +115,7 @@
             <div class="flex flex-col min-w-0 flex-1">
               <div class="relative z-2 flex items-center gap-3.5 smd:pr-[240px]">
                 <div
-                  class="aw-how-it-works__index relative shrink-0 size-15 -ml-2 rounded-full filter-[drop-shadow(0_4px_4px_rgba(0,0,0,0.25))] before:content-[''] before:absolute before:inset-1.25 before:rounded-full before:border-2 before:border-espresso bg-[#FDEDE0] flex items-center justify-center smd:-ml-2"
+                  class="aw-how-it-works__index relative shrink-0 size-15 -ml-2 rounded-full filter-[drop-shadow(0_4px_4px_rgba(0,0,0,0.25))] before:content-[''] before:absolute before:inset-1.25 before:rounded-full before:border-2 before:border-espresso bg-[#FDEDE0] flex items-center justify-center smd:-ml-2 will-change-transform"
                   aria-hidden="true"
                 >
                   <span class="font-gothic_condensed font-extrabold text-[25px] leading-none text-espresso">
@@ -125,18 +131,28 @@
               </div>
 
               <div class="relative z-1 h-px w-[calc(100%+36px)] bg-[#F0EDEA] -ml-4.5 -mt-1.5 smd:-ml-6 smd:w-[calc(100%+48px)]"></div>
-
+              <div class="flex flex-col smd:flex-row justify-between items-center">
               {% if block.settings.description != blank %}
-                <div class="aw-how-it-works__description rte font-kurdis-semi-condensed font-semibold text-sm leading-[1.3] w-full text-espresso pr-7.5 pt-3.5 [&_p]:mb-0 smd:pr-0 lg:px-1.5{% if action_type == 'join' or action_type == 'custom_button' %} smd:max-w-[260px] smd:pt-3 md:max-w-[286px]{% else %} smd:pt-4.75{% endif %}">
+                <div class="aw-how-it-works__description rte font-kurdis-semi-condensed font-semibold text-sm leading-[1.3] w-full text-espresso pt-3.5 [&_p]:mb-0 smd:pr-0 lg:px-1.5{% if action_type == 'join' or action_type == 'custom_button' %}
+                {% if customer == blank %} 
+                smd:max-w-[260px] smd:pt-3 md:max-w-[286px] pr-7.5 
+                {% endif %}
+                {% else %} smd:pt-4.75 {% endif %}">
                   {{ block.settings.description | replace: '\n', '<br>' }}
                 </div>
               {% endif %}
+              {% if block.settings.disclaimer_text != blank and customer == blank %}
+                <div class="hidden smd:block">
+                  {{ disclaimer }}
+                </div>
+              {% endif %}
+              </div>
             </div>
 
             {% if show_action %}
               <div class="aw-how-it-works__action
-                w-full mt-1 z-2 smd:absolute smd:right-6 smd:max-w-[232px] smd:-bottom-auto smd:left-auto smd:right-4.5 smd:mt-0 smd:shrink-0 smd:self-center smd:flex smd:items-center smd:justify-end
-                {% if action_type == 'join' or action_type == 'custom_button' %} absolute left-4.5 -bottom-6.5 max-w-[calc(100%-36px)] smd:bottom-auto smd:left-auto smd:right-5 smd:top-9{% endif %}
+                w-full mt-1 z-2 relative smd:absolute smd:right-6 smd:max-w-[232px] smd:-bottom-auto smd:left-auto smd:right-4.5 smd:mt-0 smd:shrink-0 smd:self-center smd:flex smd:items-center smd:justify-end
+                {% if action_type == 'join' or action_type == 'custom_button' %} absolute left-4.5 -bottom-2.5 smd:bottom-auto max-w-[calc(100%-36px)] smd:left-auto smd:right-5 smd:top-9{% endif %}
                 {% if action_type == 'link' %} smd:top-7 smd:text-right{% endif %}
               ">
                 {% if action_type == 'join' %}
@@ -163,6 +179,11 @@
                     {{ link_label }}
                   </a>
                 {% endif %}
+              </div>
+            {% endif %}
+            {% if block.settings.disclaimer_text != blank and customer == blank %}
+             <div class="block smd:hidden">
+                {{ disclaimer }}
               </div>
             {% endif %}
           </div>
@@ -579,6 +600,11 @@
           "id": "link_url",
           "label": "Link URL",
           "visible_if": "{{ block.settings.action_type == 'link' }}"
+        },
+        {
+          "type": "text",
+          "id": "disclaimer_text",
+          "label": "Disclaimer text"
         }
       ]
     }

@@ -24,6 +24,7 @@ class BundleEditorComponent extends Component {
    * @property {number} quantity
    * @property {number} originalQuantity
    * @property {string | null} key
+   * @property {number | null} cartVariantId
    * @property {string | null} flavorName
    */
 
@@ -124,6 +125,7 @@ class BundleEditorComponent extends Component {
         quantity: 0,
         originalQuantity: 0,
         key: null,
+        cartVariantId: null,
         flavorName: /** @type {HTMLElement} */ (el).dataset.flavorName || null,
       })),
     };
@@ -147,10 +149,16 @@ class BundleEditorComponent extends Component {
     );
 
     for (const row of this.#state.rows) {
-      const cartItem = items.find((item) => Number(item.product_id) === row.productId);
+      // Match on _bundle_product_id (the flavor product) first: a child line's own
+      // product_id can be a bundle_unit product, so it won't equal row.productId.
+      // Fall back to product_id for legacy lines written before that property existed.
+      const cartItem = items.find(
+        (item) => Number(item.properties?._bundle_product_id) === row.productId
+      ) ?? items.find((item) => Number(item.product_id) === row.productId);
       row.quantity = cartItem?.quantity ?? 0;
       row.originalQuantity = row.quantity;
       row.key = cartItem?.key ?? null;
+      row.cartVariantId = cartItem ? Number(cartItem.variant_id ?? cartItem.id) : null;
       row.flavorName = cartItem?.properties?._flavor ?? row.flavorName;
     }
   }
@@ -197,6 +205,31 @@ class BundleEditorComponent extends Component {
     }
     if (count <= 0) return 0;
     return count < 3 ? count - 1 : 2;
+  }
+
+  /**
+   * Resolves the SKU a tier should price and add. For 32oz the flavor variant may
+   * reference a bundle_unit variant (mix / single-3) — that per-carton SKU drives
+   * both price and cart. A plain variant with no bundle_unit (e.g. the single-6
+   * 6-pack) is used as-is. Mirrors the resolution in `product-form-bundle.ts`.
+   *
+   * @param {BundleRow} row
+   * @param {number} tier
+   */
+  #resolveVariant(row, tier) {
+    const variants = row?.variants ?? [];
+    if (!this.#is32oz) return variants[tier];
+    // Mix uses the per-carton bundle unit on the 3-pack variant (variants[0]): its
+    // bundle_unit_6 sibling for a 6-carton bundle, else its bundle_unit — so mix prices/adds
+    // bundle units, not the 6-pack SKU. Single uses the tier variant's bundle_unit when
+    // present (single-3), otherwise the plain variant (single-6 = regular 6-pack).
+    if (this.#isMix) {
+      const base = variants[0];
+      const unit = (this.#bundleSizeNum >= 6 ? base?.bundle_unit_6 : base?.bundle_unit) ?? base?.bundle_unit;
+      return unit ?? base ?? variants[tier];
+    }
+    const source = variants[tier];
+    return source?.bundle_unit ?? source ?? variants[tier];
   }
 
   /** Syncs the DOM (quantities, prices, progress, indicator, savings, update button) to state. */
@@ -264,8 +297,8 @@ class BundleEditorComponent extends Component {
       if (increment instanceof HTMLButtonElement) increment.disabled = locked;
 
       const price = row.el.querySelector('[data-bundle-price]');
-      const variant = row.variants[variantIndex];
-      
+      const variant = this.#resolveVariant(row, variantIndex);
+
       if (price && variant) price.textContent = variant.selling_plan_price && (hasSellingPlan || memberTier === 'Elite') ? variant.selling_plan_price : variant.price;
     }
 
@@ -336,7 +369,7 @@ class BundleEditorComponent extends Component {
       const headerHeight = header.offsetHeight;
       const footerHeight = footer.offsetHeight;
       const content = this.querySelector('[data-bundle-editor-content]');
-      content.style.height = `calc(100vh - ${headerHeight + footerHeight}px)`;
+      content.style.height = `calc(100dvh - ${headerHeight + footerHeight}px)`;
     }
 
 
@@ -393,7 +426,7 @@ class BundleEditorComponent extends Component {
           `</div>`;
       } else {
         html +=
-          `<div class="wb-flex flex-col justify-center items-center p-2 rounded-[5px] h-[71px] border border-dashed border-[#CFBDB1] w-[51px] min-w-[51px] max-w-[51px]"><div class="!h-10"></div></div>`;
+          `<div class="wb-flex flex-col justify-center items-center p-2 rounded-[5px] h-auto min-h-[71px] border border-dashed border-[#CFBDB1] w-[51px] min-w-[51px] max-w-[51px]"><div class="!h-10"></div></div>`;
       }
     }
 
@@ -427,9 +460,9 @@ class BundleEditorComponent extends Component {
     for (const r of this.#state?.rows ?? []) {
       const qty = Number(r.quantity || 0);
       if (!qty) continue;
-      const variant = r.variants[tier];
+      const variant = this.#resolveVariant(r, tier);
       if (!variant) continue;
-      const original = Number(r.variants[0]?.price_cents ?? variant.price_cents ?? 0);
+      const original = Number(variant.compare_at_price_cents ?? r.variants[0]?.price_cents ?? variant.price_cents ?? 0);
       const effective =
         (useSellingPlan || memberTier === 'Elite')
           ? Number(variant.selling_plan_price_cents)
@@ -639,6 +672,7 @@ class BundleEditorComponent extends Component {
           // reads for the child line title; keep `_flavor_name` for parity.
           _flavor: row.flavorName,
           _flavor_name: row.flavorName,
+          _bundle_product_id: row.productId,
           ...bundleProps,
         },
       });
@@ -660,12 +694,13 @@ class BundleEditorComponent extends Component {
     };
 
     for (const row of state.rows) {
-      const childVariant = row.variants?.[bundleVariantIndex];
+      const childVariant = this.#resolveVariant(row, bundleVariantIndex);
       const newChildVariantId = childVariant?.id || row.variantId;
       const childSellingPlan = isSubscription ? childVariant?.selling_plan_id || null : null;
 
       if (row.key) {
-        if (parentChanged) {
+        const variantChanged = Number(row.cartVariantId) !== Number(newChildVariantId);
+        if (variantChanged) {
           updates[row.key] = 0;
           addChild(row, newChildVariantId, childSellingPlan);
         } else {
@@ -680,14 +715,7 @@ class BundleEditorComponent extends Component {
     if (oldParentProduct && parentChanged) updates[oldParentProduct.key] = 0;
     if (!oldParentProduct || parentChanged) addParent();
 
-    if (Object.keys(updates).length) {
-      const response = await fetch('/cart/update.js', fetchConfig('json', { body: JSON.stringify({ updates }) }));
-      if (!response.ok) {
-        console.error(await response.text());
-        return;
-      }
-    }
-
+ 
     if (additions.length) {
       const response = await fetch('/cart/add.js', fetchConfig('json', { body: JSON.stringify({ items: additions }) }));
       if (!response.ok) {
@@ -696,7 +724,20 @@ class BundleEditorComponent extends Component {
       }
     }
 
-    const updatedCart = await fetch('/cart.js', { headers: { Accept: 'application/json' } }).then((r) => r.json());
+
+    let updatedCart = null;
+    if (Object.keys(updates).length) {
+      const response = await fetch('/cart/update.js', fetchConfig('json', { body: JSON.stringify({ updates }) }));
+      if (!response.ok) {
+        console.error(await response.text());
+        return;
+      }
+      updatedCart = await response.json();
+    }
+
+    if (!updatedCart) {
+      updatedCart = await fetch('/cart.js', { headers: { Accept: 'application/json' } }).then((r) => r.json());
+    }
 
     document.dispatchEvent(
       new CartUpdateEvent(updatedCart, 'bundle-editor', {

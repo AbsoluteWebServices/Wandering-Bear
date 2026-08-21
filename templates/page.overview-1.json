@@ -205,10 +205,17 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {}
+                },
+                "cart_drawer_7zrqBg": {
+                  "type": "cart-drawer",
+                  "name": "Cart Drawer",
+                  "settings": {},
+                  "blocks": {}
                 }
               },
               "block_order": [
-                "logo_KwDxLq"
+                "logo_KwDxLq",
+                "cart_drawer_7zrqBg"
               ]
             }
           },
@@ -439,7 +446,7 @@
                   "name": "t:names.text",
                   "settings": {
                     "block_class": "product-description is-lp",
-                    "text": "<ul><li><strong>About 16 cups of coffee</strong></li><li>Strong, each glass = 2 espresso shots</li><li>Store anywhere until you're ready to pour</li><li>No dairy, no sugar</li></ul>",
+                    "text": "<ul><li>Coffee shop quality, straight from your fridge.</li><li>Organic, specialty-grade, 100% Arabica beans.</li><li>No dairy. No sugar. No bitterness.</li><li>16 servings per box. ~160mg caffeine (~2 espresso shots) each.</li><li>Shelf stable until opened. Tastes fresh for 30 days.</li></ul>",
                     "width": "fit-content",
                     "max_width": "normal",
                     "alignment": "left",
@@ -765,7 +772,7 @@
               "type": "_aw-review-carousel-item",
               "name": "Review Carousel Item",
               "settings": {
-                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+                "review": "\"It’s so smooth, and wakes me right up without the jitters.”"
               },
               "blocks": {}
             },
@@ -773,7 +780,7 @@
               "type": "_aw-review-carousel-item",
               "name": "Review Carousel Item",
               "settings": {
-                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+                "review": "\"My personal favorite is Wandering Bear's extra strong organic cold brew.”"
               },
               "blocks": {}
             },
@@ -781,7 +788,7 @@
               "type": "_aw-review-carousel-item",
               "name": "Review Carousel Item",
               "settings": {
-                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+                "review": "\"Whether you're a solo coffee fiend or serving a crowd, the ready-to-drink brew is smooth and super-strong.”"
               },
               "blocks": {}
             }

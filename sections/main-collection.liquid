@@ -91,7 +91,7 @@
     class="collection-wrapper !max-w-[970px] w-full mx-auto gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
   >
     
-    {% assign products_per_page = 24 %}
+    {% assign products_per_page = 40 %}
 
     {% if section.settings.enable_infinite_scroll == false %}
       {% assign products_per_page = section.settings.products_per_page %}
@@ -123,7 +123,7 @@
                     ref="cards[]"
                   >
                     {% # theme-check-disable %}
-                    {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product, collection_image: true %}
+                    {% content_for 'block', type: '_wb-product-card', id: 'product-card', closest.product: product, collection_image: true %}
                     {% # theme-check-enable %}
                   </li>
                   {% assign card_index = card_index | plus: 1 %}
@@ -165,7 +165,7 @@
               ref="cards[]"
             >
               {% # theme-check-disable %}
-              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+              {% content_for 'block', type: '_wb-product-card', id: 'product-card', closest.product: product %}
               {% # theme-check-enable %}
             </li>
             {% assign card_index = card_index | plus: 1 %}

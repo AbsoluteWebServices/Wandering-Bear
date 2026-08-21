@@ -258,10 +258,17 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {}
+                },
+                "cart_drawer_kXBqVt": {
+                  "type": "cart-drawer",
+                  "name": "Cart Drawer",
+                  "settings": {},
+                  "blocks": {}
                 }
               },
               "block_order": [
-                "logo_keqPmw"
+                "logo_keqPmw",
+                "cart_drawer_kXBqVt"
               ]
             }
           },
@@ -479,7 +486,7 @@
               "settings": {
                 "title": "",
                 "show_bundle": true,
-                "bundle_url": "https://wanderingbearcoffee.com/products/extra-strong-cold-brew-on-tap-96oz-straight-black?view=96oz",
+                "bundle_url": "https://wanderingbearcoffee.com/pages/overview?view=overview-1",
                 "bundle_swatch": "shopify://shop_images/bundle_swatch.png",
                 "bundle_label": "Bundle & Save"
               },
@@ -775,7 +782,7 @@
               "type": "_aw-review-carousel-item",
               "name": "Review Carousel Item",
               "settings": {
-                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+                "review": "\"It’s so smooth, and wakes me right up without the jitters.”"
               },
               "blocks": {}
             },
@@ -783,7 +790,7 @@
               "type": "_aw-review-carousel-item",
               "name": "Review Carousel Item",
               "settings": {
-                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+                "review": "\"Whether you're a solo coffee fiend or serving a crowd, the ready-to-drink brew is smooth and super-strong.”"
               },
               "blocks": {}
             },
@@ -791,7 +798,7 @@
               "type": "_aw-review-carousel-item",
               "name": "Review Carousel Item",
               "settings": {
-                "review": "\"It’s so smooth, and wakes me right up without the jitters..”"
+                "review": "\"My personal favorite is Wandering Bear's extra strong organic cold brew.\""
               },
               "blocks": {}
             }

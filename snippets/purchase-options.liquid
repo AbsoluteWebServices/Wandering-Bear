@@ -64,11 +64,6 @@
             </div>
         </label>
         </div>
-        {% unless is_lp %}
-        <div class="subscription-value-props mt-3.5 pb-2 col-start-1 col-end-4 row-start-3 tracking-tight md:hidden">
-            {{ subscription_value_props_mobile }}
-        </div>
-        {% endunless %}
 
         <div class="purchase-option">
         <input x-model="purchaseOption" @change="onPurchaseOptionChange('one_time')" type="radio" value="one_time" name="purchase_option" id="one_time" class="purchase-option-input absolute! top-0 left-0 w-0 h-0 opacity-0">

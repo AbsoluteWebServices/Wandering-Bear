@@ -14,28 +14,29 @@ export default (Alpine: AlpineType) => {
         activeCollectionAccentText: activeCollectionAccentText,
         activeCollectionHandle: activeCollectionHandle,
 
+        get maxSlidesPerView() {
+            const w = window.innerWidth;
+            if (w >= 1024) return 5.8;
+            if (w >= 768) return 3.5;
+            return 2.5;
+        },
+
         init() {
             this.el = this.$el;
             this.initSwiper();
         },
 
+
         initSwiper() {
             const slideCount = this.el.querySelectorAll('.swiper-slide').length;
+            const maxPerView = 5.8;
+            const canLoop = slideCount >= Math.ceil(maxPerView) * 2; // needs >= 12 slides
 
-            let maxSlidesPerView = 0;
-           
-            if (window.innerWidth < 1024) {
-                maxSlidesPerView = 2.5;
-            } else if (window.innerWidth >= 1024) {
-                maxSlidesPerView = 5.8;
-            }
-
-            const canLoop = slideCount > Math.ceil(maxSlidesPerView) * 2;
-            
             this.swiper = new Swiper(this.el.querySelector('.swiper'), {
                 modules: [Navigation, Mousewheel],
                 slidesPerView: 2.5,
                 spaceBetween: 12,
+                loopAdditionalSlides: 2, // extra clones = smoother wrap with fractional slidesPerView
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
@@ -45,30 +46,30 @@ export default (Alpine: AlpineType) => {
                     releaseOnEdges: true,    // Allows normal page scroll at the ends
                     sensitivity: 1,          // Lower this if trackpad feels hypersensitive
                 },
-                slidesOffsetBefore: 12,
-                slidesOffsetAfter: 12,
                 centeredSlides: true,
-                centerInsufficientSlides: true,
-                centeredSlidesBounds: true,
                 watchOverflow: true,
                 loop: canLoop,
                 speed: 800,
                 breakpoints: {
                     768: {
                         slidesPerView: 3.5,
+                        centeredSlides: false,
                     },
                     1024: {
                         slidesPerView: 5.8,
                         spaceBetween: 20,
-                        centeredSlides: slideCount < 6,
-                        centerInsufficientSlides: slideCount < 6,
-                        centeredSlidesBounds: slideCount < 6,
+                        centeredSlides: false,
                     },
                 },
                 on: {
                     init: () => this.updateSlideWidth(),
                     resize: () => this.updateSlideWidth(),
                   }
+            });
+            
+            this.$nextTick(() => {
+                this.swiper?.update();
+                this.swiper?.navigation?.update();
             });
         },
 
@@ -92,21 +93,16 @@ export default (Alpine: AlpineType) => {
             fetch(url)
                 .then(response => response.text())
                 .then(html => {
+                    this.swiperDestroy();
+
                     const swiperWrapper = this.el.querySelector('.swiper-wrapper');
                     swiperWrapper.innerHTML = html;
-                    this.swiperDestroy();
+
                     this.initSwiper();
 
                     this.activeCollectionTitle = title;
                     this.activeCollectionAccentText = accentText;
                     this.activeCollectionHandle = collectionHandle;
-
-                    this.$nextTick(() => {
-                        this.swiper.update();
-                        this.checkNavButtons();
-                        console.log('this swiper', this.swiper);
-                    });
-
                 })
                 .catch(error => {
                     console.error('Error fetching collection carousel:', error);

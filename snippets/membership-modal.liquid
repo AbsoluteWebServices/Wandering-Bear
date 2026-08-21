@@ -8,27 +8,46 @@
     assign elite_button_text = item.elite_button_text
     assign learn_more_button = item.learn_more_button
     assign login_text = item.login_text
-    assign already_logged_in_text = item.already_logged_in_text
+    assign already_logged_in_text = item.already_logged_in_text_elite_vip
+    assign already_logged_in_text_free = item.already_logged_in_text_free
 %}
 
 {%- capture membership_tier -%}{%- render 'customer-membership-tier' -%}{%- endcapture -%}
 {%- assign membership_tier = membership_tier | strip -%}
 {%- assign is_elite = false -%}
+{%- assign is_member = false -%}
+{%- assign tier = '' -%}
 {%- if membership_tier == 'ELITE' -%}
     {%- assign is_elite = true -%}
+    {%- assign tier = 'ELITE' -%}
+    {%- assign is_member = true -%}
 {%- endif -%}
+{% if membership_tier == 'VIP' %}
+    {%- assign is_vip = true -%}
+    {%- assign tier = 'VIP' -%}
+    {%- assign is_member = true -%}
+{% endif %}
+{% if membership_tier == 'FREE' %}
+    {%- assign is_free = true -%}
+    {%- assign tier = 'FREE' -%}
+    {%- assign is_member = true -%}
+{% endif %}
 
-{% capture elite_block %}
-    <div class="bg-[#BFD7E9] p-4 wb-flex justify-center items-center relative top-0 left-0 w-full">
+{% capture member_block %}
+    <div class="bg-[#BFD7E9] p-4 wb-flex justify-center items-center relative top-0 left-0 w-full min-h-[70px]">
         <div class="max-w-[272px] mx-auto text-sm font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-espresso [&_p>a]:!text-espresso [&_p>a]:underline">
-            {{ already_logged_in_text | metafield_tag }}
+            {% if tier == 'ELITE' or tier == 'VIP' %}
+               {{ already_logged_in_text | metafield_tag | replace: 'TIER', tier }}
+            {% else %}
+               {{ already_logged_in_text_free | metafield_tag }}
+            {% endif %}
         </div>
     </div>
 {% endcapture %}
 
 <div x-data="membershipLogin()" class="max-w-[481px] bg-white rounded-[5px] overflow-hidden relative">
-{% if is_elite %}
-    {{ elite_block }}
+{% if is_member %}
+    {{ member_block }}
 {% endif %}
 <button @click="close()" class="cursor-pointer flex justify-center items-center text-bear-black shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] items-center rounded-full w-9.5 h-9.5 absolute top-4 right-3 bg-foam cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300">
     {% render 'icons', icon: 'close', class: 'w-4 h-4 relative' %}
@@ -56,7 +75,7 @@
     {% render 'wb-button', style: 'primary', class: 'z-[3] w-full! max-w-[280px]! h-[47px]! text-[20px]!', width: 98, height: 25, label: item.learn_more_button.value.text, link: item.learn_more_button.value.url %}
 {% endif %}
 </div>
-{% if item.login_text != blank and is_elite == false %}
+{% if item.login_text != blank and is_member == false %}
     <div class="bg-[#BFD7E9] p-4" @click="onLoginLink($event)">
         <div class="text-sm font-semibold leading-[160%] font-kurdis-semi-condensed text-center text-espresso [&_p>a]:!text-espresso [&_p>a]:underline [&_strong]:font-bold">
             {{ item.login_text | metafield_tag }}

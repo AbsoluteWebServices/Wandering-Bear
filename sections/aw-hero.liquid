@@ -23,7 +23,7 @@
 {% capture hero_content %}
         {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover object-left sm:!object-[center_bottom] md:!object-center !max-w-none absolute inset-0 2xl:!object-[0%_30%]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
         {% if title_image != blank or title_text != blank or subtitle != blank %}
-            <div class="container relative wb-flex flex-col items-center md:flex-row pt-8 justify-center w-full max-w-none md:justify-start md:max-w-full md:px-5 lg:max-w-[1136px] min-h-[345px] smd:min-h-[415px] md:gap-5 mx-0 md:mx-auto lg:min-h-[555px] h-full lg:max-h-[528px]">
+            <div class="container relative wb-flex flex-col items-center md:flex-row pt-8 justify-center w-full max-w-none md:justify-start md:max-w-full gap-8 md:px-5 lg:max-w-[1136px] h-full smd:min-h-[415px] md:gap-5 mx-0 md:mx-auto lg:min-h-[555px] h-full lg:max-h-[528px]">
             <div class="relative wb-flex flex-col items-center justify-center sm:items-start md:items-center gap-2.5 z-1 w-fit md:min-w-1/2 max-w-full">
                 {% if title_image != blank and title_type == 'image' %}
                     {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative left-3 sm:left-0 w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
@@ -31,7 +31,7 @@
                     <h1 class="h1 title-text leading-[1.2] text-center md:!text-left" style="color: {{ color_scheme.settings.foreground }}; {{ title_styles }}">{{ title_text | replace: '\b', '<br>' }}</h1>
                 {% endif %}
                 {% if subtitle != blank %}
-                    <span class="h3 text-center md:!text-xl title-text" style="color: {{ color_scheme.settings.foreground }};">{{ subtitle }}</span>
+                    <span class="h3 text-center md:!text-xl title-text mx-auto" style="color: {{ color_scheme.settings.foreground }};">{{ subtitle }}</span>
                 {% endif %}
                 {% if buttons != blank %}
                     <div class="wb-flex flex-col lg:!flex-row gap-3 lg:gap-6.5 w-fit mx-auto lg:!mx-0 mt-3 relative -left-2">
@@ -47,7 +47,7 @@
                 {% endif %}
             </div>
             {% if foreground_image != blank or foreground_image_mobile != blank %}
-                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'relative min-h-full left-0 -bottom-8 md:bottom-0 md:static w-fit h-full object-contain z-1 object-bottom md:mt-12', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'relative min-h-full left-0 bottom-0 md:static w-screen smd:w-auto h-full object-contain z-1 object-bottom md:mt-12', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
                 {% endif %}
                
             </div>
@@ -63,7 +63,7 @@
     {% if badge != blank %}
         {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -bottom-5 right-[20vw] !w-[85px] !h-auto', loading: 'eager', preload: 'eager' }}
     {% endif %}
-    <svg preserveAspectRatio="none" class="absolute -bottom-0.5 left-0 w-full z-[2]" xmlns="http://www.w3.org/2000/svg" width="1290" height="30" viewBox="0 0 1290 30" fill="none">
+    <svg preserveAspectRatio="none" class="absolute -bottom-4 md:-bottom-0.5 left-0 w-full z-[2]" xmlns="http://www.w3.org/2000/svg" width="1290" height="30" viewBox="0 0 1290 30" fill="none">
         <path d="M0 0.952156L320 0L938 7.63188L1290 5.2564V30H0V0.952156Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
 </div>

@@ -14,9 +14,10 @@
       "blocks": {
         "button_9fyEpA": {
           "type": "button",
+          "disabled": true,
           "settings": {
-            "style": "secondary-gold",
-            "label": "Shop Lattes",
+            "style": "secondary-cream",
+            "label": "Shop ALL",
             "link": "shopify://collections/single-serve",
             "badge": "shopify://shop_images/NEW_BADGE_7969493a-55da-47d4-9826-d2c57b89e2c5.svg"
           }
@@ -25,7 +26,7 @@
           "type": "button",
           "settings": {
             "style": "secondary-cream",
-            "label": "Shop Cold Brew",
+            "label": "SHOP ALL",
             "link": "shopify://collections/on-tap-cold-brew"
           }
         }
@@ -48,7 +49,7 @@
         "title_text": "LIKE A COFFEE SHOP\\bIN YOUR FRIDGE",
         "font_size": 24,
         "font_size_mobile": 24,
-        "subtitle": "For the at-home pajama baristas"
+        "subtitle": "No Barista Required"
       }
     },
     "aw_divider_jeaQGx": {
@@ -189,9 +190,9 @@
         "collection_pHTVci": {
           "type": "collection",
           "settings": {
-            "collection": "on-tap-cold-brew",
-            "title": "Cold Brew Box",
-            "accent_text": "Bestseller!"
+            "collection": "site-v2-groupedpdp-96oz",
+            "title": "96oz Boxes",
+            "accent_text": "Most Popular!"
           }
         },
         "collection_XPRYUB": {
@@ -206,7 +207,7 @@
           "type": "collection",
           "settings": {
             "collection": "grouped-cold-brew-latte-8oz-cans",
-            "title": "Single Servings",
+            "title": "8oz Cans",
             "accent_text": ""
           }
         }
@@ -264,7 +265,7 @@
         "title_alt": "Our members unlock better prices with every sip",
         "subtitle": "<p>Start earning $5 for every $50 spent. The best part is – you can join for free.  <br/>Upgrade to VIP or Elite anytime for exclusive flavors, bigger discounts, and more perks.</p>",
         "foreground_image": "shopify://shop_images/Group_1327226595.svg",
-        "foreground_image_mobile": "shopify://shop_images/Group_1327226610.svg",
+        "foreground_image_mobile": "shopify://shop_images/Group_1327226595.svg",
         "description": "Join 100k+ members earning rewards with every order.",
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
@@ -338,7 +339,7 @@
         "title_image": "shopify://shop_images/PROUDLY_AVAILABLE_WHERE_YOU_SHOP.svg",
         "title_image_mobile": "shopify://shop_images/PROUDLY_AVAILABLE_WHERE_YOU_SHOP.svg",
         "button_text": "Check us out in-store",
-        "button_url": "shopify://pages/find-wandering-bear-cold-brew-in-stores",
+        "button_url": "shopify://pages/store-locator",
         "button_style": "secondary",
         "button_size": "small",
         "button_bg": "#af7404",

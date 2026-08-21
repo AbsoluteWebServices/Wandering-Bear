@@ -3,6 +3,4 @@
     width: calc(100% / 5.5);
 {% endcapture %}
 
-{% for product in collection.products %}
-    {% render 'multi-coll-carousel-slide', product: product, slide_styles: slide_styles %}
-{% endfor %}
+{% render 'carousel-padded-slides', collection: collection, slide_styles: slide_styles %}

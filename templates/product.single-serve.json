@@ -176,8 +176,8 @@
               "name": "Cross Sell Call-out",
               "settings": {
                 "color_scheme": "scheme-40eec688-b970-4f1a-96a1-8b50c977616b",
-                "image": "shopify://shop_images/HERO_1_0cda21ca-1de5-4e2e-8c56-e84d94c9f089.png",
-                "title": "Looking for MORE of our Cold Brew?",
+                "image": "shopify://shop_images/Cold_brew_Boxes_2.png",
+                "title": "Looking for MORE of our cold brew?",
                 "subtitle": "Try our bestselling 96oz box!",
                 "button_label": "Shop Now",
                 "button_link": "/"
@@ -377,8 +377,8 @@
             "font_size": 24,
             "font_size_mobile": 24,
             "title_alt": "",
-            "diagram_image": "shopify://shop_images/Group_1327226582.png",
-            "diagram_image_mobile": "shopify://shop_images/Group_1327226582_40fafe0f-35ee-4263-bb61-f217848b5895.png",
+            "diagram_image": "shopify://shop_images/ColdBrewVSLAtte_COLD_BREW_state_2.png",
+            "diagram_image_mobile": "shopify://shop_images/ColdBrewVSLAtte_COLD_BREW_state_2.png",
             "text_background_color": "#f2e6dc",
             "text_background_opacity": 80,
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
@@ -406,8 +406,8 @@
             "font_size": 24,
             "font_size_mobile": 24,
             "title_alt": "",
-            "diagram_image": "shopify://shop_images/Group_1327226582_fd7ab366-5442-4f98-887d-1f87145b9c0c.png",
-            "diagram_image_mobile": "shopify://shop_images/Group_1327226582_5b7db1b4-7656-4e22-980f-65bf57dab0c6.png",
+            "diagram_image": "shopify://shop_images/ColdBrewVSLAtte_LATTE_state_2.png",
+            "diagram_image_mobile": "shopify://shop_images/ColdBrewVSLAtte_LATTE_state_2.png",
             "text_background_color": "#f2e6dc",
             "text_background_opacity": 80,
             "icon_1": "shopify://shop_images/Group_1327226585_13824b5d-f61e-4c62-84ce-4d324dab29ad.svg",
@@ -415,7 +415,7 @@
             "description_1": "Made with our signature cold brew from organic, specialty-grade beans",
             "order_mobile_1": 2,
             "icon_2": "shopify://shop_images/Group_1327226584.svg",
-            "title_2": "SUBTLY SWEET,NO COMPROMISE",
+            "title_2": "SUBTLY SWEET, NO COMPROMISE",
             "description_2": "Only 100 calories and just 5 grams of real sugar",
             "order_mobile_2": 3,
             "icon_3": "shopify://shop_images/Group_1327226583.svg",
@@ -466,21 +466,21 @@
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226586_4387d08b-9ccc-456b-bb51-886c3448c5b4.svg",
-            "text": "Coffee shop quality in a can — just grab one and go."
+            "text": "Our premium ingredients and precise brewing process deserve packaging that can deliver."
           }
         },
         "icon_item_w3HbfU": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226587.svg",
-            "text": "Toss one in your bag, your car, your cooler — it's ready when you are."
+            "text": "Coffee shop quality meets grab and go convenience. Toss one in your bag, your car, your cooler."
           }
         },
         "icon_item_bgBnVE": {
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226588.svg",
-            "text": "Shelf stable until you're ready — once opened, best enjoyed within 24 hours."
+            "text": "Shelf stable until you're ready. Best enjoyed cold."
           }
         }
       },
@@ -513,7 +513,8 @@
         "title_alt": "",
         "title_image": "shopify://shop_images/right-sized.svg",
         "title_image_mobile": "shopify://shop_images/rightsized.svg",
-        "media_type": "image",
+        "media_type": "video",
+        "video": "shopify://files/videos/Wandering Bear 8oz Can_Target_4-5_1080.mov",
         "large_image": "shopify://shop_images/image_140_1.png",
         "padding-block-start": 54,
         "padding-block-end": 64,
@@ -541,7 +542,7 @@
         "padding-block-start-mobile": 0,
         "padding-block-end-mobile": 0,
         "image": "shopify://shop_images/coffee.png",
-        "badge": "shopify://shop_images/FRESH.svg",
+        "badge": "shopify://shop_images/FRESH_c8def4c8-8fc5-42f8-9fab-c11ddae103cf.svg",
         "subtitle": "LIKE YOU MADE IT YOURSELF, BUT BETTER",
         "title": "OUR FRESH TASTE GUARANTEE",
         "description": "It's that simple because we are obsessive over our quality standards from bean to box. We stand behind our products, so if for any reason you are not satisfied with a product you purchased from us or one of our authorized sellers, you may request a refund or replacement product within 60 days of the date of purchase."
@@ -592,7 +593,7 @@
           "type": "shopify://apps/okendo/blocks/reviews-widget/bb689e69-ea70-4661-8fb7-ad24a2e23c29",
           "settings": {
             "product": "{{ product }}",
-            "widget_type": "reviews_widget"
+            "widget_type": "combined_widget"
           }
         }
       },
@@ -703,7 +704,7 @@
         "font_size_mobile": 24,
         "title_alt": "",
         "title_image": "shopify://shop_images/Group_1327226590.svg",
-        "faqs_metaobject": "96-oz-cold-brew-straight-black",
+        "faqs_metaobject": "8-oz-cans",
         "button_label": "",
         "button_link": "",
         "padding-block-start": 0,
@@ -712,10 +713,10 @@
         "padding-block-end-mobile": 0
       }
     },
-    "products_slider_eeqjMT": {
+    "products_slider_QJTYax": {
       "type": "products-slider",
       "blocks": {
-        "heading_9RQfry": {
+        "heading_cBwgjr": {
           "type": "_heading",
           "settings": {
             "block_class": "",
@@ -753,69 +754,582 @@
           },
           "blocks": {}
         },
-        "cart_product_slider_VDnkkq": {
-          "type": "cart_product_slider",
+        "wb_product_card_6bX6X9": {
+          "type": "wb-product-card",
+          "name": "WB Product Card",
           "settings": {
             "product": "extra-strong-cold-brew-coffee-32oz-straight-black",
-            "title": "Original Black",
-            "title_small": "32oz",
-            "show_badge": true,
-            "badge_text": "",
-            "image": "shopify://shop_images/Original-Black-11oz.png",
-            "card_background_color": "",
-            "custom_price_text": ""
+            "product_card_gap": 12,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "blocks": {}
+          "blocks": {
+            "wb_image_T6XqHj": {
+              "type": "wb-image",
+              "settings": {
+                "image": "{{ closest.product.metafields.custom.collection_image.value }}",
+                "link": "",
+                "image_ratio": "adapt",
+                "image_sizes": "(min-width: 990px) 30vw, (min-width: 750px) 33vw, 50vw",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "wb_product_card_group_pWAxHd": {
+              "type": "_wb-product-card-group",
+              "settings": {
+                "class": "",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "wb_product_title_AFPU4Q": {
+                  "type": "wb-product-title",
+                  "settings": {
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "wb_price_QDhaPF": {
+                  "type": "wb-price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": false,
+                    "show_tax_info": false,
+                    "type_preset": "h6",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "wb_product_title_AFPU4Q",
+                "wb_price_QDhaPF"
+              ]
+            }
+          },
+          "block_order": [
+            "wb_image_T6XqHj",
+            "wb_product_card_group_pWAxHd"
+          ]
         },
-        "cart_product_slider_nATbyK": {
-          "type": "cart_product_slider",
+        "wb_product_card_FqqfUF": {
+          "type": "wb-product-card",
+          "name": "WB Product Card",
           "settings": {
-            "product": "cold-brew-latte-8-oz-double-latte-mocha",
-            "title": "Mocha Latte",
-            "title_small": "8oz",
-            "show_badge": true,
-            "badge_text": "",
-            "image": "shopify://shop_images/Mocha-Latte-8oz.png",
-            "card_background_color": "",
-            "custom_price_text": ""
+            "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
+            "product_card_gap": 12,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "blocks": {}
+          "blocks": {
+            "wb_image_eCdAhG": {
+              "type": "wb-image",
+              "settings": {
+                "image": "{{ closest.product.metafields.custom.collection_image.value }}",
+                "link": "",
+                "image_ratio": "adapt",
+                "image_sizes": "(min-width: 990px) 30vw, (min-width: 750px) 33vw, 50vw",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "wb_product_card_group_eMqibd": {
+              "type": "_wb-product-card-group",
+              "settings": {
+                "class": "",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "wb_product_title_ECL6bj": {
+                  "type": "wb-product-title",
+                  "settings": {
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "wb_price_CNHGXf": {
+                  "type": "wb-price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": false,
+                    "show_tax_info": false,
+                    "type_preset": "h6",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "wb_product_title_ECL6bj",
+                "wb_price_CNHGXf"
+              ]
+            }
+          },
+          "block_order": [
+            "wb_image_eCdAhG",
+            "wb_product_card_group_eMqibd"
+          ]
         },
-        "cart_product_slider_EU3AT8": {
-          "type": "cart_product_slider",
+        "wb_product_card_AGjx9t": {
+          "type": "wb-product-card",
+          "name": "WB Product Card",
           "settings": {
-            "product": "32oz-3-to-1-coffee-concentrate-bundle-unit-straight-black",
-            "title": "3:1 Concentrate",
-            "title_small": "32oz",
-            "show_badge": true,
-            "badge_text": "",
-            "image": "shopify://shop_images/3-1-Concentrate-32oz_bd218ab7-f7e2-4a56-a053-4b1b50efd297.png",
-            "card_background_color": "",
-            "custom_price_text": ""
+            "product": "extra-strong-cold-brew-on-tap-128oz-straight-black",
+            "product_card_gap": 12,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "blocks": {}
+          "blocks": {
+            "wb_image_JmWjmd": {
+              "type": "wb-image",
+              "settings": {
+                "image": "{{ closest.product.metafields.custom.collection_image.value }}",
+                "link": "",
+                "image_ratio": "adapt",
+                "image_sizes": "(min-width: 990px) 30vw, (min-width: 750px) 33vw, 50vw",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "wb_product_card_group_WH3YgB": {
+              "type": "_wb-product-card-group",
+              "settings": {
+                "class": "",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "wb_product_title_JJJjf3": {
+                  "type": "wb-product-title",
+                  "settings": {
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "wb_price_zeJxCw": {
+                  "type": "wb-price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": false,
+                    "show_tax_info": false,
+                    "type_preset": "h6",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "wb_product_title_JJJjf3",
+                "wb_price_zeJxCw"
+              ]
+            }
+          },
+          "block_order": [
+            "wb_image_JmWjmd",
+            "wb_product_card_group_WH3YgB"
+          ]
         },
-        "cart_product_slider_yPtdRp": {
-          "type": "cart_product_slider",
+        "wb_product_card_FpeW9R": {
+          "type": "wb-product-card",
+          "name": "WB Product Card",
+          "disabled": true,
           "settings": {
-            "product": "extra-strong-organic-cold-brew-coffee-11oz-straight-black",
-            "title": "Original Black",
-            "title_small": "11oz",
-            "show_badge": true,
-            "badge_text": "",
-            "image": "shopify://shop_images/Original-Black-32oz.png",
-            "card_background_color": "",
-            "custom_price_text": ""
+            "product": "cold-brew-8-oz-can",
+            "product_card_gap": 12,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "blocks": {}
+          "blocks": {
+            "wb_image_MeUkk8": {
+              "type": "wb-image",
+              "settings": {
+                "image": "{{ closest.product.metafields.custom.collection_image.value }}",
+                "link": "",
+                "image_ratio": "adapt",
+                "image_sizes": "(min-width: 990px) 30vw, (min-width: 750px) 33vw, 50vw",
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "wb_product_card_group_ynaJYp": {
+              "type": "_wb-product-card-group",
+              "settings": {
+                "class": "",
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 4,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "wb_product_title_zge4db": {
+                  "type": "wb-product-title",
+                  "settings": {
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "wb_price_qbT8c4": {
+                  "type": "wb-price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": false,
+                    "show_tax_info": false,
+                    "type_preset": "h6",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "wb_product_title_zge4db",
+                "wb_price_qbT8c4"
+              ]
+            }
+          },
+          "block_order": [
+            "wb_image_MeUkk8",
+            "wb_product_card_group_ynaJYp"
+          ]
         }
       },
       "block_order": [
-        "heading_9RQfry",
-        "cart_product_slider_VDnkkq",
-        "cart_product_slider_nATbyK",
-        "cart_product_slider_EU3AT8",
-        "cart_product_slider_yPtdRp"
+        "heading_cBwgjr",
+        "wb_product_card_6bX6X9",
+        "wb_product_card_FqqfUF",
+        "wb_product_card_AGjx9t",
+        "wb_product_card_FpeW9R"
       ],
       "custom_css": [],
       "name": "AW Products Slider",
@@ -837,7 +1351,7 @@
         "layout_type": "slider",
         "slides_per_view_mobile": "2.25",
         "slides_per_view_tablet": "3",
-        "slides_per_view_desktop": "4",
+        "slides_per_view_desktop": "3",
         "space_between_mobile": 14,
         "space_between_tablet": 24,
         "space_between_desktop": 44,
@@ -868,6 +1382,6 @@
     "okendo_reviews_widget_PUYwdd",
     "aw_member_comparison_EAjQ8s",
     "aw_frequently_asked_questions_33izYW",
-    "products_slider_eeqjMT"
+    "products_slider_QJTYax"
   ]
 }

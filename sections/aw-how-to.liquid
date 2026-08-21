@@ -3,6 +3,9 @@
     assign title = section_settings.title
     assign image = section_settings.image
     assign icon = section_settings.icon
+    assign video = section_settings.video
+    assign media_type = section_settings.media_type
+
 
     for block in section.blocks
         if block.type == 'how-to-mix' and forloop.first
@@ -85,9 +88,17 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="w-full h-full mx-auto smd:max-w-[500px] lg:mx-0">
+        {% if media_type == 'video' %}
+          <div class="w-full flex justify-center">
+            <div class="recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]">
+            {% render 'video-player', video_sources: video.sources %}
+            </div>
+          </div>
+        {% elsif media_type == 'image' %}
+          <div class="w-full h-full mx-auto smd:max-w-[500px] lg:mx-0">
             {{ image | image_url: width: 1000 | image_tag }}
-        </div>
+          </div>
+        {% endif %}
     </div>
     </div>
 </div>
@@ -249,9 +260,32 @@
       "info": "Use \\n to add a line break."
     },
     {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "options": [
+        {
+          "value": "video",
+          "label": "Video"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "visible_if": "{{ section.settings.media_type == 'video' }}"
+    },
+    {
       "type": "image_picker",
       "id": "image",
-      "label": "Image"
+      "label": "Image",
+      "visible_if": "{{ section.settings.media_type == 'image' }}"
     },
     {
       "type": "image_picker",

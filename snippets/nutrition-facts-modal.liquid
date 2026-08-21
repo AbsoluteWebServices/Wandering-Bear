@@ -7,7 +7,8 @@
 
   Data model:
     product.metafields.custom.product_group.value.collection_handle -> collection of flavor products
-    each flavor product's metafields.custom.flavor.value -> { name, nutrition_facts_label, ingredients }
+    each flavor product's metafields.custom.flavor.value -> { name }
+    each flavor product's metafields.custom.nutrition_facts.value -> { image, ingredients }
 
   Renders nothing when the product has no flavor group, so it's safe to include on any PDP.
 
@@ -148,24 +149,29 @@
         </div>
       </div>
 
-      {%- comment -%} Nutrition Facts label (one per flavor) {%- endcomment -%}
+      {%- comment -%} Nutrition Facts label (one per flavor) — image now lives on the
+         flavor product's custom.nutrition_facts metaobject (.value.image). {%- endcomment -%}
       {%- for nf_flavor in nf_flavors -%}
-        {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
-        {%- assign nf_label = nf_meta.nutrition_facts_label -%}
+        {%- assign nf_label = nf_flavor.metafields.custom.nutrition_facts.value.image -%}
         {%- if nf_label != blank -%}
-          {%- assign nf_name = nf_meta.name | default: nf_flavor.title -%}
+          {%- assign nf_name = nf_flavor.metafields.custom.flavor.value.name | default: nf_flavor.title -%}
+          {%- comment -%} Eager (not lazy): every flavor's label is display:none via
+             x-show, and a lazy image inside a hidden element won't load until first
+             revealed — which made the panel collapse to 0 height on each flavor switch
+             while the new image loaded. Eager preloads them all when the modal opens,
+             so switching just reveals an already-loaded image. {%- endcomment -%}
           <div x-show="selected === '{{ nf_flavor.handle }}'"
-          class="flex justify-start">
-            {{ nf_label | image_url: width: 720 | image_tag: loading: 'lazy', class: 'h-auto max-h-[339px] w-auto object-contain', alt: nf_name }}
+          class="flex justify-center max-h-full">
+            {{ nf_label | image_url: width: 720 | image_tag: loading: 'eager', class: 'h-auto max-h-[400px] smd:max-h-[500px] w-auto object-contain', alt: nf_name }}
           </div>
         {%- endif -%}
       {%- endfor -%}
 
-      {%- comment -%} Ingredients (one per flavor) {%- endcomment -%}
+      {%- comment -%} Ingredients (one per flavor) — also on the flavor product's
+         custom.nutrition_facts metaobject (.value.ingredients). {%- endcomment -%}
       {%- assign nf_has_ingredients = false -%}
       {%- for nf_flavor in nf_flavors -%}
-        {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
-        {%- if nf_meta.ingredients != blank -%}
+        {%- if nf_flavor.metafields.custom.nutrition_facts.value.ingredients != blank -%}
           {%- assign nf_has_ingredients = true -%}
           {%- break -%}
         {%- endif -%}
@@ -176,13 +182,13 @@
           Ingredients
         </p>
         {%- for nf_flavor in nf_flavors -%}
-          {%- assign nf_meta = nf_flavor.metafields.custom.flavor.value -%}
-          {%- if nf_meta.ingredients != blank -%}
+          {%- assign nf_ingredients = nf_flavor.metafields.custom.nutrition_facts.value.ingredients -%}
+          {%- if nf_ingredients != blank -%}
             <div
               x-show="selected === '{{ nf_flavor.handle }}'"
               class="text-[10px] font-semibold leading-[150%] [&_a]:underline"
             >
-              {{ nf_meta.ingredients }}
+              {{ nf_ingredients }}
             </div>
           {%- endif -%}
         {%- endfor -%}

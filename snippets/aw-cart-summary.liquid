@@ -6,13 +6,13 @@
   @param {string} [total_savings] - The total savings for the cart.
 {%- enddoc -%}
 
-{% capture shipping_fee %}
+{% comment %} {% capture shipping_fee %}
     {% if member_tier == 'Elite' or member_tier == 'VIP' or is_autoship %}
         FREE
     {% else %}
         Calculated at checkout
     {% endif %}
-{% endcapture %}
+{% endcapture %} {% endcomment %}
 
 
 <div class="cart-totals">
@@ -28,7 +28,7 @@
         </span>
     </div>
 
-    {% if cart.total_discounts > 0 %}
+    {% if cart.cart_level_discount_applications.size > 0 %}
         <div class="flex justify-between items-center">
             <span class="cart-totals__original-label">Discounts</span>
         </div>
@@ -48,7 +48,7 @@
         class="cart-totals__original-value cart-secondary-typography"
         data-testid="cart-subtotal-value"
         >
-            {{ shipping_fee }}
+            FREE
         </span>
     </div>
 

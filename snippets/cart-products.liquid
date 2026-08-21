@@ -33,6 +33,17 @@
       break
     endif
   endfor
+
+  comment
+    Base the member-discount mirror only on eligible lines. Exclude gift cards and membership lines.
+  endcomment
+  assign member_discount_eligible_subtotal = 0
+  for item in cart.items
+    assign discount_title_check = item.title | downcase
+    unless discount_title_check contains 'elite' or discount_title_check contains 'gift card'
+      assign member_discount_eligible_subtotal = member_discount_eligible_subtotal | plus: item.final_line_price
+    endunless
+  endfor
 %}
 
 
@@ -74,13 +85,14 @@
   {% endif %}
 >
   {% if cart.empty? or force_empty %}
+    <button type="button" on:click="cart-drawer-component/close">
       {% assign button_text = 'actions.continue_shopping' | t %}
-      {% assign button_link = settings.empty_cart_button_link | default: routes.all_products_collection_url %}
       {% render 'wb-button', 
       label: button_text, 
-      link: button_link, 
+      link: '', 
       style: 'secondary',
       class: 'cart-items__empty-button !text-base' %}
+    </button>
   {%- else -%}
     <span
       class="visually-hidden"
@@ -107,7 +119,7 @@
              the table inside `.cart-items`. {% endcomment %}
 
             {% assign bundle_parent_ids = '' %}
-
+            
             {% for item in cart.items %}
               {% if item.properties._bundle_id != blank and item.properties._bundle_parent == 'true' %}
                 {% assign bundle_parent_ids = bundle_parent_ids
@@ -129,13 +141,21 @@
                   {% assign bundle_id = item.properties._bundle_id %}
                   {% break %}
                 {% endif %}
+                {% assign is_concentrate = false %}
+                {% if item.properties._collection_handle == 'concentrate' %}
+                  {% assign is_concentrate = true %}
+                {% endif %}
               {% endfor %}
 
               <div class="bg-[#F9F3ED] font-kurdis-semi-condensed rounded-[5px] overflow-hidden">
                 {% if parent_item != blank %}
                   {% assign collection_handle = parent_item.properties._collection_handle %}
                   {% assign product_object = parent_item.product.metafields.custom.product_group.value %}
-                  {% assign product_title = product_object.headline | append: ' · ' | append: product_object.size %}
+                  {% if is_concentrate %}
+                    {% assign product_title = 'Concentrate' | append: ' · ' | append: product_object.size %}
+                  {% else %}
+                    {% assign product_title = product_object.headline | append: ' · ' | append: product_object.size %}
+                  {% endif %}
                   <div class="flex font-gothic_condensed text-bear-black font-bold uppercase text-lg justify-between items-center relative p-4">
                     {% if product_title != blank %}
                       {{ product_title }}
@@ -157,20 +177,23 @@
 
                 {% assign total_bundle_price = 0 %}
                 {% assign total_original_price = 0 %}
+                {% assign total_variant_price = 0 %}
                 {% assign bundle_total_autoship_savings = 0 %}
                 {% for item in cart.items %}
                   
                   {% if item.properties._bundle_id == bundle_id %}
                     {% unless item.properties._bundle_parent == 'true' %}
+                      {% if item.product.title contains 'Concentrate' %}
+                        {% assign is_concentrate = true %}
+                      {% endif %}
                     {% assign compare_at_price = item.compare_at_price | default: item.original_price %}
-                    {% assign bundle_line_price = item.price | times: item.quantity %}
+                    {% comment %} Sum the line-item final prices (what each flavor row shows),
+                       so the bundle total matches the rows and the Subtotal. item.price bakes
+                       in the cart-level (elite) discount; that belongs in the Discounts line,
+                       not the bundle total. {% endcomment %}
+                    {% assign bundle_line_price = item.final_line_price %}
                     {% assign original_line_price = compare_at_price | times: item.quantity %}
                     {% assign total_bundle_price = total_bundle_price | plus: bundle_line_price %}
-                    {%- comment -%}
-                      item.variant, not product.variants[0]: a bundle child has one
-                      variant per size tier, so variants[0] is the smallest tier's
-                      price and allocations no matter which one is in the cart.
-                    {%- endcomment -%}
 
                     {% liquid
                         assign quantified = false
@@ -191,8 +214,9 @@
                         endif
                         assign unit_price = item.unit_price | money
 
-                        assign variant_line_price = item.variant.price | times: item.quantity
+                        assign variant_line_price = item.final_price | times: item.quantity
                         assign total_original_price = total_original_price | plus: original_price
+                        assign total_variant_price = total_variant_price | plus: variant_line_price
     
                     %}
 
@@ -213,7 +237,7 @@
                       data-bundle-id="{{ bundle_id }}" 
                       data-bundle-image="{{ item.product.metafields.custom.bundle_image | image_url: width: 200 }}"
                       class="relative flex py-2.5 px-4 gap-2">
-                        <a href="{{ item.url | append: '?' | append: item.product.metafields.custom.product_group.value.template_suffix }}" class="w-12">
+                        <a href="{{ item.url | append: '?' | append: item.product.metafields.custom.product_group.value.template_suffix }}" class="w-12 relative">
                           {{ item.image | image_url: width: 100 | image_tag }}
                         </a>
                         <div class="flex flex-col">
@@ -233,7 +257,7 @@
                               {% else %}
                               text-bear-black
                               {% endif %}
-                              ">{{ item.price | money }} x {{ item.quantity }}</span>
+                              ">{{ item.final_price | money }} x {{ item.quantity }}</span>
                             </div>
                           </div>
                         </div>
@@ -244,8 +268,8 @@
                 {% endfor %}
 
                 {% assign bundle_total_autoship_savings_percentage = 0 %}
-                {% if total_original_price > 0 %}
-                  {% assign bundle_total_autoship_savings_percentage = bundle_total_autoship_savings | times: 100.0 | divided_by: total_original_price | round: 0 | append: '%' %}
+                {% if total_variant_price > 0 %}
+                  {% assign bundle_total_autoship_savings_percentage = bundle_total_autoship_savings | times: 100.0 | divided_by: total_variant_price | round: 0 | append: '%' %}
                 {% endif %}
 
                 {%  liquid
@@ -428,16 +452,15 @@
 
                     {% if bundle_parent_month_plan != '' %}
                       <div class="py-3.5 px-4">
-                        <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                        <button type="button" class="w-full border border-espresso flex justify-center items-center font-bold py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed text-base cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
                         data-upgrade-to-autoship
                         data-action="change-frequency"
                         data-bundle-id="{{ bundle_id | escape }}"
                         data-selling-plan-id="{{ bundle_parent_month_plan }}"
                         data-subscription-plans="{{ bundle_subscription_plans | strip | escape }}">
-                          Upgrade to Autoship and Save 
-                          
+                          Upgrade to Autoship 
                           {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
-                            {{ bundle_total_autoship_savings_percentage }}
+                            and Save {{ bundle_total_autoship_savings_percentage }}
                           {% endunless %}
                         </button>
                       </div>
@@ -446,23 +469,27 @@
 
                   <div class="flex items-center justify-between relative p-4">
                     <div class="absolute top-0 left-0 w-full h-[1px] right-0 bg-[#431A031A]"></div>
-                    <button
-                      type="button"
-                      class="inline-flex items-center gap-1 cursor-pointer text-kraft underline text-sm font-kurdis-semi-condensed font-bold hover:!text-gold transition-all duration-300"
-                      data-bundle-edit-trigger
-                      {% if parent_item.properties._bundle_type == '32oz' %}
-                        data-bundle-type="{{ parent_item.properties._bundle_type }}"
-                        data-bundle-size="{{ parent_item.properties._bundle_size }}"
-                        data-flavor-type="{{ parent_item.properties._flavor_type }}"
-                      {% endif %}
-                      data-bundle-id="{{ bundle_id | escape }}"
-                      data-selling-plan="{{ parent_item.selling_plan_allocation.selling_plan.id }}"
-                      data-collection-handle="{{ collection_handle | escape }}"
-                      data-bundle-name="{{ parent_item.properties._bundle_name | handleize }}"
-                    >
-                      {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %}
-                      Add/Modify Flavors
-                    </button>
+                    {% if is_concentrate %}
+                      <div></div>
+                    {% else %}
+                      <button
+                        type="button"
+                        class="inline-flex items-center gap-1 cursor-pointer text-kraft underline text-sm font-kurdis-semi-condensed font-bold hover:!text-gold transition-all duration-300"
+                        data-bundle-edit-trigger
+                        {% if parent_item.properties._bundle_type == '32oz' %}
+                          data-bundle-type="{{ parent_item.properties._bundle_type }}"
+                          data-bundle-size="{{ parent_item.properties._bundle_size }}"
+                          data-flavor-type="{{ parent_item.properties._flavor_type }}"
+                        {% endif %}
+                        data-bundle-id="{{ bundle_id | escape }}"
+                        data-selling-plan="{{ parent_item.selling_plan_allocation.selling_plan.id }}"
+                        data-collection-handle="{{ collection_handle | escape }}"
+                        data-bundle-name="{{ parent_item.properties._bundle_name | handleize }}"
+                      >
+                        {% render 'icons', icon: 'edit', class: 'text-sm inline-flex' %}
+                        Add/Modify Flavors
+                      </button>
+                    {% endif %}
                   {% comment %} Total bundle price {% endcomment %}
                   <div class="flex items-center gap-1">
                     {% if total_original_price > total_bundle_price %}
@@ -542,16 +569,7 @@
                   endif
                  endfor
 
-                assign cart_level_discount = 0
-                for cart_discount in cart.cart_level_discount_applications
-                  assign cart_level_discount = cart_level_discount | plus: cart_discount.total_allocated_amount
-                endfor
-
                 assign price = item.final_line_price
-                if cart_level_discount > 0 and cart.items_subtotal_price > 0
-                  assign line_discount_share = item.final_line_price | times: cart_level_discount | times: 1.0 | divided_by: cart.items_subtotal_price | round
-                  assign price = item.final_line_price | minus: line_discount_share
-                endif
 
                 if quantified
                   assign original_price = item.product.variants[0].price | times: item.quantity
@@ -664,7 +682,7 @@
                       >
                         <span class="font-kurdis-semi-condensed text-bear-black font-bold uppercase text-lg">{{- item.product.title -}}</span>
                         <br>
-                        {% unless item.title contains 'Concentrate' or item.variant.title == 'Default Title' %}
+                        {% unless item.variant.title == 'Default Title' %}
                           <span class="font-kurdis-semi-condensed text-espresso text-base">{{ item.variant.title }}</span>
                         {% endunless %}
                       </a>
@@ -839,14 +857,14 @@
                  {%- endcomment -%}
                  <div class="px-4 py-3 relative">
                    <div class="absolute top-0 left-0 w-full h-[1px] bg-[#431A031A]"></div>
-                   <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] text-espresso font-kurdis-semi-condensed font-semibold text-sm cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
+                   <button type="button" class="w-full border border-espresso flex justify-center items-center py-2 px-4 rounded-[2px] font-bold text-espresso font-kurdis-semi-condensed text-base cursor-pointer hover:bg-gold hover:!text-white transition-all duration-300 hover:border-gold"
                      data-upgrade-to-autoship
                      data-action="change-frequency"
                      data-key="{{ item.key }}"
                      data-selling-plan-id="{{ item_month_plan }}">
-                     Upgrade to Autoship and Save
+                     Upgrade to Autoship 
                      {% unless member_tier == 'VIP' or member_tier == 'Elite' %}
-                      {{ item_autoship_savings_percentage }}
+                      and Save {{ item_autoship_savings_percentage }}
                      {% endunless %}
                    </button>
                  </div>
