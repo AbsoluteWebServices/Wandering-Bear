@@ -1,10 +1,7 @@
 {% liquid
     assign section_settings = section.settings
     assign title = section_settings.title
-    assign image = section_settings.image
     assign icon = section_settings.icon
-    assign video = section_settings.video
-    assign media_type = section_settings.media_type
 
 
     for block in section.blocks
@@ -43,6 +40,31 @@
             {% endif %}
         {% endfor %}
     </div>
+{% endcapture %}
+
+{% comment %} Per-title media: each how-to-mix block sets its own image OR video (block settings,
+  chosen by Media type), toggled with the title — mirrors aw-ways-to-enjoy. {% endcomment %}
+{% capture how_to_media %}
+    {% for block in section.blocks %}
+        {% if block.type == 'how-to-mix' %}
+            {% liquid
+                assign title_handleize = block.settings.title | handleize
+                assign block_media_type = block.settings.media_type
+                assign block_video = block.settings.video
+                assign block_image = block.settings.image
+            %}
+
+            <div class="w-full flex justify-center" x-cloak x-show="activeTitle === '{{ title_handleize }}'">
+                <div class="recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]">
+                    {% if block_media_type == 'video' and block_video != blank %}
+                        {% render 'video-player', video_sources: block_video.sources %}
+                    {% elsif block_image != blank %}
+                        {{ block_image | image_url: width: 1000 | image_tag: class: 'w-full h-full object-cover rounded-[5px]' }}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endcapture %}
 
 <div x-data="howToMix('{{ active_title }}')" class="w-full relative overflow-hidden spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style' %} {% render 'spacing-style', settings: section.settings %}">
@@ -88,17 +110,7 @@
                 {% endfor %}
             </div>
         </div>
-        {% if media_type == 'video' %}
-          <div class="w-full flex justify-center">
-            <div class="recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]">
-            {% render 'video-player', video_sources: video.sources %}
-            </div>
-          </div>
-        {% elsif media_type == 'image' %}
-          <div class="w-full h-full mx-auto smd:max-w-[500px] lg:mx-0">
-            {{ image | image_url: width: 1000 | image_tag }}
-          </div>
-        {% endif %}
+        {{ how_to_media }}
     </div>
     </div>
 </div>
@@ -260,34 +272,6 @@
       "info": "Use \\n to add a line break."
     },
     {
-      "type": "select",
-      "id": "media_type",
-      "label": "Media type",
-      "options": [
-        {
-          "value": "video",
-          "label": "Video"
-        },
-        {
-          "value": "image",
-          "label": "Image"
-        }
-      ],
-      "default": "video"
-    },
-    {
-      "type": "video",
-      "id": "video",
-      "label": "Video",
-      "visible_if": "{{ section.settings.media_type == 'video' }}"
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Image",
-      "visible_if": "{{ section.settings.media_type == 'image' }}"
-    },
-    {
       "type": "image_picker",
       "id": "icon",
       "label": "Icon"
@@ -356,6 +340,34 @@
           "id": "metaobject",
           "label": "Instructions",
           "metaobject_type": "how_to_mix"
+        },
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "Media type",
+          "options": [
+            {
+              "value": "video",
+              "label": "Video"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ],
+          "default": "video"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "visible_if": "{{ block.settings.media_type == 'video' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "visible_if": "{{ block.settings.media_type == 'image' }}"
         }
       ]
     }
