@@ -93,7 +93,9 @@
 
   assign product_data = product.metafields.custom.product_group.value
   assign template_suffix = product_data.template_suffix
-  if template_suffix and product.url contains '?'
+  if product.title contains '11oz'
+    assign product_url = product.url
+  elsif template_suffix and product.url contains '?'
     assign product_url = product.url | append: '&view=' | append: template_suffix
   elsif template_suffix
     assign product_url = product.url | append: '?view=' | append: template_suffix
