@@ -339,11 +339,21 @@
           <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
           <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
         </div>
-        <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mt-2 mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
-        <div class="w-full h-[14px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
-          <div class="h-full rounded-full" style="width: {{ progress_percent }}%; background-color: var(--color-brand-gold);" data-wb-progress-bar></div>
+        {%- comment -%} Everything that states a NUMBER is hidden until the worker supplies one.
+          Progress is spend against a YEARLY threshold, and the only figure Inveterate offers is
+          lifetime — using it told long-standing members they had already arrived while their tier
+          had not moved (QA, customer 5089080967265). The worker now measures the window from
+          Shopify orders and returns no progress at all when it cannot; nothing is shown then, and
+          the same applies when the worker is unreachable. account.ts reveals this on success. {%- endcomment -%}
+        {%- comment -%} The QA preview renders states statically with no worker and no JS, so it
+          passes its own mock figures and must not be hidden — nothing would ever reveal it. {%- endcomment -%}
+        <div data-wb-progress-block{% unless preview %} hidden{% endunless %}>
+          <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mt-2 mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
+          <div class="w-full h-[14px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
+            <div class="h-full rounded-full" style="width: {{ progress_percent }}%; background-color: var(--color-brand-gold);" data-wb-progress-bar></div>
+          </div>
+          <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso text-center"><span data-wb-progress-text>{{ progress_text }}</span>{% if display_tier == 'VIP' %} {{ 'customer.dashboard.progress_or_upgrade' | t }}{% else %} {{ 'customer.dashboard.progress_or' | t }} <a href="{{ membership_url }}" class="hover-underline">{{ 'customer.dashboard.progress_sign_up_autoship' | t }}</a>{% endif %}</p>
         </div>
-        <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso text-center"><span data-wb-progress-text>{{ progress_text }}</span>{% if display_tier == 'VIP' %} {{ 'customer.dashboard.progress_or_upgrade' | t }}{% else %} {{ 'customer.dashboard.progress_or' | t }} <a href="{{ membership_url }}" class="hover-underline">{{ 'customer.dashboard.progress_sign_up_autoship' | t }}</a>{% endif %}</p>
 
         <div class="membership-upsell">
           <p class="body font-bold text-bear-black mb-1">{{ 'customer.dashboard.upgrade_today' | t }} <span class="font-parslay text-gold">{{ 'customer.dashboard.why_wait' | t }}</span></p>

@@ -176,11 +176,16 @@ function renderMembership(m: Membership | null): void {
   setExpiryLine(formatUsDate(m.credits.expires_at));
 
   // Progress column. progress === null ⇒ top tier (ELITE) — SSR already hides the column.
+  // The progress block ships hidden and is revealed only when the worker returns a figure it can
+  // stand behind. `progress: null` covers two cases and both must stay hidden: the member is on the
+  // top tier, and the qualifying spend could not be measured (Inveterate has no windowed figure, so
+  // there is nothing to fall back to — see the worker's toMembership).
   if (m.progress) {
     const bar = root.querySelector<HTMLElement>('[data-wb-progress-bar]');
     if (bar) bar.style.width = `${Math.max(0, Math.min(100, m.progress.percent))}%`;
     setText(root, 'progress-tier', m.progress.next_tier ?? undefined);
     setText(root, 'progress-text', m.progress.message);
+    root.querySelector('[data-wb-progress-block]')?.removeAttribute('hidden');
   }
   // NOTE: tier name stays SSR-native (drives the card layout); everything else here is
   // from the worker. SSR credit balance is the instant fallback until this overwrites it.
