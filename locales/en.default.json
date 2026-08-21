@@ -114,7 +114,10 @@
       "redeem_err_failed": "We couldn't redeem your credits right now. Please try again.",
       "next_autoship": "Your next autoship order",
       "previous_autoship": "Your previous autoship order:",
-      "active_autoships": "{{ count }} Active Autoships",
+      "active_autoships": {
+        "one": "{{ count }} Active Autoship",
+        "other": "{{ count }} Active Autoships"
+      },
       "cancelled": "Cancelled",
       "next_shipment": "Next shipment: {{ date }}",
       "next_shipment_label": "Next shipment:",
@@ -151,6 +154,7 @@
       "track": "Track Order",
       "tracking": "Tracking",
       "tracking_number": "Tracking Number",
+      "tracking_numbers": "Tracking Numbers",
       "tracking_pending": "Not available yet",
       "placed_on": "Placed on {{ date }}",
       "col_product": "Product",

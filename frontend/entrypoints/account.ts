@@ -251,10 +251,15 @@ function renderSubscriptions(subs: Subscriptions | null): void {
   // ("Next shipment: 2027-04-29"). Figma shows "Next shipment: 07/25/2025" (frame 1:177).
   if (!isCancelled) setText(card, 'autoship-date', formatUsDate(first.next_order_date) ?? undefined);
 
-  // Active-count badge — localized "{n} Active Autoships" (active only; CSS hides it when cancelled).
+
   if (!isCancelled) {
     const countEl = card.querySelector<HTMLElement>('[data-wb-autoship-count]');
-    if (countEl) countEl.textContent = fillTemplate(countEl, 'data-wb-count-template', subs.active_count);
+    if (countEl) {
+      const attr = subs.active_count === 1 && countEl.hasAttribute('data-wb-count-template-one')
+        ? 'data-wb-count-template-one'
+        : 'data-wb-count-template';
+      countEl.textContent = fillTemplate(countEl, attr, subs.active_count);
+    }
   }
 
   // "+N more" and the Manage control target the SAME Stay AI portal. Capture the manage anchor's
@@ -273,7 +278,7 @@ function renderSubscriptions(subs: Subscriptions | null): void {
     shown.forEach((li, i) => {
       const row = document.createElement('li');
       row.className =
-        'flex items-center justify-between !gap-2 font-kurdis-semi-condensed font-bold text-[10px] leading-none text-[#955325]';
+        'flex items-center justify-between !gap-2 font-kurdis-semi-condensed font-bold text-xs leading-none text-[#955325]';
       const itemTitle = document.createElement('span');
       itemTitle.textContent = dedupeTitle(li.title);
       row.appendChild(itemTitle);

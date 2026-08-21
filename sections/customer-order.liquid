@@ -23,8 +23,8 @@
     assign o_placed_on = 'June 03, 2026'
     assign o_payment_status = 'Paid'
     assign o_fulfillment_status = 'Fulfilled'
-    assign tracking_number = '435435'
-    assign tracking_url = ''
+    # Mock tracking — one entry keeps the singular "Tracking Number:" layout on the preview page.
+    assign tracking_list = '435435^^' | split: '~~'
     # title|sku|price|qty|total
     assign rows = '96OZ BUNDLE – 2 BOXES - 96OZ BUNDLE – 2 BOXES|staybundle|$0.00|1|$0.00;COLD BREW ON TAP (96 OZ) - BANANA BREAD - 2 BOX DISCOUNT PRICE|WBBB96oz|$34.99|1|$34.99;COLD BREW ON TAP (96 OZ) - ALMOND AMARETTO - 2 BOX DISCOUNT PRICE|WBAM96oz|$34.99|1|$34.99' | split: ';'
     assign o_subtotal = '$69.98'
@@ -36,9 +36,28 @@
     assign o_billing = '2806 Via Alta Pl|San Diego|92108|United States' | split: '|'
     assign o_shipping_addr = '23972 Park Granada|Calabasas|91302|United States' | split: '|'
   else
-    assign fulfillment = order.fulfillments.first
-    assign tracking_number = fulfillment.tracking_number
-    assign tracking_url = fulfillment.tracking_url
+    # If multiple tracking numbers, create a list of pairs of number and url
+    assign tracking_pairs = ''
+    assign seen_numbers = ''
+    for line_item in order.line_items
+      assign f = line_item.fulfillment
+      if f.tracking_number
+        assign f_url = f.tracking_url
+        for tnum in f.tracking_numbers
+          assign tn_key = '|' | append: tnum | append: '|'
+          unless seen_numbers contains tn_key
+            assign seen_numbers = seen_numbers | append: tn_key
+            assign pair = tnum | append: '^^' | append: f_url
+            if tracking_pairs == ''
+              assign tracking_pairs = pair
+            else
+              assign tracking_pairs = tracking_pairs | append: '~~' | append: pair
+            endif
+          endunless
+        endfor
+      endif
+    endfor
+    assign tracking_list = tracking_pairs | split: '~~'
     assign o_name = order.name
     assign o_placed_on = order.created_at | date: '%B %d, %Y'
     assign o_payment_status = order.financial_status_label
@@ -97,10 +116,33 @@
       {%- liquid
         assign tracking_class = 'font-gothic_condensed font-extrabold text-[16px] leading-none text-right underline text-espresso'
       -%}
-      {%- if tracking_number -%}
-        <a href="{{ tracking_url | default: '#' }}"{% if tracking_url %} target="_blank" rel="noopener"{% endif %} class="{{ tracking_class }}">{{ 'customer.order.tracking_number' | t }}: {{ tracking_number }}</a>
-      {%- else -%}
+      {%- assign tracking_count = tracking_list | size -%}
+      {%- if tracking_count == 0 -%}
         <span class="{{ tracking_class }}">{{ 'customer.order.tracking_number' | t }}: {{ 'customer.order.tracking_pending' | t }}</span>
+      {%- elsif tracking_count == 1 -%}
+        {%- assign parts = tracking_list[0] | split: '^^' -%}
+        {%- assign t_num = parts[0] -%}
+        {%- assign t_url = parts[1] -%}
+        {%- if t_url != blank -%}
+          <a href="{{ t_url }}" target="_blank" rel="noopener" class="{{ tracking_class }}">{{ 'customer.order.tracking_number' | t }}: {{ t_num }}</a>
+        {%- else -%}
+          <span class="{{ tracking_class }}">{{ 'customer.order.tracking_number' | t }}: {{ t_num }}</span>
+        {%- endif -%}
+      {%- else -%}
+        {%- comment -%} Multiple tracking numbers: list them all in a column, each linked to its url. {%- endcomment -%}
+        <div class="flex flex-col items-end !gap-1">
+          <span class="{{ tracking_class }} !no-underline">{{ 'customer.order.tracking_numbers' | t }}:</span>
+          {%- for entry in tracking_list -%}
+            {%- assign parts = entry | split: '^^' -%}
+            {%- assign t_num = parts[0] -%}
+            {%- assign t_url = parts[1] -%}
+            {%- if t_url != blank -%}
+              <a href="{{ t_url }}" target="_blank" rel="noopener" class="{{ tracking_class }}">{{ t_num }}</a>
+            {%- else -%}
+              <span class="{{ tracking_class }}">{{ t_num }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
       {%- endif -%}
     </div>
 
