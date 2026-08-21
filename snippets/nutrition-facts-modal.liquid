@@ -155,11 +155,6 @@
         {%- assign nf_label = nf_flavor.metafields.custom.nutrition_facts.value.image -%}
         {%- if nf_label != blank -%}
           {%- assign nf_name = nf_flavor.metafields.custom.flavor.value.name | default: nf_flavor.title -%}
-          {%- comment -%} Eager (not lazy): every flavor's label is display:none via
-             x-show, and a lazy image inside a hidden element won't load until first
-             revealed — which made the panel collapse to 0 height on each flavor switch
-             while the new image loaded. Eager preloads them all when the modal opens,
-             so switching just reveals an already-loaded image. {%- endcomment -%}
           <div x-show="selected === '{{ nf_flavor.handle }}'"
           class="flex justify-center max-h-full">
             {{ nf_label | image_url: width: 720 | image_tag: loading: 'eager', class: 'h-auto max-h-[400px] smd:max-h-[500px] w-auto object-contain', alt: nf_name }}

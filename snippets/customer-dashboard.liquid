@@ -40,13 +40,16 @@
   assign progress_percent = progress_percent | default: 0
   assign progress_text = progress_text | default: ''
 
+# Benefit lists live in theme settings (Theme settings → Membership → Dashboard benefits),
+  # pipe-delimited per tier. The hardcoded fallbacks keep the card populated if a field is cleared.
   if display_tier == 'FREE'
-    assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service' | split: '|'
+    assign benefits_raw = settings.dashboard_benefits_free | default: '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service'
   elsif display_tier == 'VIP'
-    assign benefits = 'Earn $5 for every $50 spent|Access exclusive flavors|Autoship discount on all orders|VIP Customer Service' | split: '|'
+    assign benefits_raw = settings.dashboard_benefits_vip | default: 'Earn $5 for every $50 spent|Access exclusive flavors|Autoship discount on all orders|VIP Customer Service'
   else
-    assign benefits = '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service|Early access to sales and launches|VIP Anniversary rewards' | split: '|'
+    assign benefits_raw = settings.dashboard_benefits_elite | default: '$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service|Early access to sales and launches|VIP Anniversary rewards'
   endif
+  assign benefits = benefits_raw | split: '|'
 
   # Figma: every dashboard card — foam #FEF8F3, 10px radius, drop-shadow 0/4/4/0 #000 25%.
   assign card = 'rounded-[10px] bg-foam shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]'
@@ -179,7 +182,7 @@
   {%- comment -%} Figma 1:602: this card is 774x104 with the button at y245-285, so 27px below it. {%- endcomment -%}
   <div class="relative {{ card }} px-6 pt-4 pb-3 md:!pt-7 md:!pb-[27px] md:!px-5 mb-6 md:!min-h-[104px] flex flex-col !gap-1.5 md:!gap-5 md:!flex-row md:!items-center md:!justify-between">
     {%- comment -%} View Credit History pinned to the top-right in every state (short $0 or tall). {%- endcomment -%}
-    <a href="{{ credit_history_url }}" class="absolute top-5 right-6 z-[1] font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+    <a href="{{ credit_history_url }}" class="absolute top-5 right-6 z-[1] font-kurdis-semi-condensed font-bold text-xs leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
     {%- comment -%} MOBILE: centered amount — matches the with-subscription (compact) card so both
       states look identical on mobile. Hidden on desktop. {%- endcomment -%}
     {%- comment -%} QA #40/#27: Figma gives the mobile credit card an identical 350x162 box in BOTH
@@ -200,7 +203,7 @@
         <span class="inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <span class="font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold" data-wb-credit-balance>{{ credits_formatted }}</span>
       </div>
-      <div class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+      <div class="font-kurdis-semi-condensed font-bold text-xs leading-none mt-3 text-dark-gold" data-wb-expiry-line>{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
     </div>
     {%- comment -%} Redeem → on-page modal. Button class is ALWAYS the standard one (never touch it);
       the 335px desktop width lives on this wrapper, not the button. {%- endcomment -%}
@@ -281,7 +284,7 @@
         History top-right; expiry centred under the amount. QA #40: the old h-full/justify-center
         + translate-y hack pushed the card to ~200px against Figma's 162px. {%- endcomment -%}
       <div class="relative min-h-[88px] mb-[6px]">
-        <a href="{{ credit_history_url }}" class="absolute right-0 top-0 z-[1] font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
+        <a href="{{ credit_history_url }}" class="absolute right-0 top-0 z-[1] font-kurdis-semi-condensed font-bold text-xs leading-none hover-underline text-espresso">{{ 'customer.dashboard.view_credit_history' | t }}</a>
         <span class="absolute left-0 top-0 z-[1] rotate-[-1.99deg] opacity-90 font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[1.04] max-w-[80px]">{{ 'customer.dashboard.your_credit' | t }}</span>
         <div class="flex flex-col items-center text-center pt-[14px]">
           <div class="font-kurdis-condensed font-extrabold text-[45px] leading-none text-dark-gold" data-wb-credit-balance>{{ credits_formatted }}</div>
@@ -310,10 +313,10 @@
         {%- comment -%} Right column: membership action links. {%- endcomment -%}
         <div class="flex flex-col items-end !gap-2.5">
           {%- if is_elite -%}
-            <a href="/community/membership?customerId={{ customer.id }}#change-plan" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+            <a href="/community/membership?customerId={{ customer.id }}#change-plan" class="font-kurdis-semi-condensed font-bold text-xs leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
             <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
           {%- endif -%}
-          <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
+          <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-xs leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
         </div>
       </div>
       {%- comment -%} QA #38: mobile needs more air above this heading — see .wb-whats-included. {%- endcomment -%}
@@ -337,13 +340,13 @@
       <div class="flex flex-col md:!flex-1 tier-divider">
         <div class="flex items-start justify-between mb-3">
           <span class="font-kurdis-semi-condensed font-bold text-[12px] leading-none text-bear-black">{{ 'customer.dashboard.progress_next_tier' | t }}</span>
-          <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
+          <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-xs leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
         </div>
         <div class="font-kurdis-condensed font-extrabold text-gold text-[26px] leading-none mt-2 mb-3" data-wb-progress-tier>{{ next_tier_label }}</div>
         <div class="w-full h-[14px] rounded-full overflow-hidden mb-2" style="background-color: var(--color-brand-beige);">
           <div class="h-full rounded-full" style="width: {{ progress_percent }}%; background-color: var(--color-brand-gold);" data-wb-progress-bar></div>
         </div>
-        <p class="font-kurdis-semi-condensed font-bold text-[10px] leading-none mb-4 text-espresso text-center"><span data-wb-progress-text>{{ progress_text }}</span>{% if display_tier == 'VIP' %} {{ 'customer.dashboard.progress_or_upgrade' | t }}{% else %} {{ 'customer.dashboard.progress_or' | t }} <a href="{{ membership_url }}" class="hover-underline">{{ 'customer.dashboard.progress_sign_up_autoship' | t }}</a>{% endif %}</p>
+        <p class="font-kurdis-semi-condensed font-bold text-xs leading-none mb-4 text-espresso text-center"><span data-wb-progress-text>{{ progress_text }}</span>{% if display_tier == 'VIP' %} {{ 'customer.dashboard.progress_or_upgrade' | t }}{% else %} {{ 'customer.dashboard.progress_or' | t }} <a href="{{ membership_url }}" class="hover-underline">{{ 'customer.dashboard.progress_sign_up_autoship' | t }}</a>{% endif %}</p>
 
         <div class="membership-upsell">
           <p class="body font-bold text-bear-black mb-1">{{ 'customer.dashboard.upgrade_today' | t }} <span class="font-parslay text-gold">{{ 'customer.dashboard.why_wait' | t }}</span></p>

@@ -74,7 +74,7 @@
         per the frame, while the dashboard card says just "Membership FAQ". Drawn in the mobile
         frame only, kept at every width — the dashboard shows it on desktop too, and there is no
         reason to hide a help link on the wider screen. {%- endcomment -%}
-      <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.credits.membership_faq' | t }}</a>
+      <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-xs leading-none hover-underline text-espresso">{{ 'customer.credits.membership_faq' | t }}</a>
     </div>
 
     {%- comment -%} ---------- Credit summary card (native balance + worker expiry) ---------- {%- endcomment -%}
@@ -92,7 +92,7 @@
           <span class="wb-credit-summary__label inline-block origin-bottom-left rotate-[-4deg] font-gothic_condensed font-extrabold uppercase text-espresso text-[20px] leading-[0.95] max-w-[68px]">{{ 'customer.dashboard.your_credit' | t }}</span>
           <span class="wb-credit-summary__amount font-kurdis-condensed font-extrabold text-[45px] leading-[0.78] text-dark-gold">{{ credits_formatted }}</span>
         </div>
-        <div class="wb-credit-summary__expiry font-kurdis-semi-condensed font-bold text-[10px] leading-none mt-3 text-dark-gold" data-wb-expiry-line data-wb-no-expiry="{{ no_expiry_text }}">{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
+        <div class="wb-credit-summary__expiry font-kurdis-semi-condensed font-bold text-xs leading-none mt-3 text-dark-gold" data-wb-expiry-line data-wb-no-expiry="{{ no_expiry_text }}">{{ 'customer.dashboard.expires_label' | t }} <span data-wb-credit-expiry>{{ credits_expiry }}</span></div>
       </div>
       {%- comment -%} Redeem → on-page redemption modal (generate Inveterate code, apply to cart);
         falls back to the /community/membership portal link when JS is off. {%- endcomment -%}

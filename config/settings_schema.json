@@ -2437,6 +2437,32 @@
         "label": "Elite product"
       },
       {
+        "type": "header",
+        "content": "Dashboard benefits"
+      },
+      {
+        "type": "paragraph",
+        "content": "Benefit list shown in the \"What's Included\" card on the account dashboard, per tier. Separate each benefit with a pipe ( | )."
+      },
+      {
+        "type": "textarea",
+        "id": "dashboard_benefits_free",
+        "label": "Free tier benefits",
+        "default": "$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service"
+      },
+      {
+        "type": "textarea",
+        "id": "dashboard_benefits_vip",
+        "label": "VIP tier benefits",
+        "default": "Earn $5 for every $50 spent|Access exclusive flavors|Autoship discount on all orders|VIP Customer Service"
+      },
+      {
+        "type": "textarea",
+        "id": "dashboard_benefits_elite",
+        "label": "Elite tier benefits",
+        "default": "$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service|Early access to sales and launches|VIP Anniversary rewards"
+      },
+      {
         "type": "text",
         "id": "account_worker_url",
         "label": "Account worker URL",

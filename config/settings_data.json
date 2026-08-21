@@ -95,6 +95,8 @@
     "nonmember_tooltip": "<p>Become a free member today to start earning $5 for every $50 spent. <a href=\"/pages/membership\" title=\"Membership\">Learn more.</a></p>",
     "member_tooltip": "<p>Members receive $5 for every $50 spent. Redeem these points at checkout or under your autoship management to apply to your next order.<a href=\"/pages/membership\" title=\"Membership\">Learn more.</a></p>",
     "elite_product": "inveterate-subscription-1",
+    "dashboard_benefits_free": "$5 off your first order|Earn $5 for every $50 spent|Member exclusive flavor access|VIP Customer Service",
+    "dashboard_benefits_vip": "Earn $5 for every $50 spent|Access exclusive flavors|Autoship discount on all orders|VIP Customer Service",
     "sections": {
       "aw-membership-modal": {
         "type": "aw-membership-modal",
@@ -114,7 +116,13 @@
           "login_label": "Login",
           "login_text": "to access all your exclusive flavors.",
           "return_to": "/pages/membership",
-          "customer_tag": "Membership Signup"
+          "customer_tag": "Membership Signup",
+          "login_view_heading": "Member Login",
+          "login_view_subtitle": "Sign in to unlock your exclusive flavors.",
+          "login_view_button": "Log in",
+          "signup_link_heading": "Not a member?",
+          "signup_link_label": "Create account",
+          "signup_link_text": "to unlock your exclusive flavors."
         }
       },
       "customer-account-dashboard": {
