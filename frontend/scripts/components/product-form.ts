@@ -35,15 +35,21 @@ export default (Alpine: AlpineType) => {
 
         get totalPrice() {
             const variant = this.selectedVariant;
-            const quantity = this._getCartQuantity(variant);
+            const quantity = this._displayQuantity(variant);
             const unitPrice = variant?.price ?? 0;
             const unitAutoshipPrice = variant?.selling_plan_price ?? unitPrice;
+
+            // Strikethrough regular price: the variant's OWN compare_at_price × cart quantity, so a
+            // total-priced pack (e.g. the 6-carton, cart_quantity 1) shows its full $197.94 regular
+            // rather than basePrice × 1. Per-carton variants (compare_at = per carton) × quantity
+            // still give the right pack total. Falls back to basePrice when no compare_at is set.
+            const regularUnit = variant?.compare_at_price ?? this.basePrice;
 
             return {
               original: this._formatPrice(unitPrice * quantity),
               autoship: this._formatPrice(unitAutoshipPrice * quantity),
               oneTime: this._formatPrice(unitPrice * quantity),
-              base: this._formatPrice(this.basePrice * quantity), // first variant's price for OTP discount display
+              base: this._formatPrice(regularUnit * quantity),
             }
           },
 
@@ -51,7 +57,7 @@ export default (Alpine: AlpineType) => {
             const variant = this.selectedVariant;
             if (!variant) return 0;
 
-            const quantity = this._getCartQuantity(variant);
+            const quantity = this._displayQuantity(variant);
 
             if (this.purchaseOption === 'autoship') {
                 if (variant.selling_plan_price == null) return 0;
@@ -98,6 +104,16 @@ export default (Alpine: AlpineType) => {
             return variant?.price;
         },
 
+        // Per-unit (per-box/per-carton) price for the current purchase option. On overview-2 `price`
+        // is the bundle total and `price_per_unit` is the per-box price, so scale currentPrice by the
+        // price_per_unit / price ratio. On other templates (e.g. concentrate) `price` is already
+        // per-unit and there is no price_per_unit field, so currentPrice is used as-is.
+        _perUnitPrice(variant: any): number {
+            return variant?.price_per_unit != null && variant?.price
+                ? variant.currentPrice * variant.price_per_unit / variant.price
+                : variant?.currentPrice;
+        },
+
         // productObject is keyed by variant id on a PDP, but by product id on the overview-2
         // LP, where each entry holds that product's own variant map. Return one variant list
         // per pricing group so savings are always compared within a single product.
@@ -118,7 +134,10 @@ export default (Alpine: AlpineType) => {
         // carries 2x the regular price. Dividing one by the other overstates the discount
         // (a 22% tier renders as 61%), so compare per-box against the single-box regular.
         _applySavings(variant: any, regularPerBox: number) {
-            const price = variant.currentPrice;
+            // Compare per box against the single-box regular, using the per-unit price so multi-box
+            // variants (whose currentPrice is the bundle total on overview-2) aren't read as >= the
+            // per-box regular and wrongly show no saving. See _perUnitPrice.
+            const price = this._perUnitPrice(variant);
 
             if (!(regularPerBox > 0) || !(price > 0) || price >= regularPerBox) {
                 variant.currentSavings = 0;
@@ -173,6 +192,11 @@ export default (Alpine: AlpineType) => {
 
         variantPriceFormatted(variantId: any, suffix = '') {
             const formatted = this.variantById(variantId)?.currentPriceFormatted;
+            return formatted ? formatted + suffix : '';
+        },
+
+        variantPricePerUnitFormatted(variantId: any, suffix = '') {
+            const formatted = this.variantById(variantId)?.pricePerUnitFormatted;
             return formatted ? formatted + suffix : '';
         },
 
@@ -232,6 +256,7 @@ export default (Alpine: AlpineType) => {
             variants.forEach((variant) => {
                 variant.currentPrice = this._getVariantDisplayPrice(variant);
                 variant.currentPriceFormatted = this._formatPrice(variant.currentPrice);
+                variant.pricePerUnitFormatted = this._formatPrice(this._perUnitPrice(variant));
                 this._applySavings(variant, regularPerBox);
             });
         },
@@ -248,6 +273,16 @@ export default (Alpine: AlpineType) => {
             }
 
             return 1;
+        },
+
+        // Quantity the displayed total must reflect — the SAME value add-to-cart uses (see the
+        // cart_quantity handling in addToCart), so the frequency panel never shows a per-carton
+        // price while the cart charges the full pack. cart_quantity is custom_quantity_rule (e.g.
+        // the 3-carton adds 3 per-carton SKUs); falls back to the quantified unit count.
+        _displayQuantity(variant: any): number {
+            return variant?.cart_quantity != null
+                ? Number(variant.cart_quantity)
+                : this._getCartQuantity(variant);
         },
 
         _getCartSectionIds() {

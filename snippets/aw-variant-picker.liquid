@@ -28,6 +28,8 @@
       endif
     endif
 
+    assign product_data = product_resource.metafields.custom.product_group.value
+
     for allocation in variant.selling_plan_allocations
         if allocation.selling_plan.name contains '1 Month'
             assign one_month_allocation = allocation
@@ -51,7 +53,7 @@
     endif
 
     assign choose_quantity_text = 'products.product.choose_quantity' | t
-    assign box_text = 'products.product.box' | t
+    assign box_text = product_data.singular_label
 
     assign savings_display = block.settings.savings_display | default: 'percent'
 %}
@@ -174,10 +176,31 @@
                     assign option_name = product_option_value
                     for variant in product_resource.variants
                     if variant.id == product_option_value.variant.id
-                      assign option_name = variant.metafields.airf.boxes | default: variant.title
-                      assign option_price = variant.price
-                      assign discount = product_resource.variants[0].compare_at_price | minus: variant.price
-                      assign option_savings = discount | times: 100.0 | divided_by: product_resource.variants[0].compare_at_price | round: 0
+                      assign unit_quantity = variant.metafields.custom.unit_quantity
+                      assign label = ''
+                      if unit_quantity > 1
+                        assign label = product_data.plural_label
+                      else
+                        assign label = product_data.singular_label
+                      endif
+                      
+                      assign option_name = variant.metafields.custom.unit_quantity | append: ' ' | append: label | default: variant.title
+
+                      ## Per-unit price for the initial (pre-JS) paint — same formula as the
+                      ## productObject block: price x custom_quantity_rule / unit_quantity. (SSR shows
+                      ## the one-time price; the JS then swaps in the selected purchase option.)
+                      assign option_unit_qty = unit_quantity | default: 1
+                      if option_unit_qty < 1
+                        assign option_unit_qty = 1
+                      endif
+                      assign option_cqr = variant.metafields.custom.custom_quantity_rule
+                      if option_cqr == blank or option_cqr < 1
+                        assign option_cqr = 1
+                      endif
+                      assign option_price = variant.price | times: option_cqr | divided_by: option_unit_qty
+                      assign regular_per_carton = product_resource.variants[0].compare_at_price
+                      assign discount = regular_per_carton | minus: option_price
+                      assign option_savings = discount | times: 100.0 | divided_by: regular_per_carton | round: 0
 
                       if savings_display == 'amount'
                         assign discount_remainder = discount | modulo: 100
@@ -194,7 +217,7 @@
                     endfor
                   %}
                     <span class="variant-option-name transition-colors duration-300 text-base text-bear-black font-bold font-gothic_condensed uppercase">{{- option_name | escape -}}</span>
-                    <span x-text="variantPriceFormatted('{{ product_option_value.variant.id }}', '/{{ box_text }}')" class="text-xs text-bear-black font-kurdis-semi-condensed font-semibold">{{- option_price | money -}}/{{ box_text }}</span>
+                    <span x-text="variantPricePerUnitFormatted('{{ product_option_value.variant.id }}', '/{{ box_text }}')" class="text-xs text-bear-black font-kurdis-semi-condensed font-semibold">{{- option_price | money -}}/{{ box_text }}</span>
                     <span x-text="{% if savings_display == 'amount' %}variantSavingsAmountFormatted{% else %}variantSavingsFormatted{% endif %}('{{ product_option_value.variant.id }}')"
                     :class="variantSavingsPercentage('{{ product_option_value.variant.id }}') > 0 ? '!block' : '!hidden'"
                     class="font-kurdis-semi-condensed font-semibold text-kraft !text-xs {% if option_savings > 0 %} block {% else %} hidden {% endif %}">{{- option_savings_text | escape -}}</span>
@@ -307,6 +330,7 @@
                   "quantified_units": {{ quantified_units | json }},
                 {% endif %}
                 "price": {{ price | json }},
+                "price_per_unit": {{ price | divided_by: variant.metafields.custom.unit_quantity | json }},
                 {% if compare_at_price %}
                   "compare_at_price": {{ compare_at_price | json }},
                 {% endif %}
@@ -393,6 +417,18 @@
               if cart_quantity == blank or cart_quantity < 1
                 assign cart_quantity = 1
               endif
+
+              ## Per-unit (per-box/per-carton) price = price x custom_quantity_rule / unit_quantity.
+              ## One formula for both data conventions:
+              ##  - per-unit-priced variants (3-carton bundle, 2-box) — price is already 1 unit and
+              ##    custom_quantity_rule == unit_quantity, so the ratio is 1 (price unchanged).
+              ##  - total-priced variants (6-carton) — custom_quantity_rule 1, unit_quantity N, so /N.
+              ## cart_quantity above is custom_quantity_rule (default 1).
+              assign unit_quantity_meta = variant.metafields.custom.unit_quantity | default: 1
+              if unit_quantity_meta < 1
+                assign unit_quantity_meta = 1
+              endif
+              assign variant_price_per_unit = price | times: cart_quantity | divided_by: unit_quantity_meta
           %}
 
           "{{ variant.id }}": {
@@ -408,6 +444,7 @@
               "quantified_units": {{ quantified_units | json }},
             {% endif %}
             "price": {{ price | json }},
+            "price_per_unit": {{ variant_price_per_unit | json }},
             {% if compare_at_price and quantified %}
               "compare_at_price": {{ compare_at_price | divided_by: quantified_units | json }},
             {% elsif compare_at_price %}
