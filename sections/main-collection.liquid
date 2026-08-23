@@ -113,7 +113,7 @@
           {% capture group_items %}
             {% for product in collection.products %}
               {% assign product_token = ',' | append: product.id | append: ',' %}
-              {% if product.metafields.custom.size.value.system.handle == group_handle %}
+              {% if product.metafields.custom.collection_group.value.system.handle == group_handle %}
                 {% unless grouped_ids contains product_token %}
                   <li
                     id="{{ section.id }}-{{ product.id }}"
@@ -144,9 +144,9 @@
                 {{- group.title | default: group.display_name -}}
               </h2>
               {% if group.description != blank %}
-                <p class="inline-flex font-kurdis-semi-condensed font-semibold text-sm leading-[1.6]">
-                  {{- group.description -}}
-                </p>
+                <div class="inline-flex font-kurdis-semi-condensed font-semibold text-sm leading-[1.6]">
+                  {{- group.description | metafield_tag -}}
+                </div>
               {% endif %}
             </li>
             {{ group_items }}
