@@ -252,7 +252,7 @@
                       "name": "t:names.text",
                       "settings": {
                         "block_class": "product-title",
-                        "text": "<h3>﻿{{ closest.product.metafields.custom.flavor.value.name.value }} • {{ closest.product.metafields.custom.size.value.product_size.value }}</h3>",
+                        "text": "<h3>﻿{{ closest.product.metafields.custom.flavor.value.name.value }} • {{ closest.product.metafields.custom.size.value.title.value }}</h3>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",
