@@ -514,7 +514,7 @@
         "padding-block-end-mobile": 44
       }
     },
-    "aw_guarantee_banner_GxEGrE": {
+    "aw_guarantee_banner_PXByfT": {
       "type": "aw-guarantee-banner",
       "name": "AW Guarantee Banner",
       "settings": {
@@ -535,9 +535,9 @@
         "padding-block-end-mobile": 0,
         "image": "shopify://shop_images/coffee.png",
         "badge": "shopify://shop_images/FRESH_c8def4c8-8fc5-42f8-9fab-c11ddae103cf.svg",
-        "subtitle": "LIKE YOU MADE IT YOURSELF, BUT BETTER",
-        "title": "OUR FRESH TASTE GUARANTEE",
-        "description": "It's that simple because we are obsessive over our quality standards from bean to box. We stand behind our products, so if for any reason you are not satisfied with a product you purchased from us or one of our authorized sellers, you may request a refund or replacement product within 60 days of the date of purchase."
+        "subtitle": "",
+        "title": "BACKED BY OUR FRESH TASTE GUARANTEE",
+        "description": "Your Wandering Bear should taste fresh, like it was just poured by your favorite barista.  <br> <br> We stand behind our products, because we obsess about quality from bean to box. So, if for any reason you aren't satisfied, you can request a refund or replacement within 60 days of your purchase. No runaround, no fine print. Just high quality, delicious coffee, guaranteed."
       }
     },
     "okendo_reviews_widget_PUYwdr": {
@@ -1370,7 +1370,7 @@
     "product_recommendations_qggXJq",
     "aw_diagram_toggle_rEY8ba",
     "aw_image_text_icons_6YkxCz",
-    "aw_guarantee_banner_GxEGrE",
+    "aw_guarantee_banner_PXByfT",
     "okendo_reviews_widget_PUYwdr",
     "aw_member_comparison_EAjQ8J",
     "aw_frequently_asked_questions_33izYW",
