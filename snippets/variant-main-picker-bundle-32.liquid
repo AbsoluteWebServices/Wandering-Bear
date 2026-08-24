@@ -288,8 +288,8 @@
             {% if child_product.metafields.custom.bundle_image != blank %}
               "image": "{{- child_product.metafields.custom.bundle_image | image_url: width: 200 -}}",
             {% endif %}
-            {% if child_product.metafields.custom.flavor_name != blank %}
-              "flavor_name": "{{- child_product.metafields.custom.flavor_name -}}",
+            {% if child_product.metafields.custom.flavor != blank %}
+              "flavor_name": "{{- child_product.metafields.custom.flavor.value.name -}}",
             {% endif %}
             {%- liquid
               assign sf_product = child_product.metafields.custom["32oz_single_flavor"].value

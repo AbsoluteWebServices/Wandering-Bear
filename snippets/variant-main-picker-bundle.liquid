@@ -151,7 +151,9 @@
             "id": {{- child_product.id -}},
             "title": "{{- child_product.title -}}",
             "handle": "{{- child_product.handle -}}",
-            "flavor_name": "{{- child_product.metafields.custom.flavor_name -}}",
+            {% if child_product.metafields.custom.flavor != blank %}
+              "flavor_name": "{{- child_product.metafields.custom.flavor.value.name -}}",
+            {% endif %}
             "bundle_name": "{{- child_product.metafields.custom.product_group.value.display_name | handleize -}}",
             "collection_handle": "{{- child_product.metafields.custom.product_group.value.collection_handle.value.handle -}}",
             {% if child_product.metafields.custom.type != blank %}
