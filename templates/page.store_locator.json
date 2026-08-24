@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "heading": {
@@ -75,9 +84,22 @@
         "logo_TyE9A9"
       ],
       "settings": {
+        "title_type": "text",
+        "title": "",
+        "title_color": "",
+        "font_size": 24,
+        "font_size_mobile": 24,
+        "title_alt": "",
         "button_text": "",
         "button_url": "",
+        "button_style": "secondary",
+        "button_size": "small",
+        "button_bg": "#af7404",
+        "button_text_color": "#f2e6dc",
+        "button_hover_bg": "#431a03",
+        "button_hover_text": "#f2e6dc",
         "grayscale": true,
+        "mobile_per_row": "3",
         "padding_top": 58,
         "padding_bottom": 56,
         "padding_top_mobile": 32,
@@ -87,8 +109,7 @@
         "background_gradient": "",
         "background_type_mobile": "same",
         "background_solid_mobile": "",
-        "background_gradient_mobile": "",
-        "mobile_per_row": "3"
+        "background_gradient_mobile": ""
       }
     },
     "locator": {
@@ -106,8 +127,8 @@
             "borderWidth": 1,
             "borderColor": "#000000",
             "textColor": "#000000",
-            "textColorSecondary": "#AAAAAA",
-            "contrastColor": "#FFFFFF",
+            "textColorSecondary": "#aaaaaa",
+            "contrastColor": "#ffffff",
             "paddingTop": 28,
             "paddingBottom": 28,
             "paddingLeft": 28,
@@ -127,7 +148,7 @@
         "height": 760,
         "height_mobile": 600,
         "background_type": "color",
-        "background_solid": "#f2e6dc",
+        "background_solid": "#EA9C5A",
         "background_gradient": "",
         "padding-block-start": 0,
         "padding-block-end": 0,
