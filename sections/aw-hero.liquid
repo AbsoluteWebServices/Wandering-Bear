@@ -26,7 +26,7 @@
             <div class="container relative wb-flex flex-col items-center md:flex-row pt-8 justify-center w-full max-w-none md:justify-start md:max-w-full gap-8 md:px-5 lg:max-w-[1136px] h-full smd:min-h-[415px] md:gap-5 mx-0 md:mx-auto lg:min-h-[555px] h-full lg:max-h-[528px]">
             <div class="relative wb-flex flex-col items-center justify-center sm:items-start md:items-center gap-2.5 z-1 w-fit md:min-w-1/2 max-w-full">
                 {% if title_image != blank and title_type == 'image' %}
-                    {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative left-3 sm:left-0 w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
+                    {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_image.alt, class: 'relative w-full h-full object-contain !max-w-[270px] md:!max-w-full mx-auto', preload: 'eager', loading: 'eager' %}
                 {% elsif title_text != blank and title_type == 'text'%}
                     <h1 class="h1 title-text leading-[1.2] text-center md:!text-left" style="color: {{ color_scheme.settings.foreground }}; {{ title_styles }}">{{ title_text | replace: '\b', '<br>' }}</h1>
                 {% endif %}
@@ -34,7 +34,7 @@
                     <span class="h3 text-center md:!text-xl title-text mx-auto" style="color: {{ color_scheme.settings.foreground }};">{{ subtitle }}</span>
                 {% endif %}
                 {% if buttons != blank %}
-                    <div class="wb-flex flex-col lg:!flex-row gap-3 lg:gap-6.5 w-fit mx-auto lg:!mx-0 mt-3 relative -left-2">
+                    <div class="wb-flex flex-col lg:!flex-row gap-3 lg:gap-6.5 w-fit mx-auto lg:!mx-0 mt-3 relative">
                         {% for button in buttons %}
                             <div class="relative mx-auto md:!mx-0" data-anchor="shop-cold-brew">
                                 {% if button.settings.badge != blank %}

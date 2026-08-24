@@ -354,7 +354,7 @@
                             {% endif %}
 
                             <span data-frequency-label>
-                              {{ selector_value }}
+                              {{ selector_value | replace: 'Delivered', 'Delivery' }}
                             </span>
                           </span>
 
@@ -773,7 +773,7 @@
                        {% endif %}
 
                        <span data-frequency-label>
-                         {{ item_selector_value }}
+                         {{ item_selector_value | replace: 'Delivered', 'Delivery' }}
                        </span>
                      </span>
 
