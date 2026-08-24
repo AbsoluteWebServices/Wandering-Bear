@@ -307,8 +307,8 @@
           "settings": {
             "title": "Single Serving",
             "metaobject": "concentrate-single-serving",
-            "media_type": "image",
-            "video": "shopify://files/videos/WB_10_16_2025_32ozLatte_UGC_hook1_NathanaelTenney.mov.mp4",
+            "media_type": "video",
+            "video": "shopify://files/videos/3to1 concentrate_ColdBrewInstructional_1080_69969225-04b6-4ad0-b199-4819ce7a0879.mov",
             "image": "shopify://shop_images/WBSB128oz_PDP_4_FRIDGESCAPE_SQUARE.jpg"
           }
         },
@@ -318,7 +318,7 @@
             "title": "1 Gallon",
             "metaobject": "concentrate-1-gallon",
             "media_type": "video",
-            "video": "shopify://files/videos/96oz PDPD TEST_1080.mov",
+            "video": "shopify://files/videos/3to1 concentrate_1Gallon_Instruction_1080.mov",
             "image": "shopify://shop_images/WBBB96oz_PDP_3_LIFESTYLE_SQUARE.jpg"
           }
         }
