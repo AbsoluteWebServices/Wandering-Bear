@@ -294,6 +294,10 @@
                       {{ diagram_icons }}
                     {% endif %}
 
+                    {% assign diagram_image_class = 'diagram-image h-full max-h-[355px]! lg:!h-[573px] lg:max-h-[initial]! !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto' %}
+                    {% if template.suffix == 'single-serve' %}
+                      {% assign diagram_image_class = 'diagram-image h-full max-h-[355px]! lg:!h-[573px] lg:max-h-[initial]! !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto lg:py-10' %}
+                    {% endif %}
                     
                     {% if diagram_image != blank %}
                         <div class="mx-auto h-auto{% if template.suffix == '32oz' %} mt-3 lg:mt-4{% endif %}">
@@ -302,7 +306,7 @@
                               image_mobile: diagram_image_mobile,
                               alt: title_alt,
                               loading: 'eager',
-                              class: 'diagram-image h-full max-h-[355px]! lg:!h-[573px] lg:max-h-[initial]! !flex order-1 lg:order-2 w-full max-h-full object-contain relative z-[2] mx-auto',
+                              class: diagram_image_class,
                               img_attributes: 'data-diagram-image'
                             %}
                         </div>
