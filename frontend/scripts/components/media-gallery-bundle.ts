@@ -164,7 +164,7 @@ export default (Alpine: typeof AlpineType) => {
         const slideCount = mainEl.querySelectorAll(
           '.swiper-slide:not(.swiper-slide-duplicate)'
         ).length
-        const enableLoop = slideCount > 2
+        const enableLoop = slideCount > 4
 
         this.swiper = new Swiper(mainEl, {
           slidesPerView: 1.12,
