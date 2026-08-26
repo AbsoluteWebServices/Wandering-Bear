@@ -347,9 +347,7 @@ export default (Alpine: AlpineType) => {
         },
 
         init() {
-            console.log('init',this.$refs.productObject.textContent);
             this.productObject = JSON.parse(this.$refs.productObject.textContent);
-            console.log('productObject', this.productObject);
             this.bundleParents = this.$refs.bundleParents ? JSON.parse(this.$refs.bundleParents.textContent) : [];
             this.bundleMeta = this.$refs.bundleMeta ? JSON.parse(this.$refs.bundleMeta.textContent) : null;
 
@@ -460,12 +458,10 @@ export default (Alpine: AlpineType) => {
         },
 
         changeFlavor(productResourceSlug: string) {
-            console.log('changeFlavor', productResourceSlug);
             this.fetchProduct(productResourceSlug);
         },
 
         async fetchProduct(productResourceSlug: string) {
-            console.log('fetchProduct', productResourceSlug);
             const url = new URL(window.location.href);
             url.searchParams.set('product', productResourceSlug);
             window.history.replaceState({}, '', url.toString());
@@ -474,8 +470,6 @@ export default (Alpine: AlpineType) => {
             const data = await res.json();
             const product = data.product;
             const productId = String(product.id);
-
-            console.log('currentProduct',product.title)
 
             this.currentProductId = productId;
 
@@ -490,7 +484,7 @@ export default (Alpine: AlpineType) => {
 
             // Check the radio of the selected variant
             const radio = this.$root?.querySelector(`label[for="flavor-${productResourceSlug}"] input`);
-            console.log('radio', radio);
+
             if (radio) {
                 radio.checked = true;
             }

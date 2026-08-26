@@ -216,7 +216,7 @@ export default (Alpine: AlpineType) => {
 
         _formatPrice(price, { withoutCents = false } = {}) {
           const price_normalized = price / 100;
-          console.log('price_normalized', price_normalized);
+
           return price_normalized.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',

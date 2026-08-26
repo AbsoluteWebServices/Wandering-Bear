@@ -331,7 +331,7 @@
                   "quantified_units": {{ quantified_units | json }},
                 {% endif %}
                 "price": {{ price | json }},
-                "price_per_unit": {{ price | divided_by: variant.metafields.custom.unit_quantity | json }},
+                "price_per_unit": {{ price }},
                 {% if compare_at_price %}
                   "compare_at_price": {{ compare_at_price | json }},
                 {% endif %}
