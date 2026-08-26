@@ -218,6 +218,7 @@
 class="section-{{ section.id }}
 {% if landing_page %} pt-5 lg:pt-0 {% endif %}"
 style="{{ background_style }}"
+id="{{ section.settings.id }}"
 >
 {% render 'product-information-content',
   product_media_size: closest.product.media.size,
@@ -426,6 +427,12 @@ style="{{ background_style }}"
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "text",
+      "id": "id",
+      "label": "ID",
+      "info": "Section ID for anchor link"
+    },
     {
       "type": "product",
       "id": "product",
