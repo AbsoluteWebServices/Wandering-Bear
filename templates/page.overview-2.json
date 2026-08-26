@@ -535,6 +535,7 @@
       "name": "LP Product Information",
       "settings": {
         "product": "extra-strong-cold-brew-on-tap-96oz-straight-black",
+        "id": "shop-now",
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
         "equal_columns": false,

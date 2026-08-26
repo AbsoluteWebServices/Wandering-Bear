@@ -71,6 +71,7 @@
       },
       "name": "LP Product Information",
       "settings": {
+        "id": "shop-now",
         "content_width": "content-center-aligned",
         "desktop_media_position": "left",
         "equal_columns": false,
