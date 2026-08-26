@@ -744,7 +744,7 @@
         "body_color": "#431a03",
         "badge_show_in_cover": true,
         "heading_offset_tablet": "4",
-        "heading": "STARTED WITH A BOX, <br>NOW WE’RE HERE.",
+        "heading": "STARTED WITH A BOX, NOW WE’RE HERE.",
         "heading_style": "display-md",
         "heading_size": 40,
         "heading_size_mobile": 20,
@@ -752,7 +752,7 @@
         "heading_gap": 0,
         "heading_wrap_pad_bottom": 0,
         "title_pad_top": 10,
-        "body": "<p>Today, Wandering Bear makes super-premium cold brew in exciting <br>flavors and formats, plus high protein cold brew lattes with 11 grams of protein <br>and just 6 grams of sugar, all built on the same brew we've been perfecting since 2014. <strong>Find us nationwide</strong> at Whole Foods, Sprouts, Target, and Costco, online at Amazon and Thrive Market, and right here on our site.</p>",
+        "body": "<p>Today, Wandering Bear makes super-premium cold brew in exciting <br/>flavors and formats, plus high protein cold brew lattes with 11 grams of protein <br/>and just 6 grams of sugar, all built on the same brew we've been perfecting since 2014. <strong>Find us nationwide</strong> at Whole Foods, Sprouts, Target, and Costco, online at Amazon and Thrive Market, and right here on our site.</p>",
         "body_size": 15,
         "body_lh": "1.38",
         "body_wrap_width": "683px",
@@ -784,7 +784,7 @@
           "type": "product",
           "settings": {
             "image": "shopify://shop_images/cold-brew-cartons.png",
-            "image_preview": "ab-wb-aboutus-cart-1.jpg",
+            "image_preview": "cold-brew-cartons.png",
             "label": "Cold Brew Cartons",
             "link": ""
           }
