@@ -1,26 +1,44 @@
 {%- capture membership_tier -%}{%- render 'customer-membership-tier' -%}{%- endcapture -%}
 {%- assign membership_tier = membership_tier | strip -%}
 
-<div
-  class="
-    back-account wb-grid pb-1 pt-8
-    {% if request.path contains 'apps/retextion' %} stay-ai grid-flow-col auto-cols-[minmax(1rem,1fr)_minmax(0px,1200px)_minmax(1rem,1fr)] bg-[#fbf2ec]{% endif %}
-    {% if request.path contains 'community/membership' %} membership-account bg-[#f2f2f3] [&~.inveterate.inveterate\_\_loading]:bg-[#f2f2f3]{% endif %}
-  "
->
-  {% if request.path contains 'apps/retextion' %}<span></span>{% endif %}
 
-  <div class="back-account__container [container:Stay-root/inline-size]{% if request.path contains 'community/membership' %} w-full max-w-[1436px] px-[130px] mx-auto{% endif %}">
-    <a href="{{ routes.account_url }}" class="back-account__link inline-flex items-center gap-1.5 font-bold text-espresso! hover:text-gold! transition-colors duration-300" title="{{ 'customer.order.back_to_account' | t }}">
-      <span class="back-account__icon inline-block rotate-180 size-4">
-        {{- 'icon-arrow.svg' | inline_asset_content -}}
-      </span>
-      <span>{{ 'customer.order.back_to_account' | t }}</span>
-    </a>
-  </div>
 
-  {% if request.path contains 'apps/retextion' %}<span></span>{% endif %}
-</div>
+  <div
+    class="
+      back-account wb-grid pb-1 pt-8
+      {% if request.path contains 'apps/retextion' %} stay-ai grid-flow-col auto-cols-[minmax(1rem,1fr)_minmax(0px,1200px)_minmax(1rem,1fr)] bg-[#fbf2ec]{% endif %}
+      {% if request.path contains 'community/membership' %} membership-account bg-[#f2f2f3] [&~.inveterate.inveterate\_\_loading]:bg-[#f2f2f3]{% endif %}
+    "
+  >
+
+    {% if request.path contains 'apps/retextion' %}
+      <span></span>
+      {% endif %}
+
+      <div class="back-account__container [container:Stay-root/inline-size]
+      {% if request.path contains 'community/membership' %} w-full max-w-[1436px] px-[130px] mx-auto
+      {% endif %}
+      {% if request.path contains 'apps/retextion' %} flex flex-col gap-3 items-center md:items-start
+      {% endif %}">
+      {% if request.path contains 'apps/retextion' %}
+        <h1 class="h1 text-espresso text-center md:text-left">Autoship Order Management</h1>
+      {% endif %}
+        <a href="{{ routes.account_url }}" class="group back-account__link w-[165px] shadow-button h-[43px] inline-flex text-center justify-center items-center gap-1.5 font-bold text-espresso hover:text-foam! transition-colors duration-300 relative" title="{{ 'customer.order.back_to_account' | t }}">
+          <span class="back-account__icon inline-block relative z-[1] text-espresso group-hover:!text-foam transition-colors duration-300">
+            {% render 'icons', icon: 'arrow-left' %}
+          </span>
+          <span class="relative z-[1] font-kurdis-condensed !font-bold uppercase text-espresso group-hover:!text-foam transition-colors duration-300">{{ 'customer.order.back_to_account' | t }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="!text-[#FEF8F3] group-hover:!text-gold absolute top-0 left-0 w-full h-full z-[0]" viewBox="0 0 205 43" fill="none">
+            <path d="M1.89748 4.47133C0.285803 6.96547 0.2212 9.90479 0.193998 12.7225C0.129395 19.4279 0.0681918 26.1305 0.00358848 32.8359C-0.0134124 34.6582 -0.0100122 36.555 0.979438 38.1892C3.36296 42.1185 6.37211 42.9756 15.2738 42.9756C74.9808 42.9756 134.691 43.1222 194.402 42.6964C196.52 42.6825 198.846 42.771 200.583 41.7839C205.292 39.11 204.779 34.224 204.636 30.599C204.371 23.8493 205 18.3025 205 11.55C205 6.82721 204.351 4.93034 202.426 3.06112C199.961 0.663758 194.827 0.766068 190.981 0.70247C165.697 0.279407 140.4 0.060962 115.106 0.0111898C89.6491 -0.0413475 64.1921 0.0913783 38.735 0.403837C31.5538 0.492321 24.376 0.59463 17.1983 0.71353C11.7784 0.802014 4.90324 -0.171309 1.89748 4.47133Z" fill="currentColor"/>
+          </svg>
+        </a>
+      </div>
+    {% if request.path contains 'apps/retextion' %}<span></span>{% endif %}
+
+    </div>
+
+
+
 
 {% stylesheet %}
   .back-account:has(~ .inveterate__tiers .inveterate__hero) {

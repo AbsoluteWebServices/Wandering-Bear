@@ -4190,3 +4190,10 @@ product-recommendations:has([data-has-recommendations='false']) {
 }
 
 }
+
+
+/* Stay Portal */
+
+.css-9g63b2 {
+  display: none !important;
+}
