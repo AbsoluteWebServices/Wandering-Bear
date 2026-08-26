@@ -775,7 +775,6 @@
         "card1": {
           "type": "product",
           "settings": {
-            "image": "shopify://shop_images/cold-brew-cartons.png",
             "image_preview": "ab-wb-hollywood-shot-13-1.jpg",
             "label": "Cold Brew On Tap",
             "link": ""
@@ -784,6 +783,7 @@
         "card2": {
           "type": "product",
           "settings": {
+            "image": "shopify://shop_images/cold-brew-cartons_79b8cd67-7de8-45be-9419-6145186abf5d.png",
             "image_preview": "cold-brew-cartons.png",
             "label": "Cold Brew Cartons",
             "link": ""
