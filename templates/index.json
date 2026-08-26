@@ -96,7 +96,7 @@
             "title": "Multi-Serve Cartons",
             "subtitle": "Fridge door friendly. Cold brews, latte and cold brew concentrate.",
             "accent_text": "",
-            "margin_bottom_mobile": 15
+            "margin_bottom_mobile": 3
           }
         },
         "collection_tile_RwjxDn": {
@@ -105,7 +105,7 @@
             "url": "shopify://collections/single-serve",
             "image": "shopify://shop_images/SINGLE_SERVE.png",
             "hover_image": "shopify://shop_images/shadow-layer.png",
-            "image_mobile": "shopify://shop_images/PHYP_SINGLE_SERVES.png",
+            "image_mobile": "shopify://shop_images/PHYP_SINGLE_SERVES_e2222f05-562e-42e7-865e-33fffd4d60b5.png",
             "mobile_image_alt": "",
             "title": "Single Serves",
             "subtitle": "Your coffee shop moment, canned. Perfect for on-the-go. Cold brew and lattes.",
