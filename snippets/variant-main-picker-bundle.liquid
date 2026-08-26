@@ -173,7 +173,8 @@
                           endif
 
                           if child_variant.compare_at_price > child_variant.price
-                            assign compare_at_price = child_variant.compare_at_price
+                            #assign compare_at_price = child_variant.compare_at_price
+                            assign compare_at_price = child_product.variants[0].compare_at_price
                           else
                             assign compare_at_price = child_variant.price
                           endif

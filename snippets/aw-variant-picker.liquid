@@ -309,7 +309,8 @@
                   endfor
 
                   if variant.compare_at_price > variant.price
-                      assign compare_at_price = variant.compare_at_price
+                    #assign compare_at_price = variant.compare_at_price
+                    assign compare_at_price = product_resource.variants[0].compare_at_price
                   else
                       assign compare_at_price = variant.price
                   endif
@@ -377,7 +378,8 @@
               endfor
 
               if variant.compare_at_price > variant.price
-                  assign compare_at_price = variant.compare_at_price
+                  #assign compare_at_price = variant.compare_at_price
+                  assign compare_at_price = product_resource.variants[0].compare_at_price
               else
                   assign compare_at_price = variant.price
               endif
@@ -438,7 +440,7 @@
             "cart_variant_id": {{ cart_variant.id | json }},
             "cart_quantity": {{ cart_quantity | json }},
             {% if bundle_unit_variant != blank %}"is_bundle": true,{% else %}"is_bundle": false,{% endif %}
-            "flavor_name": "{{- product_resource.metafields.custom.flavor_name -}}",
+            "flavor_name": "{{- product_resource.metafields.custom.flavor.value.name -}}",
             "quantified": {{ quantified | json }},
             {% if quantified %}
               "quantified_units": {{ quantified_units | json }},

@@ -77,15 +77,19 @@
   <div class="variant-selector wb-grid grid-cols-5 gap-4">
     {% for product_resource in collection.value.products  %}
         {% if product_resource.id == product.id %}
-            {% assign checked = true %}
-            {% render 'flavor-swatch', product_resource: product_resource, checked: checked %}
+            {% unless product_resource.metafields.custom.vip == true %}
+                {% assign checked = true %}
+                {% render 'flavor-swatch', product_resource: product_resource, checked: checked %}
+            {% endunless %}
         {% break %}
         {% endif %}
     {% endfor %}
     {% for product_resource in collection.value.products  %}
         {% unless product_resource.id == product.id %}
-            {% assign checked = false %}
-            {% render 'flavor-swatch', product_resource: product_resource, checked: checked %}
+            {% unless product_resource.metafields.custom.vip == true %}
+                {% assign checked = false %}
+                {% render 'flavor-swatch', product_resource: product_resource, checked: checked %}
+            {% endunless %}
         {% endunless %}
     {% endfor %}
     {% if show_bundle %}

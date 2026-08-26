@@ -46,7 +46,7 @@ export default (Alpine: AlpineType) => {
             const regularUnit = variant?.compare_at_price ?? this.basePrice;
 
             return {
-              original: this._formatPrice(unitPrice * quantity),
+              original: this._formatPrice(unitPrice),
               autoship: this._formatPrice(unitAutoshipPrice * quantity),
               oneTime: this._formatPrice(unitPrice * quantity),
               base: this._formatPrice(regularUnit * quantity),
@@ -347,7 +347,9 @@ export default (Alpine: AlpineType) => {
         },
 
         init() {
+            console.log('init',this.$refs.productObject.textContent);
             this.productObject = JSON.parse(this.$refs.productObject.textContent);
+            console.log('productObject', this.productObject);
             this.bundleParents = this.$refs.bundleParents ? JSON.parse(this.$refs.bundleParents.textContent) : [];
             this.bundleMeta = this.$refs.bundleMeta ? JSON.parse(this.$refs.bundleMeta.textContent) : null;
 
@@ -458,10 +460,12 @@ export default (Alpine: AlpineType) => {
         },
 
         changeFlavor(productResourceSlug: string) {
+            console.log('changeFlavor', productResourceSlug);
             this.fetchProduct(productResourceSlug);
         },
 
         async fetchProduct(productResourceSlug: string) {
+            console.log('fetchProduct', productResourceSlug);
             const url = new URL(window.location.href);
             url.searchParams.set('product', productResourceSlug);
             window.history.replaceState({}, '', url.toString());
