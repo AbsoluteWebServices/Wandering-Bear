@@ -38,7 +38,7 @@
         <span class="h1 mb-8 title-text leading-[1.2] text-center mx-auto mb-5 md:!mb-7.5 block" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
     <div class="container max-w-[1140px] mx-auto">
-        <div class="wb-grid grid-cols-1 gap-2 px-0 md:!px-5 lg:!px-0 md:grid-cols-3 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none">
+        <div class="wb-grid grid-cols-1 px-0 md:!px-5 lg:!px-0 md:grid-cols-3 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none mb-5 md:mb-0">
             {% for block in section.blocks %}
                 {% liquid
                     assign image = block.settings.image
@@ -50,8 +50,20 @@
                     assign badge = block.settings.badge
                     assign url = block.settings.url
                     assign hover_image = block.settings.hover_image
+                    assign margin_bottom_mobile = block.settings.margin_bottom_mobile
                 %}
-                <div class="relative group w-full h-full {% if forloop.index == 2 %} -mt-6 md:!mt-0 {% endif %}">
+                {% capture mobile_styles %}
+                    --margin-bottom-mobile: {{ margin_bottom_mobile }}px;
+                {% endcapture %}
+
+                {% style %}
+                    @media (max-width: 768px) {
+                        .slide-{{ block.id }} {
+                            margin-bottom: var(--margin-bottom-mobile);
+                        }
+                    }
+                {% endstyle %}
+                <div class="slide-{{ block.id }} relative group w-full h-full" style="{{ mobile_styles }}">
                     <a href="{{ url }}" class="relative block w-full h-fit">
                     {% if badge != blank %}
                         {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:block absolute z-[3] -top-[50px] -left-[50px] md:-left-10 lg:-left-[50px] !w-[148px] !h-auto' }}
@@ -235,6 +247,17 @@
                     "type": "image_picker",
                     "id": "badge",
                     "label": "Badge"
+                },
+                {
+                    "type": "range",
+                    "id": "margin_bottom_mobile",
+                    "label": "Margin Bottom Mobile",
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "px",
+                    "default": 0,
+                    "info": "This will only apply to mobile devices"
                 }
             ]
         }
