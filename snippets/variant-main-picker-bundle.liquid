@@ -175,6 +175,11 @@
                           if child_variant.compare_at_price > child_variant.price
                             #assign compare_at_price = child_variant.compare_at_price
                             assign compare_at_price = child_product.variants[0].compare_at_price
+
+                            # Concentrate 6-Pack uses the compare at price of the variant
+                            if child_product.title contains 'Concentrate' and child_variant.title contains '6'
+                              assign compare_at_price = child_variant.compare_at_price
+                            endif
                           else
                             assign compare_at_price = child_variant.price
                           endif
