@@ -4202,8 +4202,100 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 .inveterate__member {
   background: #F2E6DC !important;
+  font-family: 'Kurdis SemiCondensed' !important;
 }
 
 .inveterate__member__inner {
   background: #F2E6DC !important;
+}
+
+.inveterate__member__block {
+  background: #FEF8F3 !important;
+  border-radius: 10px !important;
+}
+
+.inveterate .inveterate__member #inveterate-member-tier-selection .inveterate__member__heading .inveterate__member__heading__navigation {
+  a {
+    color: var(--color-espresso) !important;
+    font-family: 'Kurdis Condensed' !important;
+    font-weight: 600 !important;
+    text-decoration: underline !important;
+  }
+
+  svg {
+    stroke: var(--color-espresso) !important;
+  }
+}
+
+#inveterate-member-tier-selection {
+
+  .inveterate__member__block {
+    background: #F2E6DC !important;
+    border: none !important;
+    font-family: 'Kurdis SemiCondensed' !important;
+    font-weight: 800 !important;
+    color: var(--color-bear-black) !important;
+    opacity: 1 !important;
+  }
+
+  .inveterate__tier__banner__body {
+    color: var(--color-bear-black) !important;
+  }
+
+  .inveterate__tier__banner {
+    background: #FEF8F3 !important;
+    border: none !important;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.1)) !important;
+  }
+
+  .inveterate__tier__banner.inveterate__tier__current {
+    background: #fff !important;
+    border: 1px solid var(--color-gold) !important;
+    opacity: 1 !important;
+  }
+
+  h3.inveterate__member__block__heading {
+    font-family: 'Kurdis Condensed' !important;
+    font-weight: 800 !important;
+    color: var(--color-espresso) !important;
+    opacity: 1 !important;
+  }
+
+  .inveterate__tier__banner__heading__title h3 {
+      font-family: 'Kurdis Condensed' !important;
+      font-weight: 800 !important;
+      color: var(--color-espresso) !important;
+      opacity: 1 !important;
+  }
+
+  .inveterate__tier__banner__heading__title span {
+    font-weight: 600 !important;
+    color: var(--color-gold) !important;
+    text-transform: uppercase !important;
+  }
+
+  .inveterate__tier__banner__heading__price h3 {
+    font-family: 'Kurdis Condensed' !important;
+    font-weight: 400 !important;
+    color: var(--color-espresso) !important;
+    font-size: 14px !important;
+    opacity: 1 !important;
+  }
+
+  .inveterate__button__secondary {
+    color: var(--color-gold) !important;
+    border-color: var(--color-gold) !important;
+  }
+
+  .inveterate__tier__banner__body__bullets li {
+    color: var(--color-bear-black) !important;
+  }
+
+}
+
+#inveterate-benefits-section {
+  font-family: 'Kurdis SemiCondensed' !important;
+  font-weight: 600 !important;
+  color: var(--color-bear-black) !important;
+  opacity: 1 !important;
 }
