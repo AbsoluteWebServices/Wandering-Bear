@@ -287,6 +287,7 @@
       ],
       "name": "AW FAQs",
       "settings": {
+        "section_id": "faq",
         "color_scheme": "",
         "background_type": "image",
         "background_solid": "#f2e6dc",
