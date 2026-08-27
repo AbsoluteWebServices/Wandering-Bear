@@ -242,12 +242,12 @@ export default (Alpine: AlpineType) => {
         }
         itemCount = cart.item_count ?? 0
       } catch {
-        window.location.href = `${discountUrl}?redirect=/collections/all`
+        window.location.href = `${discountUrl}?redirect=/collections/perfect-pour`
         return
       }
 
       if (itemCount === 0) {
-        window.location.href = `${discountUrl}?redirect=/collections/all`
+        window.location.href = `${discountUrl}?redirect=/collections/perfect-pour`
         return
       }
 
