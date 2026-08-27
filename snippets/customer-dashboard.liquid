@@ -316,7 +316,7 @@
             <a href="/community/membership?customerId={{ customer.id }}#change-plan" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
             <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
           {%- endif -%}
-          <a href="{{ membership_url }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
+          <a href="{{ membership_url }}#faq" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
         </div>
       </div>
       {%- comment -%} QA #38: mobile needs more air above this heading — see .wb-whats-included. {%- endcomment -%}
