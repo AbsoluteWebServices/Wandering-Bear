@@ -1,0 +1,23 @@
+<script type="text/javascript">
+  (function () {
+    ChurnBuster = window.ChurnBuster || {};
+    ChurnBuster.cancelAttributes = {
+      accountId: "667e0f19-152f-4f07-9b2a-6464f1260cb6",
+      source: "inveterate",
+      customerId: "{{ customer.id }}",
+      customerEmail: "{{ customer.email }}",
+      subscriptionId: "{{ customer.id }}",
+      cancelButtonSelector: "[data-inveterate-modal-trigger='cancel-message']"
+    };
+    if (window.inveterate?.customer?.subscriptionContract?.id) {
+      ChurnBuster.cancelAttributes.subscriptionId = window.inveterate.customer.subscriptionContract.id.split("/").pop();
+    }
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.async = true;
+    script.src = "https://proxy-assets.churnbuster.io/v4/scripts.js?v=1779130304305";
+    var insert = document.getElementsByTagName("script")[0];
+    insert.parentNode.insertBefore(script, insert);
+
+  })();
+  </script>
