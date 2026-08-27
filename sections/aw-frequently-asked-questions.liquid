@@ -11,6 +11,7 @@
     assign faqs_metaobject = section_settings.faqs_metaobject
     assign button_label = section_settings.button_label
     assign button_link = section_settings.button_link
+    assign section_id = section_settings.section_id
 %}
 
 {% capture title_styles %}
@@ -18,7 +19,7 @@
     --font-size-mobile: {{ section.settings.font_size_mobile | default: 24 }}px;
 {% endcapture %}
 
-<div class="flex flex-col justify-center relative overflow-hidden spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
+<div id="{{ section_id }}" class="flex flex-col justify-center relative overflow-hidden spacing-style wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style', fallback_color: color_scheme.background %} {% render 'spacing-style', settings: section.settings %}">
     {% render 'section-background', settings: section.settings, part: 'media' %}
     <div>
       {% content_for 'blocks' %}
@@ -80,6 +81,12 @@
 {
   "name": "AW FAQs",
   "settings": [
+    {
+      "type": "text",
+      "id": "section_id",
+      "label": "Section ID",
+      "info": "Used for anchor links"
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
