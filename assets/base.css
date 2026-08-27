@@ -4201,5 +4201,9 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* Inveterate Portal */
 
 .inveterate__member {
-  background: #F2E6DC;
+  background: #F2E6DC !important;
+}
+
+.inveterate__member__inner {
+  background: #F2E6DC !important;
 }
