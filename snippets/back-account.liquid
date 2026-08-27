@@ -23,6 +23,9 @@
       {% if request.path contains 'apps/retextion' %}
         <h1 class="h1 text-espresso text-center md:text-left">Autoship Order Management</h1>
       {% endif %}
+      {% if request.path contains 'community/membership' %}
+        <h1 class="h1 text-espresso text-center md:text-left !mb-2.5">Manage Membership</h1>
+      {% endif %}
         <a href="{{ routes.account_url }}" class="group back-account__link w-[165px] shadow-button h-[43px] inline-flex text-center justify-center items-center gap-1.5 font-bold text-espresso hover:text-foam! transition-colors duration-300 relative" title="{{ 'customer.order.back_to_account' | t }}">
           <span class="back-account__icon inline-block relative z-[1] text-espresso group-hover:!text-foam transition-colors duration-300">
             {% render 'icons', icon: 'arrow-left' %}
