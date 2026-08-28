@@ -16,7 +16,7 @@
           "type": "button",
           "settings": {
             "label": "SHOP NOW",
-            "link": "/collections/all",
+            "link": "/pages/overview?view=overview-1",
             "style": "secondary-gold"
           }
         }
@@ -279,7 +279,7 @@
             "image_side": "auto",
             "image": "shopify://shop_images/item-5-happiness.png",
             "button_label": "SHOP NOW",
-            "button_link": "/collections/all",
+            "button_link": "/pages/overview?view=overview-1",
             "button_style": "secondary-gold"
           }
         }
