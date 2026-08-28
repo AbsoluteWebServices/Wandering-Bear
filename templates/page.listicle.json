@@ -279,7 +279,7 @@
             "image_side": "auto",
             "image": "shopify://shop_images/item-5-happiness.png",
             "button_label": "SHOP NOW",
-            "button_link": "/pages/overview?view=overview-1",
+            "button_link": "/pages/overview?view=overview-2",
             "button_style": "secondary-gold"
           }
         }
