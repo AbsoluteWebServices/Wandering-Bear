@@ -315,6 +315,4 @@
 p {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
-    font-size: 0.875rem; /* 14px */
-    line-height: 130%;
 }
