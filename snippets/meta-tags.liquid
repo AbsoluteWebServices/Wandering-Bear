@@ -23,7 +23,10 @@
 >
 
 {%- liquid
-  if request.page_type == 'product'
+  if request.path contains 'community/membership' or request.path contains '/apps/retextion'
+    assign og_type = 'account'
+    assign page_title = 'Account' | append: ' - ' | append: shop.name
+  elsif request.page_type == 'product'
     assign og_type = 'product'
     assign page_title = product.title | append: ' - ' | append: shop.name
   elsif request.page_type == 'article'
