@@ -1,3 +1,9 @@
+{% if product.metafields.custom.bundle_product != blank %}
+    {% assign bundle_product = product.metafields.custom.bundle_product.value %}
+{% else %}
+    {% assign bundle_product = product %}
+{% endif %}
+
 <div data-media-gallery-bundle-container class="transition-opacity duration-300">
 {% render 'media-gallery-bundle', bundle_product: bundle_product %}
 </div>
