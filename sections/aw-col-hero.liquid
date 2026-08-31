@@ -32,6 +32,7 @@
 
 {% capture color_styles %}
     --color: {{ color_scheme.settings.foreground }};
+    --margin-top: {{ section.settings.margin_top }}px;
 {% endcapture %}
 
 
@@ -45,6 +46,8 @@
     }
 
     .hero-{{ section.id }} {
+        margin-top: var(--margin-top);
+
         h1 {
             color: var(--color);
         }
@@ -88,6 +91,7 @@
    --button-text: {{ button_text }};
    --button-hover-text: {{ button_hover_text }};
 {% endcapture %}
+
 
 <div class="hero-{{ section.id }} wb-grid grid-cols-1 md:grid-cols-2
 {% if template.name == 'blog' %}
@@ -173,7 +177,7 @@
         </div> 
    </div>
    <div class="flex order-1 md:order-2">
-    <picture>
+    <picture class="w-full">
       <source srcset="{{ image | image_url: width: 2000 }}" media="(min-width: 2000px)">
       <source srcset="{{ image | image_url: width: 1000 }}" media="(min-width: 768px)">
       {% if image_mobile != blank %}
@@ -189,7 +193,6 @@
 {% schema %}
 {
   "name": "AW Col Hero",
-  "class": "aw-col-hero",
   "settings": [
     {
       "type": "color_scheme",
@@ -286,6 +289,15 @@
       "type": "text",
       "id": "button_text",
       "label": "Button Text"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "default": 0,
+      "min": 0,
+      "max": 200,
+      "step": 2
     }
   ],
   "blocks": [],
