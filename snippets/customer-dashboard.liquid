@@ -315,7 +315,15 @@
         <div class="flex flex-col items-end !gap-2.5">
           {%- if is_elite -%}
             <a href="/community/membership?customerId={{ customer.id }}#change-plan" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.change_tier' | t }}</a>
-            <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.update_payment' | t }}</a>
+            {%- comment -%}
+              Hidden by account.ts for members whose ELITE came from spending rather than a paid
+              membership — they were being offered a payment screen for something they did not buy.
+              Liquid cannot decide this: the split needs baseTierId vs experienceSegmentId, and only
+              the latter reaches the theme (metafield `inveterate.segment_id`). Rendered visible so a
+              worker failure leaves paying members able to reach their card, rather than stranding
+              them; the trade is a brief flash for the earned-tier case.
+            {%- endcomment -%}
+            <a href="/community/membership?customerId={{ customer.id }}" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso" data-wb-update-payment>{{ 'customer.dashboard.update_payment' | t }}</a>
           {%- endif -%}
           <a href="{{ membership_url }}#faq" class="font-kurdis-semi-condensed font-bold text-[10px] leading-none hover-underline text-espresso">{{ 'customer.dashboard.membership_faq' | t }}</a>
         </div>

@@ -30,6 +30,9 @@ type Membership = {
     amount_to_next_formatted: string;
     message: string;
   } | null;
+  /** How the tier was reached: 'SPEND' = crossed the spending threshold, 'PAID' = held outright.
+   *  Independent of whether the member is billed — an earned tier can still carry a contract. */
+  earned_via: 'PAID' | 'SPEND';
   // Live Inveterate tier benefits. Not hydrated yet (SSR copy per Figma); typed for
   // when the "What's Included" list is wired to the worker (docs 03 §5).
   benefits: { name: string; description: string; icon: string | null; type: string }[];
@@ -182,6 +185,14 @@ function renderMembership(m: Membership | null): void {
     setText(root, 'progress-tier', m.progress.next_tier ?? undefined);
     setText(root, 'progress-text', m.progress.message);
   }
+  // "Update Payment Info" is meaningless for a tier that was earned by spending, and QA found it
+  // reading as a demand for payment. Note earned_via is about how the tier was reached, not about
+  // whether the member is billed — some earned members do still hold a paid contract, and this
+  // hides the link from them too. That is what was asked for; revisit if it causes support load.
+  root
+    .querySelector<HTMLElement>('[data-wb-update-payment]')
+    ?.toggleAttribute('data-wb-hide', m.earned_via === 'SPEND');
+
   // NOTE: tier name stays SSR-native (drives the card layout); everything else here is
   // from the worker. SSR credit balance is the instant fallback until this overwrites it.
 }
