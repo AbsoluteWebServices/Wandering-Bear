@@ -233,6 +233,10 @@
         {% render 'back-account' %}
       {% endif %}
 
+      {% if page and page.metafields.custom.h1 != blank %}
+        <h1 class="seo-hidden">{{ page.metafields.custom.h1 }}</h1>
+      {% endif %}
+
       {{ content_for_layout }}
     </main>
     {% section 'aw-membership-modal' %}
