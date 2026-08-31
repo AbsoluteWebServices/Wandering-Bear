@@ -95,6 +95,7 @@
     25 rows, not the 6 the mock started with: order history paginates at 10, so a shorter
     list could never show the control. Fields mirror the real table's columns in order.
   endcomment
+
 -%}
 {%- capture mock_orders_raw -%}
     #743463|June 3, 2026|2342425325|Pending|Unfulfilled|$69.98;
@@ -416,14 +417,43 @@
           </thead>
           <tbody>
             {%- for order in customer.orders -%}
+              {% liquid
+                  assign tracking_pairs = ''
+                  assign seen_numbers = ''
+                  for line_item in order.line_items
+                    assign f = line_item.fulfillment
+                    if f.tracking_number
+                      assign f_url = f.tracking_url
+                      for tnum in f.tracking_numbers
+                        assign tn_key = '|' | append: tnum | append: '|'
+                        unless seen_numbers contains tn_key
+                          assign seen_numbers = seen_numbers | append: tn_key
+                          assign pair = tnum | append: '^^' | append: f_url
+                          if tracking_pairs == ''
+                            assign tracking_pairs = pair
+                          else
+                            assign tracking_pairs = tracking_pairs | append: '~~' | append: pair
+                          endif
+                        endunless
+                      endfor
+                    endif
+                  endfor
+                  assign tracking_list = tracking_pairs | split: '~~'
+              %}
               {%- assign fulfillment = order.fulfillments.first -%}
               <tr class="font-kurdis-semi-condensed font-bold text-[10px] leading-[1.8] text-bear-black">
                 <td class="px-2 py-3 md:!p-3 border-b border-espresso/10"><a href="{{ order.customer_url }}" class="font-bold hover-underline">{{ order.name }}</a></td>
                 <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 whitespace-nowrap">{{ order.created_at | date: '%b %-d, %Y' }}</td>
                 <td class="px-2 py-3 md:!p-3 border-b border-espresso/10">
-                  {%- if fulfillment.tracking_number -%}
-                    {%- if fulfillment.tracking_url -%}<a href="{{ fulfillment.tracking_url }}" class="hover-underline" target="_blank" rel="noopener">{{ fulfillment.tracking_number }}</a>{%- else -%}{{ fulfillment.tracking_number }}{%- endif -%}
-                  {%- else -%}&mdash;{%- endif -%}
+                  {%- if tracking_list.size > 0 -%}
+                      {%- for pair in tracking_list -%}
+                        {%- assign tnum = pair | split: '^^' | first -%}
+                        {%- assign turl = pair | split: '^^' | last -%}
+                        <a href="{{ turl }}" class="hover-underline" target="_blank" rel="noopener">{{ tnum }}</a>
+                      {%- endfor -%}
+                  {%- else -%}
+                    &mdash;
+                  {%- endif -%}
                 </td>
                 <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell">{{ order.financial_status_label }}</td>
                 <td class="px-2 py-3 md:!p-3 border-b border-espresso/10 hidden md:!table-cell">{{ order.fulfillment_status_label }}</td>

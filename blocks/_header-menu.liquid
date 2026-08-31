@@ -93,6 +93,7 @@
           on:pointerleave="/deactivate"
         >
           <a
+            aria-label="{{ link.title }}"
             {% if forloop.first %}
               @click="openDrawer"
               x-bind:aria-expanded="drawerOpen"

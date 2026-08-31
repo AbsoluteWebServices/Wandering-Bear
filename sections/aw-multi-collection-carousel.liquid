@@ -19,7 +19,7 @@
     <div class="container flex-col items-center !gap-1.5 md:!gap-5 md:!items-start md:!flex-row mx-auto flex justify-center md:!justify-start relative md:!ml-20 max-w-[100vw]">
     {% if title_image != blank %}
         <div class="h-[101px] md:!h-[133px] w-[270px] md:!mb-6 relative z-[2] mt-7 md:!mt-0">
-            {{ title_image | image_url: width: 365 | image_tag: class: '!w-full max-h-full object-contain', alt: title_alt }}
+            {{ title_image | image_url: width: 365 | image_tag: class: '!w-full max-h-full object-contain', alt: title_image.alt }}
         </div>
     {% endif %}
 
