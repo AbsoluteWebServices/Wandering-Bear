@@ -93,7 +93,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "block_class": "font-kurdis-semi-condensed font-bold",
+                "block_class": "font-kurdis-semi-condensed font-bold text-bear-black",
                 "text": "<p>The page you requested does not exist.</p>",
                 "width": "100%",
                 "max_width": "normal",
