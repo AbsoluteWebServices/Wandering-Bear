@@ -1,0 +1,19 @@
+{%- doc -%}
+  Emits a responsive `<link rel="preload" as="image">` for an LCP/above-the-fold
+  image so the browser starts fetching it before it parses the section markup.
+
+  @param {object} image - The image object (skipped when blank).
+  @param {string} [fetchpriority] - e.g. 'high' for the true LCP image (optional).
+  @param {string} [sizes] - imagesizes value; defaults to '100vw' (optional).
+{%- enddoc -%}
+{%- if image != blank -%}
+  {%- assign preload_sizes = sizes | default: '100vw' -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ image | image_url: width: 1200 }}"
+    imagesrcset="{{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 1000 }} 1000w, {{ image | image_url: width: 1600 }} 1600w, {{ image | image_url: width: 2000 }} 2000w"
+    imagesizes="{{ preload_sizes }}"
+    {% if fetchpriority != blank %}fetchpriority="{{ fetchpriority }}"{% endif %}
+  >
+{%- endif -%}

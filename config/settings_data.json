@@ -98,6 +98,11 @@
     "dashboard_benefits_free": "$5 off your first order|Earn $5 for every $50 spent per order",
     "dashboard_benefits_vip": "Earn $5 for every $50 spent per order|Access to exclusive flavors|Autoship discount on all orders|VIP Customer Service",
     "dashboard_benefits_elite": "Earn $5 for every $50 spent per order|Access to exclusive flavors|Elite Customer Service|Early access to sales and launches|$10 Anniversary credit",
+    "homepage_image_1": "shopify://shop_images/WB_FRIDGE_GROUP_FULL_SOLO_1.png",
+    "homepage_image_2": "shopify://shop_images/WB_FRIDGE_GROUP_MOBILE.png",
+    "homepage_image_3": "shopify://shop_images/Latte_section.png",
+    "homepage_image_4": "shopify://shop_images/LIKE_A_COFFEE_SHOP_IN_YOUR_FRIDGE.svg",
+    "homepage_image_5": "shopify://shop_images/LIKE_A_COFFEE_SHOP_IN_YOUR_FRIDGE.svg",
     "sections": {
       "aw-membership-modal": {
         "type": "aw-membership-modal",
@@ -192,34 +197,6 @@
         "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507",
         "disabled": false,
         "settings": {}
-<<<<<<< HEAD
-=======
-      },
-      "16584543697844443564": {
-        "type": "shopify://apps/patrol/blocks/theme-injection/019c9621-793f-7152-a8bf-bac8d71d9665",
-        "disabled": false,
-        "settings": {}
-      },
-      "1291562577487733835": {
-        "type": "shopify://apps/black-crow-ai-that-delivers/blocks/blackcrow_ai_script/3e73f597-cb71-47a1-8a06-0c931482ecd2",
-        "disabled": false,
-        "settings": {}
-      },
-      "10641372206048101839": {
-        "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-global-embed/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-        "disabled": false,
-        "settings": {}
-      },
-      "15685250022964305326": {
-        "type": "shopify://apps/elevar-conversion-tracking/blocks/dataLayerEmbed/bc30ab68-b15c-4311-811f-8ef485877ad6",
-        "disabled": false,
-        "settings": {}
-      },
-      "10864971697205422121": {
-        "type": "shopify://apps/gorgias-live-chat-helpdesk/blocks/gorgias/a66db725-7b96-4e3f-916e-6c8e6f87aaaa",
-        "disabled": false,
-        "settings": {}
->>>>>>> e1da1221c7c6d89004e94d1a98974336484ad843
       }
     },
     "color_schemes": {

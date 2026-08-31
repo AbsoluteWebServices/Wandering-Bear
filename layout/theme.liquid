@@ -14,17 +14,6 @@
 
     {% render 'replo-head' %}
 
-    <!-- anti-flicker snippet (recommended)  -->
-    <style>.async-hide { opacity: 0 !important} </style>
-    <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
-    h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
-    (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
-    })(window,document.documentElement,'async-hide','dataLayer',4000,
-    {'OPT-N3PNKLX':true});</script>
-
-    <script src="https://www.googleoptimize.com/optimize.js?id=OPT-N3PNKLX"></script>
-
-
     {% if request.path == '/cart' %}
       <script>
         window.location.replace('/?openCart=1');
@@ -63,11 +52,23 @@
 
       {% comment %} We preconnect to commonly used third-parties to initiate TCP/TLS handshake {% endcomment %}
       <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+      {% comment %} <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+      <link rel="preconnect" href="https://p.typekit.net" crossorigin> {% endcomment %}
      
       {% comment %} We check if its a system font, or a web-safe font {% endcomment %}
-      {% unless settings.type_heading.system? and settings.type_body.system? %} 
+      {% unless settings.type_heading.system? and settings.type_body.system? %}
         <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-      {% endunless %} 
+      {% endunless %}
+
+    {%- comment -%} Preload above-the-fold homepage images (see "Preloaded Images" in theme settings). {%- endcomment -%}
+    {%- if request.page_type == 'index' -%}
+      {%- render 'image-preload', image: settings.homepage_image_1, fetchpriority: 'high' -%}
+      {%- render 'image-preload', image: settings.homepage_image_2, fetchpriority: 'high' -%}
+      {%- render 'image-preload', image: settings.homepage_image_3, fetchpriority: 'high' -%}
+      {%- render 'image-preload', image: settings.homepage_image_4, fetchpriority: 'high' -%}
+      {%- render 'image-preload', image: settings.homepage_image_5, fetchpriority: 'high' -%}
+      {%- render 'image-preload', image: settings.homepage_image_6, fetchpriority: 'high' -%}
+    {%- endif -%}
 
     {%- render 'meta-tags' -%}
     {%- render 'meta-json-ld' -%}
@@ -104,7 +105,9 @@
     {{ content_for_header }}
     {% render 'cookie-consent' %}
     {% # theme-check-enable RemoteAsset %}
-    <link rel="stylesheet" href="https://use.typekit.net/bze4adt.css">
+    {% comment %} {%- comment -%} Load Typekit fonts without blocking render (media=print → swap to all onload). {%- endcomment -%}
+    <link rel="stylesheet" href="https://use.typekit.net/bze4adt.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://use.typekit.net/bze4adt.css"></noscript> {% endcomment %}
 
        <!-- Microsoft Clarity Heatmapping and Session Recordings -->
     <script type="text/javascript">
