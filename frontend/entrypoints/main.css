@@ -76,3 +76,14 @@
         font-size: 45px !important;
     }
 }
+
+.seo-title {
+    height: 0px;
+    width: 0px;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
