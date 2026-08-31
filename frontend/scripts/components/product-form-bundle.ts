@@ -439,9 +439,22 @@ export default (Alpine: AlpineType) => {
             this.bundleParentProducts = JSON.parse(this.$refs.bundleParentProducts.textContent);
 
             if (!this.bundleProducts[this.selectedProductId]) {
-              const firstKey = Object.keys(this.bundleProducts)[0];
-              if (firstKey) this.selectedProductId = firstKey;
+              // The passed-in id (32oz `product.metafields.custom.bundle_product`)
+              // can point outside bundle_collection, so it's not a valid key. Resolve
+              // to the collection member matching the CURRENT product (by handle from
+              // the URL) — otherwise every flavor page falls to the first key (Straight
+              // Black) and overwrites the server-rendered selection once Alpine boots.
+              const currentHandle =
+                window.location.pathname.match(/\/products\/([^/?#]+)/)?.[1];
+              const matchedKey = currentHandle
+                ? Object.keys(this.bundleProducts).find(
+                    (key) => this.bundleProducts[key]?.handle === currentHandle
+                  )
+                : undefined;
+              const fallbackKey = matchedKey ?? Object.keys(this.bundleProducts)[0];
+              if (fallbackKey) this.selectedProductId = fallbackKey;
             }
+
 
             this.selectedProduct = this.bundleProducts[this.selectedProductId];
 
