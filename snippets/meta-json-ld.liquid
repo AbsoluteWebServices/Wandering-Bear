@@ -1,0 +1,170 @@
+{% case request.page_type %}
+
+{% when 'product' %}
+    {%- assign seo_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+    {%- assign review_rating = product.metafields.reviews.rating.value -%}
+    {%- assign review_count = product.metafields.reviews.rating_count.value -%}
+    {%- comment -%} priceValidUntil: 1 year out, so Google doesn't treat offers as stale. {%- endcomment -%}
+    {%- assign price_valid_until = 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "url": {{ request.origin | append: product.url | json }},
+      {% if seo_media -%}
+        "image": [
+          {{ seo_media | image_url: width: 1920 | prepend: "https:" | json }}
+        ],
+      {%- endif %}
+      "description": {{ product.description | strip_html | json }},
+      {% if product.selected_or_first_available_variant.sku != blank -%}
+        "sku": {{ product.selected_or_first_available_variant.sku | json }},
+      {%- endif %}
+      "brand": {
+        "@type": "Brand",
+        "name": {{ product.vendor | json }}
+      },
+      {%- if review_rating and review_count > 0 -%}
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": {{ review_rating.rating | json }},
+          "reviewCount": {{ review_count | json }},
+          "bestRating": {{ review_rating.scale_max | default: 5 | json }},
+          "worstRating": {{ review_rating.scale_min | default: 1 | json }}
+        },
+      {%- endif -%}
+      "offers": [
+        {%- for variant in product.variants -%}
+          {
+            "@type" : "Offer",
+            {%- if variant.sku != blank -%}
+              "sku": {{ variant.sku | json }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 12 -%}
+              "gtin12": {{ variant.barcode | json }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 13 -%}
+              "gtin13": {{ variant.barcode | json }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 14 -%}
+              "gtin14": {{ variant.barcode | json }},
+            {%- endif -%}
+            "itemCondition" : "https://schema.org/NewCondition",
+            "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+            "price" : {{ variant.price | divided_by: 100.00 | json }},
+            "priceCurrency" : {{ cart.currency.iso_code | json }},
+            "priceValidUntil" : {{ price_valid_until | json }},
+            "url" : {{ request.origin | append: variant.url | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+
+{% when 'collection' %}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "CollectionPage",
+      "name": {{ collection.title | json }},
+      "url": {{ request.origin | append: collection.url | json }},
+      {% if collection.description != blank -%}
+        "description": {{ collection.description | strip_html | json }},
+      {%- endif %}
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": {{ collection.products_count }},
+        "itemListElement": [
+          {%- for product in collection.products limit: 30 -%}
+            {
+              "@type": "ListItem",
+              "position": {{ forloop.index }},
+              "url": {{ request.origin | append: product.url | json }},
+              "name": {{ product.title | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+      }
+    }
+  </script>
+
+{% when 'blog' %}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "Blog",
+      "name": {{ blog.title | json }},
+      "url": {{ request.origin | append: blog.url | json }},
+      "blogPost": [
+        {%- for article in blog.articles limit: 30 -%}
+          {
+            "@type": "BlogPosting",
+            "headline": {{ article.title | json }},
+            "url": {{ request.origin | append: article.url | json }},
+            "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+            {% if article.image -%}
+              "image": {{ article.image | image_url: width: 1920 | prepend: "https:" | json }},
+            {%- endif %}
+            "author": {
+              "@type": "Person",
+              "name": {{ article.author | json }}
+            }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+
+{% when 'article' %}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "BlogPosting",
+      "headline": {{ article.title | json }},
+      "url": {{ request.origin | append: article.url | json }},
+      "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      {% if article.updated_at -%}
+        "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      {%- endif %}
+      {% if article.image -%}
+        "image": [
+          {{ article.image | image_url: width: 1920 | prepend: "https:" | json }}
+        ],
+      {%- endif %}
+      {% if article.excerpt_or_content != blank -%}
+        "description": {{ article.excerpt_or_content | strip_html | truncatewords: 50 | json }},
+      {%- endif %}
+      "author": {
+        "@type": "Person",
+        "name": {{ article.author | json }}
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": {{ shop.name | json }}
+        {%- if settings.logo -%},
+          "logo": {
+            "@type": "ImageObject",
+            "url": {{ settings.logo | image_url: width: 500 | prepend: "https:" | json }}
+          }
+        {%- endif %}
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": {{ request.origin | append: article.url | json }}
+      }
+    }
+  </script>
+
+{% when 'search' %}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "SearchResultsPage",
+      "name": {{ page_title | default: shop.name | json }},
+      "url": {{ canonical_url | default: request.origin | json }}
+    }
+  </script>
+
+
+{% endcase %}

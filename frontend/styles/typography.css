@@ -316,3 +316,7 @@ p {
     font-family: var(--font-kurdis-semi-condensed);
     font-weight: 600;
 }
+
+rte-formatter {
+    font-family: var(--font-kurdis-semi-condensed);
+}
