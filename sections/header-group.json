@@ -17,7 +17,7 @@
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
-            "text": "NEW FLAVOR ALERT! <a href=\"/pages/membership\" title=\"Membership\">SIGN UP FOR EARLY ACCESS</a>",
+            "text": "ALMOND AMARETTO IS BACK FOR A LIMITED TIME!",
             "link": "",
             "font": "var(--font-subheading--family)",
             "font_size": "0.75rem",
