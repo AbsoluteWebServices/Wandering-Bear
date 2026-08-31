@@ -125,3 +125,7 @@
     content="{{ page_description | escape }}"
   >
 {% endif %}
+
+{% if template == 'product' and product.metafields.product.hide_from_search_engines == true %}
+  <meta name="robots" content="noindex, nofollow">
+{% endif %}

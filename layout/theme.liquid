@@ -8,9 +8,22 @@
   <head>
     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0c89efb0-64d9-4d4b-8214-f2118b4a0481" data-blockingmode="auto" type="text/javascript"></script>
 
-<!-- Start of Shoplift scripts -->
-{% render 'shoplift' %}
-<!-- End of Shoplift scripts -->
+    <!-- Start of Shoplift scripts -->
+    {% render 'shoplift' %}
+    <!-- End of Shoplift scripts -->
+
+    {% render 'replo-head' %}
+
+    <!-- anti-flicker snippet (recommended)  -->
+    <style>.async-hide { opacity: 0 !important} </style>
+    <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
+    h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
+    (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+    })(window,document.documentElement,'async-hide','dataLayer',4000,
+    {'OPT-N3PNKLX':true});</script>
+
+    <script src="https://www.googleoptimize.com/optimize.js?id=OPT-N3PNKLX"></script>
+
 
     {% if request.path == '/cart' %}
       <script>
@@ -47,12 +60,22 @@
       >
     {% endif %}
 
+
+      {% comment %} We preconnect to commonly used third-parties to initiate TCP/TLS handshake {% endcomment %}
+      <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+     
+      {% comment %} We check if its a system font, or a web-safe font {% endcomment %}
+      {% unless settings.type_heading.system? and settings.type_body.system? %} 
+        <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+      {% endunless %} 
+
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
     {%- render 'fonts' -%}
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-schemes' -%}
+
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
@@ -63,10 +86,55 @@
       render 'vite-tag' with 'main.js'
     -%}
 
+
+    {% if request.path == '/collections/all' %}
+      <script>
+        window.location.href = '/collections/perfect-pour;
+      </script>
+    {% endif %}
+
+    {% if request.path contains '/collections' and collection.metafields.custom.hidden == true %}
+      <script>
+        window.location.href = '/collections/perfect-pour';
+      </script>
+    {% endif %}
+
+
     {{ content_for_header }}
     {% render 'cookie-consent' %}
     {% # theme-check-enable RemoteAsset %}
     <link rel="stylesheet" href="https://use.typekit.net/bze4adt.css">
+
+       <!-- Microsoft Clarity Heatmapping and Session Recordings -->
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+        t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "6v47jlzw98");
+    </script>
+
+    <!-- Triple Whale Pixel -->
+    <script type="text/javascript">
+      /* >> TriplePixel :: start*/
+      ~function (W, H, A, L, E) { function O(T, R) { void 0 === R && (R = !1), H = new XMLHttpRequest, H.open("GET", "//triplewhale-pixel.web.app/triplepx.txt?" + ~(Date.now() / 9e7), !0), H.send(null), H.onreadystatechange = function () { 4 === H.readyState && 200 === H.status ? setTimeout(function () { return eval(H.responseText) }, 50) : (299 < H.status || H.status < 200) && T && !R && (R = !0, O(T - 1)) } } if (L = window, !L[H + "sn"]) { L[H + "sn"] = 1; try { A.setItem(H, 1 + (0 | A.getItem(H) || 0)), W.includes("⇈") && A.setItem(H + "Stg", 1 + (0 | A.getItem(H + "Stg") || 0)) } catch (e) { } A = L, A[H] || (L = function () { return "tp.." + Date.now().toString(36) + Math.random().toString(36) }, E = A[H] = function (t, e, n) { return W = L(), (E._q = E._q || []).push([W, e, n]), W }, E.ch = W, O(5)) } }("", "TriplePixel", localStorage);
+      /* << TriplePixel :: end*/
+    </script>
+    <!-- End Triple Whale Pixel -->
+
+    <!-- Begin: Northbeam metadata info -->
+    <script>
+      localStorage.setItem('nb__region_code', "{{ localization.country.iso_code }}");
+      localStorage.setItem('nb__currency_code', "{{ localization.country.currency.iso_code }}");
+    </script>
+    <!-- End: Northbeam metadata info -->
+
+    <!-- Begin: Northbeam pixel -->
+    <script>(function(){var t;(n=t=t||{}).A="identify",n.B="trackPageView",n.C="fireEmailCaptureEvent",n.D="fireCustomGoal",n.E="firePurchaseEvent",n.F="trackPageViewInitial",n.G="fireSlimPurchaseEvent",n.H="identifyCustomerId";var n="//j.northbeam.io/ota-sp/236375bd-75c9-4475-82b4-75913eec3005.js";function r(n){for(var e=[],t=1;t<arguments.length;t++)e[t-1]=arguments[t];i.push({fnName:n,args:e})}var e,i=[],a=((e={})[t.F]=function(n){r(t.F,n)},(a={_q:i})[t.A]=function(n,e){return r(t.A,n,e)},a[t.B]=function(n){return r(t.B,n)},a[t.C]=function(n,e){return r(t.C,n,e)},a[t.D]=function(n,e){return r(t.D,n,e)},a[t.E]=function(n){return r(t.E,n)},a[t.G]=function(n){return r(t.G,n)},a[t.H]=function(n,e){return r(t.H,n,e)},Object.assign(function(n){for(var e=[],t=1;t<arguments.length;t++)e.push(arguments[t]);return r.apply(null,[n].concat(e))},a));window.Northbeam=a,(a=document.createElement("script")).async=!0,a.src=n,document.head.appendChild(a),e.trackPageViewInitial(window.location.href);})()</script>
+    <!-- End: Northbeam pixel -->
+
+    {%- render 'async-load-head-scripts-wrapper' with wrapped_content_for_header: wrapped_content_for_header, template: template -%}
+
   </head>
 
   <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">

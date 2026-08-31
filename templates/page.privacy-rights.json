@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
- {
+{
   "sections": {
     "main": {
       "type": "main-page",
@@ -17,7 +17,7 @@
           "name": "Title",
           "settings": {
             "block_class": "page-title",
-            "text": "<h1>GET IN TOUCH</h1>",
+            "text": "<h1>Page Title</h1>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
@@ -53,6 +53,7 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 0,
@@ -60,9 +61,24 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "privacy_rights_form_xj4QNC": {
+      "type": "privacy-rights-form",
+      "name": "Privacy Rights Form",
+      "settings": {
+        "page_title_type": "text",
+        "page_title_image_alt": "Privacy Rights Request",
+        "page_title": "Privacy Rights Request",
+        "title": "Consumer Privacy",
+        "intro": "<p>If you are a resident of certain U.S. states, you may have certain rights regarding your personal data under applicable state privacy law. Use this form to submit a request. We will respond to verified requests within the timeframes required by law. Submitting a request does not require you to create an account, and no fee will be charged.</p>",
+        "verification_notice_1": "<p>By submitting this request, I acknowledge that Wandering Bear Coffee may use the information provided in this form, and may contact me using the contact information I provide, solely to verify my identity or authority and to process and respond to this privacy rights request. Wandering Bear Coffee will request only the information reasonably necessary for verification and request fulfillment.</p>",
+        "verification_notice_2": "<p>For authorized agent requests, Wandering Bear Coffee may require verification of both the agent's authority and the consumer's identity, unless the agent provides a valid power of attorney. If Wandering Bear Coffee is unable to verify identity or authority to the required degree of certainty, it will notify the requestor and explain why the request cannot be processed.</p>",
+        "worker_url": "https://wandering-bear-privacy-form.megan-95f.workers.dev"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "privacy_rights_form_xj4QNC"
   ]
 }

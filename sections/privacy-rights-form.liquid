@@ -1,0 +1,354 @@
+{% liquid
+  assign worker_url = section.settings.worker_url 
+%}
+
+{% style %}
+.privacy-rights-form {
+  input,select {
+    font-family: 'Arial', sans-serif !important;
+    font-size: 1rem;
+  }
+
+  input[type="text"],input[type="email"],input[type="tel"],input[type="number"],textarea,select {
+    background: transparent;
+  }
+
+  .input-label {
+    display: block;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-kurdis-semi-condensed);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 130%;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 60px;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .section-label {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    .input-label {
+      font-size: 16px;
+    }
+  }
+}
+
+{% endstyle %}
+
+<div
+  x-data="privacyRights('{{ worker_url }}')"
+  class="pb-16 px-5 privacy-rights-form"
+>
+  {% if section.settings.page_title_type == 'text' %}
+    <h1 class="h1 uppercase text-center leading-none mt-20 mb-12 text-bear-black"
+        style="font-size: clamp(2.5rem, 7vw, 5rem);">
+      {{ section.settings.page_title }}
+    </h1>
+  {% else %}
+    <div class="flex justify-center items-center mt-20 mb-5 lg:mb-12 max-w-full lg:max-w-[60vw] 2xl:max-w-[1400px] mx-auto">
+      {{ section.settings.page_title_image | image_url: width: 1000 | image_tag: class: 'w-full h-auto', alt: section.settings.page_title_image_alt }}
+      <h1 class="absolute top-0 left-0 h-0 w-0 opacity-0 -z-1">
+        {{ section.settings.page_title_image_alt }}
+      </h1>
+    </div>
+  {% endif %}
+
+  <div class="max-w-[792px] mx-auto">
+    <!-- Intro -->
+
+    <!-- Form -->
+    <form
+      x-show="!submitted"
+      @submit.prevent="handleSubmit"
+      novalidate
+    >
+
+    <h2 class="h2 lg:text-[37px] uppercase mb-3 text-bear-black">{{ section.settings.title }}</h2>
+    <div class="[&_p]:font-body [&_p]:leading-relaxed [&_p]:text-neutral-600 [&_p]:mb-9 [&_p]:text-base lg:[&_p]:text-lg">{{ section.settings.intro }}</div>
+
+
+      <!-- Section 1 -->
+      <div class="section-label">
+        <span class="font-kurdis-condensed text-base lg:text-lg uppercase tracking-widest font-bold text-neutral-500 md:whitespace-nowrap">
+          Section 1 &mdash; Requestor Information
+        </span>
+        <div class="flex-1 h-px bg-bear-black"></div>
+      </div>
+
+      <div class="mb-5 lg:mb-10">
+        <label for="prf_name" class="input-label">
+          Full Name <span class="text-neutral-500">*</span>
+        </label>
+        <input
+          id="prf_name" type="text" name="full_name" required
+          placeholder="First and last name"
+          class="w-full px-4 py-3 text-lg lg:text-[27px] bg-neutral-100 font-['Arial',sans-serif] border border-black text-bear-black outline-none focus:border-bear-black transition-colors placeholder:text-bear-black/40 placeholder:font-normal"
+        >
+      </div>
+
+      <div class="mb-5 lg:mb-10">
+        <label for="prf_email" class="input-label">
+          Email Address <span class="text-neutral-500">*</span>
+        </label>
+        <input
+          id="prf_email" type="email" name="email" required
+          placeholder="you@example.com"
+          class="w-full px-4 py-3 text-lg lg:text-[27px] bg-neutral-100 font-['Arial',sans-serif] border border-black text-bear-black outline-none focus:border-bear-black transition-colors placeholder:text-bear-black/40 placeholder:font-normal"
+        >
+      </div>
+
+      <div class="mb-5 lg:mb-10">
+        <label for="prf_state" class="input-label">
+          State of Residence <span class="text-neutral-500">*</span>
+        </label>
+        <div class="relative">
+          <select
+            id="prf_state" name="state_of_residence" required
+            class="w-full px-4 py-3 pr-10 text-lg lg:text-[27px] bg-neutral-100 border border-black text-bear-black outline-none focus:border-bear-black transition-colors appearance-none cursor-pointer"
+          >
+            <option value="" disabled selected>Select your state</option>
+            <option>Alabama</option>
+            <option>Alaska</option>
+            <option>Arizona</option>
+            <option>Arkansas</option>
+            <option>California</option>
+            <option>Colorado</option>
+            <option>Connecticut</option>
+            <option>Delaware</option>
+            <option>Florida</option>
+            <option>Georgia</option>
+            <option>Hawaii</option>
+            <option>Idaho</option>
+            <option>Illinois</option>
+            <option>Indiana</option>
+            <option>Iowa</option>
+            <option>Kansas</option>
+            <option>Kentucky</option>
+            <option>Louisiana</option>
+            <option>Maine</option>
+            <option>Maryland</option>
+            <option>Massachusetts</option>
+            <option>Michigan</option>
+            <option>Minnesota</option>
+            <option>Mississippi</option>
+            <option>Missouri</option>
+            <option>Montana</option>
+            <option>Nebraska</option>
+            <option>Nevada</option>
+            <option>New Hampshire</option>
+            <option>New Jersey</option>
+            <option>New Mexico</option>
+            <option>New York</option>
+            <option>North Carolina</option>
+            <option>North Dakota</option>
+            <option>Ohio</option>
+            <option>Oklahoma</option>
+            <option>Oregon</option>
+            <option>Pennsylvania</option>
+            <option>Rhode Island</option>
+            <option>South Carolina</option>
+            <option>South Dakota</option>
+            <option>Tennessee</option>
+            <option>Texas</option>
+            <option>Utah</option>
+            <option>Vermont</option>
+            <option>Virginia</option>
+            <option>Washington</option>
+            <option>West Virginia</option>
+            <option>Wisconsin</option>
+            <option>Wyoming</option>
+            <option>Other</option>
+          </select>
+          <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-bear-black" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+            <path d="M1 1L6 7L11 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="mb-5 lg:mb-10">
+        <label for="prf_for" class="input-label">
+          Who are you submitting for?
+        </label>
+        <div class="relative">
+          <select
+            id="prf_for" name="submitting_for"
+            class="w-full px-4 py-3 pr-10 text-lg lg:text-[27px] bg-neutral-100 border border-black text-bear-black outline-none focus:border-bear-black transition-colors appearance-none cursor-pointer"
+          >
+            <option value="" disabled selected>Select one</option>
+            <option value="Myself">Myself</option>
+            <option value="Someone Else / Authorized Agent">Someone Else / Authorized Agent</option>
+          </select>
+          <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-bear-black" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+            <path d="M1 1L6 7L11 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="section-label">
+        <span class="font-kurdis-condensed text-base lg:text-lg uppercase tracking-widest font-bold text-neutral-500 whitespace-nowrap">
+          Section 2 &mdash; Type of Request
+        </span>
+        <div class="flex-1 h-px bg-bear-black"></div>
+      </div>
+
+      <div class="mb-5 lg:mb-10">
+        <label for="prf_right" class="input-label">
+          Right you wish to exercise <span class="text-neutral-500">*</span>
+        </label>
+        <div class="relative">
+          <select
+            id="prf_right" name="right_to_exercise" required
+            class="w-full px-4 py-3 pr-10 text-lg lg:text-[27px] bg-neutral-100 border border-black text-bear-black outline-none focus:border-bear-black transition-colors appearance-none cursor-pointer"
+          >
+            <option value="" disabled selected>Select a right</option>
+            <option value="Right to Know / Access">Right to Know / Access</option>
+            <option value="Right to Delete">Right to Delete</option>
+            <option value="Right to Correct">Right to Correct</option>
+            <option value="Right to Opt-Out of Sale / Sharing">Right to Opt-Out of Sale / Sharing</option>
+            <option value="Right to Limit Use of Sensitive Personal Information">Right to Limit Use of Sensitive Personal Information</option>
+            <option value="Right to Non-Discrimination">Right to Non-Discrimination</option>
+          </select>
+          <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-bear-black" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+            <path d="M1 1L6 7L11 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="section-label">
+        <span class="font-kurdis-condensed text-base lg:text-lg uppercase tracking-widest font-bold text-neutral-500 whitespace-nowrap">
+          Section 3 &mdash; Verification Acknowledgment
+        </span>
+        <div class="flex-1 h-px bg-bear-black"></div>
+      </div>
+
+      <div class="bg-[#F8ECE0] border-[3px] border-accent-200 p-6 mb-4 space-y-3 text-xs leading-relaxed text-bear-black [&_p]:text-base lg:[&_p]:text-lg">
+        {{ section.settings.verification_notice_1 }}
+      </div>
+
+      <div class="bg-[#F8ECE0] border-[3px] border-accent-200 p-6 mb-4 space-y-3 text-xs leading-relaxed text-bear-black [&_p]:text-base lg:[&_p]:text-lg">
+        {{ section.settings.verification_notice_2 }}
+      </div>
+
+      <div class="flex items-start gap-2.5 mt-5 mb-7 w-full">
+        <input
+          id="prf_ack" type="checkbox" name="acknowledge" required
+          class="w-[18px] h-[18px] shrink-0 mt-0.5 border border-bear-black accent-bear-black cursor-pointer"
+        >
+        <label for="prf_ack" class="font-kurdis-semi-condensed text-sm leading-snug text-bear-black cursor-pointer">
+          I acknowledge the Verification Notice above and certify that the information in this request is true and correct.
+          <span class="text-neutral-500">*</span>
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        :disabled="submitting"
+        class="w-full font-kurdis-semi-condensed py-4 font-black text-lg lg:text-[22px] uppercase tracking-wide text-accent-100 bg-accent-200 border-accent-100 border-4 cursor-pointer hover:bg-gold hover:border-gold hover:text-foam transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        x-text="submitting ? 'Submitting…' : 'Submit Request'"
+      ></button>
+
+      <p x-show="error" x-cloak class="mt-3 text-center text-xs font-bold text-red-800">
+        Something went wrong. Please try again or contact us directly.
+      </p>
+    </form>
+
+    <!-- Success -->
+    <div x-show="submitted" x-cloak class="text-center py-12">
+      <p class="!font-kurdis-semi-condensed font-black !text-2xl uppercase text-bear-black mb-3">Request Submitted</p>
+      <p class="!text-lg lg:text-[27px] leading-relaxed text-neutral-600">
+        Thank you. We've received your privacy rights request and will respond within the timeframes required by applicable law.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Privacy Rights Form",
+  "settings": [
+    {
+      "type": "select",
+      "id": "page_title_type",
+      "label": "Page Title Type",
+      "options": [
+        {
+          "value": "text",
+          "label": "Text"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "page_title_image",
+      "label": "Page Title Image",
+      "visible_if": "{{ section.settings.page_title_type == 'image' }}"
+    },
+    {
+      "type": "text",
+      "id": "page_title_image_alt",
+      "label": "Page Title Image Alt",
+      "default": "Privacy Rights Request",
+      "visible_if": "{{ section.settings.page_title_type == 'image' }}"
+    },
+    {
+      "type": "text",
+      "id": "page_title",
+      "label": "Page Title",
+      "default": "Privacy Rights Request",
+      "visible_if": "{{ section.settings.page_title_type == 'text' }}"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Consumer Privacy"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "<p>If you are a resident of certain U.S. states, you may have certain rights regarding your personal data under applicable state privacy law. Use this form to submit a request. We will respond to verified requests within the timeframes required by law. Submitting a request does not require you to create an account, and no fee will be charged.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "verification_notice_1",
+      "label": "Verification Notice 1",
+      "default": "<p>By submitting this request, I acknowledge that Wandering Bear Coffee may use the information provided in this form, and may contact me using the contact information I provide, solely to verify my identity or authority and to process and respond to this privacy rights request. Wandering Bear Coffee will request only the information reasonably necessary for verification and request fulfillment.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "verification_notice_2",
+      "label": "Verification Notice 2",
+      "default": "<p>For authorized agent requests, Wandering Bear Coffee may require verification of both the agent's authority and the consumer's identity, unless the agent provides a valid power of attorney. If Wandering Bear Coffee is unable to verify identity or authority to the required degree of certainty, it will notify the requestor and explain why the request cannot be processed.</p>"
+    },
+    {
+      "type": "text",
+      "id": "worker_url",
+      "label": "Cloudflare Worker URL",
+      "default": "https://privacy-form.yourname.workers.dev",
+      "info": "Full URL of your deployed Cloudflare Worker (e.g. https://privacy-form.yourname.workers.dev)"
+    }
+  ],
+  "presets": [
+    { "name": "Privacy Rights Form" }
+  ]
+}
+{% endschema %}

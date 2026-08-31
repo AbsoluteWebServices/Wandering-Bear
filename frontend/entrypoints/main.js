@@ -96,6 +96,7 @@ const init = async () => {
     const { default: Cart } = await import("~/scripts/components/cart")
     const { default: ReviewCarouselBlock } = await import("~/scripts/components/reviewCarouselBlock")
     const { default: NutritionFacts } = await import("~/scripts/components/nutrition-facts")
+    const { default: PrivacyRights } = await import("~/scripts/components/privacyRights")
 
     Alpine.plugin(morph)
     Alpine.plugin(SwiperSlider)
@@ -123,7 +124,8 @@ const init = async () => {
     Alpine.plugin(Cart)
     Alpine.plugin(ReviewCarouselBlock)
     Alpine.plugin(NutritionFacts)
-
+    Alpine.plugin(PrivacyRights)
+    
     // Global cart store: `hasMembership` tracks whether the cart contains the membership
     // (Elite) product. Reactive in Alpine (`$store.cart.hasMembership`) and readable from
     // plain JS (`Alpine.store('cart').hasMembership`). Refreshed on every `cart:update`.
@@ -158,10 +160,6 @@ const init = async () => {
     Alpine.start()
     window.Alpine = Alpine
 
-    // Nutrition Facts Modal
-    // Open the modal when clicking on the #nutrition-facts anchor.
-    // Uses capture phase so the click is handled before any ancestor
-    // (e.g. the accordion's toggleAccordion) can stopPropagation() it.
     document.addEventListener('click', (event) => {
         const trigger = event.target.closest('[href="#nutrition-facts"]')
         if (!trigger) return
