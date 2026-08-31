@@ -23,18 +23,39 @@
 >
 
 {%- liquid
+  if request.page_type == 'product'
+    assign og_type = 'product'
+    assign page_title = product.title | append: ' - ' | append: shop.name
+  elsif request.page_type == 'article'
+    assign og_type = 'article'
+    assign page_title = article.title | append: ' - ' | append: shop.name
+  elsif request.page_type == 'collection'
+    assign og_type = 'collection'
+    assign page_title = collection.title | append: ' - ' | append: shop.name
+  elsif request.page_type == 'blog'
+    assign og_type = 'blog'
+    assign page_title = blog.title | append: ' - ' | append: shop.name
+  elsif request.page_type == 'search'
+    assign og_type = 'search'
+    assign page_title = 'Search Results' | append: ' - ' | append: shop.name
+  elsif request.page_type == '404'
+    assign og_type = '404'
+    assign page_title = 'Page Not Found' | append: ' - ' | append: shop.name
+  elsif request.page_type == 'index'
+    assign og_type = 'website'
+    assign page_title = shop.name
+  elsif request.page_type == 'page'
+    assign og_type = 'page'
+    assign page_title = page.title | append: ' - ' | append: shop.name
+  elsif request.page_type == 'password'
+    assign og_url = request.origin
+  endif
+
   assign og_title = page_title | default: shop.name
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
 
-  if request.page_type == 'product'
-    assign og_type = 'product'
-  elsif request.page_type == 'article'
-    assign og_type = 'article'
-  elsif request.page_type == 'password'
-    assign og_url = request.origin
-  endif
 %}
 
 <meta
