@@ -171,9 +171,9 @@
       "name": "Floating Image",
       "settings": {
         "color_scheme": "",
-        "background_image": "shopify://shop_images/Group_1327226596.png",
+        "background_image": "shopify://shop_images/sky.webp",
         "background_image_mobile": "shopify://shop_images/Group_1327226600.png",
-        "floating_image": "shopify://shop_images/LatteHands_Badge.png",
+        "floating_image": "shopify://shop_images/latte-hand-group.webp",
         "floating_image_mobile": "shopify://shop_images/Mobile_Hand.png",
         "badge": "shopify://shop_images/NEW_BADGE_4d6fd12a-4e18-4ac6-bc2d-5be88aab3ff9.svg",
         "title_type": "image",

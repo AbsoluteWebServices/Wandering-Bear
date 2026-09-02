@@ -387,8 +387,8 @@
     /* The artwork sits in the top 71% of ab-bearhand.png; the rest is transparent, so the box keeps
        running past the visible paw and reads as a gap above the footer. Figma clips that tail with
        the frame edge — do the same by bleeding the box past the section, which is overflow:hidden. */
-    margin: var(--paw-top-mobile, -22px) 0 var(--paw-bleed-mobile, -148px) var(--paw-left-mobile, -339px);
-    z-index: 0;
+    margin: -80px 0 var(--paw-bleed-mobile, -148px) var(--paw-left-mobile, -339px);
+    z-index: 1;
     background-image: var(--paw-img);
     background-repeat: no-repeat;
     /*
@@ -518,17 +518,16 @@
     }
 
     .wb-about-products__paw-img {
-      width: 617px;
+      width: 1000px;
       /* Figma lets the paw run under the promise cards; it just sits behind them (z-index below).
          The cap only stops it overshooting the screen once the column narrows on tablet — at the
          1280 design width (397 + 220 = 617) it is inert. */
-      max-width: calc(100% + 220px);
+      max-width: calc(100% + 420px);
       aspect-ratio: 1087 / 608;
       /* bleed off the left edge of the content column (clipped by the section's overflow:hidden) */
-      margin: 5px 0 0 -197px;
-      background-position: 86% 43%;
-      /* zoom: bigger % = closer (tune here / in console). cover = minimum fill. */
-      background-size: 130%;
+      margin: -30px 0 0 -197px;
+      background-position: 30%;
+      background-size: contain
     }
 
     .wb-about-products__paw-sticker {
