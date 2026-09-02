@@ -33,7 +33,7 @@
         "logo_bqbeBN": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/logo-5.png",
+            "image": "shopify://shop_images/Erewhon_Gold.png",
             "hide_on_mobile": false,
             "max_width": "144",
             "max_width_mobile": "102"
@@ -42,7 +42,7 @@
         "logo_gAdXrx": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/logo-1_8f883ae7-a2f9-4863-aca9-7299e7d72b76.png",
+            "image": "shopify://shop_images/Wholefoods_Gold.png",
             "hide_on_mobile": false,
             "max_width": "87",
             "max_width_mobile": "63"
@@ -51,7 +51,7 @@
         "logo_PG9Uzh": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/logo-4_f89ffb5e-c07a-4ddb-8490-0ee0b4cce935.png",
+            "image": "shopify://shop_images/Costco_Gold.png",
             "hide_on_mobile": false,
             "max_width": "156",
             "max_width_mobile": "96"
@@ -60,7 +60,7 @@
         "logo_KHHzVL": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/logo-3_95ab9dd9-43e9-4d30-a53d-dcdec39ee189.png",
+            "image": "shopify://shop_images/Sprouts_Gold.png",
             "hide_on_mobile": false,
             "max_width": "150",
             "max_width_mobile": "106"
@@ -69,7 +69,7 @@
         "logo_TyE9A9": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/logo-2_4485c334-ff30-4f71-8c4d-271a081171ff.png",
+            "image": "shopify://shop_images/Target_Gold.png",
             "hide_on_mobile": false,
             "max_width": "172",
             "max_width_mobile": "106"
@@ -148,7 +148,7 @@
         "height": 760,
         "height_mobile": 600,
         "background_type": "color",
-        "background_solid": "#F2E6DC",
+        "background_solid": "#f2e6dc",
         "background_gradient": "",
         "padding-block-start": 0,
         "padding-block-end": 0,

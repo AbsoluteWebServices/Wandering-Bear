@@ -81,7 +81,6 @@
             "title": "Cold Brew Boxes",
             "subtitle": "Always delicious and ready \"on tap\" in your fridge with 13 flavors to choose from.",
             "accent_text": "",
-            "badge": "shopify://shop_images/BADGE_TEST_2.svg",
             "margin_bottom_mobile": 0
           }
         },
@@ -223,7 +222,7 @@
       "name": "AW Multi Coll Carousel",
       "settings": {
         "color_scheme": "scheme-1",
-        "title_image": "shopify://shop_images/flavorsonflavors.svg"
+        "title_image": "shopify://shop_images/FLVRS.svg"
       }
     },
     "membership_rzQn9p": {
