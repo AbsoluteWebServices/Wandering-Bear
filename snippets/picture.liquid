@@ -14,6 +14,7 @@
     @param {string} [hover_image_classes] - The classes for the hover image element (optional)
     @param {string} [fetchpriority] - The fetchpriority attribute for the picture element (optional)
     @param {object} [hover_source] - The hover source image (optional)
+    @param {string} [picture_classes] - The classes for the picture element (optional)
 {%- enddoc -%}
 
 {% assign image_classes = image_classes | default: '' %}
@@ -93,7 +94,7 @@
     {% endif %}
 {% endcapture %}
 
-<picture>
+<picture class="{{ picture_classes }}">
     {{ picture_sources }}
     <img src="{{ base_source | image_url: width: width }}" width="{{ width }}" height="{{ height }}" {{ img_parameters }} class="{{ class }} {{ image_classes }}">
 </picture>

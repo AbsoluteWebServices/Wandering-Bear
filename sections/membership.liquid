@@ -15,55 +15,89 @@
     assign button_label = section.settings.button_label
     assign button_link = section.settings.button_link
     assign foreground_bg_image = section.settings.foreground_bg_image
+    assign foreground_bg_image_mobile = section.settings.foreground_bg_image_mobile
+    assign background_color = section.settings.background_color    
+    assign icon = section.settings.icon
+    assign text_bubble_top_image = section.settings.text_bubble_top_image
+    assign text_bubble_bottom_image = section.settings.text_bubble_bottom_image
 %}
 
-<div class="flex flex-col md:!flex-row relative pt-12 lg:!pt-[55px] md:!pb-[80px] z-0 overflow-hidden" style="background-color: {{ color_scheme.background }}">
+{% capture background_styles %}
+    {% if background_color != blank %}
+        background-image: {{ background_color }};
+    {% else %}
+        background-color: {{ color_scheme.settings.background }};
+    {% endif %}
+{% endcapture %}
+
+<div class="flex flex-col md:!flex-row relative px-4 pt-12 lg:!pt-[55px] pb-[175px] smd:!pb-[80px] z-0 overflow-hidden" style="{{ background_styles }}">
     <svg preserveAspectRatio="none" class="absolute -top-5 left-0 w-full z-[2]" xmlns="http://www.w3.org/2000/svg" width="1280" height="18" viewBox="0 0 1280 18" fill="none">
         <path d="M0 14.5L424 17.0497L1280 14.5V0H0V14.5Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
-    {% liquid
-        assign bg_mobile = background_image_mobile | default: background_image
-    %}
-    {% capture fgbg_sources %}
-        <source srcset="{{ foreground_bg_image | image_url: width: 400 }} 400w, {{ foreground_bg_image | image_url: width: 600 }} 600w, {{ foreground_bg_image | image_url: width: 900 }} 900w, {{ foreground_bg_image | image_url: width: 1200 }} 1200w" sizes="(min-width: 1024px) 600px, 75vw">
-    {% endcapture %}
-    {% capture bg_sources %}
-        <source media="(max-width: 749px)" srcset="{{ bg_mobile | image_url: width: 480 }} 480w, {{ bg_mobile | image_url: width: 768 }} 768w, {{ bg_mobile | image_url: width: 1080 }} 1080w" sizes="100vw">
-        <source srcset="{{ background_image | image_url: width: 1024 }} 1024w, {{ background_image | image_url: width: 1536 }} 1536w, {{ background_image | image_url: width: 1920 }} 1920w" sizes="100vw">
-    {% endcapture %}
-    {% if foreground_bg_image != blank %}
-        <div class="-mt-10 relative -bottom-6 -left-6 smd:-mt-20 lg:mt-0 !h-fit order-2 w-3/4 md:!w-1/2 max-h-[400px] md:max-h-full object-contain md:object-cover md:!absolute z-[1] md:left-0 md:bottom-0 max-w-[600px]">
-        {% render 'picture', sources: fgbg_sources, source: foreground_bg_image, class: '!h-full !min-h-full', alt: foreground_bg_image.alt %}
+
+    <div class="container aspect-[350/628] smd:aspect-auto smd:max-w-[1140px] mx-auto flex-col max-w-[350px] smd:flex-row flex justify-start smd:justify-between !gap-0 order-1 relative smd:bg-[#C5B2A4] rounded-[10px] overflow-hidden smd:overflow-visible">
+        {% if text_bubble_top_image != blank %}
+            <div class="hidden md:block absolute -top-3 left-[20%] w-[232px] h-fit z-[2] shadow-button">
+                {% render 'picture', source: text_bubble_top_image, class: 'w-full h-full object-contain', alt: text_bubble_top_image.alt %}
+            </div>
+        {% endif %}
+        {% if text_bubble_bottom_image != blank %}
+            <div class="hidden md:block absolute bottom-5 -left-[1%] w-[209px] h-fit z-[2] shadow-button">
+                {% render 'picture', source: text_bubble_bottom_image, class: 'w-full h-full object-contain', alt: text_bubble_bottom_image.alt %}
+            </div>
+        {% endif %}
+        <div class="absolute inset-0 min-h-0 flex smd:w-[60%]">
+            {% liquid
+            assign bg_mobile = background_image_mobile | default: background_image
+            assign fgbg_mobile = foreground_bg_image_mobile | default: foreground_bg_image
+            %}
+            {% capture fgbg_sources %}
+                <source media="(max-width: 749px)" srcset="{{ fgbg_mobile | image_url: width: 400 }} 400w, {{ fgbg_mobile | image_url: width: 600 }} 600w, {{ fgbg_mobile | image_url: width: 900 }} 900w" sizes="75vw">
+                <source srcset="{{ foreground_bg_image | image_url: width: 600 }} 600w, {{ foreground_bg_image | image_url: width: 900 }} 900w, {{ foreground_bg_image | image_url: width: 1200 }} 1200w" sizes="(min-width: 1024px) 600px, 75vw">
+            {% endcapture %}
+            {% capture bg_sources %}
+                <source media="(max-width: 749px)" srcset="{{ bg_mobile | image_url: width: 480 }} 480w, {{ bg_mobile | image_url: width: 768 }} 768w, {{ bg_mobile | image_url: width: 1080 }} 1080w" sizes="100vw">
+                <source srcset="{{ background_image | image_url: width: 1024 }} 1024w, {{ background_image | image_url: width: 1536 }} 1536w, {{ background_image | image_url: width: 1920 }} 1920w" sizes="100vw">
+            {% endcapture %}
+            {% if foreground_bg_image != blank %}
+                <div class="w-full max-h-full min-h-0 flex min-w-full">
+                {% render 'picture', picture_classes: 'w-full', sources: fgbg_sources, source: foreground_bg_image, mobile_source: foreground_bg_image_mobile, class: 'h-full w-full object-cover smd:rounded-tl-[10px] smd:rounded-bl-[10px]', alt: foreground_bg_image.alt %}
+                </div>
+            {% endif %}        
         </div>
-    {% endif %}
-    {% render 'picture', sources: bg_sources, source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt %}
-    <div class="container mx-auto flex justify-center md:!justify-end px-4 !gap-0 order-1">
-        <div class="md:!w-1/2 relative z-[2] md:-left-2">
-            <div class="wb-flex flex-col items-center md:!items-start md:!pb-0">
+        <div class="smd:w-1/2 smd:min-w-1/2 smd:mr-0 relative z-[2] smd:bg-[#C5B2A4] smd:py-6 smd:-left-2 pt-[34px] px-4 flex flex-col justify-start smd:justify-center items-center smd:max-w-[458px] md:h-[550px] mx-auto">
+            <div class="wb-flex flex-col items-center md:!pb-0">
+                {% if icon != blank %}
+                    <div class="w-[50px] mb-4">
+                        {% render 'picture', source: icon, class: 'w-full h-full object-contain', alt: icon.alt %}
+                    </div>
+                {% endif %}
                 {% if title_type == 'text' %}
                     <h2 class="h2 text-gold mb-5">{{ title }}</h2>
                 {% elsif title_type == 'image' %}
-                    {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'max-w-[333px] md:!max-w-full w-full max-h-full object-contain mb-4 md:mb-3 mx-auto md:!mx-0' %}
+                    {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'max-w-full w-full max-h-full object-contain mb-7 mx-auto' %}
                 {% endif %}
-                {% if subtitle != blank %}
-                    <span class="body block mb-8 md:mb-5 max-w-[316px] md:!max-w-full relative left-1 md:left-0" style="color: {{ color_scheme.settings.foreground }}">{{ subtitle }}</span>
-                {% endif %}
-                <div class="max-w-[316px] mb-3 pl-2 lg:pl-0 w-full md:!max-w-full !font-kurdis-semi-condensed relative left-1 md:left-0">
-                {% for bullet in bulletpoints %}
-                    <div class="wb-flex gap-4 block mb-4 items-center w-full">
-                        {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!w-[14px]', alt: bullet.settings.title }}
-                        <span class="body font-bold !leading-[16px]" style="color: {{ color_scheme.settings.foreground }}">{{ bullet.settings.title }}</span>
+                <div class="max-w-[262px] mx-auto">
+                    {% if subtitle != blank %}
+                        <span class="body block mb-8 md:mb-5 max-w-[316px] md:!max-w-full relative left-1 md:left-0" style="color: {{ color_scheme.settings.foreground }}">{{ subtitle }}</span>
+                    {% endif %}
+                    <div class="max-w-[316px] mb-3 w-full smd:!max-w-full !font-kurdis-semi-condensed relative left-1 smd:left-0 smd:mb-6">
+                    {% for bullet in bulletpoints %}
+                        <div class="wb-flex gap-4 block mb-4 items-center w-full">
+                            {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!w-[14px]', alt: bullet.settings.title }}
+                            <span class="body font-bold !leading-[16px]" style="color: {{ color_scheme.settings.foreground }}">{{ bullet.settings.title }}</span>
+                        </div>
+                    {% endfor %}
                     </div>
-                {% endfor %}
                 </div>
                 {% if foreground_image != blank %}
                     {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'w-full max-h-full object-contain relative -left-4 md:left-0', alt: title_alt %}
                 {% endif %}
-                {% if description != blank %}
-                    <div class="rte !font-kurdis-semi-condensed !text-sm -mt-1 whitespace-nowrap md:whitespace-normal md:pl-2" style="color: {{ color_scheme.settings.foreground }}">{{ description }}</div>
-                {% endif %}
                 {% if button_label != blank and button_link != blank %}
-                    {% render 'wb-button', style: 'secondary-gold', class: 'mt-4 !w-[280px] ml-1', label: button_label, link: button_link %}
+                    {% render 'wb-button', style: 'secondary-gold', class: '!w-[190px] ml-1 mb-6', label: button_label, link: button_link %}
+                {% endif %}
+                {% if description != blank %}
+                    <span class="rte max-w-[239px] smd:max-w-[287px] font-semibold smd:font-bold font-kurdis-semi-condensed text-center !text-sm -mt-1 whitespace-normal text-[#F0E4DA] smd:!text-gold" ">{{ description }}</span>
                 {% endif %}
             </div>
         </div>
@@ -78,10 +112,21 @@
         "name": "Membership",
         "settings": [
             {
+                "type": "color_background",
+                "id": "background_color",
+                "label": "Background Color",
+                "default": "#C5B2A4"
+            },
+            {
                 "type": "color_scheme",
                 "id": "color_scheme",
                 "label": "Color Scheme",
                 "default": "scheme-1"
+            },
+            {
+                "type": "image_picker",
+                "id": "icon",
+                "label": "Icon"
             },
             {
                 "type": "image_picker",
@@ -167,6 +212,21 @@
                 "type": "image_picker",
                 "id": "foreground_bg_image",
                 "label": "Foreground Background Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "foreground_bg_image_mobile",
+                "label": "Foreground Background Image Mobile"
+            },
+            {
+                "type": "image_picker",
+                "id": "text_bubble_top_image",
+                "label": "Text Bubble Top Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "text_bubble_bottom_image",
+                "label": "Text Bubble Bottom Image"
             }
         ],
         "blocks": [
