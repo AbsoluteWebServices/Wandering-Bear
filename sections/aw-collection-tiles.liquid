@@ -38,7 +38,7 @@
     {% elsif title_type == 'text' and title != blank %}
         <span class="h1 mb-8 title-text leading-[1.2] text-center mx-auto mb-5 md:!mb-7.5 block" style="color: {{ text_color }}; {{ title_styles }}">{{ title | replace: '\b', '<br>' }}</span>
     {% endif %}
-    <div class="container max-w-[1140px] mx-auto">
+    <div class="container max-w-[1140px] mx-auto relative z-[3]">
         <div class="wb-grid grid-cols-1 px-0 md:!px-5 lg:!px-0 md:grid-cols-3 md:gap-[90px] relative z-[1] max-w-[500px] mx-auto md:!mx-0 md:!max-w-none mb-5 md:mb-0">
             {% for block in section.blocks %}
                 {% liquid

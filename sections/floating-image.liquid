@@ -9,6 +9,7 @@
     assign title_image = section.settings.title_image
     assign title_image_mobile = section.settings.title_image_mobile
     assign title_alt = section.settings.title_alt
+    assign description = section.settings.description
     assign bulletpoints = section.blocks | where: "type", "bulletpoint"
     assign button_label = section.settings.button_label
     assign button_link = section.settings.button_link
@@ -39,11 +40,11 @@
     {% endcapture %}
     {% render 'picture', sources: bg_sources, source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt %}
     {% if floating_image != blank %}
-        {% render 'picture', sources: fg_sources, source: floating_image, mobile_source: floating_image_mobile, class: 'bottom-7 !max-h-[300px] md:-bottom-2 xl:!bottom-auto !h-auto !w-auto sm:!max-w-[70vw] md:!max-h-full object-contain absolute right-0 z-[2] md:!w-[50vw] lg:!w-auto !flex justify-end', alt: floating_image.alt %}
+        {% render 'picture', sources: fg_sources, source: floating_image, mobile_source: floating_image_mobile, class: 'bottom-7 md:-bottom-2 max-w-[80vw] sm:!max-w-[50vw] md:!max-h-[600px] object-contain absolute right-0 z-[2] md:!w-min lg:!w-auto !flex justify-end', alt: floating_image.alt %}
     {% endif %}
-    <div class="container max-w-[1000px] px-4 mx-auto lg:relative z-[2] pt-10 lg:!pt-[60px] pb-[250px] md:!pb-20">
+    <div class="container max-w-[1000px] px-4 mx-auto lg:relative z-[2] pt-10 lg:!pt-[60px] pb-[458px] md:!pb-20">
         <div class="relative z-[3] md:!w-1/2 wb-flex flex-col max-w-[263px] md:!max-w-[457px] mx-auto md:!mx-0">
-            <div class="flex flex-col mb-6 md:!mb-8 relative md:left-0 lg:-left-6.5">
+            <div class="flex flex-col mb-6 md:!mb-3 relative md:left-0">
                 {% if badge != blank %}
                     {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-[30px] -left-[30px] !w-[60px] !h-auto shadow-button', loading: 'eager', preload: 'eager' }}
                 {% endif %}
@@ -53,24 +54,35 @@
                     {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: '!max-w-[246px] md:!max-w-[438px] mx-auto md:!mx-0 w-full max-h-full object-contain' %}
                 {% endif %}
             </div>
-            <div class="wb-flex leading-[16px] flex-col md:pl-[30px] gap-3.5 md:gap-4 items-center md:pb-0 md:items-start">
+            {% if description != blank %}
+            <div class="hidden md:block font-kurdis-semi-condensed font-bold mb-[35px] text-xl leading-[22px]">
+                {{ description | replace: '\b', '<br>' }}
+            </div>
+            {% endif %}
+            <div class="wb-flex leading-[16px] flex-col gap-3.5 md:gap-4 items-center md:pb-0 md:items-start">
             {% for bullet in bulletpoints %}
                 <div class="inline !leading-[16px] text-center md:text-left md:flex gap-2">
                     {% if bullet.settings.image != blank %}
                         {{ bullet.settings.image | image_url: width: 20 | image_tag: class: '!h-4 !w-4 !inline-block md:!flex', alt: bullet.settings.title }}
                     {% endif %}
                     {% if bullet.settings.title != blank %}
-                        <span class="body font-bold !leading-[16px] text-center md:!text-left">{{ bullet.settings.title }}</span>
+                        <span class="body font-semibold !text-base !leading-[16px] text-center md:!text-left">{{ bullet.settings.title }}</span>
                     {% endif %}
                 </div>
             {% endfor %}
             {% if button_label != blank and button_link != blank %}
-                {% render 'wb-button', style: 'primary', class: 'mt-2 md:!mt-4 z-[3] md:!ml-5 !w-[266px] !h-[51px]', width: 253, height: 49, label: button_label, link: button_link %}
+                {% render 'wb-button', 
+                style: 'custom', 
+                button_bg: color_scheme.settings.primary_button_background,
+                button_text: color_scheme.settings.primary_button_text,
+                button_hover_bg: color_scheme.settings.primary_button_hover_background,
+                button_hover_text: color_scheme.settings.primary_button_hover_text,
+                class: 'mt-2 md:!mt-4 z-[3] !w-[266px] !h-[51px]', width: 253, height: 49, label: button_label, link: button_link %}
             {% endif %}
             </div>
         </div>
     </div>
-    <svg preserveAspectRatio="none" class="absolute -bottom-0.5 left-0 w-full" xmlns="http://www.w3.org/2000/svg" width="1280" height="18" viewBox="0 0 1280 18" fill="none">
+    <svg preserveAspectRatio="none" class="absolute -bottom-0.5 left-0 w-full z-[3]" xmlns="http://www.w3.org/2000/svg" width="1280" height="18" viewBox="0 0 1280 18" fill="none">
         <path d="M0 0L670 5.33019L1280 0V18H0V0Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
 </div>
@@ -184,6 +196,12 @@
                 "id": "title_alt",
                 "label": "Title Alt",
                 "visible_if": "{{ section.settings.title_type == 'image' }}"
+            },
+            {
+                "type": "text",
+                "id": "description",
+                "label": "Description",
+                "default": "We reimagined how delicious a canned latte could taste."
             },
             {
                 "type": "text",
