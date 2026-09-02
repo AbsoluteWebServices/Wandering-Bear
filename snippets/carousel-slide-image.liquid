@@ -1,0 +1,34 @@
+{%- doc -%}
+    Renders a correctly-sized <img> for a multi-collection carousel slide.
+
+    Slides are ~1/5.8 of the container on desktop and ~1/2.8 on mobile, so the
+    generic full-bleed `picture` snippet — which serves sources up to 1920px and
+    falls back to a hardcoded 1920x1080 <img> — massively over-fetches here
+    (every slide was downloading a 1920px file for a ~135-270px box). This emits
+    a tight srcset + sizes so the browser picks an appropriately small variant.
+
+    @param {object} source - the image (required)
+    @param {string} [class] - classes for the img (optional)
+    @param {string} [loading] - loading attribute (optional, default 'lazy')
+    @param {string} [alt] - alt text (optional, defaults to source.alt)
+{%- enddoc -%}
+{%- liquid
+    assign img_loading = loading | default: 'lazy'
+    assign img_alt = alt | default: source.alt
+-%}
+{%- if source != blank -%}
+    <img
+        src="{{ source | image_url: width: 330 }}"
+        srcset="{{ source | image_url: width: 165 }} 165w,
+                {{ source | image_url: width: 265 }} 265w,
+                {{ source | image_url: width: 330 }} 330w,
+                {{ source | image_url: width: 400 }} 400w,
+                {{ source | image_url: width: 530 }} 530w,
+                {{ source | image_url: width: 660 }} 660w"
+        sizes="(min-width: 768px) 20vw, 40vw"
+        width="135"
+        height="229"
+        loading="{{ img_loading }}"
+        alt="{{ img_alt | escape }}"
+        class="{{ class }}">
+{%- endif -%}

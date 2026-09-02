@@ -69,6 +69,8 @@
     <div
       ref="menuDrawer"
       class="
+        transition-discrete
+        duration-300
         menu-drawer
         color-{{ block_settings.color_scheme }}
       "
@@ -917,7 +919,7 @@
     padding: 0;
     background-color: var(--color-background);
     overflow: auto;
-    display: flex;
+    display: none;
     border-right: var(--style-border-drawer);
     box-shadow: var(--shadow-drawer);
     flex-direction: column;
@@ -966,6 +968,7 @@
     opacity: 1;
     display: flex;
     flex-direction: column;
+    display: flex;
   }
 
   .menu-drawer__inner-container {

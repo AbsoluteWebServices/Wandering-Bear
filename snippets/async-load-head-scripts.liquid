@@ -1,0 +1,163 @@
+<script>
+    (() => {
+        const shopify_header_scripts = document?.getElementById('shopify_header_scripts');
+        if (!shopify_header_scripts) {
+            return;
+        }
+
+        const temp = document.createElement('div');
+        if (!temp) {
+            return;
+        }
+
+        temp.innerHTML = shopify_header_scripts
+            ?.innerHTML
+            ?.replaceAll('<head>', '')
+            ?.replaceAll('<\/head>', '');
+
+        let elements = temp.children;
+        if (!elements) {
+            return;
+        }
+
+        if (!elements?.length) {
+            return;
+        }
+
+        let lazyElements = []
+
+        // Loop through each element
+        for (let i = 0; i < elements.length; i++) {
+            // Create a new element
+            const newElement = document.createElement(elements[i].tagName)
+            // Get all the attributes of the element
+            const attributes = elements[i].attributes
+            // Insert the innerHTML of the element
+            if (elements[i].innerHTML) {
+                newElement.innerHTML = elements[i].innerHTML || "";
+            }
+
+            // Loop through each attribute
+            for (let j = 0; j < attributes.length; j++) {
+                let attribute = attributes[j];
+
+                newElement.setAttribute(attribute.name, attribute.value)
+            }
+
+            if (!newElement) {
+                return;
+            }
+
+            if (!![
+                'title',
+                'base',
+                'meta',
+                'noscript',
+                'template',
+                'object',
+            ]?.includes(newElement?.tagName?.toLowerCase())) {
+                setTimeout(() => {
+                    document.head.appendChild(newElement);
+                }, 0);
+
+                continue;
+            }
+
+            let immediate = [
+                newElement?.id === 'web-pixels-manager-setup',
+                newElement?.innerText?.includes('window.performance'),
+                newElement?.classList?.contains('analytics'),
+                newElement?.innerText?.includes('window.ShopifyAnalytics'),
+                newElement?.innerText?.includes('Shopify.shop = '),
+                newElement?.innerText?.includes('__st'),
+                newElement?.innerText?.includes('PreviewBarInjectorLoader'),
+                newElement?.innerText?.includes('Shopify.currency'),
+                newElement?.innerText?.includes('loadFeatures'),
+                newElement?.innerText?.includes('window.__shgMoneyFormat'),
+                newElement?.src?.includes('preview_bar_injector'),
+                newElement?.src?.includes('gobot'),
+            ]?.includes(true);
+
+            switch (newElement?.tagName) {
+                case "SCRIPT": {
+                    newElement.async = false;
+                    newElement.defer = true;
+
+                    if (newElement.tagName === 'SCRIPT' && !immediate) {
+                        lazyElements.push(newElement)
+                    } else {
+                        document.head.appendChild(newElement)
+                    }
+                }
+                break;
+                case "LINK": {
+                    document.head.appendChild(newElement);
+                }
+                break;
+                case "DIV": {
+                    try {
+                        document.body.appendChild(newElement);
+                    } catch (error) {
+                        console.log('error', error);
+                    }
+                }
+                break;
+                default: {
+                    document.head.appendChild(newElement);
+                }
+            }
+        }
+
+        setTimeout(() => {
+            window.dispatchEvent(new Event('head-sync-scripts-loaded'));
+            document.dispatchEvent(new Event('head-sync-scripts-loaded'));
+        }, 1000);
+
+        let loaded = false
+        const lazyLoadShopifyScripts = function (event) {
+            console.log('lazyLoadShopifyScripts head called', event);
+
+            if (!!loaded) {
+                return;
+            }
+
+            loaded = true
+            lazyElements?.forEach(function (element) {
+                document?.head?.appendChild(element);
+            });
+
+            setTimeout(function () {
+                window.dispatchEvent(new Event('head-lazy-scripts-loaded'));
+                document.dispatchEvent(new Event('head-lazy-scripts-loaded'));
+            }, 1000);
+
+            document.body.classList.add('interacted');
+        }
+
+        window.addEventListener('scroll', lazyLoadShopifyScripts, {
+            once: true,
+            passive: false,
+        });
+
+        const eventNames = [
+            'keydown',
+            'touchstart',
+            'mouseover',
+        ];
+
+        if (!eventNames) {
+            return;
+        }
+
+        if (!eventNames?.length) {
+            return;
+        }
+
+        eventNames?.forEach((eventName) => {
+            document.addEventListener(eventName, lazyLoadShopifyScripts, {
+                once: true,
+                passive: false,
+            });
+        });
+    })();
+</script>

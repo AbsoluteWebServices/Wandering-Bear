@@ -1,0 +1,116 @@
+<script>
+    (() => {
+        let userInteraction = false;
+        function loadOnceOnUserInteraction(cb) {
+            if (userInteraction) {
+                return;
+            }
+            cb();
+            userInteraction = true;
+        }
+
+        function registerCallbackOnUserInteraction(asyncLoad) {
+            let events = ['touchstart', 'mouseover', 'keydown'];
+            if (!events) {
+                return;
+            }
+            if (!events.length) {
+                return;
+            }
+            events.map((eventName) => {
+                document.addEventListener(
+                    eventName,
+                    () => {
+                        loadOnceOnUserInteraction(asyncLoad);
+                    },
+                    { once: true }
+                );
+            });
+        }
+
+        function PreviewBarInjectorInit(...params) {
+            if (!window.Shopify?.PreviewBarInjector) {
+                return;
+            }
+            const previewBarInjector = new window.Shopify.PreviewBarInjector(...params);
+            if (!previewBarInjector) {
+                return;
+            }
+            previewBarInjector.init();
+        }
+
+        function PreviewBarInjectorLoader(...params) {
+            return new Promise((resolve) => {
+                if (window.Shopify?.PreviewBarInjector) {
+                    PreviewBarInjectorInit(...params);
+                    return resolve(true);
+                }
+                const PreviewBarInjectorLoaderInterval = setInterval(() => {
+                    if (!window.Shopify?.PreviewBarInjector) {
+                        return;
+                    }
+                    PreviewBarInjectorInit(...params);
+                    clearInterval(PreviewBarInjectorLoaderInterval);
+                    return resolve(true);
+                }, 1000);
+            });
+        }
+
+        window.registerCallbackOnUserInteraction = registerCallbackOnUserInteraction;
+        window.PreviewBarInjectorLoader = PreviewBarInjectorLoader;
+        window.PreviewBarInjectorInit = PreviewBarInjectorInit;
+    })();
+</script>
+
+{%- assign wrapped_content_for_header = wrapped_content_for_header
+    | replace: 'new Shopify.PreviewBarInjector', 'PreviewBarInjectorLoader'
+    | replace: 'previewBarInjector.init();', ''
+    | replace: "window.addEventListener('load', asyncLoad, false)", 'registerCallbackOnUserInteraction(asyncLoad)'
+    | replace: 's.src = urls[i]', 'if(!/^\?/.test(urls[i])) s.src = urls[i]'
+-%}
+
+{%- capture global_scripts_to_remove -%}
+
+{%- endcapture -%}
+{%- assign global_scripts_to_remove = global_scripts_to_remove | strip_newlines | split: ',' -%}
+
+{%- capture account_scripts_to_remove -%}
+
+{%- endcapture -%}
+{%- assign account_scripts_to_remove = account_scripts_to_remove | strip_newlines | split: ',' -%}
+
+{%- for global_script_to_remove in global_scripts_to_remove -%}
+    {%- capture global_script_to_remove_replace -%}{{- global_script_to_remove | strip -}}{%- endcapture -%}
+
+    {%- assign wrapped_content_for_header = wrapped_content_for_header
+        | replace: global_script_to_remove_replace, ''
+    -%}
+{%- endfor -%}
+
+{%- if template.name == 'account' -%}
+    {%- for account_script_to_remove in account_scripts_to_remove -%}
+        {%- capture account_script_to_remove_replace -%}{{- account_script_to_remove | strip -}}{%- endcapture -%}
+
+        {%- assign wrapped_content_for_header = wrapped_content_for_header
+            | replace: account_script_to_remove_replace, ''
+        -%}
+    {%- endfor -%}
+{%- endif -%}
+
+<template id="shopify_header_scripts">
+    <head>
+        <link href="https://cdn.rebuyengine.com" rel="preconnect">
+        <link href="https://cdn.rebuyengine.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.5.x/dist/css/glide.core.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide@3.5.x" defer></script>
+
+        {%- if settings.predictive_search_enabled -%}
+            {%- render 'assets' with 'styles/components/predictive-search.scss' -%}
+            {%- render 'assets' with 'scripts/components/predictive-search.js' -%}
+        {%- endif -%}
+
+
+        {{- wrapped_content_for_header -}}
+        {% render 'cookie-consent' %}
+    </head>
+</template>

@@ -21,12 +21,22 @@
     <svg preserveAspectRatio="none" class="absolute -top-5 left-0 w-full z-[2]" xmlns="http://www.w3.org/2000/svg" width="1280" height="18" viewBox="0 0 1280 18" fill="none">
         <path d="M0 14.5L424 17.0497L1280 14.5V0H0V14.5Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
+    {% liquid
+        assign bg_mobile = background_image_mobile | default: background_image
+    %}
+    {% capture fgbg_sources %}
+        <source srcset="{{ foreground_bg_image | image_url: width: 400 }} 400w, {{ foreground_bg_image | image_url: width: 600 }} 600w, {{ foreground_bg_image | image_url: width: 900 }} 900w, {{ foreground_bg_image | image_url: width: 1200 }} 1200w" sizes="(min-width: 1024px) 600px, 75vw">
+    {% endcapture %}
+    {% capture bg_sources %}
+        <source media="(max-width: 749px)" srcset="{{ bg_mobile | image_url: width: 480 }} 480w, {{ bg_mobile | image_url: width: 768 }} 768w, {{ bg_mobile | image_url: width: 1080 }} 1080w" sizes="100vw">
+        <source srcset="{{ background_image | image_url: width: 1024 }} 1024w, {{ background_image | image_url: width: 1536 }} 1536w, {{ background_image | image_url: width: 1920 }} 1920w" sizes="100vw">
+    {% endcapture %}
     {% if foreground_bg_image != blank %}
         <div class="-mt-10 relative -bottom-6 -left-6 smd:-mt-20 lg:mt-0 !h-fit order-2 w-3/4 md:!w-1/2 max-h-[400px] md:max-h-full object-contain md:object-cover md:!absolute z-[1] md:left-0 md:bottom-0 max-w-[600px]">
-        {% render 'picture', source: foreground_bg_image, class: '!h-full !min-h-full', alt: foreground_bg_image.alt, width: 1920, height: 1080 %}
+        {% render 'picture', sources: fgbg_sources, source: foreground_bg_image, class: '!h-full !min-h-full', alt: foreground_bg_image.alt %}
         </div>
     {% endif %}
-    {% render 'picture', source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080 %}
+    {% render 'picture', sources: bg_sources, source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt %}
     <div class="container mx-auto flex justify-center md:!justify-end px-4 !gap-0 order-1">
         <div class="md:!w-1/2 relative z-[2] md:-left-2">
             <div class="wb-flex flex-col items-center md:!items-start md:!pb-0">

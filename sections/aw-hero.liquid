@@ -20,8 +20,22 @@
     --font-size-mobile: {{ section.settings.font_size_mobile }}px;
 {% endcapture %}
 
+{% liquid
+    assign bg_tablet = background_image_tablet | default: background_image
+    assign bg_mobile = background_image_mobile | default: background_image
+    assign fg_mobile = foreground_image_mobile | default: foreground_image
+%}
+{% capture bg_sources %}
+    <source media="(max-width: 749px)" srcset="{{ bg_mobile | image_url: width: 480 }} 480w, {{ bg_mobile | image_url: width: 768 }} 768w, {{ bg_mobile | image_url: width: 1080 }} 1080w" sizes="100vw">
+    <source media="(max-width: 1023px)" srcset="{{ bg_tablet | image_url: width: 768 }} 768w, {{ bg_tablet | image_url: width: 1024 }} 1024w, {{ bg_tablet | image_url: width: 1600 }} 1600w" sizes="100vw">
+    <source srcset="{{ background_image | image_url: width: 1200 }} 1200w, {{ background_image | image_url: width: 1536 }} 1536w, {{ background_image | image_url: width: 1920 }} 1920w" sizes="100vw">
+{% endcapture %}
+{% capture fg_sources %}
+    <source media="(max-width: 1023px)" srcset="{{ fg_mobile | image_url: width: 500 }} 500w, {{ fg_mobile | image_url: width: 768 }} 768w, {{ fg_mobile | image_url: width: 1000 }} 1000w" sizes="100vw">
+    <source srcset="{{ foreground_image | image_url: width: 600 }} 600w, {{ foreground_image | image_url: width: 900 }} 900w, {{ foreground_image | image_url: width: 1200 }} 1200w" sizes="(min-width: 1024px) 50vw, 100vw">
+{% endcapture %}
 {% capture hero_content %}
-        {% render 'picture', source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover object-left sm:!object-[center_bottom] md:!object-center !max-w-none absolute inset-0 2xl:!object-[0%_30%]', alt: background_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+        {% render 'picture', sources: bg_sources, source: background_image, tablet_source: background_image_tablet, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover object-left sm:!object-[center_bottom] md:!object-center !max-w-none absolute inset-0 2xl:!object-[0%_30%]', alt: background_image.alt, preload: 'eager', loading: 'eager', fetchpriority: 'high' %}
         {% if title_image != blank or title_text != blank or subtitle != blank %}
             <div class="container relative wb-flex flex-col items-center md:flex-row pt-8 justify-center w-full max-w-none md:justify-start md:max-w-full gap-8 md:px-5 lg:max-w-[1136px] h-full smd:min-h-[415px] md:gap-5 mx-0 md:mx-auto lg:min-h-[555px] h-full lg:max-h-[528px]">
             <div class="relative wb-flex flex-col items-center justify-center sm:items-start md:items-center gap-2.5 z-1 w-fit md:min-w-1/2 max-w-full">
@@ -47,7 +61,7 @@
                 {% endif %}
             </div>
             {% if foreground_image != blank or foreground_image_mobile != blank %}
-                    {% render 'picture', source: foreground_image, mobile_source: foreground_image_mobile, class: 'relative min-h-full left-0 bottom-0 md:static w-screen smd:w-auto h-full object-contain z-1 object-bottom md:mt-12', alt: foreground_image.alt, width: 1920, height: 1080, preload: 'eager', loading: 'eager' %}
+                    {% render 'picture', sources: fg_sources, source: foreground_image, mobile_source: foreground_image_mobile, class: 'relative min-h-full left-0 bottom-0 md:static w-screen smd:w-auto h-full object-contain z-1 object-bottom md:mt-12', alt: foreground_image.alt, preload: 'eager', loading: 'eager' %}
                 {% endif %}
                
             </div>

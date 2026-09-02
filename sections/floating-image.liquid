@@ -25,9 +25,21 @@
         <path d="M1290 27.249L970 28L352 21.9804L3.62444e-07 23.854L2.44783e-06 -1.16568e-06L1290 0.00011161L1290 27.249Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
    
-    {% render 'picture', source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt, width: 1920, height: 1080 %}
+    {% liquid
+        assign bg_mobile = background_image_mobile | default: background_image
+        assign fg_mobile = floating_image_mobile | default: floating_image
+    %}
+    {% capture bg_sources %}
+        <source media="(max-width: 749px)" srcset="{{ bg_mobile | image_url: width: 480 }} 480w, {{ bg_mobile | image_url: width: 768 }} 768w, {{ bg_mobile | image_url: width: 1080 }} 1080w" sizes="100vw">
+        <source srcset="{{ background_image | image_url: width: 1024 }} 1024w, {{ background_image | image_url: width: 1536 }} 1536w, {{ background_image | image_url: width: 1920 }} 1920w" sizes="100vw">
+    {% endcapture %}
+    {% capture fg_sources %}
+        <source media="(max-width: 1023px)" srcset="{{ fg_mobile | image_url: width: 400 }} 400w, {{ fg_mobile | image_url: width: 600 }} 600w, {{ fg_mobile | image_url: width: 800 }} 800w" sizes="70vw">
+        <source srcset="{{ floating_image | image_url: width: 500 }} 500w, {{ floating_image | image_url: width: 800 }} 800w, {{ floating_image | image_url: width: 1100 }} 1100w" sizes="(min-width: 1024px) 50vw, 70vw">
+    {% endcapture %}
+    {% render 'picture', sources: bg_sources, source: background_image, mobile_source: background_image_mobile, class: 'w-full !h-full object-cover !max-w-none absolute inset-0', alt: background_image.alt %}
     {% if floating_image != blank %}
-        {% render 'picture', source: floating_image, mobile_source: floating_image_mobile, class: 'bottom-7 !max-h-[300px] md:-bottom-2 xl:!bottom-auto !h-auto !w-auto sm:!max-w-[70vw] md:!max-h-full object-contain absolute right-0 z-[2] md:!w-[50vw] lg:!w-auto !flex justify-end', alt: floating_image.alt, width: 1920, height: 1080 %}
+        {% render 'picture', sources: fg_sources, source: floating_image, mobile_source: floating_image_mobile, class: 'bottom-7 !max-h-[300px] md:-bottom-2 xl:!bottom-auto !h-auto !w-auto sm:!max-w-[70vw] md:!max-h-full object-contain absolute right-0 z-[2] md:!w-[50vw] lg:!w-auto !flex justify-end', alt: floating_image.alt %}
     {% endif %}
     <div class="container max-w-[1000px] px-4 mx-auto lg:relative z-[2] pt-10 lg:!pt-[60px] pb-[250px] md:!pb-20">
         <div class="relative z-[3] md:!w-1/2 wb-flex flex-col max-w-[263px] md:!max-w-[457px] mx-auto md:!mx-0">

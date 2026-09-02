@@ -10,7 +10,14 @@
     @param {number} [width] - The width of the image (optional)
     @param {number} [height] - The height of the image (optional)
     @param {string} [alt] - The alt text for the image (optional)
+    @param {string} [image_classes] - The classes for the image element (optional)
+    @param {string} [hover_image_classes] - The classes for the hover image element (optional)
+    @param {string} [fetchpriority] - The fetchpriority attribute for the picture element (optional)
+    @param {object} [hover_source] - The hover source image (optional)
 {%- enddoc -%}
+
+{% assign image_classes = image_classes | default: '' %}
+{% assign hover_image_classes = hover_image_classes | default: '' %}
 
 {% liquid
     assign desktop_source = source
@@ -62,17 +69,18 @@
     {% assign alt = desktop_source.alt %}
 {% endif %}
 
-{% if width %}
-    {% assign width = width %}
-{% else %}
-    {% assign width = image.width %}
-{% endif %}
-
-{% if height %}
-    {% assign height = height %}
-{% else %}
-    {% assign height = image.height %}
-{% endif %}
+{% liquid
+    assign base_source = source
+    if base_source == blank
+        assign base_source = resolved_mobile
+    endif
+    if width == blank
+        assign width = base_source.width
+    endif
+    if height == blank
+        assign height = base_source.height
+    endif
+%}
 
 {% capture img_parameters %}
     loading="{{ loading }}"
@@ -80,10 +88,15 @@
       preload="{{ preload }}"
     {% endif %}
     alt="{{ alt }}"
-    class="{{ class }}"
+    {% if fetchpriority %}
+      fetchpriority="{{ fetchpriority }}"
+    {% endif %}
 {% endcapture %}
 
 <picture>
     {{ picture_sources }}
-    <img src="{{ resolved_mobile | image_url: width: 1920 }}" height="1080" width="1920" {{ img_parameters }}>
+    <img src="{{ base_source | image_url: width: width }}" width="{{ width }}" height="{{ height }}" {{ img_parameters }} class="{{ class }} {{ image_classes }}">
 </picture>
+{% if hover_source %}
+    <img src="{{ hover_source | image_url: width: hover_source.width }}" width="{{ hover_source.width }}" height="{{ hover_source.height }}" {{ img_parameters }} class="{{ hover_image_classes }}">
+{% endif %}

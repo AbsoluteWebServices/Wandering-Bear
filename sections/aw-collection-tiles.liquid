@@ -70,25 +70,35 @@
                     {% endif %}
                     <div class="wb-grid grid-cols-1 grid-rows-1 relative block w-full h-full">
                         {% if image != blank %}
+                            {% capture sources %}
+                                <source media="(min-width: 1024px)" srcset="{{ image | image_url: width: 320, format: 'webp' }} 320w, {{ image | image_url: width: 500, format: 'webp' }} 500w, {{ image | image_url: width: 680, format: 'webp' }} 680w" sizes="320px">
+                                {% if image_mobile != blank %}
+                                    <source srcset="{{ image_mobile | image_url: width: 500, format: 'webp' }} 500w, {{ image_mobile | image_url: width: 760, format: 'webp' }} 760w, {{ image_mobile | image_url: width: 1000, format: 'webp' }} 1000w" sizes="(min-width: 500px) 500px, 90vw">
+                                {% else %}
+                                    <source srcset="{{ image | image_url: width: 500, format: 'webp' }} 500w, {{ image | image_url: width: 1000, format: 'webp' }} 1000w" sizes="(min-width: 500px) 500px, 90vw">
+                                {% endif %}
+                            {% endcapture %}
                             {% render 'picture', 
-                                source: image, 
-                                image: image,
-                                image_mobile: image_mobile,
+                                sources: sources,
+                                source: image,
                                 tablet_source: image_mobile,
                                 mobile_source: image_mobile,
-                                class: ' w-full h-full relative z-[2] top-0 left-0 object-cover',
+                                hover_source: hover_image,
                                 preload: 'eager',
-                                loading: 'eager'
+                                loading: 'eager',
+                                fetchpriority: 'high',
+                                image_classes: 'w-full h-full relative z-[2] top-0 left-0 object-cover',
+                                hover_image_classes: 'hidden md:block absolute inset-0 w-full h-full z-[1] object-cover group-hover:opacity-0 transition-opacity duration-300'
                             %}
                         {% endif %}
-                        {% if hover_image != blank %}
+                        {% comment %} {% if hover_image != blank %}
                             {% render 'picture', 
                                 source: hover_image,
                                 class: 'hidden md:block opacity-100 absolute h-[calc(100%+4px)] w-[calc(100%+4px)] z-[1] top-0 left-0 object-cover w-full h-full group-hover:opacity-0 transition-opacity duration-300'
                                 preload: 'eager',
                                 loading: 'eager'
                             %}
-                        {% endif %}
+                        {% endif %} {% endcomment %}
                     </div>
                     </a>
                     <div class="hidden md:!flex flex-col mt-3 lg:pl-3 {% unless accent_text != blank %} {% endunless %} items-center">

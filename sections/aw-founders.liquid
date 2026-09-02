@@ -93,7 +93,11 @@
     style="background: linear-gradient(to bottom, {{ color_scheme.settings.background }} 0%, transparent 100%);"></div>
 
     {% if background_image != blank %}
-        {% render 'picture', source: background_image, class: 'w-full !h-full object-cover absolute inset-0' %}
+        {% capture bg_sources %}
+            <source media="(max-width: 749px)" srcset="{{ background_image | image_url: width: 480 }} 480w, {{ background_image | image_url: width: 768 }} 768w, {{ background_image | image_url: width: 1080 }} 1080w" sizes="100vw">
+            <source srcset="{{ background_image | image_url: width: 1024 }} 1024w, {{ background_image | image_url: width: 1536 }} 1536w, {{ background_image | image_url: width: 1920 }} 1920w" sizes="100vw">
+        {% endcapture %}
+        {% render 'picture', sources: bg_sources, source: background_image, class: 'w-full !h-full object-cover absolute inset-0' %}
     {% endif %}
     <div class="max-w-[936px] w-full container mx-auto relative">
         <div class="wb-flex flex-col-reverse md:!flex-row gap-4 md:gap-10 lg:gap-4 justify-between items-center px-[50px] md:!px-0 w-full md:w-fit lg:w-full">

@@ -24,6 +24,42 @@ export default (Alpine: AlpineType) => {
         init() {
             this.el = this.$el;
             this.initSwiper();
+            this.preloadHoverImages();
+        },
+
+        preloadHoverImages() {
+            const run = () => {
+                const conn = (navigator as any).connection;
+                if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''))) return;
+
+                const imgs = this.el.querySelectorAll('.js-carousel-hover-image') as NodeListOf<HTMLImageElement>;
+                const seen = new Set<string>();
+
+                imgs.forEach((img) => {
+                    const src = img.getAttribute('src') || '';
+                    const srcset = img.getAttribute('srcset') || '';
+                    const sizes = img.getAttribute('sizes') || '';
+                    const key = srcset || src;
+                    if (!key || seen.has(key)) return; // dedupe repeated/looped slides
+                    seen.add(key);
+
+                    const warm = new Image();
+                    if (sizes) warm.sizes = sizes;
+                    if (srcset) warm.srcset = srcset;
+                    if (src) warm.src = src;
+                });
+            };
+
+            const schedule = () =>
+                'requestIdleCallback' in window
+                    ? (window as any).requestIdleCallback(run, { timeout: 2000 })
+                    : setTimeout(run, 200);
+
+            if (document.readyState === 'complete') {
+                schedule();
+            } else {
+                window.addEventListener('load', schedule, { once: true });
+            }
         },
 
 
@@ -99,6 +135,7 @@ export default (Alpine: AlpineType) => {
                     swiperWrapper.innerHTML = html;
 
                     this.initSwiper();
+                    this.preloadHoverImages();
 
                     this.activeCollectionTitle = title;
                     this.activeCollectionAccentText = accentText;
