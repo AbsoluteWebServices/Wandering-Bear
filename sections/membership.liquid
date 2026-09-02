@@ -35,7 +35,7 @@
         <path d="M0 14.5L424 17.0497L1280 14.5V0H0V14.5Z" fill="{{ color_scheme.settings.background }}"/>
     </svg>
 
-    <div class="container aspect-[350/628] smd:aspect-auto smd:max-w-[1140px] mx-auto flex-col max-w-[350px] smd:flex-row flex justify-start smd:justify-between !gap-0 order-1 relative smd:bg-[#C5B2A4] rounded-[10px] overflow-hidden smd:overflow-visible">
+    <div class="container aspect-[350/628] smd:aspect-auto smd:max-w-[1140px] mx-auto flex-col max-w-[350px] smd:flex-row flex justify-start smd:justify-between !gap-0 order-1 relative rounded-[10px] overflow-hidden smd:overflow-visible">
         {% if text_bubble_top_image != blank %}
             <div class="hidden md:block absolute -top-3 left-[20%] w-[232px] h-fit z-[2] shadow-button">
                 {% render 'picture', source: text_bubble_top_image, class: 'w-full h-full object-contain', alt: text_bubble_top_image.alt %}
@@ -65,7 +65,7 @@
                 </div>
             {% endif %}        
         </div>
-        <div class="smd:w-1/2 smd:min-w-1/2 smd:mr-0 relative z-[2] smd:bg-[#C5B2A4] smd:py-6 smd:-left-2 pt-[34px] px-4 flex flex-col justify-start smd:justify-center items-center smd:max-w-[458px] md:h-[550px] mx-auto">
+        <div class="smd:w-1/2 smd:min-w-1/2 smd:mr-0 relative z-[2] smd:bg-[linear-gradient(90deg,rgba(197,178,164,0.00)_0%,#C5B2A4_16.35%,#F2E6DC_100%)] smd:py-6 smd:-left-2 pt-[34px] px-4 flex flex-col justify-start smd:justify-center items-center smd:max-w-[458px] md:h-[550px] mx-auto smd:rounded-tr-[10px] smd:rounded-br-[10px]">
             <div class="wb-flex flex-col items-center md:!pb-0">
                 {% if icon != blank %}
                     <div class="w-[50px] mb-4">
