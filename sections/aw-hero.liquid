@@ -50,7 +50,7 @@
                 {% if buttons != blank %}
                     <div class="wb-flex flex-col lg:!flex-row gap-3 lg:gap-6.5 w-fit mx-auto lg:!mx-0 mt-3 relative">
                         {% for button in buttons %}
-                            <div class="relative mx-auto md:!mx-0" data-anchor="shop-cold-brew">
+                            <div class="relative mx-auto md:!mx-0" data-anchor="shop-all">
                                 {% if button.settings.badge != blank %}
                                     {{ button.settings.badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] -top-5 -left-10 !w-[59px] !h-auto shadow-button', loading: 'eager', preload: 'eager' }}
                                 {% endif %}

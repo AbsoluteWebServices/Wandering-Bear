@@ -16,13 +16,14 @@
     --font-size-mobile: {{ section.settings.font_size_mobile }}px;
 {% endcapture %}
 
+
 <div class="pt-5 pb-3 px-6 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
-        {{ badge | image_url: width: 100 | image_tag: class: 'absolute z-[2] w-[66px] md:w-[86px] !h-auto shadow-button -rotate-[14deg] opacity-0 transition-opacity duration-300 !-top-20', 
-            data-anchor-target: 'shop-cold-brew',
-            data-anchor-target:"shop-cold-brew",
-            data-anchor-x:"220",
-            data-anchor-y:"40",
+        {{ badge | image_url: width: 200 | image_tag: class: 'hidden md:block absolute z-[2] w-[180px] !h-auto opacity-0 transition-opacity duration-300 !-top-[100px]', 
+            data-anchor-target: 'shop-all',
+            data-anchor-target:"shop-all",
+            data-anchor-x:"-200",
+            data-anchor-y:"10",
             data-anchor-x-mobile:"4",
             data-anchor-y-mobile:"40"
          }}
@@ -91,14 +92,6 @@
                                 hover_image_classes: 'hidden md:block absolute inset-0 w-full h-full z-[1] object-cover group-hover:opacity-0 transition-opacity duration-300'
                             %}
                         {% endif %}
-                        {% comment %} {% if hover_image != blank %}
-                            {% render 'picture', 
-                                source: hover_image,
-                                class: 'hidden md:block opacity-100 absolute h-[calc(100%+4px)] w-[calc(100%+4px)] z-[1] top-0 left-0 object-cover w-full h-full group-hover:opacity-0 transition-opacity duration-300'
-                                preload: 'eager',
-                                loading: 'eager'
-                            %}
-                        {% endif %} {% endcomment %}
                     </div>
                     </a>
                     <div class="hidden md:!flex flex-col mt-3 lg:pl-3 {% unless accent_text != blank %} {% endunless %} items-center">
