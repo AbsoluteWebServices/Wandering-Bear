@@ -4309,7 +4309,7 @@ product-recommendations:has([data-has-recommendations='false']) {
   background: #E6D6B7;
 }
 
-#storelocators_root #storelocators .location[style*=background] {
+#storelocators_root #storelocators .location[style*="background"] {
   background: #FFFFFF !important;
 }
 
