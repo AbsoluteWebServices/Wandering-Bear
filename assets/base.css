@@ -4302,18 +4302,19 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 /* Store Locator */
 
+
 #storelocators_root #storelocators #left_column,
 #storelocators_root #storelocators #left_top,
 #storelocators_root #storelocators #locations {
-  background: #FEF8F3;
+  background: #E6D6B7;
 }
 
-#storelocators_root #storelocators .location[style*="background"] {
-  background: #F8EADF !important;
+#storelocators_root #storelocators .location[style*=background] {
+  background: #FFFFFF !important;
 }
 
 #storelocators_root #storelocators #second_column {
-  background: #FEF8F3;
+  background: #E6D6B7;
 }
 
 .wb-button {
