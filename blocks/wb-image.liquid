@@ -59,6 +59,14 @@
   assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
 %}
 
+{% if template.name == 'collection' %}
+  {% assign fetch_priority = 'high' %}
+  {% assign loading = 'eager' %}
+{% else %}
+  {% assign fetch_priority = 'low' %}
+  {% assign loading = 'lazy' %}
+{% endif %}
+
 {% capture image %}
   {%- if wb_image -%}
     {{
@@ -70,7 +78,9 @@
         height: wb_image.height,
         class: 'image-block__image border-style',
         style: image_border_style,
-        sizes: sizes
+        sizes: sizes,
+        fetchpriority: fetch_priority,
+        loading: loading
     }}
   {%- else -%}
     <div class="placeholder-image border-style size-style" style="{{ image_border_style }}">
