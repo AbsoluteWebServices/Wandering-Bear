@@ -40,7 +40,7 @@
     <div class="container aw-logo-wall__inner relative z-[1] max-w-[1132px] flex flex-col mx-auto !gap-[30px]{% if section.settings.grayscale %} aw-logo-wall--grayscale{% endif %}{% if section.settings.mobile_per_row == '3' %} aw-logo-wall--mobile-3{% endif %}">
         {% if title_type == 'image' %}
             {% if title_image != blank %}
-                <div class="aw-logo-wall__title-image mx-auto w-full max-w-full px-5 md:px-0 md:max-w-[442px]">
+                <div class="aw-logo-wall__title-image mx-auto w-full px-5 md:px-0 max-w-[350px] smd:max-w-[442px]">
                     {% render 'title-image', image: title_image, image_mobile: title_image_mobile, alt: title_alt, class: 'w-full max-h-full object-contain' %}
                 </div>
             {% endif %}
@@ -60,7 +60,7 @@
                 <div class="aw-logo-wall__cell
                 {% if block.settings.hide_on_mobile %} hidden md:flex {% endif %} w-[108px] sm:w-[200px] h-[58px] md:!h-[72px] flex items-center justify-center">
                     {% liquid
-                        assign class = 'object-contain !max-h-full !w-auto !h-auto  logo-' | append: block.id
+                        assign class = 'object-contain !max-h-full !w-full !h-auto  logo-' | append: block.id
                         assign logo_alt_fallback = block.settings.image.src | split: '?' | first | split: '/' | last | split: '.' | first | replace: '_', ' ' | replace: '-', ' ' | capitalize
                     %}
                     {% render 'image', image: block.settings.image, height: 72, class: class, alt_text_fallback: logo_alt_fallback %}

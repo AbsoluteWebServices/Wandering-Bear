@@ -6,6 +6,8 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    <link rel="preconnect" href="https://consent.cookiebot.com" crossorigin>
+    <link rel="preconnect" href="https://consentcdn.cookiebot.com" crossorigin>
     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="0c89efb0-64d9-4d4b-8214-f2118b4a0481" data-blockingmode="auto" type="text/javascript"></script>
 
     <!-- Start of Shoplift scripts -->
@@ -54,9 +56,9 @@
       {% comment %} <link rel="preconnect" href="https://use.typekit.net" crossorigin>
       <link rel="preconnect" href="https://p.typekit.net" crossorigin> {% endcomment %}
      
-      {% unless settings.type_heading.system? and settings.type_body.system? %}
+      {% comment %} {% unless settings.type_heading.system? and settings.type_body.system? %}
         <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
-      {% endunless %}
+      {% endunless %} {% endcomment %}
 
 
     <!-- shopify/apps -->
