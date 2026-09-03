@@ -274,7 +274,9 @@
         "button_label": "Learn More",
         "button_link": "shopify://pages/membership",
         "foreground_bg_image": "shopify://shop_images/WB_HOLLYWOOD_SHOT_20_EDIT_1.png",
-        "foreground_bg_image_mobile": "shopify://shop_images/mobile-membership.png"
+        "foreground_bg_image_mobile": "shopify://shop_images/mobile-membership.png",
+        "text_bubble_top_image": "shopify://shop_images/Group_1327226663.svg",
+        "text_bubble_bottom_image": "shopify://shop_images/Group_1327226664.svg"
       }
     },
     "aw_logo_wall_AXpPn6": {
