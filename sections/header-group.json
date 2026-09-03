@@ -18,7 +18,7 @@
           "type": "_announcement",
           "settings": {
             "text": "ALMOND AMARETTO IS BACK FOR A LIMITED TIME!",
-            "link": "",
+            "link": "https://wanderingbearcoffee.com/products/cold-brew-on-tap-96-oz-almond-amaretto",
             "font": "var(--font-subheading--family)",
             "font_size": "0.75rem",
             "weight": "",
