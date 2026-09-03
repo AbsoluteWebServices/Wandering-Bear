@@ -1,5 +1,6 @@
 import { Component } from '@theme/component';
 import { debounce, isClickedOutside, onAnimationEnd } from '@theme/utilities';
+import { trapFocus, removeTrapFocus } from '@theme/focus';
 
 /**
  * A custom element that manages a dialog.
@@ -46,7 +47,11 @@ export class DialogComponent extends Component {
   showDialog() {
     const { dialog } = this.refs;
 
-    if (dialog.open) return;
+
+    if (dialog.open) {
+      if (dialog.matches(':modal')) return;
+      dialog.close();
+    }
 
     const scrollY = window.scrollY;
     this.#previousScrollY = scrollY;
@@ -58,6 +63,9 @@ export class DialogComponent extends Component {
       document.body.style.top = `-${scrollY}px`;
 
       dialog.showModal();
+
+      if (!dialog.matches(':modal')) trapFocus(dialog);
+
       this.dispatchEvent(new DialogOpenEvent());
 
       this.addEventListener('click', this.#handleClick);
@@ -98,6 +106,8 @@ export class DialogComponent extends Component {
 
     dialog.close();
     dialog.classList.remove('dialog-closing');
+
+    removeTrapFocus();
 
     this.dispatchEvent(new DialogCloseEvent());
   };

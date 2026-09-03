@@ -57,7 +57,7 @@
 <picture>
   <source srcset="{{ section.settings.image | image_url: width: 1920 }}" media="(min-width: 750px)">
   <source srcset="{{ section.settings.image | image_url: width: 750 }}" media="(max-width: 749px)">
-  <img class="absolute top-0 left-0 w-full object-cover h-[400px] -z-[1]" src="{{ section.settings.image | image_url: width: 1920 }}" alt="{{ section.settings.image.alt }}" width="1920" height="1080" loading="lazy">
+  <img class="absolute top-0 left-0 w-full object-cover h-[400px] -z-[1]" src="{{ section.settings.image | image_url: width: 1920 }}" alt="{{ section.settings.image.alt }}" width="1920" height="1080" loading="eager" fetchpriority="high">
 </picture>
 <results-list
   class="section product-grid-container relative z-1 color-{{ section.settings.color_scheme }}"
@@ -140,7 +140,7 @@
               class="product-grid__group col-span-full inline flex-wrap items-baseline gap-x-3 gap-y-1 pb-4 border-b border-[#431A031A]{% if first_group_rendered %} mt-6{% endif %}"
               role="presentation"
             >
-              <h2 class="inline-flex font-gothic_condensed font-bold {% if group.title contains '96' or group.title contains '128' %} text-[30px] {% else %} !text-[25px] {% endif %} leading-[1.1] mr-3 !ml-0 !my-0">
+              <h2 role="heading" aria-level="2" class="inline-flex font-gothic_condensed font-bold {% if group.title contains '96' or group.title contains '128' %} text-[30px] {% else %} !text-[25px] {% endif %} leading-[1.1] mr-3 !ml-0 !my-0">
                 {{- group.title | default: group.display_name -}}
               </h2>
               {% if group.description != blank %}

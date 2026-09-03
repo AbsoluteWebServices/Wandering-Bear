@@ -2,13 +2,17 @@
 
 <div>
     {% for entry in nav_blocks.value %}
+        {% assign alt_text = entry.name %}
+        {% if entry.image.alt != blank %}
+            {% assign alt_text = entry.image.alt %}
+        {% endif %}
         <div class="pl-5.5 md:!pl-8 py-2.5 md:!py-[15px] flex items-center !gap-5 md:!gap-7 border-b border-[#431A031A]">
-            <a href="{{ entry.url }}" class="w-[80px] h-[80px] shadow-button rounded-[16px] overflow-hidden">
-            {{ entry.image | image_url: width: 200 | image_tag: class: 'h-full w-full object-cover' }}
+            <a aria-label="{{ entry.name }}" href="{{ entry.url }}" class="w-[80px] h-[80px] shadow-button rounded-[16px] overflow-hidden">
+            {{ entry.image | image_url: width: 200 | image_tag: class: 'h-full w-full object-cover', alt: alt_text }}
             </a>
 
             <div class="flex flex-col !gap-2">
-                <a href="{{ entry.url }}" class="flex items-center !gap-2">
+                <a aria-label="{{ entry.name }}" href="{{ entry.url }}" class="flex items-center !gap-2">
                    <span class="font-gothic_condensed text-[20px] font-extrabold text-bear-black">{{ entry.name }}</span>
                    <span class="text-sm font-medium font-parslay text-gold">{{ entry.accent_text }}</span>
                 </a>
@@ -22,9 +26,9 @@
     {% endfor %}
     <div class="px-5.5 smd:pl-[26px] smd:pr-10 pt-5">
         <div class="relative w-full flex !gap-0 justify-center items-center overflow-hidden">
-            <a href="{{ mobile_metaobject.banner_link }}" class="absolute w-full h-full"></a>
+            <a aria-label="Shop All" href="{{ mobile_metaobject.banner_link }}" class="absolute w-full h-full"></a>
             <div class="h-min">
-                {{ mobile_metaobject.banner_image | image_url: width: 800 | image_tag: class: '!h-auto w-full object-cover' }}
+                {{ mobile_metaobject.banner_image | image_url: width: 800 | image_tag: class: '!h-auto w-full object-cover' | alt: 'Shop All' }}
             </div>
         </div>
     </div>

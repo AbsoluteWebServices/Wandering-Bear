@@ -72,7 +72,7 @@
             <div class="w-full flex justify-center" x-cloak x-show="activeTitle === '{{ title_handleize }}'">
                 <div class="{{ media_wrap_class }}">
                     {% if block_media_type == 'video' and block_video != blank %}
-                        {% render 'video-player', video_sources: block_video.sources %}
+                        {% render 'video-player', video_sources: block_video.sources, video: block_video %}
                     {% elsif block_image != blank %}
                         {{ block_image | image_url: width: 1000 | image_tag: class: media_img_class }}
                     {% endif %}

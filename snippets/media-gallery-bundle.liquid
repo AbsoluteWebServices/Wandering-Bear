@@ -1,6 +1,6 @@
 {% capture slide_styles %}
     --width: 100%;
-    --mobile-width: calc((100% / 1.12) - 8px);
+    --mobile-width: calc((100% - 1.2px) / 1.12);
     --mobile-margin-right: 10px;
 {% endcapture %}
 {% capture thumbnail_styles %}
@@ -52,10 +52,32 @@
                         style="{{ slide_styles }}"
                     >
                      <div class="swiper-zoom-container max-w-full max-h-full lg:max-h-[540px] flex">
+                        {% capture gallery_sources %}
+                            <source
+                                media="(min-width: 768px)"
+                                srcset="{{ media | image_url: width: 570 }} 570w, {{ media | image_url: width: 855 }} 855w, {{ media | image_url: width: 1140 }} 1140w"
+                                sizes="570px">
+                            <source
+                                srcset="{{ media | image_url: width: 400 }} 400w, {{ media | image_url: width: 550 }} 550w, {{ media | image_url: width: 700 }} 700w, {{ media | image_url: width: 850 }} 850w, {{ media | image_url: width: 1000 }} 1000w, {{ media | image_url: width: 1200 }} 1200w"
+                                sizes="100vw">
+                        {% endcapture %}
+                        {%- comment -%}
+                          Slide 1 is the LCP element: eager and high priority.
+
+                          Slides 2-5 already inherit picture.liquid's `loading: lazy`, but
+                          that alone does not stop them — the slides sit side by side in the
+                          (overflow-hidden) track, so they are only a few hundred px from the
+                          viewport and Chrome's lazy threshold fetches them anyway. That was
+                          620KB of carousel loading alongside the LCP image. `fetchpriority`
+                          cannot cancel the request but it does put them behind slide 1 in
+                          the queue, so the LCP image is no longer competing with them.
+                        {%- endcomment -%}
                         {% if forloop.first %}
-                            {% render 'picture', source: media, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt, loading: 'eager', fetchpriority: 'high' %}
+                            {% render 'picture', source: media, sources: gallery_sources, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt, loading: 'eager', fetchpriority: 'high' %}
+                        {% elsif forloop.index == 2 %}
+                            {% render 'picture', source: media, sources: gallery_sources, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt, fetchpriority: 'low' %}
                         {% else %}
-                            {% render 'picture', source: media, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt %}
+                            {% render 'picture', source: media, sources: gallery_sources, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt, loading: 'lazy', fetchpriority: 'low' %}
                         {% endif %}
                      </div>
                      <div class="zoom-toggle absolute bottom-4 right-4 w-6 h-6 cursor-pointer z-[2]">
@@ -99,16 +121,8 @@
         align-items: center;
     }
 
-    @media screen and (max-width: 1023px) {
-        .product-gallery:not(.swiper-initialized) .swiper-slide {
-            width: 100% !important;
-        }
-
-        /* Reserve the gallery's height before Swiper JS initializes and sets it inline —
-           without this the container has no height on first paint, which is the main
-           contributor to CLS on mobile PDP loads. */
-        .product-gallery {
-            aspect-ratio: 1 / 1;
-        }
-    }
+    /* No height is reserved on .product-gallery itself: the slide carries a 1/1
+       aspect-ratio and, because --mobile-width now matches what Swiper computes,
+       the slide is the same size before and after init. The container's height
+       follows from it in both states, so there is nothing left to shift. */
 {% endstylesheet %}

@@ -68,35 +68,69 @@ let loaded = false
 const init = async () => {
     if (loaded) return
     loaded = true
-    const { default: Alpine } = await import("alpinejs")
-    const { default: morph } = await import("@alpinejs/morph")
-
-    const { default: SwiperSlider } = await import("~/scripts/components/swiperSlider")
-    const { default: VideoPlayer } = await import("~/scripts/components/videoPlayer")
-    const { default: Header } = await import("~/scripts/components/header")
-    const { default: Tooltip } = await import("~/scripts/components/tooltip")
-    const { default: ProductFormBundle } = await import("~/scripts/components/product-form-bundle")
-    const { default: MediaGalleryBundle } = await import("~/scripts/components/media-gallery-bundle")
-    const { default: Diagram } = await import("~/scripts/components/diagram")
-    const { default: Accordion } = await import("~/scripts/components/accordion")
-    const { default: Footer } = await import("~/scripts/components/footer")
-    const { default: Modal } = await import("~/scripts/components/modal")
-    const { default: MembershipLogin } = await import("~/scripts/components/membership-login")
-    const { default: BackInStock } = await import("~/scripts/components/back-in-stock")
-    const { default: EliteAtc } = await import("~/scripts/components/elite-atc")
-    const { default: CreditRedemption } = await import("~/scripts/components/creditRedemption")
-    const { default: DiagramToggle } = await import("~/scripts/components/diagramToggle")
-    const { default: ProductForm } = await import("~/scripts/components/product-form")
-    const { default: HowToMix } = await import("~/scripts/components/how-to-mix")
-    const { default: WaysToEnjoy } = await import("~/scripts/components/ways-to-enjoy")
-    const { default: ProductValueProps } = await import("~/scripts/components/productValueProps")
-    const { default: ProductsSlider } = await import("~/scripts/components/productsSlider")
-    const { default: ReviewCarousel } = await import("~/scripts/components/reviewCarousel")
-    const { default: OverlayScrollbar } = await import("~/scripts/components/overlayScrollbar")
-    const { default: Cart } = await import("~/scripts/components/cart")
-    const { default: ReviewCarouselBlock } = await import("~/scripts/components/reviewCarouselBlock")
-    const { default: NutritionFacts } = await import("~/scripts/components/nutrition-facts")
-    const { default: PrivacyRights } = await import("~/scripts/components/privacyRights")
+    // Awaiting these one-by-one made each chunk wait for the previous download to
+    // finish before its own request was even issued — 28 serial round trips. They
+    // have no interdependencies, so they are fetched concurrently instead; the
+    // registration order below is unchanged and still governs plugin order.
+    const [
+        { default: Alpine },
+        { default: morph },
+        { default: SwiperSlider },
+        { default: VideoPlayer },
+        { default: Header },
+        { default: Tooltip },
+        { default: ProductFormBundle },
+        { default: MediaGalleryBundle },
+        { default: Diagram },
+        { default: Accordion },
+        { default: Footer },
+        { default: Modal },
+        { default: MembershipLogin },
+        { default: BackInStock },
+        { default: EliteAtc },
+        { default: CreditRedemption },
+        { default: DiagramToggle },
+        { default: ProductForm },
+        { default: HowToMix },
+        { default: WaysToEnjoy },
+        { default: ProductValueProps },
+        { default: ProductsSlider },
+        { default: ReviewCarousel },
+        { default: OverlayScrollbar },
+        { default: Cart },
+        { default: ReviewCarouselBlock },
+        { default: NutritionFacts },
+        { default: PrivacyRights },
+    ] = await Promise.all([
+        import("alpinejs"),
+        import("@alpinejs/morph"),
+        import("~/scripts/components/swiperSlider"),
+        import("~/scripts/components/videoPlayer"),
+        import("~/scripts/components/header"),
+        import("~/scripts/components/tooltip"),
+        import("~/scripts/components/product-form-bundle"),
+        import("~/scripts/components/media-gallery-bundle"),
+        import("~/scripts/components/diagram"),
+        import("~/scripts/components/accordion"),
+        import("~/scripts/components/footer"),
+        import("~/scripts/components/modal"),
+        import("~/scripts/components/membership-login"),
+        import("~/scripts/components/back-in-stock"),
+        import("~/scripts/components/elite-atc"),
+        import("~/scripts/components/creditRedemption"),
+        import("~/scripts/components/diagramToggle"),
+        import("~/scripts/components/product-form"),
+        import("~/scripts/components/how-to-mix"),
+        import("~/scripts/components/ways-to-enjoy"),
+        import("~/scripts/components/productValueProps"),
+        import("~/scripts/components/productsSlider"),
+        import("~/scripts/components/reviewCarousel"),
+        import("~/scripts/components/overlayScrollbar"),
+        import("~/scripts/components/cart"),
+        import("~/scripts/components/reviewCarouselBlock"),
+        import("~/scripts/components/nutrition-facts"),
+        import("~/scripts/components/privacyRights"),
+    ])
 
     Alpine.plugin(morph)
     Alpine.plugin(SwiperSlider)

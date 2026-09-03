@@ -69,22 +69,8 @@
             <span class="icon-pause">
               {{- 'icon-pause.svg' | inline_asset_content -}}
             </span>
-            {% for source in video.sources %}
-                {% if source.mime_type == 'video/mp4' %}
-                    <video
-                        class="h-full w-full object-cover cursor-pointer"
-                        autoplay
-                        muted
-                        loop
-                        playsinline
-                        webkit-playsinline
-                        preload="metadata"
-                    >
-                        <source src="{{ source.url }}" type="{{ source.mime_type }}">
-                    </video>
-                  {% break %}
-                {% endif %}
-              {% endfor %}         
+
+            {% render 'deferred-video', video: video, class: 'h-full w-full object-cover cursor-pointer' %}
             </div>
         </div>
     {% endif %}

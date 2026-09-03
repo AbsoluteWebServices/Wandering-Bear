@@ -80,6 +80,8 @@
         class="header-actions__action button-unstyled{% if display_style == 'text' %} header-actions__text-style{% endif %}"
         on:click="/open"
         aria-haspopup="dialog"
+        aria-expanded="false"
+        data-cart-drawer-trigger
         aria-label="{{ 'accessibility.cart' | t }}"
         aria-describedby="cart-bubble-text"
         data-testid="cart-drawer-trigger"
@@ -148,7 +150,15 @@
         </div>
       </div>
 
+      {%- comment -%}
+        `inert` from first paint: the panel is only moved off screen with a
+        transform, so without it a keyboard user tabs out of the cart and into a
+        panel they cannot see. bundle-editor.js flips it when the panel opens —
+        but that script is a low-priority module, so the attribute has to be in
+        the markup to cover the window before it runs.
+      {%- endcomment -%}
       <bundle-editor-component
+        inert
         class="modify-bundle bg-[#F2E6DC] absolute top-0 right-0 bottom-0 left-0 z-1000"
         data-testid="bundle-editor"
       >

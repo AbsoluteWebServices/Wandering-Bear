@@ -108,7 +108,7 @@
             <div class="wb-flex justify-center mt-5" x-cloak x-show="activeTitle === '{{ title_handleize }}'">
                 <div class="recipe-media px-4.5 w-full mx-auto smd:px-0 smd:max-w-[339px] max-h-[488px] overflow-hidden rounded-[10px]">
                     {% if is_video %}
-                        {% render 'video-player', video_sources: media.sources %}
+                        {% render 'video-player', video_sources: media.sources, video: media %}
                     {% else %}
                         {{ media | image_url: width: 1000 | image_tag: class: 'w-full h-full object-cover rounded-[5px]' }}
                     {% endif %}

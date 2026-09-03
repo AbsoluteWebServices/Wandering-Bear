@@ -92,6 +92,11 @@ class CartDrawerComponent extends DialogComponent {
       this.#handleLayoutClose
     );
 
+    this.addEventListener(
+      DialogCloseEvent.eventName,
+      this.#handleTriggerCollapse
+    );
+
     if (history.state?.cartDrawerOpen) {
       history.replaceState(null, '');
     }
@@ -155,10 +160,19 @@ class CartDrawerComponent extends DialogComponent {
       this.#handleLayoutClose
     );
 
+    this.removeEventListener(
+      DialogCloseEvent.eventName,
+      this.#handleTriggerCollapse
+    );
+
     this.#headerResizeObserver.disconnect();
 
     this.#historyAbortController?.abort();
   }
+
+  #handleTriggerCollapse = () => {
+    this.#setTriggerExpanded(false);
+  };
 
   #handleBundleEdit = (event) => {
     const { dialog } = /** @type {Refs} */ (this.refs);
@@ -293,6 +307,7 @@ class CartDrawerComponent extends DialogComponent {
 
   open() {
     this.showDialog();
+    this.#setTriggerExpanded(true);
 
     document.dispatchEvent(
       new CustomEvent('cart-drawer:open', { bubbles: true })
@@ -323,6 +338,27 @@ class CartDrawerComponent extends DialogComponent {
 
   close() {
     this.closeDialog();
+    this.#setTriggerExpanded(false);
+  }
+
+  /**
+   * Reflects the drawer's state on its trigger. The button carries
+   * `aria-haspopup="dialog"`, so without this it announces that it opens a
+   * dialog but never that the dialog is already open.
+   *
+   * @param {boolean} expanded
+   */
+  #setTriggerExpanded(expanded) {
+    const trigger = this.querySelector(
+      '[data-cart-drawer-trigger]'
+    );
+
+    if (trigger instanceof HTMLElement) {
+      trigger.setAttribute(
+        'aria-expanded',
+        String(expanded)
+      );
+    }
   }
 
   /**

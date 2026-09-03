@@ -51,7 +51,7 @@
       </div>
     {% endif %}
     {% if image != blank %}
-      {% render 'image', image: image, height: 300, class: 'w-full !h-full object-cover absolute !object-center' %}
+      {% render 'image', image: image, height: 120, class: 'w-full !h-full object-cover absolute !object-center' %}
     {% else %}
       <div class="absolute inset-0 z-[2] wb-flex justify-center items-center">
         <span class="text-xs text-center">Missing Image</span>
@@ -101,8 +101,10 @@
       (or otherwise unlocked frequency) is selected.
     {%- endcomment -%}
     {%- capture add_to_bundle_buttons -%}
+      {% assign flavor_title = child_product.metafields.custom.flavor.value.name %}
         <div x-show="!isInBundle({{ child_product.id }})" class="wb-flex justify-end items-center">
           <button
+            aria-label="Add {{ flavor_title }} to bundle"
             class="group h-10! w-20! flex justify-center items-center relative whitespace-nowrap cursor-pointer shadow-button"
             @click.prevent.stop="addToBundle({{ child_product.id }},{% if bundle_type == '32oz' %} '32oz' {% else %} null {% endif %})"
             :disabled="disabled" :class="{ 'opacity-50 !cursor-default': disabled }"
@@ -145,6 +147,7 @@
           x-show="isInBundle({{ child_product.id }}) && flavorType !== 'single'"
         >
           <button
+            aria-label="Decrease quantity of {{ flavor_title }} in bundle"
             class="group cursor-pointer relative shadow-button w-7.5 h-10!"
             @click.prevent.stop="decrementQty({{ child_product.id }})"
           >
@@ -167,6 +170,7 @@
             class="text-xl md:text-[12px] w-10 text-espresso text-center font-kurdis-condensed uppercase font-extrabold"
             x-text="getBundleProductQuantity({{ child_product.id }})"></span>
           <button
+            aria-label="Increase quantity of {{ flavor_title }} in bundle"
             :disabled="getBundleProductQuantity({{ child_product.id }}) >= qtyLimit"
             :class="{ 'opacity-50 !cursor-default': disabled }"
             class="group cursor-pointer relative shadow-button  w-7.5 h-10!"

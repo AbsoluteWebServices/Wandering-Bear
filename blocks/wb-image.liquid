@@ -69,7 +69,7 @@
 
 {% capture image %}
   {%- if wb_image -%}
-    {{
+    {% comment %} {{
       wb_image
       | image_url: width: 3840
       | image_tag:
@@ -81,7 +81,19 @@
         sizes: sizes,
         fetchpriority: fetch_priority,
         loading: loading
-    }}
+    }} {% endcomment %}
+    {% capture sources %}
+      <source media="(min-width: 1024px)" srcset="{{ wb_image | image_url: width: 320, format: 'webp' }} 320w, {{ wb_image | image_url: width: 500, format: 'webp' }} 500w, {{ wb_image | image_url: width: 680, format: 'webp' }} 680w" sizes="320px">
+      <source srcset="{{ wb_image | image_url: width: 500, format: 'webp' }} 500w, {{ wb_image | image_url: width: 1000, format: 'webp' }} 1000w" sizes="(min-width: 500px) 500px, 90vw">
+  {% endcapture %}
+  {% render 'picture', 
+    sources: sources,
+    source: wb_image,
+    tablet_source: wb_image,
+    class: 'image-block__image border-style',
+    fetchpriority: 'high',
+    loading: 'eager'
+  %}
   {%- else -%}
     <div class="placeholder-image border-style size-style" style="{{ image_border_style }}">
       {{ 'detailed-apparel-1' | placeholder_svg_tag: 'image-block__placeholder' }}

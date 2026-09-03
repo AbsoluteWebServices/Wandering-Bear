@@ -1,0 +1,116 @@
+{%- doc -%}
+    Renders a below-the-fold background video that costs nothing until it is
+    nearly on screen.
+
+    Two things make an ordinary autoplay <video> expensive:
+
+    1. `autoplay` overrides `preload`, so the browser downloads the file during
+       page load no matter what the preload attribute says. On the 96oz PDP that
+       was 12.5MB — 77% of the page's total weight — for a video that sits ~2900px
+       down the page, and it starved the LCP image of bandwidth on its way there.
+    2. `video.sources` is not ordered by size, so taking the first mp4 with
+       a break on the first match happened to select the HD-1080p-7.2Mbps rendition.
+
+    So: no `src` is attached until an IntersectionObserver says the section is
+    within a screen of the viewport, and the rendition is chosen by height rather
+    than by array position.
+
+    @param {object} [video] - The Shopify video object (supplies sources and poster)
+    @param {array} [sources] - Rendition list, when the caller only has `video.sources`
+    @param {string} [class] - Classes for the <video> element
+    @param {number} [max_height] - Largest rendition height to consider (default 720)
+    @param {boolean} [autoplay] - Start playback once loaded (default true)
+    @param {boolean} [poster] - Show video.preview_image before load (default false).
+      Off by default: `poster` is fetched eagerly like any other image, so switching it
+      on for a below-the-fold video trades a deferred video download for an eager
+      image one. Worth it only where the placeholder is actually seen.
+{%- enddoc -%}
+
+{%- liquid
+    assign max_height = max_height | default: 720
+    assign autoplay = autoplay | default: true, allow_false: true
+    if sources == blank
+        assign sources = video.sources
+    endif
+
+    # Two passes rather than one, because `video.sources` is not ordered by size:
+    # first the largest rendition at or below max_height, and if every rendition is
+    # larger than that (a 1080p-only upload) the smallest one that exists.
+    assign chosen_url = ''
+    assign chosen_type = ''
+    assign chosen_height = 0
+    for source in sources
+        if source.mime_type == 'video/mp4' and source.height <= max_height and source.height > chosen_height
+            assign chosen_url = source.url
+            assign chosen_type = source.mime_type
+            assign chosen_height = source.height
+        endif
+    endfor
+
+    if chosen_url == ''
+        assign smallest = 999999
+        for source in sources
+            if source.mime_type == 'video/mp4' and source.height < smallest
+                assign chosen_url = source.url
+                assign chosen_type = source.mime_type
+                assign smallest = source.height
+            endif
+        endfor
+    endif
+-%}
+
+{%- if chosen_url != '' -%}
+  <video
+      class="{{ class }}"
+      muted
+      loop
+      playsinline
+      webkit-playsinline
+      preload="none"
+      {% if poster and video.preview_image %}poster="{{ video.preview_image | image_url: width: 1000 }}"{% endif %}
+      data-deferred-video
+      {% unless autoplay %}data-no-autoplay{% endunless %}
+      data-video-src="{{ chosen_url }}"
+      data-video-type="{{ chosen_type }}"
+  ></video>
+  <script>
+    (function () {
+      var script = document.currentScript;
+      var video = script && script.previousElementSibling;
+      if (!video || !video.hasAttribute('data-deferred-video')) {
+        // currentScript is null when a section is re-injected via the Section
+        // Rendering API; fall back to the last video still awaiting a source.
+        var pending = document.querySelectorAll('[data-deferred-video]:not([data-video-loaded])');
+        video = pending[pending.length - 1];
+        if (!video) return;
+      }
+
+      function load() {
+        if (video.dataset.videoLoaded) return;
+        video.dataset.videoLoaded = '1';
+        var source = document.createElement('source');
+        source.src = video.dataset.videoSrc;
+        source.type = video.dataset.videoType;
+        video.appendChild(source);
+        video.load();
+        if (video.hasAttribute('data-no-autoplay')) return;
+        var played = video.play();
+        if (played) played.catch(function () {});
+      }
+
+      if (!('IntersectionObserver' in window)) return load();
+
+      // rootMargin starts the fetch a screen early so playback has begun by the
+      // time the section is actually scrolled into view.
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          observer.disconnect();
+          load();
+        });
+      }, { rootMargin: '100% 0px' });
+
+      observer.observe(video);
+    })();
+  </script>
+{%- endif -%}
