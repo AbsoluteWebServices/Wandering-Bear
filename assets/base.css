@@ -4302,7 +4302,6 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 /* Store Locator */
 
-
 #storelocators_root #storelocators #left_column,
 #storelocators_root #storelocators #left_top,
 #storelocators_root #storelocators #locations {
@@ -4315,6 +4314,12 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 #storelocators_root #storelocators #second_column {
   background: #E6D6B7;
+}
+
+#storelocators_root .location .sl_address,
+#storelocators_root .selectedLocation .sl_address,
+#storelocators_root .updateStatus {
+  color: black !important;
 }
 
 .wb-button {
