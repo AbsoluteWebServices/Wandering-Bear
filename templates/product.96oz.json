@@ -464,7 +464,7 @@
           "type": "icon_item",
           "settings": {
             "icon": "shopify://shop_images/Group_1327226588.svg",
-            "text": "Shelf stable before opening, so you an stock up without the stress. Once tapped, keep in the fridge and enjoy within 30 days."
+            "text": "Shelf stable before opening, so you an stock up without the stress. Once opened, keep in the fridge and enjoy within 30 days."
           }
         }
       },
@@ -667,6 +667,7 @@
       "custom_css": [],
       "name": "AW FAQs",
       "settings": {
+        "section_id": "",
         "color_scheme": "",
         "background_type": "transparent",
         "background_solid": "#f2e6dc",
