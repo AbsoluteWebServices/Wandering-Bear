@@ -82,64 +82,6 @@
   {% endif %}
 </a>
 
-{% stylesheet %}
-  .header-logo {
-    display: flex;
-    height: 100%;
-    font-size: var(--font-size--md);
-    font-family: var(--font-family);
-    font-weight: var(--font-weight);
-    font-style: var(--font-style);
-    color: var(--color-foreground);
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-
-    &[data-hidden-on-home-page] {
-      display: none;
-
-      #header-component:is(
-          [sticky='always']:not([data-scroll-direction='none']),
-          [sticky='scroll-up'][data-scroll-direction='up']
-        )
-        & {
-        display: flex;
-      }
-    }
-
-    @media screen and (max-width: 749px) {
-      padding: 0;
-    }
-
-    @media screen and (min-width: 750px) {
-      flex-shrink: 0;
-    }
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  .header-logo__image {
-    object-fit: contain;
-    height: var(--header-logo-image-height-mobile);
-    width: var(--header-logo-image-width-mobile);
-
-    @media screen and (min-width: 750px) {
-      height: var(--header-logo-image-height);
-      width: var(--header-logo-image-width);
-    }
-  }
-
-  .header-logo:has(.header-logo__image-container--inverse) .header-logo__image-container--original {
-    display: var(--header-logo-display, block);
-  }
-
-  .header-logo__image-container--inverse {
-    display: var(--header-logo-inverse-display, none);
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:names.logo",

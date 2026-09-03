@@ -18,6 +18,7 @@
           "type": "menu",
           "name": "t:names.menu",
           "settings": {
+            "class": "",
             "menu": "new-footer-col-1",
             "heading": "",
             "menu_spacing": 12,
@@ -39,6 +40,7 @@
           "type": "menu",
           "name": "t:names.menu",
           "settings": {
+            "class": "",
             "menu": "our-company",
             "heading": "",
             "menu_spacing": 12,
@@ -60,6 +62,7 @@
           "type": "menu",
           "name": "t:names.menu",
           "settings": {
+            "class": "",
             "menu": "support",
             "heading": "",
             "menu_spacing": 12,
@@ -89,6 +92,7 @@
             "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "center",
             "gap": 0,
+            "gap_mobile": 12,
             "width": "fill",
             "custom_width": 100,
             "width_mobile": "fill",
@@ -114,7 +118,11 @@
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {
             "image_a3Yhp9": {
@@ -124,6 +132,7 @@
                 "image": "shopify://shop_images/BEAR_ICON_f206af7b-1bb0-4c5b-837c-b40cdcc085f1.svg",
                 "link": "/",
                 "image_ratio": "adapt",
+                "image_sizes": "",
                 "width": "fill",
                 "custom_width": 100,
                 "width_mobile": "fill",
@@ -144,7 +153,7 @@
               "type": "text",
               "settings": {
                 "block_class": "",
-                "text": "<h3><strong>WANNA TRADE?</strong></h3>",
+                "text": "<h4><strong>WANNA TRADE?</strong></h4>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "center",
@@ -162,7 +171,11 @@
                 "padding-block-start": 8,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {}
             },
@@ -188,7 +201,11 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {}
             },
@@ -214,7 +231,11 @@
                 "padding-block-start": 21,
                 "padding-block-end": 20,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {}
             },

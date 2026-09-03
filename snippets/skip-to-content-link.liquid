@@ -15,22 +15,3 @@
 >
   {{ text | t }}
 </a>
-
-{% stylesheet %}
-  .skip-to-content-link {
-    position: absolute;
-    left: -99999px;
-  }
-
-  .skip-to-content-link:focus {
-    z-index: var(--layer-temporary);
-    overflow: auto;
-    width: auto;
-    height: auto;
-    padding: var(--padding-lg) var(--padding-4xl);
-    left: var(--margin-lg);
-    top: var(--margin-lg);
-    background-color: var(--color-background);
-    box-shadow: 0 0 0 var(--focus-outline-offset) var(--color-background);
-  }
-{% endstylesheet %}

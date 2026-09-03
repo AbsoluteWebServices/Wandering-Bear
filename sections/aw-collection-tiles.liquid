@@ -9,13 +9,14 @@
     assign background_color = color_scheme.settings.background
     assign text_color = color_scheme.settings.foreground
     assign badge = section_settings.badge
+    assign section_header = section_settings.section_header
 %}
 
 {% capture title_styles %}
     --font-size: {{ section.settings.font_size }}px;
     --font-size-mobile: {{ section.settings.font_size_mobile }}px;
 {% endcapture %}
-
+<div class="seo-hidden">{{ section_header }}</div>
 
 <div class="pt-5 pb-3 px-6 md:!pt-2 md:!pb-4.5 relative" style="background-color: {{ background_color }}">
     {% if badge != blank %}
@@ -52,6 +53,10 @@
                     assign url = block.settings.url
                     assign hover_image = block.settings.hover_image
                     assign margin_bottom_mobile = block.settings.margin_bottom_mobile
+                    assign tile_label = title | default: accent_text | default: subtitle
+                    if tile_label == blank and url != blank
+                        assign tile_label = url | split: '?' | first | split: '/' | last | replace: '-', ' ' | capitalize
+                    endif
                 %}
                 {% capture mobile_styles %}
                     --margin-bottom-mobile: {{ margin_bottom_mobile }}px;
@@ -65,7 +70,7 @@
                     }
                 {% endstyle %}
                 <div class="slide-{{ block.id }} relative group w-full h-full" style="{{ mobile_styles }}">
-                    <a href="{{ url }}" class="relative block w-full h-fit">
+                    <a aria-label="{{ tile_label }}" href="{{ url }}" class="relative block w-full h-fit">
                     {% if badge != blank %}
                         {{ badge | image_url: width: 100 | image_tag: class: 'hidden md:block absolute z-[3] -top-[50px] -left-[50px] md:-left-10 lg:-left-[50px] !w-[148px] !h-auto' }}
                     {% endif %}
@@ -198,6 +203,16 @@
             "type": "image_picker",
             "id": "badge",
             "label": "Badge"
+        },
+        {
+            "type": "header",
+            "content": "SEO"
+        },
+        {
+            "type": "richtext",
+            "id": "section_header",
+            "label": "Section Header",
+            "info": "This is a hidden SEO field that will be used to display the section header in the search results"
         }
     ],
     "blocks": [

@@ -52,7 +52,11 @@
                         style="{{ slide_styles }}"
                     >
                      <div class="swiper-zoom-container max-w-full max-h-full lg:max-h-[540px] flex">
-                        {% render 'picture', source: media, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt %}
+                        {% if forloop.first %}
+                            {% render 'picture', source: media, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt, loading: 'eager', fetchpriority: 'high' %}
+                        {% else %}
+                            {% render 'picture', source: media, class: 'max-w-full max-h-full w-full h-full media-fit object-center', style: 'object-position: center;', alt: media.alt %}
+                        {% endif %}
                      </div>
                      <div class="zoom-toggle absolute bottom-4 right-4 w-6 h-6 cursor-pointer z-[2]">
                         {% render 'icons', icon: 'zoom-in', class: 'zoom-toggle__icon zoom-toggle__in' %}
@@ -69,7 +73,13 @@
                         class="swiper-slide rounded-[5px] max-w-17 md:max-w-27 overflow-hidden cursor-pointer !aspect-square before:transition-all before:duration-300{% if forloop.first %} swiper-slide-thumb-active{% endif %}"
                         style="{{ thumbnail_styles }}"
                     >
-                        {{ media | image_url: width: 600 | image_tag: class: 'w-full !h-full media-fit object-center scale-[1.1]', style: 'object-position: center;', alt: media.alt }}
+                        {% liquid
+                            assign thumb_alt = media.alt
+                            if thumb_alt == blank
+                                assign thumb_alt = bundle_product.title | append: ' thumbnail ' | append: forloop.index
+                            endif
+                        %}
+                        {{ media | image_url: width: 600 | image_tag: widths: '100, 150, 220, 320', sizes: '(min-width: 768px) 108px, 68px', class: 'w-full !h-full media-fit object-center scale-[1.1]', style: 'object-position: center;', alt: thumb_alt }}
                     </div>
                 {% endfor %}
             </div>
@@ -92,6 +102,13 @@
     @media screen and (max-width: 1023px) {
         .product-gallery:not(.swiper-initialized) .swiper-slide {
             width: 100% !important;
+        }
+
+        /* Reserve the gallery's height before Swiper JS initializes and sets it inline —
+           without this the container has no height on first paint, which is the main
+           contributor to CLS on mobile PDP loads. */
+        .product-gallery {
+            aspect-ratio: 1 / 1;
         }
     }
 {% endstylesheet %}

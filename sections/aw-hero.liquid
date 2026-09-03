@@ -31,7 +31,7 @@
     <source srcset="{{ background_image | image_url: width: 1200 }} 1200w, {{ background_image | image_url: width: 1536 }} 1536w, {{ background_image | image_url: width: 1920 }} 1920w" sizes="100vw">
 {% endcapture %}
 {% capture fg_sources %}
-    <source media="(max-width: 1023px)" srcset="{{ fg_mobile | image_url: width: 500 }} 500w, {{ fg_mobile | image_url: width: 768 }} 768w, {{ fg_mobile | image_url: width: 1000 }} 1000w" sizes="100vw">
+    <source media="(max-width: 1023px)" srcset="{{ fg_mobile | image_url: width: 500 }} 500w, {{ fg_mobile | image_url: width: 768 }} 768w, {{ fg_mobile | image_url: width: 1000 }} 1000w" sizes="80vw">
     <source srcset="{{ foreground_image | image_url: width: 600 }} 600w, {{ foreground_image | image_url: width: 900 }} 900w, {{ foreground_image | image_url: width: 1200 }} 1200w" sizes="(min-width: 1024px) 50vw, 100vw">
 {% endcapture %}
 {% capture hero_content %}

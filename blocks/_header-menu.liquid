@@ -93,9 +93,10 @@
           on:pointerleave="/deactivate"
         >
           <a
+            href="{{ link.url }}"
             aria-label="{{ link.title }}"
             {% if forloop.first %}
-              @click="openDrawer"
+              @click.prevent="openDrawer"
               x-bind:aria-expanded="drawerOpen"
             {% else %}
             href="{{ link.url }}"
@@ -145,7 +146,7 @@
           {%- endif -%}
         </li>
       {% endfor %}
-      <li
+      {% comment %} <li
         class="menu-list__list-item"
         role="presentation"
         slot="more"
@@ -154,10 +155,10 @@
         on:pointerenter="/activate"
         on:pointerleave="/deactivate"
       >
-        <button role="listitem" class="menu-list__link button-unstyled">
+        <button class="menu-list__link button-unstyled">
           <span class="menu-list__link-title">{{ 'actions.more' | t }}</span>
         </button>
-      </li>
+      </li> {% endcomment %}
     {% endcapture %}
 
     <header-menu
@@ -328,21 +329,6 @@
 
     @media screen and (min-width: 750px) {
       font-size: var(--menu-top-level-font-size-desktop);
-    }
-  }
-
-  .menu-list__link-title {
-    padding-inline: 20px;
-    font-family: var(--font-kurdis-semi-condensed);
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 100%;
-    text-transform: uppercase;
-    letter-spacing: 0 !important;
-    line-height: 100% !important;
-
-    @media screen and (max-width: 890px) {
-      padding-inline: 4px;
     }
   }
 

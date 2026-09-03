@@ -26,11 +26,13 @@
                     <span class="ml-1">·</span>
                 </li>
             {% endfor %}
-            <span class="font-kurdis-semi-condensed font-semibold text-sm text-center md:!text-left" style="color: {{ color_scheme.settings.foreground }}">
-            &copy; {{ 'now' | date: '%Y' }}
-            {{ shop.name | link_to: routes.root_url -}}
-            </span>
-        </ul> 
+            <li>
+                <span class="font-kurdis-semi-condensed font-semibold text-sm text-center md:!text-left" style="color: {{ color_scheme.settings.foreground }}">
+                &copy; {{ 'now' | date: '%Y' }}
+                {{ shop.name | link_to: routes.root_url -}}
+                </span>
+            </li>
+        </ul>
     </div>
   {% endcapture %}
 {% endif %}

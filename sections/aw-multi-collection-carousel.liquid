@@ -5,6 +5,7 @@
     assign active_collection_title = section.blocks[0].settings.title
     assign active_collection_accent_text = section.blocks[0].settings.accent_text
     assign active_collection_handle = section.blocks[0].settings.collection.handle
+    assign section_header = section.settings.section_header
 %}
 
 {% capture slide_styles %}
@@ -14,6 +15,8 @@
     --margin-right: 20px;
     --margin-right-mobile: 10px;
 {% endcapture %}
+
+<div class="seo-hidden">{{ section_header }}</div>
 
 <div x-data="swiperSlider('{{ active_collection_title }}', '{{ active_collection_accent_text }}','{{ active_collection_handle }}')" class="relative z-1 pt-2 pb-10 max-w-[100vw] overflow-x-hidden -mt-[60px] md:mt-0" style="background-color: {{ color_scheme.settings.background }}">
     <div class="container flex-col items-center !gap-1.5 md:!gap-5 md:!items-start md:!flex-row mx-auto flex justify-center md:!justify-start relative md:!ml-20 max-w-[100vw]">
@@ -91,8 +94,17 @@
                 "type": "image_picker",
                 "id": "title_image",
                 "label": "Title Image"
+            },
+            {
+                "type": "header",
+                "content": "SEO"
+            },
+            {
+                "type": "richtext",
+                "id": "section_header",
+                "label": "Section Header",
+                "info": "This is a hidden SEO field that will be used to display the section header in the search results"
             }
-
         ],
         "blocks": [
             {

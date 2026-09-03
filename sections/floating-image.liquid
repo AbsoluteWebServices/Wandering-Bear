@@ -14,12 +14,15 @@
     assign button_label = section.settings.button_label
     assign button_link = section.settings.button_link
     assign badge = section.settings.badge
+    assign section_header = section.settings.section_header
 %}
 
 {% capture title_styles %}
     --font-size: {{ section.settings.font_size }}px;
     --font-size-mobile: {{ section.settings.font_size_mobile }}px;
 {% endcapture %}
+
+<div class="seo-hidden">{{ section_header }}</div>
 
 <div class="relative w-full pb-2 md:!pb-0" style="background-color: {{ color_scheme.background }}">
     <svg preserveAspectRatio="none" class="hidden md:block absolute top-0 md:-top-5 left-0 w-full z-[2]" xmlns="http://www.w3.org/2000/svg" width="1290" height="28" viewBox="0 0 1290 28" fill="none">
@@ -212,6 +215,16 @@
                 "type": "url",
                 "id": "button_link",
                 "label": "Button Link"
+            },
+            {
+                "type": "header",
+                "content": "SEO"
+            },
+            {
+                "type": "richtext",
+                "id": "section_header",
+                "label": "Section Header",
+                "info": "This is a hidden SEO field that will be used to display the section header in the search results"
             }
         ],
         "blocks": [

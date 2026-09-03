@@ -13,6 +13,7 @@
     assign title_alt = section.settings.title_alt
     assign title_image = section.settings.title_image
     assign title_image_mobile = section.settings.title_image_mobile
+    assign section_header = section.settings.section_header
 %}
 
 {%- comment -%}
@@ -31,6 +32,8 @@
     --font-size: {{ section.settings.font_size | default: 24 }}px;
     --font-size-mobile: {{ section.settings.font_size_mobile | default: 24 }}px;
 {% endcapture %}
+
+<div class="seo-hidden">{{ section_header }}</div>
 
 <div class="relative overflow-hidden wb-section-bg" style="{% render 'section-background', settings: section.settings, part: 'style' %} {{ wall_styles }}">
     {% render 'section-background', settings: section.settings, part: 'media' %}
@@ -56,8 +59,11 @@
             {% for block in section.blocks %}          
                 <div class="aw-logo-wall__cell
                 {% if block.settings.hide_on_mobile %} hidden md:flex {% endif %} w-[108px] sm:w-[200px] h-[58px] md:!h-[72px] flex items-center justify-center">
-                    {% assign class = 'object-contain !max-h-full !w-auto !h-auto  logo-' | append: block.id %}
-                    {{ block.settings.image | image_url: width: 400 | image_tag: class: class, alt: block.settings.image.alt }}
+                    {% liquid
+                        assign class = 'object-contain !max-h-full !w-auto !h-auto  logo-' | append: block.id
+                        assign logo_alt_fallback = block.settings.image.src | split: '?' | first | split: '/' | last | split: '.' | first | replace: '_', ' ' | replace: '-', ' ' | capitalize
+                    %}
+                    {% render 'image', image: block.settings.image, height: 72, class: class, alt_text_fallback: logo_alt_fallback %}
                 </div>
                 {% style %}
                     .logo-{{ block.id }} {
@@ -295,6 +301,16 @@
         { "value": "3", "label": "3" }
       ],
       "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "SEO"
+    },
+    {
+      "type": "richtext",
+      "id": "section_header",
+      "label": "Section Header",
+      "info": "This is a hidden SEO field that will be used to display the section header in the search results"
     },
     {
       "type": "header",

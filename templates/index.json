@@ -127,7 +127,8 @@
         "font_size_mobile": 24,
         "title_alt": "GO BIG. OR GO BIGGER.",
         "title_image": "shopify://shop_images/PICK_HOW_YOU_POUR.svg",
-        "badge": "shopify://shop_images/homepage-badges.svg"
+        "badge": "shopify://shop_images/homepage-badges.svg",
+        "section_header": "<h2>Pick how you pour</h2>"
       }
     },
     "floating_image_DU4qGq": {
@@ -185,7 +186,8 @@
         "title_alt": "This latte's got benefits",
         "description": "We reimagined how delicious a\\bcanned latte could taste.",
         "button_label": "Shop Lattes",
-        "button_link": "shopify://collections/single-serve"
+        "button_link": "shopify://collections/single-serve",
+        "section_header": "<h2>This latte's got benefits</h2>"
       }
     },
     "aw_multi_collection_carousel_PEXHa4": {
@@ -224,7 +226,8 @@
       "name": "AW Multi Coll Carousel",
       "settings": {
         "color_scheme": "scheme-1",
-        "title_image": "shopify://shop_images/FLVRS.svg"
+        "title_image": "shopify://shop_images/FLVRS.svg",
+        "section_header": "<h2>Flavors on Flavors</h2>"
       }
     },
     "membership_rzQn9p": {
@@ -276,7 +279,8 @@
         "foreground_bg_image": "shopify://shop_images/WB_HOLLYWOOD_SHOT_20_EDIT_1.png",
         "foreground_bg_image_mobile": "shopify://shop_images/mobile-membership.png",
         "text_bubble_top_image": "shopify://shop_images/Group_1327226663.svg",
-        "text_bubble_bottom_image": "shopify://shop_images/Group_1327226664.svg"
+        "text_bubble_bottom_image": "shopify://shop_images/Group_1327226664.svg",
+        "section_header": "<h2>Members unlock better prices with every sip</h2>"
       }
     },
     "aw_logo_wall_AXpPn6": {
@@ -355,6 +359,7 @@
         "button_hover_text": "#f2e6dc",
         "grayscale": false,
         "mobile_per_row": "2",
+        "section_header": "<p>Proudly available where you shop</p>",
         "padding_top": 50,
         "padding_bottom": 6,
         "padding_top_mobile": 20,
@@ -384,7 +389,8 @@
         "video": "shopify://files/videos/wb-about.mp4",
         "signature_image": "shopify://shop_images/signatures_1.png",
         "title_badge": "shopify://shop_images/WB_TAG_ca8ddfb1-2800-48d0-8ac6-bea8ab75af42.svg",
-        "badge": "shopify://shop_images/Group_1327226585_3c795ecf-5307-404f-9d7d-965f8cf2b5c2.png"
+        "badge": "shopify://shop_images/Group_1327226585_3c795ecf-5307-404f-9d7d-965f8cf2b5c2.png",
+        "section_header": "<p>A message from our founders</p>"
       }
     }
   },

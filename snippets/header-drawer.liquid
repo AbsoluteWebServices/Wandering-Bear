@@ -888,23 +888,6 @@
     }
   }
 
-  details:not(.menu-open) .header__icon--menu .header-drawer-icon--close {
-    display: none;
-  }
-
-  details.menu-open .header__icon--menu .header-drawer-icon--close {
-    @media screen and (min-width: 750px) {
-      display: none;
-    }
-  }
-
-  details.menu-open .header__icon--menu .header-drawer-icon--open {
-    display: none;
-
-    /* @media screen and (min-width: 750px) {
-      display: flex;
-    } */
-  }
 
   .menu-drawer {
     position: fixed;
@@ -958,7 +941,7 @@
   .menu-drawer,
   details[open] > .menu-drawer__submenu {
     transition: transform var(--drawer-animation-speed) ease, visibility var(--drawer-animation-speed) ease,
-      opacity var(--drawer-animation-speed) ease;
+      opacity var(--drawer-animation-speed) ease, display var(--drawer-animation-speed) ease allow-discrete;
   }
 
   .menu-open > .menu-drawer,
@@ -968,7 +951,20 @@
     opacity: 1;
     display: flex;
     flex-direction: column;
-    display: flex;
+  }
+
+  /* display:none can't be animated directly — @starting-style supplies the
+     "just before this becomes visible" values so the transform/visibility/
+     opacity transition above actually has something to animate from instead
+     of snapping straight to the open state. Needed since the drawer moved to
+     display:none when closed (perf commit a32e798). */
+  @starting-style {
+    .menu-open > .menu-drawer,
+    .menu-open > .menu-drawer__submenu:not(.menu-drawer__menu--childlist) {
+      transform: translateX(-100%);
+      visibility: hidden;
+      opacity: 0;
+    }
   }
 
   .menu-drawer__inner-container {

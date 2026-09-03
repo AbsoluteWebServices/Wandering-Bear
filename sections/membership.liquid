@@ -20,6 +20,7 @@
     assign icon = section.settings.icon
     assign text_bubble_top_image = section.settings.text_bubble_top_image
     assign text_bubble_bottom_image = section.settings.text_bubble_bottom_image
+    assign section_header = section.settings.section_header
 %}
 
 {% capture background_styles %}
@@ -29,6 +30,8 @@
         background-color: {{ color_scheme.settings.background }};
     {% endif %}
 {% endcapture %}
+
+<div class="seo-hidden">{{ section_header }}</div>
 
 <div class="flex flex-col md:!flex-row relative px-4 pt-12 lg:!pt-[55px] pb-[175px] smd:!pb-[80px] z-0 overflow-hidden" style="{{ background_styles }}">
     <svg preserveAspectRatio="none" class="absolute -top-5 left-0 w-full z-[2]" xmlns="http://www.w3.org/2000/svg" width="1280" height="18" viewBox="0 0 1280 18" fill="none">
@@ -227,6 +230,16 @@
                 "type": "image_picker",
                 "id": "text_bubble_bottom_image",
                 "label": "Text Bubble Bottom Image"
+            },
+            {
+                "type": "header",
+                "content": "SEO"
+            },
+            {
+                "type": "richtext",
+                "id": "section_header",
+                "label": "Section Header",
+                "info": "This is a hidden SEO field that will be used to display the section header in the search results"
             }
         ],
         "blocks": [

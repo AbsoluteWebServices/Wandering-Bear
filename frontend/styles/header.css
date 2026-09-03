@@ -69,3 +69,1330 @@
       opacity: 0;
     }
   } */
+
+/* ==========================================================================
+   Moved from sections/header.liquid {% stylesheet %} (2026-09-03).
+   That block was Shopify's auto-compiled section CSS, delivered through
+   content_for_header — which this theme defers into an inert <template> and
+   re-inserts via JS (see snippets/async-load-head-scripts*.liquid). A
+   script-appended <link>/<style> is never render-blocking, so the header
+   painted unstyled first and snapped into its real layout once this CSS
+   landed late, causing a large layout shift (and a header-only font swap,
+   same root cause). Moving it here ships it in the same synchronously
+   loaded, render-blocking bundle as base.css, eliminating the shift.
+   No Liquid interpolation was present in the original block — moved as-is.
+   ========================================================================== */
+body {
+  --header-height: 60px;
+  --header-group-height: var(--header-height);
+  --transparent-header-offset-boolean: 0; /* stylelint-disable-line declaration-property-value-disallowed-list */
+}
+
+.header {
+  /* Set header paddings based on height setting */
+  --header-padding: var(--padding-sm);
+  --font-paragraph--line-height: 1;
+  --header-content-transition-timing: 0s;
+
+  display: block;
+  contain: layout style;
+  background: transparent;
+
+  a,
+  .button,
+  .button-secondary,
+  .header-actions__action {
+    /* reset style from base.css */
+    transition: color var(--header-content-transition-timing), border-color var(--header-content-transition-timing);
+  }
+}
+
+#header-component :is(.header-menu, .dropdown-localization) {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  /* Desktop menu is the default at this width; JS only overrides to 'drawer'
+     for touch devices. Using :not([drawer]) keeps first paint correct with no
+     attribute set yet (no hydration flash). */
+  #header-component:not([data-menu-style='drawer']) :is(.header-menu, .dropdown-localization) {
+    display: flex;
+  }
+}
+
+#header-component[data-menu-style='drawer'] .header__column {
+  display: contents;
+}
+
+@media screen and (min-width: 750px) {
+  #header-component:not([data-menu-style='drawer']) .header__navigation-bar-row {
+    display: none;
+  }
+}
+
+.header[transparent] {
+  --language-button-background-color: transparent;
+  --language-button-border-color: transparent;
+  --header-content-transition-timing: calc(var(--submenu-animation-speed) - var(--animation-speed-fast))
+    var(--animation-speed-fast) var(--ease-out-cubic);
+
+  --closed-underlay-height: 0px;
+
+  /* used to display the appropriate logo based on transparency state */
+  --header-logo-display: none;
+  --header-logo-inverse-display: block;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: var(--layer-overlay);
+
+  &[transparent='not-sticky'][data-sticky-state='active'],
+  &:has(.menu-list__link:not([aria-haspopup]):hover) {
+    --header-logo-display: unset;
+    --header-logo-inverse-display: unset;
+    --color-foreground: inherit;
+    --color-foreground-rgb: inherit;
+    --color-background: inherit;
+    --color-background-rgb: inherit;
+    --color-border: inherit;
+    --color-border-rgb: inherit;
+    --closed-underlay-height: 100%;
+  }
+
+  /** For transparent header, apply inherit to rows when menu is not hovered */
+  &:not([data-sticky-state='active']):not(:has(.menu-list__link:is(:hover, [aria-expanded='true']))) .header__row {
+    --color-foreground: inherit;
+    --color-foreground-rgb: inherit;
+    --color-border: inherit;
+    --color-border-rgb: inherit;
+    --color-primary-button-background: inherit;
+    --color-primary-button-text: inherit;
+  }
+
+  /* Multiple selectors for performance: each simple :has() check is faster than one complex selector with multiple conditions */
+  &:has(.mega-menu__list:hover),
+  &:has(.menu-list__link:is(:hover, [aria-expanded='true'])),
+  &:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'])) {
+    --header-logo-display: unset;
+    --header-logo-inverse-display: unset;
+    --color-foreground: inherit;
+    --color-foreground-rgb: inherit;
+    --color-background: inherit;
+    --color-background-rgb: inherit;
+    --color-border: inherit;
+    --color-border-rgb: inherit;
+    --header-content-transition-timing: var(--submenu-animation-speed) var(--ease-out-cubic);
+  }
+}
+
+/* When top row has transparent background, make it inherit colors from header component */
+[data-transparent-color-scheme='top']:hover .header__row--top,
+[data-transparent-color-scheme='top']:focus-within .header__row--top,
+[data-transparent-color-scheme='both']:hover .header__row--top,
+[data-transparent-color-scheme='both']:focus-within .header__row--top {
+  --color-foreground: inherit;
+  --color-foreground-rgb: inherit;
+  --color-border: inherit;
+  --color-border-rgb: inherit;
+  --color-primary-button-background: inherit;
+  --color-primary-button-text: inherit;
+}
+
+/* When bottom row has transparent background, make it inherit colors from header component */
+[data-transparent-color-scheme='bottom']:hover .header__row--bottom,
+[data-transparent-color-scheme='bottom']:focus-within .header__row--bottom,
+[data-transparent-color-scheme='both']:hover .header__row--bottom,
+[data-transparent-color-scheme='both']:focus-within .header__row--bottom {
+  --color-foreground: inherit;
+  --color-foreground-rgb: inherit;
+  --color-border: inherit;
+  --color-border-rgb: inherit;
+  --color-primary-button-background: inherit;
+  --color-primary-button-text: inherit;
+}
+
+.header-section {
+  position: relative;
+  z-index: var(--layer-heightened);
+}
+
+/* need default values for non-flash transitions on first overflow menu open */
+#header-component {
+  --submenu-height: 0px;
+  --full-open-header-height: 0px;
+}
+
+#header-group:has(#header-component[sticky]) {
+  display: contents;
+}
+
+.header-section:has(> #header-component[sticky='always']),
+.header-section:has(> #header-component[sticky='scroll-up'][data-sticky-state='active']) {
+  position: sticky;
+
+  /* Use -1 instead of 0 so intersection observer can track sticky state */
+  top: -1px;
+  z-index: var(--layer-sticky);
+}
+
+.no-scroll .header-section:has(> #header-component[sticky='always']),
+.no-scroll .header-section:has(> #header-component[sticky='scroll-up'][data-sticky-state='active']) {
+  z-index: 1;
+}
+
+.header[data-sticky-state] {
+  transition: opacity var(--animation-speed) var(--animation-easing);
+  opacity: 1;
+}
+
+.header[data-sticky-state='active'] {
+  view-transition-name: sticky-header;
+}
+
+:active-view-transition-type(empty-cart-drawer) {
+  .header[data-sticky-state='active'] {
+    view-transition-name: none;
+  }
+}
+
+.header[data-sticky-state='idle'] {
+  opacity: 0;
+}
+
+/* ================================
+   * Underlays
+   * ================================ */
+.header__underlay {
+  position: absolute;
+  inset: 0;
+}
+
+.header__underlay-closed {
+  height: var(--closed-underlay-height, 100%);
+  z-index: var(--layer-lowest);
+  /* --top-row-height / --header-height are set by JS (ResizeObserver). Without
+     fallbacks the gradient is invalid until then, so the underlay renders
+     transparent and the page background flashes through before the color
+     paints. The 100% fallbacks make it paint the top-row color immediately. */
+  background: linear-gradient(
+    var(--color-scheme-top-row) 0 var(--top-row-height, 100%),
+    var(--color-scheme-bottom-row) var(--top-row-height, 100%) var(--header-height, 100%)
+  );
+  transition: height var(--animation-speed-slow) var(--ease-out-cubic);
+}
+
+.header__underlay-open {
+  height: var(--full-open-header-height);
+  background: linear-gradient(
+    var(--color-scheme-top-row) 0 var(--top-row-height, 100%),
+    var(--color-scheme-bottom-row) var(--top-row-height, 100%) var(--header-height, 100%),
+    var(--color-submenu) var(--header-height, 100%) 100%
+  );
+  /* header-height is updated via js, the transition works automagically */
+  transition: height var(--submenu-animation-speed) var(--ease-out-cubic);
+}
+
+.header__underlay-open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: var(--shadow-popover);
+  clip-path: inset(var(--header-height) 0 -100px 0); /* stylelint-disable-line */
+  transition: height var(--submenu-animation-speed) var(--ease-out-cubic);
+}
+
+/* When top row has transparent background, make underlay inherit colors from header component */
+[data-transparent-color-scheme='top']:hover,
+[data-transparent-color-scheme='top']:focus-within,
+[data-transparent-color-scheme='both']:hover,
+[data-transparent-color-scheme='both']:focus-within {
+  :is(.header__underlay-open, .header__underlay-closed) {
+    --color-scheme-top-row: var(--color-background);
+  }
+}
+
+/* When bottom row has transparent background, make underlay inherit colors from header component */
+[data-transparent-color-scheme='bottom']:hover,
+[data-transparent-color-scheme='bottom']:focus-within,
+[data-transparent-color-scheme='both']:hover,
+[data-transparent-color-scheme='both']:focus-within {
+  :is(.header__underlay-open, .header__underlay-closed) {
+    --color-scheme-bottom-row: var(--color-background);
+  }
+}
+
+[data-submenu-overlap-bottom-row] {
+  .header__underlay-open {
+    background: linear-gradient(
+      var(--color-scheme-top-row) 0 var(--top-row-height),
+      var(--color-submenu) var(--top-row-height) 100%
+    );
+  }
+
+  .header__row--bottom {
+    z-index: var(--layer-lowest);
+  }
+}
+
+/* End Underlays ================ */
+
+.header__row {
+  /* The account component uses a different color scheme, but we need to override it to inherit the color of the header row */
+  --color-account-icon: var(--color-foreground);
+
+  position: relative;
+
+  /* Overwrite color from color scheme, background is controlled by the underlays */
+  background-color: transparent;
+
+  &:has(.mega-menu__list:hover),
+  &:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])),
+  &:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'])) {
+    /* Only elevate the row when the submenu is open to avoid overlapping other elevated content */
+    z-index: var(--layer-heightened);
+  }
+}
+
+.header__row--top:not(.divider--page-width),
+.header__row--top.divider--page-width .header__columns,
+.header__row--bottom {
+  border-bottom: var(--border-bottom-width) solid var(--color-border);
+}
+
+@media screen and (max-width: 749px) {
+  .header__row--top:not(.divider--page-width),
+  .header__row--top.divider--page-width .header__columns {
+    border-bottom-width: var(--border-bottom-width-mobile);
+  }
+}
+
+#header-component[data-menu-style='drawer'] .header__row--top:not(.divider--page-width),
+#header-component[data-menu-style='drawer'] .header__row--top.divider--page-width .header__columns {
+  border-bottom-width: var(--border-bottom-width-mobile);
+}
+
+.header__row.divider--page-width:not(.section--page-width) .header__columns {
+  @media screen and (min-width: 750px) {
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    margin-inline-start: var(--page-margin);
+    margin-inline-end: var(--page-margin);
+  }
+}
+
+.header__column {
+  display: flex;
+  align-items: center;
+
+  /* on mobile, header__column nodes are ignored to create a new grid-template-area based on all visible content */
+  @media screen and (max-width: 749px) {
+    display: contents;
+  }
+}
+
+.header__column--left,
+.header__column--center {
+  grid-area: left;
+}
+
+.header__column--center {
+  gap: 57px;
+  grid-area: left;
+}
+
+.header__column--center {
+  justify-content: center;
+  grid-area: center;
+
+  header-menu:only-child .overflow-menu::part(list) {
+    justify-content: center;
+  }
+}
+
+.header__column--right {
+  gap: var(--gap-xl);
+  justify-content: flex-end;
+  grid-area: right;
+
+  .overflow-menu::part(list) {
+    justify-content: flex-end;
+  }
+}
+
+.header__columns {
+  /* Three column layout */
+  --header-left: 1fr;
+  --header-center: auto;
+  --header-right: 1fr;
+  --header-template-columns: var(--header-left) var(--header-center) var(--header-right);
+
+  /* Mobile layout */
+  --header-mobile-bookend: 44px;
+
+  display: grid;
+  grid-template-areas: 'left center right';
+  grid-gap: var(--gap-xl);
+  grid-template-columns: var(--header-template-columns);
+  padding-top: 15px !important;
+  padding-bottom: 18px !important;
+
+  @media screen and (max-width: 768px) {
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+    padding-left: 22px !important;
+    padding-right: 24px !important;
+  }
+
+  /* If menu is in center column */
+  &:has(.header__column--center header-menu) {
+    --header-center: auto;
+    --header-left: minmax(max-content, 1fr);
+    --header-right: minmax(max-content, 1fr);
+  }
+
+  /* If there is no center column, make the column the menu is in grow eagerly */
+  &:where(:not(:has(.header__column--center))) {
+    @media screen and (min-width: 750px) {
+      --header-template-columns: var(--header-left) var(--header-right);
+
+      grid-template-areas: 'left right';
+    }
+
+    /* If the header-menu is in the right column */
+    &:has(.header__column--right header-menu) {
+      --header-right: auto;
+      --header-left: minmax(max-content, 1fr);
+    }
+
+    /* If the header-menu is in the left column */
+    &:has(.header__column--left header-menu) {
+      --header-left: auto;
+      --header-right: minmax(max-content, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
+      var(--header-mobile-bookend) var(--header-mobile-bookend);
+
+    grid-template-areas: 'leftA leftB center rightA rightB';
+    grid-column: span 3;
+    column-gap: 0;
+    align-items: center;
+    padding-block: 0;
+    padding-inline: 0 var(--padding-3xs);
+
+    .header-logo {
+      grid-area: center;
+    }
+
+    &:not(:has(header-actions)) .search-action {
+      grid-area: leftB;
+    }
+
+    &:not(:has(shopify-account)) .search-action {
+      grid-area: rightA;
+    }
+
+    .search-action {
+      grid-area: leftB;
+    }
+
+    header-actions {
+      grid-area: rightB;
+    }
+  }
+}
+
+/* not ideal but we need to duplicate these styles for when touch comes into play
+  We could avoid the duplication using js to set the data-menu-style attribute on small screens instead of using @media queries */
+#header-component[data-menu-style='drawer'] .header__columns {
+  --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
+    var(--header-mobile-bookend) var(--header-mobile-bookend);
+
+  grid-template-areas: 'leftA leftB center rightA rightB';
+  grid-column: span 3;
+  column-gap: 0;
+  align-items: center;
+  padding-block: 0;
+  padding-inline: 0 var(--padding-3xs);
+
+  .header-logo {
+    grid-area: center;
+  }
+
+  &:not(:has(header-actions)) .search-action {
+    grid-area: leftB;
+  }
+
+  &:not(:has(shopify-account)) .search-action {
+    grid-area: rightA;
+  }
+
+  .search-action {
+    grid-area: leftB;
+  }
+
+  header-actions {
+    grid-area: rightB;
+  }
+}
+
+/* Single column layout if there are no columns within */
+.header__columns:not(:has(.header__column)) {
+  grid-template-columns: 1fr;
+}
+
+/* Check for hover support to avoid unnecessary expensive recalculations when tapping on mobile */
+@media (hover: hover) {
+  /* Column-specific dimming effect when any interactive element is hovered
+      Multiple selectors for performance: each simple :has() check is faster than one complex selector with multiple conditions */
+  .header__column:has(header-menu:hover),
+  .header__column:has(.header-actions__action:hover),
+  .header__column:has(.header__icon--menu:hover) {
+    header-menu:not(:hover),
+    .header-actions__action:not(:hover),
+    .header__icon--menu:not(:hover) {
+      opacity: var(--opacity-subdued-text);
+      transition: opacity var(--animation-speed) var(--animation-easing);
+    }
+  }
+}
+
+/* Ensure smooth transitions for all interactive elements */
+header-menu,
+.header-actions__action,
+.header__icon--menu {
+  transition: opacity var(--animation-speed) var(--animation-easing);
+}
+
+/* Header action button styles */
+.header-actions__action {
+  --button-color: var(--color-foreground);
+  color: var(--button-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+
+  &:hover {
+    --button-color: var(--color-foreground);
+  }
+}
+
+.header-actions__action:not(.account-button) .svg-wrapper {
+  height: var(--button-size);
+  width: var(--button-size);
+}
+
+.header-actions__action:not(.account-button) svg {
+  width: 27px;
+  height: 36px;
+}
+
+.header:has(#Details-menu-drawer-container[open]) {
+  contain: style;
+}
+
+.header.header--compact {
+  --header-padding: var(--padding-2xs);
+}
+
+.header__columns {
+  --padding-block-start: var(--header-padding);
+  --padding-block-end: var(--header-padding);
+}
+
+.header:not(.header--compact) .header__row--bottom {
+  --header-padding: var(--padding-xs);
+}
+
+.header--collapse-row-paddings {
+  .header__row--top .header__columns {
+    --padding-block-end: 0px;
+  }
+
+  .header__row--bottom .header__columns {
+    --padding-block-start: 0px;
+  }
+}
+
+/* When the header is transparent, add a margin to a potential header-section below it */
+.header-section:has(.header[transparent]) + .shopify-section {
+  margin-top: var(--header-height);
+}
+
+/* When the header is transparent, and when there is no header-section below it, offset the first main-section with
+   * the height of the header
+   */
+
+main > .shopify-section:first-child .section:not(.disable-section-top-offset) {
+  &.spacing-style,
+  .spacing-style {
+    --section-top-offset: calc(var(--header-height) * var(--transparent-header-offset-boolean));
+
+    /* Any nested sections should not be offset */
+    :is(.spacing-style, .inherit-spacing) {
+      --section-top-offset: 0px;
+    }
+  }
+
+  /* Make sticky content immediately stick to the top of the page */
+  .sticky-content {
+    margin-top: calc(var(--header-height) * var(--transparent-header-offset-boolean) * -1);
+  }
+}
+
+/* Optimize layout performance for hidden menus */
+.header-menu .menu-list__submenu {
+  content-visibility: auto;
+  contain-intrinsic-size: 0px 500px;
+}
+
+/* Force visibility when open/animating and in overflow submenu to prevent layout issues */
+.header-menu details[open] .menu-list__submenu,
+.header-menu .menu-list__submenu[data-active],
+.header-menu .menu-list__list-item[slot='overflow'] .menu-list__submenu {
+  content-visibility: visible;
+}
+
+/* Dropdown Localization Styles */
+.dropdown-localization__button {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--menu-localization-font);
+  font-size: var(--menu-localization-font-size);
+  font-weight: var(--menu-top-level-font-weight);
+  padding-inline: var(--padding-2xs);
+  margin-inline: calc(-1 * var(--padding-2xs));
+}
+
+.dropdown-localization__button .svg-wrapper.icon-caret {
+  height: var(--icon-size-xs);
+  width: var(--icon-size-xs);
+  right: var(--margin-xs);
+  top: calc(50% - var(--padding-2xs));
+  flex-shrink: 0;
+  transition: transform var(--animation-speed) var(--animation-easing);
+}
+
+.dropdown-localization__button .icon-flag {
+  width: var(--menu-localization-font-size, var(--icon-size-sm));
+  height: var(--menu-localization-font-size, var(--icon-size-sm));
+  clip-path: circle(50%); /* stylelint-disable-line */
+  background-position: center;
+  background-size: cover;
+  margin-inline-end: 4px;
+  position: relative;
+}
+
+.dropdown-localization__button .icon-flag::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 var(--size-shadow) var(--color-shadow);
+  border-radius: 50%;
+}
+
+.dropdown-localization__button[aria-expanded='true'] .icon-caret svg {
+  transform: rotate(180deg);
+}
+
+.dropdown-localization__button,
+.dropdown-localization__button:hover {
+  box-shadow: none;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+dropdown-localization-component .localization-form__list {
+  max-height: 20.5rem;
+}
+
+.localization-wrapper {
+  position: fixed;
+  z-index: var(--layer-raised);
+  border-radius: var(--style-border-radius-popover);
+  transition-property: display, opacity, translate;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--ease-out-quad);
+  transition-behavior: allow-discrete;
+  translate: 0 20px;
+  opacity: 0;
+}
+
+.localization-wrapper:not([hidden]) {
+  translate: 0 0;
+  opacity: 1;
+}
+
+@starting-style {
+  .localization-wrapper:not([hidden]) {
+    translate: 0 20px;
+    opacity: 0;
+  }
+}
+
+dropdown-localization-component {
+  position: relative;
+  background-color: transparent;
+}
+
+dropdown-localization-component .country-filter {
+  position: relative;
+  padding: 8px;
+}
+
+dropdown-localization-component .country-filter__input {
+  border: none;
+}
+
+dropdown-localization-component .localization-form__list-item {
+  margin-inline: 8px;
+}
+
+dropdown-localization-component .localization-wrapper {
+  box-shadow: var(--shadow-popover);
+  border: var(--style-border-popover);
+  background-color: var(--color-background);
+  max-height: 27.5rem;
+  position: absolute;
+  top: calc(100% + 10px);
+  z-index: calc(var(--layer-header-menu) + 1);
+}
+
+dropdown-localization-component .localization-wrapper.right-bound {
+  right: 0;
+  left: unset;
+}
+
+dropdown-localization-component .localization-wrapper.left-bound {
+  left: -8px;
+  right: unset;
+}
+
+/* Additional specificity due to dropdown-localization-component getting a low score */
+dropdown-localization-component .language-selector.language-selector {
+  padding: 10px 8px 10px 16px;
+}
+
+dropdown-localization-component .localization-form__currency {
+  width: max-content;
+  opacity: 0;
+  visibility: hidden;
+  transition: none;
+}
+
+dropdown-localization-component .localization-form__select:hover {
+  background-color: rgb(var(--color-primary-hover-rgb) / var(--opacity-8));
+}
+
+dropdown-localization-component
+  :is(
+    .localization-form__list-item:hover,
+    .localization-form__list-item[aria-selected='true'],
+    .localization-form__list-item[aria-current='true']
+  )
+  .localization-form__currency {
+  opacity: 1;
+  color: var(--color-foreground-muted);
+  transition: opacity var(--animation-speed-slow) var(--animation-easing);
+  visibility: visible;
+}
+
+.dropdown-localization .language-selector:where(:not(.top-shadow)) {
+  font-weight: var(--menu-top-level-font-weight);
+}
+
+.dropdown-localization:not(dropdown-localization-component) .language-selector {
+  font-family: var(--menu-localization-font);
+  font-size: var(--menu-localization-font-size);
+}
+
+/* ==========================================================================
+   Moved from snippets/header-actions.liquid {% stylesheet %} (2026-09-03).
+   Same reason as the block above — see that comment.
+   ========================================================================== */
+.header {
+  --account-offset-top: calc(
+    var(--header-group-height) + (var(--header-height) * var(--transparent-header-offset-boolean))
+  );
+
+  &[data-sticky-state='active'] {
+    --account-offset-top: calc(var(--header-height) - 1px);
+  }
+}
+
+.account-button {
+  /* Remove the background color from the color scheme, we want to inherit the color of the header */
+  background: transparent;
+}
+
+.account-button__icon,
+.account-button__text {
+  color: var(--color-account-icon);
+  transition: color var(--header-content-transition-timing);
+  -webkit-font-smoothing: antialiased;
+}
+
+shopify-account {
+  --shopify-account-font-heading: var(--font-heading--family);
+  --shopify-account-font-heading-weight: var(--font-heading--weight);
+  --shopify-account-font-body: var(--font-body--family);
+  --shopify-account-font-body-weight: var(--font-body--weight);
+  --shopify-account-radius-base: var(--style-border-radius-popover);
+  --shopify-account-radius-button: var(--style-border-radius-buttons-primary);
+  --shopify-account-radius-button-small: var(--style-border-radius-buttons-primary);
+  --shopify-account-radius-input: var(--style-border-radius-buttons-primary);
+  --shopify-account-color-background: var(--color-background);
+  --shopify-account-color-text: var(--color-foreground);
+  --shopify-account-color-accent: var(--color-primary-button-background);
+  --shopify-account-color-accent-text: var(--color-primary-button-text);
+  --shopify-account-dialog-position-top: var(--account-offset-top);
+
+  &:not(:defined) {
+    min-width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Match the line height of the other buttons */
+    line-height: normal;
+  }
+}
+
+.account-button__fallback {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--shopify-account-color-accent, #0a142f);
+}
+
+.account-button--text shopify-account {
+  color: inherit;
+}
+
+.cart-drawer {
+  --cart-drawer-padding: var(--padding-xl) var(--padding-xl);
+  --cart-drawer-padding-desktop: var(--padding-xl) var(--padding-2xl);
+
+  @media screen and (min-width: 750px) {
+    margin-inline-end: calc(var(--gap-xs) * -1);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .cart-drawer--text {
+    display: flex;
+    align-items: center;
+  }
+}
+
+bundle-editor-component.modify-bundle {
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+bundle-editor-component.modify-bundle[data-open] {
+  transform: translateX(0);
+}
+
+.cart-drawer__dialog {
+  position: fixed;
+  overflow: hidden;
+  border-radius: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border-left: var(--style-border-drawer);
+  box-shadow: var(--shadow-drawer);
+  background-color: var(--color-background);
+
+  @media screen and (min-width: 750px) {
+    width: var(--sidebar-width);
+    max-width: 95vw;
+  }
+}
+
+/* Needed to ensure the drawer is full height */
+.cart-drawer__dialog:modal {
+  max-height: 100dvh;
+  overflow-y: hidden;
+}
+
+.cart-drawer__inner {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.cart-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(249 243 237 / 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+/* !important beats the inline opacity:0 fallback on the element. */
+.cart-drawer__inner:has(.cart-items-disabled) .cart-loading-overlay {
+  opacity: 1 !important;
+  visibility: visible;
+  pointer-events: auto !important;
+}
+
+.cart-loading-overlay > span {
+  animation-play-state: paused;
+}
+
+.cart-drawer__inner:has(.cart-items-disabled) .cart-loading-overlay > span {
+  animation-play-state: running;
+}
+
+.cart-drawer__content {
+  height: calc(100dvh - var(--header-height));
+  max-height: calc(100dvh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background-color: var(--color-background);
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.cart-drawer__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin-bottom: 0;
+}
+
+.cart-drawer__close-button {
+  margin-right: calc(var(--padding-sm) * -1);
+  top: var(--margin-sm);
+}
+
+.cart-drawer--empty .cart-drawer__content {
+  text-align: center;
+  min-height: auto;
+}
+
+.cart-drawer__items .cart-items__table-row {
+  /* padding-bottom: var(--gap-xl); */
+  border-bottom: var(--style-border-width) solid var(--color-border);
+  margin-bottom: var(--gap-xl);
+}
+
+.cart-drawer__items .cart-items__table-row:has(+ .cart-items__nested-line) {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.cart-drawer__items .cart-items__table-row:last-child {
+  border-bottom: none;
+}
+
+.cart-drawer__summary {
+  --cart-drawer-summary-padding: 0;
+
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--cart-drawer-summary-padding);
+  margin-top: auto;
+  background-color: var(--color-background);
+  /* stylelint-disable-next-line color-named */
+  mask-image: linear-gradient(to bottom, transparent, black var(--cart-drawer-summary-padding));
+
+  @media screen and (min-width: 750px) {
+    --cart-drawer-summary-padding: 0;
+  }
+}
+
+.cart-drawer__dialog[cart-summary-sticky='false'] .cart-drawer__summary {
+  position: static;
+  mask-image: none;
+}
+
+.cart-drawer__dialog[cart-summary-sticky='false'] .cart-drawer__items {
+  overflow: unset;
+}
+
+.cart-actions summary {
+  padding-inline: 0;
+  padding-block: var(--padding-sm);
+  line-height: 1.2;
+  min-height: var(--minimum-touch-target);
+}
+
+.cart-drawer__summary .cart__summary-totals:not(:has(.cart__subtotal-container:empty)) {
+  border-block-start: var(--style-border-width) solid var(--color-border);
+  padding-block-start: var(--padding-2xl);
+}
+
+.cart-drawer__summary .cart-note {
+  @media screen and (min-width: 750px) {
+    margin-block-start: var(--margin-3xs);
+  }
+}
+
+.cart-drawer__heading--empty {
+  display: flex;
+  justify-content: center;
+}
+
+.cart-drawer__items {
+  display: flex;
+  flex-direction: column;
+  padding-inline: var(--cart-drawer-padding);
+  overflow-y: auto;
+
+  @media screen and (min-width: 750px) {
+    padding-inline: var(--cart-drawer-padding-desktop);
+  }
+}
+
+.cart-drawer--empty .cart-drawer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  margin-top: 0;
+}
+
+.cart-drawer:not(:has(.cart-form)) .cart-drawer__content {
+  justify-content: flex-start;
+}
+
+.cart-drawer__header {
+  background-color: var(--color-background);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--cart-drawer-padding);
+  border-bottom: var(--style-border-width) solid none;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  @media screen and (min-width: 750px) {
+    padding-inline: var(--cart-drawer-padding-desktop);
+  }
+}
+
+.cart-drawer--empty .cart-drawer__header {
+  justify-content: right;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cart-drawer--empty .cart-drawer__heading {
+  text-align: center;
+}
+
+header-actions {
+  display: flex;
+
+  @media screen and (max-width: 749px) {
+    justify-self: flex-end;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .header-actions--text {
+    gap: var(--gap-xl);
+  }
+
+  .header-actions__text-style {
+    font-size: var(--header-actions-font-size);
+    font-family: var(--header-actions-font-family);
+    font-weight: var(--header-actions-font-weight);
+    text-transform: var(--header-actions-text-case);
+  }
+}
+
+#header-component[data-menu-style='drawer'] header-actions {
+  justify-self: flex-end;
+}
+
+.header__column--right header-actions {
+  margin-inline-start: calc(var(--gap-md) * -1);
+}
+
+.header-actions__cart-icon {
+  position: relative;
+}
+
+.header-actions__cart-icon .cart-bubble {
+  position: absolute;
+  margin-top: 4px;
+}
+
+.header-actions__cart-icon .cart-bubble__text-count {
+  font-size: 20px;
+  font-weight: 811;
+  line-height: 61px;
+  letter-spacing: 0.2px;
+  font-family: var(--font-gothic_condensed);
+  color: var(--color-scheme-top-row);
+}
+
+@media screen and (min-width: 750px) {
+  .header-actions__cart-icon--text.header-actions__cart-icon .cart-bubble {
+    position: relative;
+    top: 0;
+  }
+}
+
+.cart-drawer__heading .cart-bubble {
+  width: fit-content;
+  border-radius: var(--style-border-radius-buttons-primary);
+  aspect-ratio: auto;
+  padding: var(--cart-padding);
+}
+
+.cart-drawer__heading .cart-bubble[data-maintain-ratio] {
+  width: min(1lh, 22px);
+  height: min(1lh, 22px);
+}
+
+.header-actions__cart-icon .cart-bubble__text,
+.cart-drawer__heading .cart-bubble__text {
+  font-family: var(--font-paragraph--family);
+  font-weight: var(--font-paragraph--weight);
+}
+
+.header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
+  /* Create donut mask where the cart bubble sits */
+  mask: radial-gradient(
+    calc(var(--cart-bubble-size) + 2px) at calc(100% - var(--cart-bubble-right)) var(--cart-bubble-top),
+    transparent 45.45%,
+    #fff 45.45%,
+    #fff 100%
+  );
+}
+
+.cart-drawer__heading .cart-bubble .cart-bubble__background {
+  background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
+}
+
+.cart-drawer__heading .cart-bubble__text {
+  color: var(--color-foreground);
+  font-size: clamp(var(--font-size--3xs), 0.75em, var(--font-size--xs));
+}
+
+.cart-bubble.cart-bubble--animating .cart-bubble__background {
+  animation: grow var(--animation-speed) var(--animation-easing);
+}
+
+.cart-bubble--animating .cart-bubble__text {
+  --start-y: -1em;
+  --start-opacity: 1;
+  /* Set initial transform state before animation starts */
+  transform: translate(0, var(--start-y, -1em));
+  opacity: var(--start-opacity, 1);
+  animation: move-and-fade var(--animation-speed) var(--animation-easing);
+}
+
+cart-icon:has(.cart-bubble__text-count:empty) {
+  --cart-bubble-size: 10px;
+  --cart-bubble-top: 9px;
+  --cart-bubble-right: 9px;
+
+  .svg-wrapper {
+    --cart-bubble-top: 4px;
+    --cart-bubble-right: 4px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  cart-icon.header-actions__cart-icon--text:has(.cart-bubble__text-count:empty) {
+    --cart-bubble-right: 2.5px;
+  }
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  html:active-view-transition-type(empty-cart-drawer) {
+    .cart-drawer__close-button {
+      view-transition-name: cart-drawer-close-button;
+    }
+  }
+}
+
+:active-view-transition {
+  .cart-drawer__header,
+  .cart-drawer__content {
+    background: transparent;
+  }
+}
+
+::view-transition-old(cart-drawer-content) {
+  transform-origin: 50% 33%;
+  animation: cart-contents-old var(--spring-d280-b0-duration) var(--spring-d280-b0-easing) forwards;
+}
+
+::view-transition-new(cart-drawer-content) {
+  transform-origin: top center;
+  animation: cart-contents-new var(--spring-d280-b0-duration) var(--spring-d280-b0-easing) forwards;
+}
+
+@keyframes cart-contents-old {
+  to {
+    scale: 0.92;
+    opacity: 0;
+  }
+}
+
+@keyframes cart-contents-new {
+  from {
+    scale: 1.05;
+    translate: 0 128px;
+    filter: blur(1px);
+    opacity: 0;
+  }
+}
+
+.header-actions__text {
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (min-width: 750px) {
+  .header-actions__cart-icon--text {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+  }
+
+  .header__column--right .header-actions--text {
+    margin-inline-start: 0;
+  }
+}
+
+/* ==========================================================================
+   Moved from blocks/_header-logo.liquid {% stylesheet %} (2026-09-03).
+   Same reason as the block above — see that comment.
+   ========================================================================== */
+.header-logo {
+  display: flex;
+  height: 100%;
+  font-size: var(--font-size--md);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight);
+  font-style: var(--font-style);
+  color: var(--color-foreground);
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+
+  &[data-hidden-on-home-page] {
+    display: none;
+
+    #header-component:is(
+        [sticky='always']:not([data-scroll-direction='none']),
+        [sticky='scroll-up'][data-scroll-direction='up']
+      )
+      & {
+      display: flex;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    padding: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.header-logo__image {
+  object-fit: contain;
+  height: var(--header-logo-image-height-mobile);
+  width: var(--header-logo-image-width-mobile);
+
+  @media screen and (min-width: 750px) {
+    height: var(--header-logo-image-height);
+    width: var(--header-logo-image-width);
+  }
+}
+
+.header-logo:has(.header-logo__image-container--inverse) .header-logo__image-container--original {
+  display: var(--header-logo-display, block);
+}
+
+.header-logo__image-container--inverse {
+  display: var(--header-logo-inverse-display, none);
+}
+
+.skip-to-content-link {
+  position: absolute;
+  left: -99999px;
+}
+
+.skip-to-content-link:focus {
+  z-index: var(--layer-temporary);
+  overflow: auto;
+  width: auto;
+  height: auto;
+  padding: var(--padding-lg) var(--padding-4xl);
+  left: var(--margin-lg);
+  top: var(--margin-lg);
+  background-color: var(--color-background);
+  box-shadow: 0 0 0 var(--focus-outline-offset) var(--color-background);
+}
+
+
+.menu-list__link-title {
+  padding-inline: 20px;
+  font-family: var(--font-kurdis-semi-condensed);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0 !important;
+  line-height: 100% !important;
+  color: var(--color-espresso);
+
+  @media screen and (max-width: 890px) {
+    padding-inline: 4px;
+  }
+}
+
+details:not(.menu-open) .header__icon--menu .header-drawer-icon--close {
+  display: none;
+}
+
+details.menu-open .header__icon--menu .header-drawer-icon--close {
+  @media screen and (min-width: 750px) {
+    display: none;
+  }
+}
+
+details.menu-open .header__icon--menu .header-drawer-icon--open {
+  display: none;
+
+  /* @media screen and (min-width: 750px) {
+    display: flex;
+  } */
+}

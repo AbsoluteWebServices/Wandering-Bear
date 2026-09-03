@@ -64,6 +64,7 @@
 
 <a
   href="{{ link | default: '#' }}"
+  aria-label="{{ label }}"
   class="btn {{ style }} {% if class %} {{ class }} {% endif %}"
   {% if custom_styles %}style="{{ custom_styles }}"{% endif %}
   {% if attributes != blank %}{{ attributes }}{% endif %}

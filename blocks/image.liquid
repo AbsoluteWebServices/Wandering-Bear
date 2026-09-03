@@ -46,6 +46,15 @@
     assign sizes = 'auto, (min-width: 750px) ' | append: media_width_desktop | append: ', ' | append: media_width_mobile
   endif
   assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
+
+  # `image.alt` comes from the Shopify admin media library and is often left blank by
+  # merchants. When that happens and the block is also a link (e.g. a footer logo linking
+  # home), the <a> ends up with no text content and no accessible name at all. Fall back to
+  # a filename-derived label so the link is never nameless.
+  assign image_alt = block_settings.image.alt
+  if image_alt == blank and block_settings.image != blank
+    assign image_alt = block_settings.image.src | split: '?' | first | split: '/' | last | split: '.' | first | replace: '_', ' ' | replace: '-', ' ' | capitalize
+  endif
 %}
 
 {% capture image %}
@@ -59,7 +68,8 @@
         height: block_settings.image.height,
         class: 'image-block__image border-style',
         style: image_border_style,
-        sizes: sizes
+        sizes: sizes,
+        alt: image_alt
     }}
   {%- else -%}
     <div class="placeholder-image border-style size-style" style="{{ image_border_style }}">

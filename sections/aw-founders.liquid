@@ -13,6 +13,7 @@
     assign text_color = color_scheme.text
     assign badge = section_settings.badge
     assign title_badge = section_settings.title_badge
+    assign section_header = section_settings.section_header
 %}
 
 {% capture title_styles %}
@@ -77,7 +78,7 @@
                         loop
                         playsinline
                         webkit-playsinline
-                        preload="auto"
+                        preload="metadata"
                     >
                         <source src="{{ source.url }}" type="{{ source.mime_type }}">
                     </video>
@@ -88,6 +89,7 @@
         </div>
     {% endif %}
 {% endcapture %}
+<div class="seo-hidden">{{ section_header }}</div>
 <div class="relative pt-[68px] md:!pt-[110px] pb-[46px] md:!pb-[90px]" style="background-color: {{ color_scheme.background }}">
     <div class="absolute top-0 left-0 right-0 h-[100px] z-[2]"
     style="background: linear-gradient(to bottom, {{ color_scheme.settings.background }} 0%, transparent 100%);"></div>
@@ -255,6 +257,16 @@
             "type": "image_picker",
             "id": "badge",
             "label": "Badge"
+        },
+        {
+            "type": "header",
+            "content": "SEO"
+        },
+        {
+            "type": "richtext",
+            "id": "section_header",
+            "label": "Section Header",
+            "info": "This is a hidden SEO field that will be used to display the section header in the search results"
         }
     ],
     "presets": [
