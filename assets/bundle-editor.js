@@ -50,21 +50,96 @@ class BundleEditorComponent extends Component {
   /** Guards against the submit firing `update` twice (which retries a stale line). */
   #committing = false;
 
+  /** @type {HTMLElement | null} Where focus goes when the panel closes again. */
+  #returnFocusTo = null;
+
   #onTriggerClick = this.#handleTriggerClick.bind(this);
+
+  /** @type {HTMLDialogElement | null} The drawer this panel lives in, if any. */
+  #dialog = null;
+
+  #onDialogClose = () => {
+    if (!this.hasAttribute('data-open')) return;
+
+    this.removeAttribute('data-open');
+    this.#setFocusContainment(false, { moveFocus: false });
+  };
 
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener('click', this.#onTriggerClick);
+
+    // Applied here and not in the Liquid: this script is also what lifts `inert`
+    // on open, so an attribute in the markup would leave the panel visible with
+    // every control dead if the script ever failed to run.
+    this.inert = !this.hasAttribute('data-open');
+
+    // `close` does not bubble. Closing the drawer leaves the panel open, so
+    // without this the cart stays inert the next time the drawer opens.
+    this.#dialog = this.closest('dialog');
+    this.#dialog?.addEventListener('close', this.#onDialogClose);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     document.removeEventListener('click', this.#onTriggerClick);
+    this.#dialog?.removeEventListener('close', this.#onDialogClose);
+    this.#dialog = null;
   }
 
   /** @returns {HTMLElement | null} */
   get #panel() {
     return this.querySelector('[data-bundle-panel]');
+  }
+
+  /**
+   * Confines focus to whichever view is on screen, the cart or the bundle panel.
+   *
+   * The panel is only moved aside with `transform: translateX(100%)`, which hides
+   * it visually but leaves it in the tab order, so the off-screen side has to be
+   * marked `inert` explicitly.
+   *
+   * @param {boolean} open - Whether the bundle panel is now the visible view.
+   * @param {{ moveFocus?: boolean }} [options] - `moveFocus: false` re-syncs
+   *   `inert` only, for when the drawer itself is closing and the browser is
+   *   already restoring focus to whatever opened it.
+   */
+  #setFocusContainment(open, { moveFocus = true } = {}) {
+    for (const sibling of this.parentElement?.children ?? []) {
+      if (sibling === this || !(sibling instanceof HTMLElement)) continue;
+      sibling.inert = open;
+    }
+
+    this.inert = !open;
+
+    if (!moveFocus) {
+      this.#returnFocusTo = null;
+      return;
+    }
+
+    if (open) {
+      const first = this.querySelector(
+        'button, [href], input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      // preventScroll: the panel is still at translateX(100%) here, and a plain
+      // focus() would scroll the drawer sideways to reveal it, fighting the
+      // transition. `overflow: hidden` does not prevent that — clipped boxes are
+      // still scrollable programmatically.
+      if (first instanceof HTMLElement) first.focus({ preventScroll: true });
+
+      return;
+    }
+
+    // Committing an edit re-renders the cart, which can replace the trigger, and
+    // focusing a detached node silently drops focus to <body>.
+    const target = this.#returnFocusTo?.isConnected
+      ? this.#returnFocusTo
+      : this.closest('dialog')?.querySelector('.cart-drawer__close-button');
+
+    this.#returnFocusTo = null;
+
+    if (target instanceof HTMLElement) target.focus({ preventScroll: true });
   }
 
   /**
@@ -77,6 +152,10 @@ class BundleEditorComponent extends Component {
     if (!(trigger instanceof HTMLElement)) return;
 
     event.preventDefault();
+
+    // Captured here rather than from document.activeElement on open, because
+    // Safari does not focus a button on click.
+    this.#returnFocusTo = trigger;
     this.open({
       collectionHandle: trigger.dataset.collectionHandle ?? '',
       bundleName: trigger.dataset.bundleName ?? '',
@@ -134,6 +213,7 @@ class BundleEditorComponent extends Component {
     this.dataset.bundleMode = this.#isSingle ? 'single' : this.#isMix ? 'mix' : 'default';
     this.#render();
     this.setAttribute('data-open', '');
+    this.#setFocusContainment(true);
   }
 
   /** Reveals the current bundle's line quantities from the live cart. */
@@ -557,6 +637,7 @@ class BundleEditorComponent extends Component {
   /** Closes the editor and returns to the cart. Bound declaratively via `on:click`. */
   backToCart() {
     this.removeAttribute('data-open');
+    this.#setFocusContainment(false);
   }
 
   /**

@@ -38,6 +38,7 @@ class CartItemsComponent extends Component {
     document.addEventListener(ThemeEvents.cartUpdate, this.#handleCartUpdate, { capture: true });
     document.addEventListener(ThemeEvents.discountUpdate, this.handleDiscountUpdate);
     document.addEventListener(ThemeEvents.quantitySelectorUpdate, this.#debouncedOnChange);
+    this.addEventListener('focusin', this.#trackFocus);
   }
 
   disconnectedCallback() {
@@ -46,6 +47,7 @@ class CartItemsComponent extends Component {
     document.removeEventListener(ThemeEvents.cartUpdate, this.#handleCartUpdate, { capture: true });
     document.removeEventListener(ThemeEvents.discountUpdate, this.handleDiscountUpdate);
     document.removeEventListener(ThemeEvents.quantitySelectorUpdate, this.#debouncedOnChange);
+    this.removeEventListener('focusin', this.#trackFocus);
   }
 
   /**
@@ -105,8 +107,13 @@ class CartItemsComponent extends Component {
     if (isEmptyCart && template instanceof HTMLTemplateElement) {
       const clone = document.importNode(template.content, true);
 
+      // Removing the focused node resets activeElement to <body> without firing
+      // any event, so focus has to be placed deliberately after the swap.
+      this.#captureFocus();
+
       startViewTransition(() => {
         this.replaceChildren(clone);
+        this.#restoreFocus();
       }, [this.isDrawer ? 'empty-cart-drawer' : 'empty-cart-page']);
 
       return;
@@ -192,7 +199,9 @@ class CartItemsComponent extends Component {
           })
         );
 
+        this.#captureFocus();
         morphSection(this.sectionId, parsedResponseText.sections[this.sectionId], { mode: this.isDrawer ? 'hydration' : 'full' });
+        this.#restoreFocus();
 
         this.#updateCartQuantitySelectorButtonStates();
       })
@@ -237,6 +246,80 @@ class CartItemsComponent extends Component {
     cartItemErrorContainer.classList.remove('hidden');
   };
 
+
+  /**
+   * Control to return focus to after the next re-render.
+   *
+   * @type {{ rowKey: string | null, label: string } | null}
+   */
+  #focusSnapshot = null;
+
+  /**
+   * Last control focused inside the cart. Tracked continuously because focus is
+   * usually already lost by the time a re-render begins — disabling the clicked
+   * button is enough to reset activeElement to <body>, silently.
+   *
+   * @type {{ rowKey: string | null, label: string } | null}
+   */
+  #lastFocused = null;
+
+  #trackFocus = (event) => {
+    const { target } = event;
+    if (!(target instanceof HTMLElement)) return;
+
+    const row = target.closest('[data-key]');
+
+    this.#lastFocused = {
+      rowKey: row instanceof HTMLElement ? row.dataset.key ?? null : null,
+      label: describeControl(target),
+    };
+  };
+
+  #captureFocus() {
+    const active = document.activeElement;
+
+    if (active instanceof HTMLElement && active !== document.body && this.contains(active)) {
+      const row = active.closest('[data-key]');
+
+      this.#focusSnapshot = {
+        rowKey: row instanceof HTMLElement ? row.dataset.key ?? null : null,
+        label: describeControl(active),
+      };
+
+      return;
+    }
+
+    this.#focusSnapshot = this.#lastFocused;
+  }
+
+  #restoreFocus() {
+    const snapshot = this.#focusSnapshot;
+    this.#focusSnapshot = null;
+
+    if (!snapshot) return;
+
+    const active = document.activeElement;
+    if (active instanceof HTMLElement && active !== document.body && this.contains(active)) return;
+
+    let scope = /** @type {Element} */ (this);
+
+    if (snapshot.rowKey) {
+      const row = this.querySelector(`[data-key="${CSS.escape(snapshot.rowKey)}"]`);
+      if (row) scope = row;
+    }
+
+    const candidates = Array.from(
+      scope.querySelectorAll(
+        'a[href], button:enabled, input:not([type=hidden]):enabled, select:enabled, textarea:enabled, summary, [tabindex]:not([tabindex^="-"])'
+      )
+    ).filter((element) => !element.closest('[inert]'));
+
+    const match = candidates.find((element) => describeControl(element) === snapshot.label);
+    const target = match ?? candidates[0];
+
+    if (target instanceof HTMLElement) target.focus();
+  }
+
   /**
    * Handles the cart update.
    *
@@ -251,12 +334,15 @@ class CartItemsComponent extends Component {
 
     const cartItemsHtml = event.detail.data.sections?.[this.sectionId];
     if (cartItemsHtml) {
+      this.#captureFocus();
       morphSection(this.sectionId, cartItemsHtml);
+      this.#restoreFocus();
 
       // Update button states for all cart quantity selectors after morph
       this.#updateCartQuantitySelectorButtonStates();
     } else {
-      sectionRenderer.renderSection(this.sectionId, { cache: false });
+      this.#captureFocus();
+      sectionRenderer.renderSection(this.sectionId, { cache: false }).then(() => this.#restoreFocus());
     }
   };
 
@@ -331,4 +417,13 @@ class CartItemsComponent extends Component {
 
 if (!customElements.get('cart-items-component')) {
   customElements.define('cart-items-component', CartItemsComponent);
+}
+
+/**
+ *
+ * @param {Element} element
+ * @returns {string}
+ */
+function describeControl(element) {
+  return (element.getAttribute('aria-label') || element.textContent || '').trim().replace(/\s+/g, ' ');
 }

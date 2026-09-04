@@ -1,6 +1,5 @@
 import { Component } from '@theme/component';
 import { debounce, isClickedOutside, onAnimationEnd } from '@theme/utilities';
-import { trapFocus, removeTrapFocus } from '@theme/focus';
 
 /**
  * A custom element that manages a dialog.
@@ -10,6 +9,26 @@ import { trapFocus, removeTrapFocus } from '@theme/focus';
  *
  * @extends Component<Refs>
  */
+const FOCUSABLE_SELECTOR =
+  'a[href], button:enabled, input:not([type=hidden]):enabled, select:enabled, textarea:enabled, summary, [tabindex]:not([tabindex^="-"])';
+
+/**
+ * Tabbable elements inside a container, in document order.
+ *
+ * Skips `inert` subtrees and anything not rendered, so callers never land focus
+ * on a control the user cannot see.
+ *
+ * @param {Element} container
+ * @returns {HTMLElement[]}
+ */
+function getFocusableWithin(container) {
+  return /** @type {HTMLElement[]} */ (
+    Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR)).filter(
+      (element) => !element.closest('[inert]') && (element.checkVisibility?.() ?? true)
+    )
+  );
+}
+
 export class DialogComponent extends Component {
   requiredRefs = ['dialog'];
 
@@ -47,7 +66,9 @@ export class DialogComponent extends Component {
   showDialog() {
     const { dialog } = this.refs;
 
-
+    // `open` is only an attribute and does not mean modal. A dialog carrying it
+    // without showModal() renders normally but has no backdrop, no Escape and no
+    // focus containment, so re-open it rather than treating it as already shown.
     if (dialog.open) {
       if (dialog.matches(':modal')) return;
       dialog.close();
@@ -64,7 +85,7 @@ export class DialogComponent extends Component {
 
       dialog.showModal();
 
-      if (!dialog.matches(':modal')) trapFocus(dialog);
+      document.addEventListener('focusin', this.#enforceFocus, true);
 
       this.dispatchEvent(new DialogOpenEvent());
 
@@ -83,6 +104,8 @@ export class DialogComponent extends Component {
 
     this.removeEventListener('click', this.#handleClick);
     this.removeEventListener('keydown', this.#handleKeyDown);
+
+    document.removeEventListener('focusin', this.#enforceFocus, true);
 
     // Force browser to restart animation by resetting it
     // Temporarily remove any existing animation state
@@ -107,8 +130,6 @@ export class DialogComponent extends Component {
     dialog.close();
     dialog.classList.remove('dialog-closing');
 
-    removeTrapFocus();
-
     this.dispatchEvent(new DialogCloseEvent());
   };
 
@@ -120,6 +141,29 @@ export class DialogComponent extends Component {
       this.closeDialog();
     } else {
       this.showDialog();
+    }
+  };
+
+  /**
+   * Pulls focus back when it escapes an open dialog.
+   *
+   * @param {FocusEvent} event
+   */
+  #enforceFocus = (event) => {
+    const { dialog } = this.refs;
+    const { target } = event;
+
+    if (!dialog.open || !(target instanceof Node)) return;
+    if (dialog.contains(target)) return;
+
+    event.stopPropagation();
+
+    const focusable = getFocusableWithin(dialog)[0];
+
+    if (focusable) {
+      focusable.focus();
+    } else {
+      dialog.focus();
     }
   };
 
@@ -201,3 +245,38 @@ document.addEventListener(
   },
   { capture: true }
 );
+
+/**
+ * Keeps Tab inside whichever modal dialog holds focus.
+ *
+ * showModal() confines focus to the document, not to the dialog, so tabbing past
+ * either end hands focus to the browser's own UI. That transition fires no event
+ * a page can observe, which is why it has to be prevented rather than corrected.
+ *
+ * Global on purpose: DialogComponent is only one of several callers of
+ * showModal() (aw-membership-signup-modal, aw-modal, member-login-modal and
+ * zoom-dialog each do their own). Keys handled elsewhere are skipped.
+ */
+document.addEventListener('keydown', (event) => {
+  if (event.defaultPrevented || event.key !== 'Tab') return;
+
+  const active = document.activeElement;
+  const dialog = active instanceof Element ? active.closest('dialog[open]') : null;
+
+  // Non-modal dialogs are just part of the page and should tab like it.
+  if (!dialog || !dialog.matches(':modal')) return;
+
+  const focusable = getFocusableWithin(dialog);
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (!first || !last) return;
+
+  if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+  } else if (event.shiftKey && (active === first || active === dialog)) {
+    event.preventDefault();
+    last.focus();
+  }
+});
