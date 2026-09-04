@@ -97,11 +97,6 @@
 >
 <link
   rel="modulepreload"
-  href="{{ 'recently-viewed-products.js' | asset_url }}"
-  fetchpriority="low"
->
-<link
-  rel="modulepreload"
   href="{{ 'scrolling.js' | asset_url }}"
   fetchpriority="low"
 >
@@ -138,23 +133,25 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'variant-picker.js' | asset_url }}"
+{% if template.name == 'product' or template.name == 'page' %}
+  <script
+    src="{{ 'variant-picker.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+  <script
+    src="{{ 'variant-select.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+  <script
+  src="{{ 'product-form.js' | asset_url }}"
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'variant-select.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% endif %}
 <script
   src="{{ 'product-card.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-<script
-  src="{{ 'product-form.js' | asset_url }}"
   type="module"
   fetchpriority="low"
 ></script>
