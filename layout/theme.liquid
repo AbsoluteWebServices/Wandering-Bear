@@ -135,6 +135,7 @@
 
     {%- render 'async-load-head-scripts-wrapper' with wrapped_content_for_header: wrapped_content_for_header, template: template -%}
 
+    {% render 'redirects' %}
   </head>
 
   <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
@@ -250,8 +251,6 @@
     <footer class="z-1 relative">
       {% sections 'footer-group' %}
     </footer>
-
-    {% render 'search-modal' %}
 
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
